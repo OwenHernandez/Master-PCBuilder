@@ -27,6 +27,7 @@ import {
 	ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 import StackNavigator from './src/navigations/StackNavigator';
+import PrimaryContextProvider from './src/contexts/PrimaryContext';
 
 type SectionProps = PropsWithChildren<{
 	title: string;
@@ -42,7 +43,9 @@ function App(): React.JSX.Element {
 	return (
 		<SafeAreaView style={backgroundStyle}>
 			<NavigationContainer>
-				<StackNavigator />
+				<PrimaryContextProvider>
+					<StackNavigator />
+				</PrimaryContextProvider>
 			</NavigationContainer>
 		</SafeAreaView>
 	);
