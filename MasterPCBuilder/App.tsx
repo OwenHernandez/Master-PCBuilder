@@ -28,6 +28,7 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 import { NavigationContainer } from '@react-navigation/native';
 import StackNavigator from './src/navigations/StackNavigator';
+import PrimaryContextProvider, { PrimaryContext } from './src/contexts/PrimaryContext';
 
 
 type SectionProps = PropsWithChildren<{
@@ -39,7 +40,9 @@ function App(): JSX.Element {
   return (
     <NavigationContainer>
       <View style={{ flex: 1 }}>
-        <StackNavigator />
+        <PrimaryContextProvider>
+          <StackNavigator />
+        </PrimaryContextProvider>
       </View>
     </NavigationContainer>
   );

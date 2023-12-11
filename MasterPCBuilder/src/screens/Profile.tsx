@@ -19,8 +19,7 @@ const Profile = (props: Props) => {
         { name: "Your Posts", nav: "UserPostsList" },
         { name: "Liked Posts", nav: "LikedPostsList" },
         { name: "Wish List", nav: "WishList" },
-        { name: "Friends", nav: "FriendsList" },
-        { name: "Logout", nav: "Logout" }
+        { name: "Friends", nav: "FriendsList" }
     ];*/
 
     return (
@@ -43,8 +42,8 @@ const Profile = (props: Props) => {
                             height: 100
                         }}
                     />
-                    <Text style={{ fontSize: 40 }}>{user.nick}</Text>
-                    <Text style={{ fontSize: 20 }}>{user.email}</Text>
+                    <Text style={{ fontSize: 40, color: "white" }}>{user.nick}</Text>
+                    <Text style={{ fontSize: 20, color: "white" }}>{user.email}</Text>
                 </View>
                 <TouchableOpacity style={{ ...Styles.touchable, marginBottom: 10, padding: 20 }} onPress={() => navigation.navigate("UserBuildsList")}>
                     <Text style={{ fontSize: 20, textAlign: 'center', color: "white" }}>Your Builds</Text>

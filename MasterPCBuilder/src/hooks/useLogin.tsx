@@ -4,8 +4,6 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigations/StackNavigator';
 import { usePrimaryContext } from '../contexts/PrimaryContext';
 
-type Props = {}
-
 const useLogin = () => {
     const { setUser } = usePrimaryContext();
     const [email, setEmail] = useState("");

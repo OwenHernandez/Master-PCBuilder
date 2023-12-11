@@ -1,4 +1,4 @@
-import { Alert, FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, FlatList, Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect } from 'react'
 import { RootStackParamList } from '../navigations/StackNavigator';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -16,7 +16,7 @@ const Post = (props: Props) => {
     const post = route.params.post;
 
     return (
-        <ScrollView>
+        <SafeAreaView style={{ flex: 1 }}>
             <View style={Styles.headerView}>
                 <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
                     <Image
@@ -26,6 +26,8 @@ const Post = (props: Props) => {
                             height: 35
                         }}
                     />
+                    <Text style={{ fontSize: 25, color: "white" }}>{user.nick}</Text>
+                    <Text style={{ fontSize: 20, color: "white" }}>{user.email}</Text>
                 </TouchableOpacity>
                 <Text style={Styles.headerText}>{post.title}</Text>
                 <TouchableOpacity onPress={() => Alert.alert("Iria al drawer")}>
@@ -58,7 +60,7 @@ const Post = (props: Props) => {
                     ListHeaderComponent={<Text style={{ fontSize: 25, color: "white" }}>Components Used:{"\n"}</Text>}
                 />
             </View>
-        </ScrollView>
+        </SafeAreaView>
     )
 }
 
