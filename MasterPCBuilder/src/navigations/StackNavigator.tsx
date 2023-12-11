@@ -7,6 +7,7 @@ import Profile from '../screens/Profile';
 import UserPostsList from '../screens/UserPostsList';
 import Post from '../screens/Post';
 import UserBuildsList from '../screens/UserBuildsList';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 type Props = {}
 
@@ -25,6 +26,7 @@ export type RootStackParamList = {
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
+const Tab = createBottomTabNavigator();
 
 const StackNavigator = (props: Props) => {
     return (
@@ -36,8 +38,8 @@ const StackNavigator = (props: Props) => {
                 }
             }}
         >
-            <Stack.Screen name="Register" component={Register} />
             <Stack.Screen name="Login" component={Login} />
+            <Stack.Screen name="Register" component={Register} />
             {/*<Stack.Screen name="Builder" component={Builder} />*/}
             <Stack.Screen name="Profile" component={Profile} />
             {/*<Stack.Screen name="Settings" component={Settings} />*/}

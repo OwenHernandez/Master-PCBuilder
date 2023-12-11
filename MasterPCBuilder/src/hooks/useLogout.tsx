@@ -10,8 +10,8 @@ const useLogout = () => {
     const { user, setUser } = usePrimaryContext();
 
     function logout(navigation: NativeStackNavigationProp<RootStackParamList, any, undefined>) {
-        setUser("");
-        navigation.navigate("Register");
+        //setUser("");
+        navigation.navigate("Login");
     }
 
     return {

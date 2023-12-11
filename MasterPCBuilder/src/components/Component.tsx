@@ -9,14 +9,19 @@ type Props = {
 const Component = (props: Props) => {
     const { comp } = props;
     return (
-        <View>
+        <View style={{ flex: 1, flexDirection: 'row' }}>
             <Image
                 source={{
-                    uri: comp.compImage
+                    uri: comp.compImage,
+                    width: 150,
+                    height: 150
                 }}
             />
-            <Text>{comp.name}</Text>
-            <Text>{comp.description}</Text>
+            <View style={{ maxWidth: "60%" }}>
+                <Text style={{ fontSize: 20 }}>Name: {comp.name}</Text>
+                <Text style={{ fontSize: 20 }}>Pricing Nowadays: {comp.price}</Text>
+                <Text style={{ fontSize: 15 }}>Description: {"\n"}{comp.description}</Text>
+            </View>
         </View>
     )
 }

@@ -15,14 +15,14 @@ const UserPostsList = (props: Props) => {
         {
             title: "Coso",
             image: "https://upload.wikimedia.org/wikipedia/commons/1/16/Computadora-PC.png",
-            components: [{ name: "CPU", compImage: "https://i.ebayimg.com/images/g/-1sAAOSwtQNlLpw6/s-l1600.jpg", description: "CPU super potente perfecta..." }],
-            description: "Es un buen montaje porque...",
+            components: [{ name: "CPU", compImage: "https://i.ebayimg.com/images/g/-1sAAOSwtQNlLpw6/s-l1600.jpg", description: "CPU super potente perfecta...", price: "100€" }],
+            description: "Es un buen montaje porque coso, coso, coso, coso, coso, y tambien...",
             priceRange: "1000€"
         },
         {
             title: "Coso2",
             image: "https://upload.wikimedia.org/wikipedia/commons/1/16/Computadora-PC.png",
-            components: [{ name: "CPU", compImage: "https://i.ebayimg.com/images/g/-1sAAOSwtQNlLpw6/s-l1600.jpg", description: "CPU super potente perfecta..." }],
+            components: [{ name: "CPU", compImage: "https://i.ebayimg.com/images/g/-1sAAOSwtQNlLpw6/s-l1600.jpg", description: "CPU super potente perfecta...", price: "100€" }],
             description: "Es un buen montaje porque...",
             priceRange: "1000€"
         }
@@ -48,8 +48,9 @@ const UserPostsList = (props: Props) => {
                     <Icon name='three-bars' size={30}></Icon>
                 </TouchableOpacity>
             </View>
-            <View style={{}}>
+            <View>
                 <FlatList
+                    numColumns={2}
                     data={tempPostsList}
                     renderItem={(post) => {
                         return (

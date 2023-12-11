@@ -12,15 +12,15 @@ const Login = (props: Props) => {
     const { changeEmail, changePassword, checkLogin, errorMsg } = useLogin();
     return (
         <View style={{ flex: 1 }}>
-            <View style={Styles.headerView}>
+            <View style={{ ...Styles.headerView, flexDirection: "column" }}>
                 <Text style={Styles.headerText}>{route.name}</Text>
             </View>
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                <View style={{ backgroundColor: 'purple', padding: 50 }}>
-                    <TextInput placeholder='Email' placeholderTextColor={"black"} onChangeText={changeEmail} style={{ ...Styles.textInput, marginBottom: 10 }}></TextInput>
-                    <TextInput secureTextEntry={true} placeholder='Password' placeholderTextColor={"black"} onChangeText={changePassword} style={{ ...Styles.textInput, marginBottom: 10 }}></TextInput>
+                <View style={{ backgroundColor: 'purple', padding: "10%" }}>
+                    <TextInput placeholder='Email' placeholderTextColor={"black"} onChangeText={changeEmail} style={{ ...Styles.textInput, marginBottom: "3%" }}></TextInput>
+                    <TextInput secureTextEntry={true} placeholder='Password' placeholderTextColor={"black"} onChangeText={changePassword} style={{ ...Styles.textInput, marginBottom: "3%" }}></TextInput>
                 </View>
-                <View style={{ flexDirection: "row", padding: 30 }}>
+                <View style={{ flexDirection: "row", padding: "8%" }}>
                     <TouchableOpacity style={Styles.touchable} onPress={() => checkLogin(navigation)}>
                         <Text style={{ color: "white", fontSize: 20 }}>Login</Text>
                     </TouchableOpacity>

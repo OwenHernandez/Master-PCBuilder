@@ -4,7 +4,7 @@ export const Styles = StyleSheet.create({
     headerView: {
         borderBottomColor: "red",
         borderWidth: 2,
-        padding: 20,
+        padding: "5%",
         flexDirection: "row",
         justifyContent: "space-between"
     },
@@ -20,9 +20,9 @@ export const Styles = StyleSheet.create({
         width: 150
     },
     touchable: {
-        margin: 20,
+        margin: "5%",
         borderWidth: 2,
         borderColor: "red",
-        padding: 5
+        padding: "2%"
     }
 })
