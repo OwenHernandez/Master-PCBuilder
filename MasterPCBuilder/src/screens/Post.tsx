@@ -1,4 +1,4 @@
-import { FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect } from 'react'
 import { RootStackParamList } from '../navigations/StackNavigator';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -6,10 +6,12 @@ import usePost from '../hooks/usePost';
 import Component from '../components/Component';
 import { Styles } from '../themes/Styles';
 import Icon from 'react-native-vector-icons/Octicons';
+import { usePrimaryContext } from '../contexts/PrimaryContext';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Post'>;
 
 const Post = (props: Props) => {
+    const { user } = usePrimaryContext();
     const { navigation, route } = props;
     const post = route.params.post;
 
@@ -19,15 +21,15 @@ const Post = (props: Props) => {
                 <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
                     <Image
                         source={{
-                            uri: "https://static.vecteezy.com/system/resources/thumbnails/002/318/271/small/user-profile-icon-free-vector.jpg",
+                            uri: user.profilePic,
                             width: 35,
                             height: 35
                         }}
                     />
                 </TouchableOpacity>
                 <Text style={Styles.headerText}>{post.title}</Text>
-                <TouchableOpacity>
-                    <Icon name='three-bars' size={30}></Icon>
+                <TouchableOpacity onPress={() => Alert.alert("Iria al drawer")}>
+                    <Icon name='three-bars' size={30} color={"white"}></Icon>
                 </TouchableOpacity>
             </View>
             <View style={{}}>
@@ -40,8 +42,8 @@ const Post = (props: Props) => {
                         }}
                     />
                     <View style={{}}>
-                        <Text style={{ fontSize: 25 }}>Cost: {post.priceRange}</Text>
-                        <Text style={{ fontSize: 15, maxWidth: "80%" }}>Description: {"\n\n"}{post.description}{"\n\n"}</Text>
+                        <Text style={{ fontSize: 25, color: "white" }}>Cost: {post.priceRange}</Text>
+                        <Text style={{ fontSize: 15, maxWidth: "80%", color: "white" }}>Description: {"\n\n"}{post.description}{"\n\n"}</Text>
                     </View>
                 </View>
                 <FlatList
@@ -53,7 +55,7 @@ const Post = (props: Props) => {
                         );
                     }}
                     keyExtractor={(comp, index) => index + ""}
-                    ListHeaderComponent={<Text style={{ fontSize: 25 }}>Components Used:{"\n"}</Text>}
+                    ListHeaderComponent={<Text style={{ fontSize: 25, color: "white" }}>Components Used:{"\n"}</Text>}
                 />
             </View>
         </ScrollView>

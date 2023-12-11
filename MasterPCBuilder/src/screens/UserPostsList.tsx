@@ -5,10 +5,12 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import IPostType from '../interfaces/IPostType';
 import { Styles } from '../themes/Styles';
 import Icon from 'react-native-vector-icons/Octicons';
+import { usePrimaryContext } from '../contexts/PrimaryContext';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'UserPostsList'>;
 
 const UserPostsList = (props: Props) => {
+    const { user } = usePrimaryContext();
     const { navigation, route } = props;
     const [postsList, setPostsList] = useState([{}] as IPostType[]);
     const tempPostsList = [
@@ -37,15 +39,15 @@ const UserPostsList = (props: Props) => {
                 <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
                     <Image
                         source={{
-                            uri: "https://static.vecteezy.com/system/resources/thumbnails/002/318/271/small/user-profile-icon-free-vector.jpg",
+                            uri: user.profilePic,
                             width: 35,
                             height: 35
                         }}
                     />
                 </TouchableOpacity>
                 <Text style={Styles.headerText}>{route.name}</Text>
-                <TouchableOpacity>
-                    <Icon name='three-bars' size={30}></Icon>
+                <TouchableOpacity onPress={() => Alert.alert("Iria al drawer")}>
+                    <Icon name='three-bars' size={30} color={"white"}></Icon>
                 </TouchableOpacity>
             </View>
             <View>
@@ -63,8 +65,8 @@ const UserPostsList = (props: Props) => {
                                             height: 130
                                         }}
                                     />
-                                    <Text style={{ fontSize: 20 }}>{post.item.title}</Text>
-                                    <Text>{post.item.priceRange}</Text>
+                                    <Text style={{ fontSize: 20, color: "white" }}>{post.item.title}</Text>
+                                    <Text style={{ color: "white" }}>{post.item.priceRange}</Text>
                                 </View>
                             </TouchableOpacity>
                         )

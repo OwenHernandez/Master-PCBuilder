@@ -18,9 +18,9 @@ const Component = (props: Props) => {
                 }}
             />
             <View style={{ maxWidth: "60%" }}>
-                <Text style={{ fontSize: 20 }}>Name: {comp.name}</Text>
-                <Text style={{ fontSize: 20 }}>Pricing Nowadays: {comp.price}</Text>
-                <Text style={{ fontSize: 15 }}>Description: {"\n"}{comp.description}</Text>
+                <Text style={{ fontSize: 20, color: "white" }}>Name: {comp.name}</Text>
+                <Text style={{ fontSize: 20, color: "white" }}>Pricing Nowadays: {comp.price}</Text>
+                <Text style={{ fontSize: 15, color: "white" }}>Description: {"\n"}{comp.description}</Text>
             </View>
         </View>
     )

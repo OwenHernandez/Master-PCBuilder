@@ -1,4 +1,4 @@
-import { FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { RootStackParamList } from '../navigations/StackNavigator';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -7,16 +7,18 @@ import IBuildType from '../interfaces/IBuildType';
 import Component from '../components/Component';
 import { Styles } from '../themes/Styles';
 import Icon from 'react-native-vector-icons/Octicons';
+import { usePrimaryContext } from '../contexts/PrimaryContext';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'UserBuildsList'>;
 
 const UserBuildsList = (props: Props) => {
+    const { user } = usePrimaryContext();
     const { navigation, route } = props;
     const [buildsList, setBuildsList] = useState([{}] as IBuildType[]);
     const tempBuilds = [
         {
             name: "BuildCoso",
-            price: "",
+            price: "1000€",
             notes: "jkfdjsgvfjdnjghsridhgjf",
             components: [
                 { name: "CPU", compImage: "https://i.ebayimg.com/images/g/-1sAAOSwtQNlLpw6/s-l1600.jpg", description: "CPU super potente perfecta...", price: "100€" },
@@ -34,29 +36,25 @@ const UserBuildsList = (props: Props) => {
                 <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
                     <Image
                         source={{
-                            uri: "https://static.vecteezy.com/system/resources/thumbnails/002/318/271/small/user-profile-icon-free-vector.jpg",
+                            uri: user.profilePic,
                             width: 35,
                             height: 35
                         }}
                     />
                 </TouchableOpacity>
                 <Text style={Styles.headerText}>{route.name}</Text>
-                <TouchableOpacity>
-                    <Icon name='three-bars' size={30}></Icon>
+                <TouchableOpacity onPress={() => Alert.alert("Iria al drawer")}>
+                    <Icon name='three-bars' size={30} color={"white"}></Icon>
                 </TouchableOpacity>
             </View>
             <FlatList
                 data={tempBuilds}
                 renderItem={(build) => {
                     return (
-                        <FlatList
-                            data={build.item.components}
-                            renderItem={(comp) => {
-                                return (
-                                    <Component comp={comp.item} />
-                                )
-                            }}
-                        />
+                        <View>
+                            <Text style={{ fontSize: 30, color: "white" }}>{build.item.name}</Text>
+                            <Text style={{ fontSize: 20, color: "white" }}>{build.item.price}</Text>
+                        </View>
                     )
                 }}
                 keyExtractor={(comp, index) => index + ""}
