@@ -25,7 +25,7 @@ const Profile = (props: Props) => {
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <View style={Styles.headerView}>
-                <TouchableOpacity onPress={() => /*navigation.navigate("Settings")*/Alert.alert("Iria a los ajustes")}>
+                <TouchableOpacity onPress={() => navigation.navigate("Settings")}>
                     <Icon name='gear' size={30} color={"white"}></Icon>
                 </TouchableOpacity>
                 <Text style={Styles.headerText}>{route.name}</Text>

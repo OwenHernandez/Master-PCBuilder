@@ -8,6 +8,9 @@ import UserPostsList from '../screens/UserPostsList';
 import Post from '../screens/Post';
 import UserBuildsList from '../screens/UserBuildsList';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Settings from '../screens/Settings';
+import WishList from '../screens/WishList';
+import FriendsList from '../screens/FriendsList';
 
 type Props = {}
 
@@ -21,7 +24,7 @@ export type RootStackParamList = {
     UserPostsList: undefined,
     LikedPostsList: undefined,
     Post: { post: any },
-    WishList: undefined,
+    WishList: {},
     FriendsList: undefined
 };
 
@@ -42,12 +45,12 @@ const StackNavigator = (props: Props) => {
             <Stack.Screen name="Register" component={Register} />
             {/*<Stack.Screen name="Builder" component={Builder} />*/}
             <Stack.Screen name="Profile" component={Profile} />
-            {/*<Stack.Screen name="Settings" component={Settings} />*/}
+            <Stack.Screen name="Settings" component={Settings} />
             <Stack.Screen name="UserBuildsList" component={UserBuildsList} />
             <Stack.Screen name="UserPostsList" component={UserPostsList} />
             <Stack.Screen name="Post" component={Post} />
-            {/*<Stack.Screen name="WishList" component={WishList} />*/}
-            {/*<Stack.Screen name="FriendsList" component={FriendsList} />*/}
+            <Stack.Screen name="WishList" component={WishList} />
+            <Stack.Screen name="FriendsList" component={FriendsList} />
         </Stack.Navigator>
     )
 }
