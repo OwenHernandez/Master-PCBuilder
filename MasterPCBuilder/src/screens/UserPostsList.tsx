@@ -17,7 +17,13 @@ const UserPostsList = (props: Props) => {
         {
             title: "Coso",
             image: "https://upload.wikimedia.org/wikipedia/commons/1/16/Computadora-PC.png",
-            components: [{ name: "CPU", compImage: "https://i.ebayimg.com/images/g/-1sAAOSwtQNlLpw6/s-l1600.jpg", description: "CPU super potente perfecta...", price: "100€" }],
+            components: [
+                { name: "CPU", compImage: "https://i.ebayimg.com/images/g/-1sAAOSwtQNlLpw6/s-l1600.jpg", description: "CPU super potente perfecta...", price: "100€" },
+                { name: "CPU", compImage: "https://i.ebayimg.com/images/g/-1sAAOSwtQNlLpw6/s-l1600.jpg", description: "CPU super potente perfecta...", price: "100€" },
+                { name: "CPU", compImage: "https://i.ebayimg.com/images/g/-1sAAOSwtQNlLpw6/s-l1600.jpg", description: "CPU super potente perfecta...", price: "100€" },
+                { name: "CPU", compImage: "https://i.ebayimg.com/images/g/-1sAAOSwtQNlLpw6/s-l1600.jpg", description: "CPU super potente perfecta...", price: "100€" },
+                { name: "CPU", compImage: "https://i.ebayimg.com/images/g/-1sAAOSwtQNlLpw6/s-l1600.jpg", description: "CPU super potente perfecta...", price: "100€" }
+            ],
             description: "Es un buen montaje porque coso, coso, coso, coso, coso, y tambien...",
             priceRange: "1000€"
         },
@@ -43,6 +49,7 @@ const UserPostsList = (props: Props) => {
                             width: 35,
                             height: 35
                         }}
+                        style={{ ...Styles.imageStyle }}
                     />
                 </TouchableOpacity>
                 <Text style={Styles.headerText}>{route.name}</Text>
@@ -61,8 +68,8 @@ const UserPostsList = (props: Props) => {
                                     <Image
                                         source={{
                                             uri: post.item.image,
-                                            width: 130,
-                                            height: 130
+                                            width: 120,
+                                            height: 120
                                         }}
                                     />
                                     <Text style={{ fontSize: 20, color: "white" }}>{post.item.title}</Text>

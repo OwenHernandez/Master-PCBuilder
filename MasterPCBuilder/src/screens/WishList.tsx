@@ -32,6 +32,7 @@ const WishList = (props: Props) => {
                             width: 35,
                             height: 35
                         }}
+                        style={{ ...Styles.imageStyle }}
                     />
                 </TouchableOpacity>
                 <Text style={Styles.headerText}>{route.name}</Text>

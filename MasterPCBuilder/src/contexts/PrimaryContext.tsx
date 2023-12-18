@@ -5,15 +5,20 @@ import IUserType from '../interfaces/IUserType';
 export interface PrimaryContextType {
     user: IUserType;
     setUser: React.Dispatch<React.SetStateAction<IUserType>>;
+    darkMode: boolean;
+    setDarkMode: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const PrimaryContext = createContext<PrimaryContextType>({} as PrimaryContextType);
 
 const PrimaryContextProvider = (props: any) => {
     const [user, setUser] = useState({} as IUserType);
+    const [darkMode, setDarkMode] = useState(true);
     const contextValues: PrimaryContextType = {
         user,
-        setUser
+        setUser,
+        darkMode,
+        setDarkMode
     };
 
     return (

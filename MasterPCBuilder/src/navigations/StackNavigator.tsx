@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import React from 'react'
+import React, { useEffect } from 'react'
 import Register from '../screens/Register';
 import Login from '../screens/Login';
 import Profile from '../screens/Profile';
@@ -11,20 +11,26 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Settings from '../screens/Settings';
 import WishList from '../screens/WishList';
 import FriendsList from '../screens/FriendsList';
+import Landing from '../screens/Landing';
+import { usePrimaryContext } from '../contexts/PrimaryContext';
+import IPostType from '../interfaces/IPostType';
+import IBuildType from '../interfaces/IBuildType';
 
 type Props = {}
 
 export type RootStackParamList = {
+    Landing: undefined,
     Register: undefined,
     Login: undefined,
     Builder: undefined,
     Profile: undefined,
     Settings: undefined,
     UserBuildsList: undefined,
+    Build: { build: IBuildType }
     UserPostsList: undefined,
     LikedPostsList: undefined,
-    Post: { post: any },
-    WishList: {},
+    Post: { post: IPostType },
+    WishList: undefined,
     FriendsList: undefined
 };
 
@@ -32,21 +38,29 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator();
 
 const StackNavigator = (props: Props) => {
+    const { darkMode } = usePrimaryContext();
+    useEffect(() => {
+        //Miraria el darkMode de la base de datos y lo pondria en el contexto
+    }, []);
+
     return (
         <Stack.Navigator
             screenOptions={{
                 headerShown: false,
                 contentStyle: {
-                    backgroundColor: "black"
+                    //Falta configurar el modo claro
+                    backgroundColor: (darkMode) ? "#242121" : "white"
                 }
             }}
         >
+            <Stack.Screen name='Landing' component={Landing} />
             <Stack.Screen name="Login" component={Login} />
             <Stack.Screen name="Register" component={Register} />
             {/*<Stack.Screen name="Builder" component={Builder} />*/}
             <Stack.Screen name="Profile" component={Profile} />
             <Stack.Screen name="Settings" component={Settings} />
             <Stack.Screen name="UserBuildsList" component={UserBuildsList} />
+            {/*<Stack.Screen name="Build" component={Build} />*/}
             <Stack.Screen name="UserPostsList" component={UserPostsList} />
             <Stack.Screen name="Post" component={Post} />
             <Stack.Screen name="WishList" component={WishList} />
@@ -56,5 +70,3 @@ const StackNavigator = (props: Props) => {
 }
 
 export default StackNavigator
-
-const styles = StyleSheet.create({})

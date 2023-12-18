@@ -16,9 +16,9 @@ const Login = (props: Props) => {
                 <Text style={Styles.headerText}>{route.name}</Text>
             </View>
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                <View style={{ backgroundColor: 'purple', padding: "10%" }}>
+                <View style={{ backgroundColor: '#524f4f', padding: "10%", borderRadius: 20 }}>
                     <TextInput placeholder='Email' placeholderTextColor={"black"} onChangeText={changeEmail} style={{ ...Styles.textInput, marginBottom: "3%" }}></TextInput>
-                    <TextInput secureTextEntry={true} placeholder='Password' placeholderTextColor={"black"} onChangeText={changePassword} style={{ ...Styles.textInput, marginBottom: "3%" }}></TextInput>
+                    <TextInput secureTextEntry={true} placeholder='Password' placeholderTextColor={"black"} onChangeText={changePassword} style={{ ...Styles.textInput }}></TextInput>
                 </View>
                 <View style={{ flexDirection: "row", padding: "8%" }}>
                     <TouchableOpacity style={Styles.touchable} onPress={() => checkLogin(navigation)}>

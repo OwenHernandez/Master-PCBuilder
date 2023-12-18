@@ -2,7 +2,7 @@ import { StyleSheet } from "react-native";
 
 export const Styles = StyleSheet.create({
     headerView: {
-        borderBottomColor: "red",
+        borderBottomColor: "#ca2613",
         borderWidth: 2,
         padding: "5%",
         flexDirection: "row",
@@ -14,6 +14,7 @@ export const Styles = StyleSheet.create({
         textAlign: 'center'
     },
     textInput: {
+        borderRadius: 20,
         backgroundColor: 'white',
         color: "black",
         textAlign: 'center',
@@ -21,8 +22,12 @@ export const Styles = StyleSheet.create({
     },
     touchable: {
         margin: "5%",
+        borderRadius: 20,
         borderWidth: 2,
-        borderColor: "red",
-        padding: "2%"
+        borderColor: "#ca2613",
+        padding: "3%"
+    },
+    imageStyle: {
+        borderRadius: 50
     }
 })

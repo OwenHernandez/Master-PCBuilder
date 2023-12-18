@@ -34,13 +34,14 @@ const Profile = (props: Props) => {
                 </TouchableOpacity>
             </View>
             <ScrollView>
-                <View style={{ alignItems: 'center' }}>
+                <View style={{ alignItems: 'center', margin: "5%" }}>
                     <Image
                         source={{
                             uri: user.profilePic,
                             width: 100,
                             height: 100
                         }}
+                        style={{ ...Styles.imageStyle }}
                     />
                     <Text style={{ fontSize: 40, color: "white" }}>{user.nick}</Text>
                     <Text style={{ fontSize: 20, color: "white" }}>{user.email}</Text>

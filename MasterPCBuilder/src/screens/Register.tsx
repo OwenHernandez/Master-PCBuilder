@@ -17,7 +17,7 @@ const Register = (props: Props) => {
                 <Text style={Styles.headerText}>{route.name}</Text>
             </View>
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                <View style={{ backgroundColor: 'purple', padding: "10%" }}>
+                <View style={{ backgroundColor: '#524f4f', padding: "10%", borderRadius: 20 }}>
                     <TextInput placeholder='Nick' placeholderTextColor={"black"} onChangeText={changeNick} style={{ ...Styles.textInput, marginBottom: "3%" }}></TextInput>
                     <TextInput placeholder='Email' placeholderTextColor={"black"} onChangeText={changeEmail} style={{ ...Styles.textInput, marginBottom: "3%" }}></TextInput>
                     <TextInput secureTextEntry={true} placeholder='Password' placeholderTextColor={"black"} onChangeText={changePassword} style={{ ...Styles.textInput, marginBottom: "3%" }}></TextInput>

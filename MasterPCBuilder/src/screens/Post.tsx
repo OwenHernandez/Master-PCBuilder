@@ -25,9 +25,8 @@ const Post = (props: Props) => {
                             width: 35,
                             height: 35
                         }}
+                        style={{ ...Styles.imageStyle }}
                     />
-                    <Text style={{ fontSize: 25, color: "white" }}>{user.nick}</Text>
-                    <Text style={{ fontSize: 20, color: "white" }}>{user.email}</Text>
                 </TouchableOpacity>
                 <Text style={Styles.headerText}>{post.title}</Text>
                 <TouchableOpacity onPress={() => Alert.alert("Iria al drawer")}>
@@ -35,21 +34,22 @@ const Post = (props: Props) => {
                 </TouchableOpacity>
             </View>
             <View style={{}}>
-                <View style={{ flexDirection: "row", borderColor: "red", borderWidth: 2, borderBottomWidth: 0, borderTopWidth: 0 }}>
+                <View style={{ flexDirection: "row", borderColor: "#ca2613", borderWidth: 2, borderTopWidth: 0 }}>
                     <Image
                         source={{
                             uri: post.image,
                             width: 150,
                             height: 150
                         }}
+                        style={{ margin: "5%" }}
                     />
                     <View style={{}}>
                         <Text style={{ fontSize: 25, color: "white" }}>Cost: {post.priceRange}</Text>
-                        <Text style={{ fontSize: 15, maxWidth: "80%", color: "white" }}>Description: {"\n\n"}{post.description}{"\n\n"}</Text>
+                        <Text style={{ fontSize: 15, maxWidth: "73%", color: "white" }}>Description: {"\n\n"}{post.description}{"\n\n"}</Text>
                     </View>
                 </View>
                 <FlatList
-                    contentContainerStyle={{ borderColor: "red", borderWidth: 2 }}
+                    contentContainerStyle={{ borderColor: "#ca2613", borderWidth: 2, borderTopWidth: 0 }}
                     data={post.components}
                     renderItem={(component) => {
                         return (
@@ -58,6 +58,7 @@ const Post = (props: Props) => {
                     }}
                     keyExtractor={(comp, index) => index + ""}
                     ListHeaderComponent={<Text style={{ fontSize: 25, color: "white" }}>Components Used:{"\n"}</Text>}
+                //ItemSeparatorComponent={() => <Text style={{ color: "#ca2613" }}>―――――――――――――</Text>}
                 />
             </View>
         </SafeAreaView>
