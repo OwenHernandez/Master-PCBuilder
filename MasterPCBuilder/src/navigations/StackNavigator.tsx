@@ -15,6 +15,8 @@ import Landing from '../screens/Landing';
 import { usePrimaryContext } from '../contexts/PrimaryContext';
 import IPostType from '../interfaces/IPostType';
 import IBuildType from '../interfaces/IBuildType';
+import LikedPostsList from '../screens/LikedPostsList';
+import DrawerNavigator from './DrawerNavigator';
 
 type Props = {}
 
@@ -22,6 +24,7 @@ export type RootStackParamList = {
     Landing: undefined,
     Register: undefined,
     Login: undefined,
+    DrawerNavigator: any,
     Builder: undefined,
     Profile: undefined,
     Settings: undefined,
@@ -40,7 +43,7 @@ const Tab = createBottomTabNavigator();
 const StackNavigator = (props: Props) => {
     const { darkMode } = usePrimaryContext();
     useEffect(() => {
-        //Miraria el darkMode de la base de datos y lo pondria en el contexto
+        //Miraria el darkMode de la base de datos del movil y lo pondria en el contexto
     }, []);
 
     return (
@@ -48,18 +51,17 @@ const StackNavigator = (props: Props) => {
             screenOptions={{
                 headerShown: false,
                 contentStyle: {
-                    //Falta configurar el modo claro
-                    backgroundColor: (darkMode) ? "#242121" : "white"
+                    backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"
                 }
             }}
         >
             <Stack.Screen name='Landing' component={Landing} />
             <Stack.Screen name="Login" component={Login} />
             <Stack.Screen name="Register" component={Register} />
+            <Stack.Screen name="DrawerNavigator" component={DrawerNavigator} />
             {/*<Stack.Screen name="Builder" component={Builder} />*/}
-            <Stack.Screen name="Profile" component={Profile} />
-            <Stack.Screen name="Settings" component={Settings} />
             <Stack.Screen name="UserBuildsList" component={UserBuildsList} />
+            <Stack.Screen name="LikedPostsList" component={LikedPostsList} />
             {/*<Stack.Screen name="Build" component={Build} />*/}
             <Stack.Screen name="UserPostsList" component={UserPostsList} />
             <Stack.Screen name="Post" component={Post} />

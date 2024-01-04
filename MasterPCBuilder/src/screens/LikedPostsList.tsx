@@ -1,18 +1,17 @@
-import { Alert, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { View, Text, TouchableOpacity, Image, Alert, FlatList } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { RootStackParamList } from '../navigations/StackNavigator';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import IPostType from '../interfaces/IPostType';
 import { Styles } from '../themes/Styles';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Octicons from 'react-native-vector-icons/Octicons';
 import { usePrimaryContext } from '../contexts/PrimaryContext';
-import { DrawerToggleButton } from '@react-navigation/drawer';
-import { DrawerActions } from '@react-navigation/native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../navigations/StackNavigator';
+import IBuildType from '../interfaces/IBuildType';
+import IPostType from '../interfaces/IPostType';
 
-type Props = NativeStackScreenProps<RootStackParamList, 'UserPostsList'>;
+type Props = NativeStackScreenProps<RootStackParamList, 'LikedPostsList'>;
 
-const UserPostsList = (props: Props) => {
+const LikedPostsList = (props: Props) => {
     const { user, darkMode } = usePrimaryContext();
     const { navigation, route } = props;
     const [postsList, setPostsList] = useState([{}] as IPostType[]);
@@ -41,7 +40,7 @@ const UserPostsList = (props: Props) => {
         }
     ];
     useEffect(() => {
-        //Aqui se llamaria a la base de datos para conseguir sus posts
+        //Aqui se llamaria a la api para conseguir los posts que dio like
     }, []);
 
     return (
@@ -58,7 +57,7 @@ const UserPostsList = (props: Props) => {
                     />
                 </TouchableOpacity>
                 <Text style={{ ...Styles.headerText, color: (darkMode) ? "white" : "black" }}>{route.name}</Text>
-                <TouchableOpacity onPress={() => navigation.dispatch(DrawerActions.toggleDrawer)}>
+                <TouchableOpacity onPress={() => Alert.alert("Iria al drawer")}>
                     <Octicons name='three-bars' size={30} color={(darkMode) ? "white" : "black"}></Octicons>
                 </TouchableOpacity>
             </View>
@@ -97,4 +96,4 @@ const UserPostsList = (props: Props) => {
     )
 }
 
-export default UserPostsList
+export default LikedPostsList

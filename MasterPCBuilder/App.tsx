@@ -29,6 +29,7 @@ import {
 import { NavigationContainer } from '@react-navigation/native';
 import StackNavigator from './src/navigations/StackNavigator';
 import PrimaryContextProvider, { PrimaryContext } from './src/contexts/PrimaryContext';
+import DrawerNavigator from './src/navigations/DrawerNavigator';
 
 
 type SectionProps = PropsWithChildren<{

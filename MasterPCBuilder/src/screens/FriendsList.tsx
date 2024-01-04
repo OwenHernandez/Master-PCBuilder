@@ -12,7 +12,7 @@ type Props = NativeStackScreenProps<RootStackParamList, 'FriendsList'>;
 
 const FriendsList = (props: Props) => {
     const { navigation, route } = props;
-    const { user } = usePrimaryContext();
+    const { user, darkMode } = usePrimaryContext();
     const tempFriendsList: IUserType[] = [
         {
             nick: "Amigo1",
@@ -39,12 +39,12 @@ const FriendsList = (props: Props) => {
                             width: 35,
                             height: 35
                         }}
-                        style={{ ...Styles.imageStyle }}
+                        style={{ ...Styles.imageStyle, borderColor: (darkMode) ? "white" : "black", borderWidth: 1 }}
                     />
                 </TouchableOpacity>
-                <Text style={Styles.headerText}>{route.name}</Text>
+                <Text style={{ ...Styles.headerText, color: (darkMode) ? "white" : "black" }}>{route.name}</Text>
                 <TouchableOpacity onPress={() => Alert.alert("Iria al drawer")}>
-                    <Icon name='three-bars' size={30} color={"white"}></Icon>
+                    <Icon name='three-bars' size={30} color={(darkMode) ? "white" : "black"}></Icon>
                 </TouchableOpacity>
             </View>
             <FlatList
@@ -60,9 +60,10 @@ const FriendsList = (props: Props) => {
                                             width: 35,
                                             height: 35
                                         }}
+                                        style={{ ...Styles.imageStyle, borderColor: (darkMode) ? "white" : "black", borderWidth: 1 }}
                                     />
                                 </TouchableOpacity>
-                                <Text>{friend.item.nick}</Text>
+                                <Text style={{ color: (darkMode) ? "white" : "black" }}>{friend.item.nick}</Text>
                             </TouchableOpacity>
                         </View>
                     )

@@ -21,8 +21,8 @@ const useLogin = () => {
     function checkLogin(navigation: NativeStackNavigationProp<RootStackParamList, "Login", undefined>) {
         if (email !== "" && password !== "") {
             //Faltaria comprobar si la contraseña esta bien
-            setUser({ nick: "Coso", email: "coso@gmail.com", profilePic: "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0=", lightMode: true });
-            navigation.navigate("Profile");
+            setUser({ nick: "Coso", email: "coso@gmail.com", profilePic: "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0=" });
+            navigation.navigate("DrawerNavigator");
         } else {
             setErrorMsg("The inputs can't be empty");
         }

@@ -6,7 +6,8 @@ export const Styles = StyleSheet.create({
         borderWidth: 2,
         padding: "5%",
         flexDirection: "row",
-        justifyContent: "space-between"
+        justifyContent: "space-between",
+        alignItems: "center"
     },
     headerText: {
         fontSize: 20,

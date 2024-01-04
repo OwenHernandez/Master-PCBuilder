@@ -6,5 +6,6 @@ export default interface IPostType {
     priceRange: string;
     description: string;
     components: Array<IComponentType>;
-    comments?: Array<string>
+    comments?: Array<string>;
+    liked: boolean;
 }

@@ -3,4 +3,5 @@ export default interface IComponentType {
     price: string;
     compImage: string;
     description: string;
+    site: string;
 }

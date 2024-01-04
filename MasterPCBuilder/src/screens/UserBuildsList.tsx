@@ -12,7 +12,7 @@ import { usePrimaryContext } from '../contexts/PrimaryContext';
 type Props = NativeStackScreenProps<RootStackParamList, 'UserBuildsList'>;
 
 const UserBuildsList = (props: Props) => {
-    const { user } = usePrimaryContext();
+    const { user, darkMode } = usePrimaryContext();
     const { navigation, route } = props;
     const [buildsList, setBuildsList] = useState([{}] as IBuildType[]);
     const tempBuilds = [
@@ -27,7 +27,7 @@ const UserBuildsList = (props: Props) => {
         }
     ];
     useEffect(() => {
-        //Aqui se llamaria a la base de datos para conseguir sus builds
+        //Aqui se llamaria a la api para conseguir sus builds
     }, []);
 
     return (
@@ -40,12 +40,12 @@ const UserBuildsList = (props: Props) => {
                             width: 35,
                             height: 35
                         }}
-                        style={{ ...Styles.imageStyle }}
+                        style={{ ...Styles.imageStyle, borderColor: (darkMode) ? "white" : "black", borderWidth: 1 }}
                     />
                 </TouchableOpacity>
-                <Text style={Styles.headerText}>{route.name}</Text>
+                <Text style={{ ...Styles.headerText, color: (darkMode) ? "white" : "black" }}>{route.name}</Text>
                 <TouchableOpacity onPress={() => Alert.alert("Iria al drawer")}>
-                    <Icon name='three-bars' size={30} color={"white"}></Icon>
+                    <Icon name='three-bars' size={30} color={(darkMode) ? "white" : "black"}></Icon>
                 </TouchableOpacity>
             </View>
             <FlatList
@@ -53,8 +53,8 @@ const UserBuildsList = (props: Props) => {
                 renderItem={(build) => {
                     return (
                         <View>
-                            <Text style={{ fontSize: 30, color: "white" }}>{build.item.name}</Text>
-                            <Text style={{ fontSize: 20, color: "white" }}>{build.item.price}</Text>
+                            <Text style={{ fontSize: 30, color: (darkMode) ? "white" : "black" }}>{build.item.name}</Text>
+                            <Text style={{ fontSize: 20, color: (darkMode) ? "white" : "black" }}>{build.item.price}</Text>
                         </View>
                     )
                 }}

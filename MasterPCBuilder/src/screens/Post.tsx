@@ -11,7 +11,7 @@ import { usePrimaryContext } from '../contexts/PrimaryContext';
 type Props = NativeStackScreenProps<RootStackParamList, 'Post'>;
 
 const Post = (props: Props) => {
-    const { user } = usePrimaryContext();
+    const { user, darkMode } = usePrimaryContext();
     const { navigation, route } = props;
     const post = route.params.post;
 
@@ -25,16 +25,16 @@ const Post = (props: Props) => {
                             width: 35,
                             height: 35
                         }}
-                        style={{ ...Styles.imageStyle }}
+                        style={{ ...Styles.imageStyle, borderColor: (darkMode) ? "white" : "black", borderWidth: 1 }}
                     />
                 </TouchableOpacity>
-                <Text style={Styles.headerText}>{post.title}</Text>
+                <Text style={{ ...Styles.headerText, color: (darkMode) ? "white" : "black" }}>{post.title}</Text>
                 <TouchableOpacity onPress={() => Alert.alert("Iria al drawer")}>
-                    <Icon name='three-bars' size={30} color={"white"}></Icon>
+                    <Icon name='three-bars' size={30} color={(darkMode) ? "white" : "black"}></Icon>
                 </TouchableOpacity>
             </View>
-            <View style={{}}>
-                <View style={{ flexDirection: "row", borderColor: "#ca2613", borderWidth: 2, borderTopWidth: 0 }}>
+            <View style={{ maxHeight: "90%" }}>
+                <View style={{ flexDirection: "row" }}>
                     <Image
                         source={{
                             uri: post.image,
@@ -44,20 +44,25 @@ const Post = (props: Props) => {
                         style={{ margin: "5%" }}
                     />
                     <View style={{}}>
-                        <Text style={{ fontSize: 25, color: "white" }}>Cost: {post.priceRange}</Text>
-                        <Text style={{ fontSize: 15, maxWidth: "73%", color: "white" }}>Description: {"\n\n"}{post.description}{"\n\n"}</Text>
+                        <Text style={{ fontSize: 25, color: (darkMode) ? "white" : "black" }}>Cost: {post.priceRange}</Text>
+                        <Text style={{ fontSize: 15, maxWidth: "73%", color: (darkMode) ? "white" : "black" }}>Description: {"\n\n"}{post.description}{"\n\n"}</Text>
                     </View>
                 </View>
+                <Text style={{ fontSize: 25, color: (darkMode) ? "white" : "black", borderColor: "#ca2613", borderWidth: 2, borderTopWidth: 0 }}>Components Used:{"\n"}</Text>
                 <FlatList
                     contentContainerStyle={{ borderColor: "#ca2613", borderWidth: 2, borderTopWidth: 0 }}
                     data={post.components}
                     renderItem={(component) => {
                         return (
-                            <Component comp={component.item} />
+                            <View>
+                                <Component comp={component.item} />
+                                <TouchableOpacity style={{ ...Styles.touchable, alignItems: 'center' }} onPress={() => Alert.alert("añadiría a los favoritos")}>
+                                    <Text style={{ color: (darkMode) ? "white" : "black" }}>Add to Wish List</Text>
+                                </TouchableOpacity>
+                            </View>
                         );
                     }}
                     keyExtractor={(comp, index) => index + ""}
-                    ListHeaderComponent={<Text style={{ fontSize: 25, color: "white" }}>Components Used:{"\n"}</Text>}
                 //ItemSeparatorComponent={() => <Text style={{ color: "#ca2613" }}>―――――――――――――</Text>}
                 />
             </View>
