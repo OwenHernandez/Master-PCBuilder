@@ -1,4 +1,4 @@
-import { Alert, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, Dimensions, FlatList, Image, PixelRatio, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect } from 'react'
 import { Styles } from '../themes/Styles';
 import Component from '../components/Component';
@@ -7,12 +7,17 @@ import { RootStackParamList } from '../navigations/StackNavigator';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/Octicons';
 import IUserType from '../interfaces/IUserType';
+import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'FriendsList'>;
 
 const FriendsList = (props: Props) => {
     const { navigation, route } = props;
     const { user, darkMode } = usePrimaryContext();
+    const fontScale = PixelRatio.getFontScale();
+    const getFontSize = (size: number) => size / fontScale;
+    const fullScreen = Dimensions.get("window").scale;
+    const getIconSize = (size: number) => size / fullScreen;
     const tempFriendsList: IUserType[] = [
         {
             nick: "Amigo1",
@@ -35,16 +40,14 @@ const FriendsList = (props: Props) => {
                 <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
                     <Image
                         source={{
-                            uri: user.profilePic,
-                            width: 35,
-                            height: 35
+                            uri: user.profilePic
                         }}
-                        style={{ ...Styles.imageStyle, borderColor: (darkMode) ? "white" : "black", borderWidth: 1 }}
+                        style={{ ...Styles.imageStyle, borderColor: (darkMode) ? "white" : "black", borderWidth: 1, width: getIconSize(110), height: getIconSize(110) }}
                     />
                 </TouchableOpacity>
                 <Text style={{ ...Styles.headerText, color: (darkMode) ? "white" : "black" }}>{route.name}</Text>
-                <TouchableOpacity onPress={() => Alert.alert("Iria al drawer")}>
-                    <Icon name='three-bars' size={30} color={(darkMode) ? "white" : "black"}></Icon>
+                <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <Material name='keyboard-backspace' size={getIconSize(100)} color={(darkMode) ? "white" : "black"}></Material>
                 </TouchableOpacity>
             </View>
             <FlatList
@@ -56,11 +59,9 @@ const FriendsList = (props: Props) => {
                                 <TouchableOpacity onPress={() => Alert.alert("Abriria el perfil del amigo")}>
                                     <Image
                                         source={{
-                                            uri: friend.item.profilePic,
-                                            width: 35,
-                                            height: 35
+                                            uri: friend.item.profilePic
                                         }}
-                                        style={{ ...Styles.imageStyle, borderColor: (darkMode) ? "white" : "black", borderWidth: 1 }}
+                                        style={{ ...Styles.imageStyle, borderColor: (darkMode) ? "white" : "black", borderWidth: 1, width: getIconSize(110), height: getIconSize(110) }}
                                     />
                                 </TouchableOpacity>
                                 <Text style={{ color: (darkMode) ? "white" : "black" }}>{friend.item.nick}</Text>

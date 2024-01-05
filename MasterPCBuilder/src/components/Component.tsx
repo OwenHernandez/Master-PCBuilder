@@ -20,7 +20,7 @@ const Component = (props: Props) => {
                 }}
                 style={{ margin: "5%" }}
             />
-            <View style={{ maxWidth: "56%" }}>
+            <View style={{ maxWidth: "54%" }}>
                 <Text style={{ fontSize: 20, color: (darkMode) ? "white" : "black", marginRight: "10%" }}>Name: {comp.name}</Text>
                 <Text style={{ fontSize: 20, color: (darkMode) ? "white" : "black" }}>Pricing Nowadays: {comp.price}</Text>
                 <Text style={{ fontSize: 15, color: (darkMode) ? "white" : "black" }}>Description: {"\n"}{comp.description}</Text>

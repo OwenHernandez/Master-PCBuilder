@@ -1,4 +1,4 @@
-import { Alert, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, Dimensions, FlatList, Image, PixelRatio, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { RootStackParamList } from '../navigations/StackNavigator';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -8,12 +8,17 @@ import Component from '../components/Component';
 import { Styles } from '../themes/Styles';
 import Icon from 'react-native-vector-icons/Octicons';
 import { usePrimaryContext } from '../contexts/PrimaryContext';
+import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'UserBuildsList'>;
 
 const UserBuildsList = (props: Props) => {
     const { user, darkMode } = usePrimaryContext();
     const { navigation, route } = props;
+    const fontScale = PixelRatio.getFontScale();
+    const getFontSize = (size: number) => size / fontScale;
+    const fullScreen = Dimensions.get("window").scale;
+    const getIconSize = (size: number) => size / fullScreen;
     const [buildsList, setBuildsList] = useState([{}] as IBuildType[]);
     const tempBuilds = [
         {
@@ -36,16 +41,14 @@ const UserBuildsList = (props: Props) => {
                 <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
                     <Image
                         source={{
-                            uri: user.profilePic,
-                            width: 35,
-                            height: 35
+                            uri: user.profilePic
                         }}
-                        style={{ ...Styles.imageStyle, borderColor: (darkMode) ? "white" : "black", borderWidth: 1 }}
+                        style={{ ...Styles.imageStyle, borderColor: (darkMode) ? "white" : "black", borderWidth: 1, width: getIconSize(110), height: getIconSize(110) }}
                     />
                 </TouchableOpacity>
                 <Text style={{ ...Styles.headerText, color: (darkMode) ? "white" : "black" }}>{route.name}</Text>
-                <TouchableOpacity onPress={() => Alert.alert("Iria al drawer")}>
-                    <Icon name='three-bars' size={30} color={(darkMode) ? "white" : "black"}></Icon>
+                <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <Material name='keyboard-backspace' size={getIconSize(100)} color={(darkMode) ? "white" : "black"}></Material>
                 </TouchableOpacity>
             </View>
             <FlatList
@@ -53,8 +56,8 @@ const UserBuildsList = (props: Props) => {
                 renderItem={(build) => {
                     return (
                         <View>
-                            <Text style={{ fontSize: 30, color: (darkMode) ? "white" : "black" }}>{build.item.name}</Text>
-                            <Text style={{ fontSize: 20, color: (darkMode) ? "white" : "black" }}>{build.item.price}</Text>
+                            <Text style={{ fontSize: getFontSize(30), color: (darkMode) ? "white" : "black" }}>{build.item.name}</Text>
+                            <Text style={{ fontSize: getFontSize(20), color: (darkMode) ? "white" : "black" }}>{build.item.price}</Text>
                         </View>
                     )
                 }}
@@ -65,5 +68,3 @@ const UserBuildsList = (props: Props) => {
 }
 
 export default UserBuildsList
-
-const styles = StyleSheet.create({})

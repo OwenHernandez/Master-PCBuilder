@@ -1,19 +1,18 @@
-import { Alert, Dimensions, FlatList, Image, PixelRatio, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { View, Text, TouchableOpacity, FlatList, Image, Alert, PixelRatio } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { RootStackParamList } from '../navigations/StackNavigator';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import IPostType from '../interfaces/IPostType';
 import { Styles } from '../themes/Styles';
+import { DrawerActions } from '@react-navigation/native';
+import { usePrimaryContext } from '../contexts/PrimaryContext';
+import IPostType from '../interfaces/IPostType';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../navigations/StackNavigator';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Octicons from 'react-native-vector-icons/Octicons';
-import { usePrimaryContext } from '../contexts/PrimaryContext';
-import { DrawerToggleButton } from '@react-navigation/drawer';
-import { DrawerActions, useNavigation } from '@react-navigation/native';
-import Material from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Dimensions } from 'react-native';
 
-type Props = NativeStackScreenProps<RootStackParamList, 'UserPostsList'>;
+type Props = NativeStackScreenProps<RootStackParamList, 'Social'>;
 
-const UserPostsList = (props: Props) => {
+const Social = (props: Props) => {
     const { user, darkMode } = usePrimaryContext();
     const { navigation, route } = props;
     const fontScale = PixelRatio.getFontScale();
@@ -52,7 +51,7 @@ const UserPostsList = (props: Props) => {
     }, []);
 
     return (
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1, backgroundColor: (darkMode) ? "#242121" : "#F5F5F5" }}>
             <View style={Styles.headerView}>
                 <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
                     <Image
@@ -63,8 +62,8 @@ const UserPostsList = (props: Props) => {
                     />
                 </TouchableOpacity>
                 <Text style={{ ...Styles.headerText, color: (darkMode) ? "white" : "black" }}>{route.name}</Text>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Material name='keyboard-backspace' size={getIconSize(100)} color={(darkMode) ? "white" : "black"}></Material>
+                <TouchableOpacity onPress={() => navigation.dispatch(DrawerActions.openDrawer())}>
+                    <Octicons name='three-bars' size={getIconSize(100)} color={(darkMode) ? "white" : "black"}></Octicons>
                 </TouchableOpacity>
             </View>
             <View style={{ height: "90%" }}>
@@ -114,4 +113,4 @@ const UserPostsList = (props: Props) => {
     )
 }
 
-export default UserPostsList
+export default Social

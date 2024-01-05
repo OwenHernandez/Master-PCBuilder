@@ -6,16 +6,21 @@ import Profile from '../screens/Profile'
 import { usePrimaryContext } from '../contexts/PrimaryContext'
 import Settings from '../screens/Settings';
 import Builder from '../screens/Builder';
+import Social from '../screens/Social';
+import UserPostsList from '../screens/UserPostsList';
+import SocialTabs from './SocialTabs';
 
 type Props = {}
 
 export type RootDrawerParamList = {
+    Landing: undefined;
     Profile: undefined;
     Settings: undefined;
     Builder: undefined;
+    Social: undefined;
 }
 
-const Drawer = createDrawerNavigator<RootDrawerParamList>();
+const Drawer = createDrawerNavigator();
 
 const DrawerNavigator = (props: Props) => {
     const { darkMode } = usePrimaryContext();
@@ -33,7 +38,9 @@ const DrawerNavigator = (props: Props) => {
         >
             <Drawer.Screen name="Builder" component={Builder} />
             <Drawer.Screen name="Profile" component={Profile} />
+            <Drawer.Screen name="Social" component={SocialTabs} />
             <Drawer.Screen name="Settings" component={Settings} />
+            {/*<Drawer.Screen name="UserPostsList" component={UserPostsList} />*/}
             {/*<Drawer.Screen name="StackNavigator" component={StackNavigator} options={{}} />*/}
         </Drawer.Navigator>
     )

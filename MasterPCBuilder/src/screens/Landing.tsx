@@ -13,7 +13,6 @@ const Landing = (props: Props) => {
     return (
         <View style={{ flex: 1 }}>
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                {/*<Text style={{ ...Styles.headerText, fontSize: 30, marginBottom: "30%" }}>Master-PCBuilder</Text>*/}
                 <Image
                     source={(darkMode) ? require("../../img/logo_dark.png") : require("../../img/logo_light.png")}
                     style={{ width: 300, height: 300 }}

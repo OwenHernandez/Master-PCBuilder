@@ -1,4 +1,4 @@
-import { Alert, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, Dimensions, FlatList, Image, PixelRatio, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import IComponentType from '../interfaces/IComponentType';
 import { Styles } from '../themes/Styles';
@@ -7,12 +7,17 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigations/StackNavigator';
 import Icon from 'react-native-vector-icons/Octicons';
 import Component from '../components/Component';
+import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'WishList'>;
 
 const WishList = (props: Props) => {
     const { navigation, route } = props;
     const { user, darkMode } = usePrimaryContext();
+    const fontScale = PixelRatio.getFontScale();
+    const getFontSize = (size: number) => size / fontScale;
+    const fullScreen = Dimensions.get("window").scale;
+    const getIconSize = (size: number) => size / fullScreen;
     const [wishList, setWishList] = useState({} as IComponentType[]);
     const tempWishList: IComponentType[] = [
         { name: "CPU", compImage: "https://i.ebayimg.com/images/g/-1sAAOSwtQNlLpw6/s-l1600.jpg", description: "CPU super potente perfecta...", price: "100€", site: "PCComponentes" },
@@ -28,16 +33,14 @@ const WishList = (props: Props) => {
                 <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
                     <Image
                         source={{
-                            uri: user.profilePic,
-                            width: 35,
-                            height: 35
+                            uri: user.profilePic
                         }}
-                        style={{ ...Styles.imageStyle, borderColor: (darkMode) ? "white" : "black", borderWidth: 1 }}
+                        style={{ ...Styles.imageStyle, borderColor: (darkMode) ? "white" : "black", borderWidth: 1, width: getIconSize(110), height: getIconSize(110) }}
                     />
                 </TouchableOpacity>
                 <Text style={{ ...Styles.headerText, color: (darkMode) ? "white" : "black" }}>{route.name}</Text>
-                <TouchableOpacity onPress={() => Alert.alert("Iria al drawer")}>
-                    <Icon name='three-bars' size={30} color={(darkMode) ? "white" : "black"}></Icon>
+                <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <Material name='keyboard-backspace' size={getIconSize(100)} color={(darkMode) ? "white" : "black"}></Material>
                 </TouchableOpacity>
             </View>
             <FlatList

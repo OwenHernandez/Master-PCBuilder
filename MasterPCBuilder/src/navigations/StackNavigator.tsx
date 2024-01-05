@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StatusBar, StyleSheet, Text, View } from 'react-native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { useEffect } from 'react'
 import Register from '../screens/Register';
@@ -24,6 +24,9 @@ export type RootStackParamList = {
     Landing: undefined,
     Register: undefined,
     Login: undefined,
+    Social: undefined,
+    CreatePost: undefined,
+    SearchPost: undefined,
     DrawerNavigator: any,
     Builder: undefined,
     Profile: undefined,
@@ -42,6 +45,7 @@ const Tab = createBottomTabNavigator();
 
 const StackNavigator = (props: Props) => {
     const { darkMode } = usePrimaryContext();
+
     useEffect(() => {
         //Miraria el darkMode de la base de datos del movil y lo pondria en el contexto
     }, []);
@@ -59,10 +63,8 @@ const StackNavigator = (props: Props) => {
             <Stack.Screen name="Login" component={Login} />
             <Stack.Screen name="Register" component={Register} />
             <Stack.Screen name="DrawerNavigator" component={DrawerNavigator} />
-            {/*<Stack.Screen name="Builder" component={Builder} />*/}
             <Stack.Screen name="UserBuildsList" component={UserBuildsList} />
             <Stack.Screen name="LikedPostsList" component={LikedPostsList} />
-            {/*<Stack.Screen name="Build" component={Build} />*/}
             <Stack.Screen name="UserPostsList" component={UserPostsList} />
             <Stack.Screen name="Post" component={Post} />
             <Stack.Screen name="WishList" component={WishList} />
