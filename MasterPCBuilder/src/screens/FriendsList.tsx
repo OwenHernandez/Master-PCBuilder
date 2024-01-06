@@ -8,6 +8,8 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/Octicons';
 import IUserType from '../interfaces/IUserType';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
+import Octicon from 'react-native-vector-icons/Octicons';
+import { DrawerActions } from '@react-navigation/native';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'FriendsList'>;
 
@@ -20,8 +22,38 @@ const FriendsList = (props: Props) => {
     const getIconSize = (size: number) => size / fullScreen;
     const tempFriendsList: IUserType[] = [
         {
-            nick: "Amigo1",
+            nick: "Amigo1jkjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
             email: "amigo1@gmail.com",
+            profilePic: "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0=",
+        },
+        {
+            nick: "Amigo2",
+            email: "amigo2@gmail.com",
+            profilePic: "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0=",
+        },
+        {
+            nick: "Amigo2",
+            email: "amigo2@gmail.com",
+            profilePic: "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0=",
+        },
+        {
+            nick: "Amigo2",
+            email: "amigo2@gmail.com",
+            profilePic: "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0=",
+        },
+        {
+            nick: "Amigo2",
+            email: "amigo2@gmail.com",
+            profilePic: "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0=",
+        },
+        {
+            nick: "Amigo2",
+            email: "amigo2@gmail.com",
+            profilePic: "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0=",
+        },
+        {
+            nick: "Amigo2",
+            email: "amigo2@gmail.com",
             profilePic: "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0=",
         },
         {
@@ -35,7 +67,7 @@ const FriendsList = (props: Props) => {
     }, []);
 
     return (
-        <View>
+        <View style={{ backgroundColor: (darkMode) ? "#242121" : "#F5F5F5" }}>
             <View style={Styles.headerView}>
                 <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
                     <Image
@@ -46,16 +78,17 @@ const FriendsList = (props: Props) => {
                     />
                 </TouchableOpacity>
                 <Text style={{ ...Styles.headerText, color: (darkMode) ? "white" : "black" }}>{route.name}</Text>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Material name='keyboard-backspace' size={getIconSize(100)} color={(darkMode) ? "white" : "black"}></Material>
+                <TouchableOpacity onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}>
+                    <Octicon name='three-bars' size={30} color={(darkMode) ? "white" : "black"}></Octicon>
                 </TouchableOpacity>
             </View>
-            <FlatList
-                data={tempFriendsList}
-                renderItem={(friend) => {
-                    return (
-                        <View>
-                            <TouchableOpacity onPress={() => Alert.alert("Abriria el chat")}>
+            <View style={{ height: "90%" }}>
+                <FlatList
+                    data={tempFriendsList}
+                    renderItem={(friend) => {
+                        return (
+
+                            <TouchableOpacity onPress={() => Alert.alert("Abriria el chat")} style={{ ...Styles.touchable, flexDirection: "row", alignItems: "center", margin: "3%" }}>
                                 <TouchableOpacity onPress={() => Alert.alert("Abriria el perfil del amigo")}>
                                     <Image
                                         source={{
@@ -64,13 +97,14 @@ const FriendsList = (props: Props) => {
                                         style={{ ...Styles.imageStyle, borderColor: (darkMode) ? "white" : "black", borderWidth: 1, width: getIconSize(110), height: getIconSize(110) }}
                                     />
                                 </TouchableOpacity>
-                                <Text style={{ color: (darkMode) ? "white" : "black" }}>{friend.item.nick}</Text>
+                                <Text style={{ color: (darkMode) ? "white" : "black", marginLeft: "5%", marginRight: "13%" }}>{friend.item.nick}</Text>
                             </TouchableOpacity>
-                        </View>
-                    )
-                }}
-                keyExtractor={(comp, index) => index + ""}
-            />
+
+                        )
+                    }}
+                    keyExtractor={(comp, index) => index + ""}
+                />
+            </View>
         </View>
     )
 }

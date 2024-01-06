@@ -54,7 +54,7 @@ const Post = (props: Props) => {
                 <Text style={{ fontSize: 25, color: (darkMode) ? "white" : "black", borderColor: "#ca2613", borderWidth: 2, borderTopWidth: 0 }}>Components Used:{"\n"}</Text>
                 <FlatList
                     contentContainerStyle={{ borderColor: "#ca2613", borderWidth: 2, borderTopWidth: 0 }}
-                    data={post.components}
+                    data={post.build.components}
                     renderItem={(component) => {
                         return (
                             <View>

@@ -17,6 +17,7 @@ import IPostType from '../interfaces/IPostType';
 import IBuildType from '../interfaces/IBuildType';
 import LikedPostsList from '../screens/LikedPostsList';
 import DrawerNavigator from './DrawerNavigator';
+import FriendsTabs from './FriendsTabs';
 
 type Props = {}
 
@@ -37,7 +38,10 @@ export type RootStackParamList = {
     LikedPostsList: undefined,
     Post: { post: IPostType },
     WishList: undefined,
-    FriendsList: undefined
+    Friends: undefined,
+    FriendsList: undefined,
+    AddFriend: undefined,
+    SearchFriends: undefined
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -47,7 +51,7 @@ const StackNavigator = (props: Props) => {
     const { darkMode } = usePrimaryContext();
 
     useEffect(() => {
-        //Miraria el darkMode de la base de datos del movil y lo pondria en el contexto
+        //Miraria el darkMode en el asyncStorage y lo pondria en el contexto
     }, []);
 
     return (
@@ -68,7 +72,7 @@ const StackNavigator = (props: Props) => {
             <Stack.Screen name="UserPostsList" component={UserPostsList} />
             <Stack.Screen name="Post" component={Post} />
             <Stack.Screen name="WishList" component={WishList} />
-            <Stack.Screen name="FriendsList" component={FriendsList} />
+            <Stack.Screen name="Friends" component={FriendsTabs} />
         </Stack.Navigator>
     )
 }

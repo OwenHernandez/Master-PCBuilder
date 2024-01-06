@@ -7,18 +7,21 @@ import CreatePost from '../screens/CreatePost';
 import { usePrimaryContext } from '../contexts/PrimaryContext';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import SearchPost from '../screens/SearchPost';
+import FriendsList from '../screens/FriendsList';
+import AddFriend from '../screens/AddFriend';
+import SearchFriends from '../screens/SearchFriends';
 
 type Props = {}
 
-export type RootTabsParamList = {
-    Social: undefined;
-    Create: undefined;
+export type FriendsTabsParamList = {
+    Friends: undefined;
+    Add: undefined;
     Search: undefined;
 }
 
-const Tab = createBottomTabNavigator<RootTabsParamList>();
+const Tab = createBottomTabNavigator<FriendsTabsParamList>();
 
-const SocialTabs = (props: Props) => {
+const FriendsTabs = (props: Props) => {
     const { user, darkMode } = usePrimaryContext();
     const fontScale = PixelRatio.getFontScale();
     const getFontSize = (size: number) => size / fontScale;
@@ -26,8 +29,8 @@ const SocialTabs = (props: Props) => {
     const getIconSize = (size: number) => size / fullScreen;
 
     return (
-        <Tab.Navigator initialRouteName='Social' screenOptions={{ headerShown: false }}>
-            <Tab.Screen name="Create"
+        <Tab.Navigator initialRouteName='Friends' screenOptions={{ headerShown: false }}>
+            <Tab.Screen name="Add"
                 options={{
                     tabBarIcon: ({ focused }) => <Material name={(focused) ? "plus-circle" : "plus-circle-outline"} size={getIconSize(90)} color={(darkMode) ? "white" : "black"} />,
                     tabBarInactiveBackgroundColor: (darkMode) ? "#242121" : "#F5F5F5", tabBarActiveBackgroundColor: (darkMode) ? "#242121" : "#F5F5F5",
@@ -35,9 +38,9 @@ const SocialTabs = (props: Props) => {
                     tabBarLabelStyle: { fontSize: getFontSize(13) },
                     tabBarStyle: { borderTopColor: "#ca2613", borderTopWidth: 2 }
                 }}
-                component={CreatePost}
+                component={AddFriend}
             />
-            <Tab.Screen name="Social"
+            <Tab.Screen name="Friends"
                 options={{
                     tabBarIcon: ({ focused }) => <Ionicon name={(focused) ? 'people-sharp' : 'people-outline'} size={getIconSize(90)} color={(darkMode) ? "white" : "black"} />,
                     tabBarInactiveBackgroundColor: (darkMode) ? "#242121" : "#F5F5F5", tabBarActiveBackgroundColor: (darkMode) ? "#242121" : "#F5F5F5",
@@ -45,7 +48,7 @@ const SocialTabs = (props: Props) => {
                     tabBarLabelStyle: { fontSize: getFontSize(13) },
                     tabBarStyle: { borderTopColor: "#ca2613", borderTopWidth: 2 }
                 }}
-                component={Social}
+                component={FriendsList}
             />
             <Tab.Screen name="Search"
                 options={{
@@ -55,10 +58,10 @@ const SocialTabs = (props: Props) => {
                     tabBarLabelStyle: { fontSize: getFontSize(13) },
                     tabBarStyle: { borderTopColor: "#ca2613", borderTopWidth: 2 }
                 }}
-                component={SearchPost}
+                component={SearchFriends}
             />
         </Tab.Navigator>
     )
 }
 
-export default SocialTabs
+export default FriendsTabs

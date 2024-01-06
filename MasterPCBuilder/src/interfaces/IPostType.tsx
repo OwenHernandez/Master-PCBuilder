@@ -1,3 +1,4 @@
+import IBuildType from "./IBuildType";
 import IComponentType from "./IComponentType";
 import IUserType from "./IUserType";
 
@@ -7,7 +8,7 @@ export default interface IPostType {
     image: string;
     priceRange: string;
     description: string;
-    components: Array<IComponentType>;
+    build: IBuildType;
     comments?: Array<string>;
     liked: boolean;
 }

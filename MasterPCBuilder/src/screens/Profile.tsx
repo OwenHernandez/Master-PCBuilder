@@ -6,7 +6,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { usePrimaryContext } from '../contexts/PrimaryContext';
 import useLogout from '../hooks/useLogout';
 import { Styles } from '../themes/Styles';
-import Icon from 'react-native-vector-icons/Octicons';
+import Octicon from 'react-native-vector-icons/Octicons';
 import { DrawerActions } from '@react-navigation/native';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Profile'>;
@@ -27,11 +27,11 @@ const Profile = (props: Props) => {
         <SafeAreaView style={{ flex: 1, backgroundColor: (darkMode) ? "#242121" : "#F5F5F5" }}>
             <View style={Styles.headerView}>
                 <TouchableOpacity onPress={() => navigation.navigate("Settings")}>
-                    <Icon name='gear' size={30} color={(darkMode) ? "white" : "black"}></Icon>
+                    <Octicon name='gear' size={30} color={(darkMode) ? "white" : "black"}></Octicon>
                 </TouchableOpacity>
                 <Text style={{ ...Styles.headerText, color: (darkMode) ? "white" : "black" }}>{route.name}</Text>
                 <TouchableOpacity onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}>
-                    <Icon name='three-bars' size={30} color={(darkMode) ? "white" : "black"}></Icon>
+                    <Octicon name='three-bars' size={30} color={(darkMode) ? "white" : "black"}></Octicon>
                 </TouchableOpacity>
             </View>
             <ScrollView>
@@ -59,7 +59,7 @@ const Profile = (props: Props) => {
                 <TouchableOpacity style={{ ...Styles.touchable, marginBottom: 10, padding: 20 }} onPress={() => navigation.navigate("WishList")}>
                     <Text style={{ fontSize: 20, textAlign: 'center', color: (darkMode) ? "white" : "black" }}>Wish List</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={{ ...Styles.touchable, marginBottom: 10, padding: 20 }} onPress={() => navigation.navigate("FriendsList")}>
+                <TouchableOpacity style={{ ...Styles.touchable, marginBottom: 10, padding: 20 }} onPress={() => navigation.navigate("Friends")}>
                     <Text style={{ fontSize: 20, textAlign: 'center', color: (darkMode) ? "white" : "black" }}>Friends</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={{ ...Styles.touchable, marginBottom: 10, padding: 20, borderColor: "violet" }} onPress={() => logout(navigation)}>

@@ -63,19 +63,19 @@ const Builder = (props: Props) => {
                 <TouchableOpacity onPress={toggleModal} style={{ ...Styles.touchable, flexDirection: 'row' }}>
                     <Octicons name="cpu" size={getIconSize(150)} color={(darkMode) ? "white" : "black"}></Octicons>
                     <View style={{ flex: 1, alignItems: "center" }}>
-                        <Text style={{ fontSize: getFontSize(30) }}>CPU</Text>
+                        <Text style={{ fontSize: getFontSize(30), color: (darkMode) ? "white" : "black" }}>CPU</Text>
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => Alert.alert("Abrira un modal con las opciones de motherBoards")} style={{ ...Styles.touchable, flexDirection: 'row' }}>
                     <Material name="developer-board" size={getIconSize(150)} color={(darkMode) ? "white" : "black"}></Material>
                     <View style={{ flex: 1, alignItems: "center" }}>
-                        <Text style={{ fontSize: getFontSize(30) }}>Mother Board</Text>
+                        <Text style={{ fontSize: getFontSize(30), color: (darkMode) ? "white" : "black" }}>Mother Board</Text>
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => Alert.alert("Abrira un modal con las opciones de memorias ram")} style={{ ...Styles.touchable, flexDirection: 'row' }}>
                     <FontAwesome5 name="memory" size={getIconSize(150)} color={(darkMode) ? "white" : "black"}></FontAwesome5>
                     <View style={{ flex: 1, alignItems: "center" }}>
-                        <Text style={{ fontSize: getFontSize(30) }}>Memory RAM</Text>
+                        <Text style={{ fontSize: getFontSize(30), color: (darkMode) ? "white" : "black" }}>Memory RAM</Text>
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => Alert.alert("Abrira un modal con las opciones de gpus")} style={{ ...Styles.touchable, flexDirection: 'row' }}>
@@ -84,31 +84,31 @@ const Builder = (props: Props) => {
                         style={{ width: getIconSize(150), height: getIconSize(150) }}
                     />
                     <View style={{ flex: 1, alignItems: "center" }}>
-                        <Text style={{ fontSize: getFontSize(30) }}>GPU</Text>
+                        <Text style={{ fontSize: getFontSize(30), color: (darkMode) ? "white" : "black" }}>GPU</Text>
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => Alert.alert("Abrira un modal con las opciones de discos")} style={{ ...Styles.touchable, flexDirection: 'row' }}>
                     <Material name="harddisk" size={getIconSize(150)} color={(darkMode) ? "white" : "black"}></Material>
                     <View style={{ flex: 1, alignItems: "center" }}>
-                        <Text style={{ fontSize: getFontSize(30) }}>Drives</Text>
+                        <Text style={{ fontSize: getFontSize(30), color: (darkMode) ? "white" : "black" }}>Drives</Text>
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => Alert.alert("Abrira un modal con las opciones de torres")} style={{ ...Styles.touchable, flexDirection: 'row' }}>
                     <Material name="desktop-tower" size={getIconSize(150)} color={(darkMode) ? "white" : "black"}></Material>
                     <View style={{ flex: 1, alignItems: "center" }}>
-                        <Text style={{ fontSize: getFontSize(30) }}>Tower</Text>
+                        <Text style={{ fontSize: getFontSize(30), color: (darkMode) ? "white" : "black" }}>Tower</Text>
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => Alert.alert("Abrira un modal con las opciones de refrigeraciones")} style={{ ...Styles.touchable, flexDirection: 'row' }}>
                     <Material name="fan" size={getIconSize(150)} color={(darkMode) ? "white" : "black"}></Material>
                     <View style={{ flex: 1, alignItems: "center" }}>
-                        <Text style={{ fontSize: getFontSize(30) }}>Fans</Text>
+                        <Text style={{ fontSize: getFontSize(30), color: (darkMode) ? "white" : "black" }}>Fans</Text>
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => Alert.alert("Abrira un modal con las opciones de psus")} style={{ ...Styles.touchable, flexDirection: 'row' }}>
                     <Material name="power" size={getIconSize(150)} color={(darkMode) ? "white" : "black"}></Material>
                     <View style={{ flex: 1, alignItems: "center" }}>
-                        <Text style={{ fontSize: getFontSize(30) }}>PSU</Text>
+                        <Text style={{ fontSize: getFontSize(30), color: (darkMode) ? "white" : "black" }}>PSU</Text>
                     </View>
                 </TouchableOpacity>
                 <View style={{ alignItems: 'center', marginBottom: "5%" }}>
@@ -117,42 +117,42 @@ const Builder = (props: Props) => {
                 <TouchableOpacity onPress={() => Alert.alert("Abrira un modal con las opciones de psus")} style={{ ...Styles.touchable, flexDirection: 'row' }}>
                     <FontAwesome5 name="tv" size={getIconSize(150)} color={(darkMode) ? "white" : "black"}></FontAwesome5>
                     <View style={{ flex: 1, alignItems: "center" }}>
-                        <Text style={{ fontSize: getFontSize(30) }}>TV</Text>
+                        <Text style={{ fontSize: getFontSize(30), color: (darkMode) ? "white" : "black" }}>TV</Text>
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => Alert.alert("Abrira un modal con las opciones de psus")} style={{ ...Styles.touchable, flexDirection: 'row' }}>
                     <FontAwesome5 name="keyboard" size={getIconSize(150)} color={(darkMode) ? "white" : "black"}></FontAwesome5>
                     <View style={{ flex: 1, alignItems: "center" }}>
-                        <Text style={{ fontSize: getFontSize(30) }}>Keyboard</Text>
+                        <Text style={{ fontSize: getFontSize(30), color: (darkMode) ? "white" : "black" }}>Keyboard</Text>
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => Alert.alert("Abrira un modal con las opciones de psus")} style={{ ...Styles.touchable, flexDirection: 'row' }}>
                     <FontAwesome5 name="mouse" size={getIconSize(150)} color={(darkMode) ? "white" : "black"}></FontAwesome5>
                     <View style={{ flex: 1, alignItems: "center" }}>
-                        <Text style={{ fontSize: getFontSize(30) }}>Mouse</Text>
+                        <Text style={{ fontSize: getFontSize(30), color: (darkMode) ? "white" : "black" }}>Mouse</Text>
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => Alert.alert("Abrira un modal con las opciones de psus")} style={{ ...Styles.touchable, flexDirection: 'row' }}>
                     <FontAwesome5 name="headphones-alt" size={getIconSize(150)} color={(darkMode) ? "white" : "black"}></FontAwesome5>
                     <View style={{ flex: 1, alignItems: "center" }}>
-                        <Text style={{ fontSize: getFontSize(30) }}>Headphones</Text>
+                        <Text style={{ fontSize: getFontSize(30), color: (darkMode) ? "white" : "black" }}>Headphones</Text>
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => Alert.alert("Abrira un modal con las opciones de psus")} style={{ ...Styles.touchable, flexDirection: 'row' }}>
                     <Material name="speaker" size={getIconSize(150)} color={(darkMode) ? "white" : "black"}></Material>
                     <View style={{ flex: 1, alignItems: "center" }}>
-                        <Text style={{ fontSize: getFontSize(30) }}>Speakers</Text>
+                        <Text style={{ fontSize: getFontSize(30), color: (darkMode) ? "white" : "black" }}>Speakers</Text>
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => Alert.alert("Abrira un modal con las opciones de psus")} style={{ ...Styles.touchable, flexDirection: 'row' }}>
                     <FontAwesome5 name="microphone" size={getIconSize(150)} color={(darkMode) ? "white" : "black"}></FontAwesome5>
                     <View style={{ flex: 1, alignItems: "center" }}>
-                        <Text style={{ fontSize: getFontSize(30) }}>Microphone</Text>
+                        <Text style={{ fontSize: getFontSize(30), color: (darkMode) ? "white" : "black" }}>Microphone</Text>
                     </View>
                 </TouchableOpacity>
             </ScrollView>
             <View style={{ ...Styles.headerView, borderTopColor: "#ca2613" }}>
-                <Text style={{ ...Styles.headerText }}>Price Range: {/*Precio*/}€</Text>
+                <Text style={{ ...Styles.headerText, color: (darkMode) ? "white" : "black" }}>Price Range: {/*Precio*/}€</Text>
             </View>
             <Modal
                 animationType="slide"

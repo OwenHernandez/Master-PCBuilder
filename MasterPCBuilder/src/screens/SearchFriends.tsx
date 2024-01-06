@@ -7,10 +7,12 @@ import { Styles } from '../themes/Styles';
 import Octicons from 'react-native-vector-icons/Octicons';
 import { DrawerActions } from '@react-navigation/native';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
+import Material from 'react-native-vector-icons/MaterialCommunityIcons';
+import Octicon from 'react-native-vector-icons/Octicons';
 
-type Props = NativeStackScreenProps<RootStackParamList, 'SearchPost'>;
+type Props = NativeStackScreenProps<RootStackParamList, 'SearchFriends'>;
 
-const SearchPost = (props: Props) => {
+const SearchFriends = (props: Props) => {
     const { user, darkMode } = usePrimaryContext();
     const { navigation, route } = props;
     const fontScale = PixelRatio.getFontScale();
@@ -30,12 +32,15 @@ const SearchPost = (props: Props) => {
                     />
                 </TouchableOpacity>
                 <Text style={{ ...Styles.headerText, color: (darkMode) ? "white" : "black" }}>{route.name}</Text>
-                <TouchableOpacity onPress={() => navigation.dispatch(DrawerActions.openDrawer())}>
-                    <Octicons name='three-bars' size={getIconSize(100)} color={(darkMode) ? "white" : "black"}></Octicons>
+                <TouchableOpacity onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}>
+                    <Octicon name='three-bars' size={30} color={(darkMode) ? "white" : "black"}></Octicon>
                 </TouchableOpacity>
             </View>
             <View style={{ flexDirection: "row", justifyContent: "space-around", margin: "10%", alignItems: "center" }}>
-                <TextInput placeholder='Search a post by title' placeholderTextColor={(darkMode) ? "white" : "black"} style={{ borderWidth: 2, borderColor: "#ca2613", borderRadius: 20, paddingHorizontal: "5%", width: "80%", fontSize: getFontSize(15), color: (darkMode) ? "white" : "black" }}></TextInput>
+                <View style={{ width: "80%" }}>
+                    <TextInput placeholder='Search a friend by the nick' placeholderTextColor={(darkMode) ? "white" : "black"} style={{ borderWidth: 2, borderColor: "#ca2613", borderRadius: 20, paddingHorizontal: "5%", marginVertical: "5%", fontSize: getFontSize(15), color: (darkMode) ? "white" : "black" }}></TextInput>
+                    <TextInput placeholder='Search a friend by the email' placeholderTextColor={(darkMode) ? "white" : "black"} style={{ borderWidth: 2, borderColor: "#ca2613", borderRadius: 20, paddingHorizontal: "5%", fontSize: getFontSize(15), color: (darkMode) ? "white" : "black" }}></TextInput>
+                </View>
                 <TouchableOpacity onPress={() => Alert.alert("buscaria en la api")}>
                     <FontAwesome5Icon name="search" size={getIconSize(80)} color={(darkMode) ? "white" : "black"} />
                 </TouchableOpacity>
@@ -44,4 +49,4 @@ const SearchPost = (props: Props) => {
     )
 }
 
-export default SearchPost
+export default SearchFriends

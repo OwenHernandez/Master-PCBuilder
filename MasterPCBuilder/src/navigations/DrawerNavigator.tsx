@@ -9,6 +9,7 @@ import Builder from '../screens/Builder';
 import Social from '../screens/Social';
 import UserPostsList from '../screens/UserPostsList';
 import SocialTabs from './SocialTabs';
+import FriendsTabs from './FriendsTabs';
 
 type Props = {}
 
@@ -18,6 +19,7 @@ export type RootDrawerParamList = {
     Settings: undefined;
     Builder: undefined;
     Social: undefined;
+    Friends: undefined;
 }
 
 const Drawer = createDrawerNavigator();
@@ -39,6 +41,7 @@ const DrawerNavigator = (props: Props) => {
             <Drawer.Screen name="Builder" component={Builder} />
             <Drawer.Screen name="Profile" component={Profile} />
             <Drawer.Screen name="Social" component={SocialTabs} />
+            <Drawer.Screen name="Friends" component={FriendsTabs} />
             <Drawer.Screen name="Settings" component={Settings} />
             {/*<Drawer.Screen name="UserPostsList" component={UserPostsList} />*/}
             {/*<Drawer.Screen name="StackNavigator" component={StackNavigator} options={{}} />*/}
