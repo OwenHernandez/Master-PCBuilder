@@ -18,6 +18,9 @@ import IBuildType from '../interfaces/IBuildType';
 import LikedPostsList from '../screens/LikedPostsList';
 import DrawerNavigator from './DrawerNavigator';
 import FriendsTabs from './FriendsTabs';
+import Chat from '../screens/Chat';
+import IUserType from '../interfaces/IUserType';
+import FriendsProfile from '../screens/FriendsProfile';
 
 type Props = {}
 
@@ -41,7 +44,9 @@ export type RootStackParamList = {
     Friends: undefined,
     FriendsList: undefined,
     AddFriend: undefined,
-    SearchFriends: undefined
+    SearchFriends: undefined,
+    Chat: { friend: IUserType },
+    FriendsProfile: { friend: IUserType }
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -73,6 +78,8 @@ const StackNavigator = (props: Props) => {
             <Stack.Screen name="Post" component={Post} />
             <Stack.Screen name="WishList" component={WishList} />
             <Stack.Screen name="Friends" component={FriendsTabs} />
+            <Stack.Screen name="Chat" component={Chat} />
+            <Stack.Screen name="FriendsProfile" component={FriendsProfile} />
         </Stack.Navigator>
     )
 }

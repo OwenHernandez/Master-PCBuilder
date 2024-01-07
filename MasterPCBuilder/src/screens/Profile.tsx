@@ -1,4 +1,4 @@
-import { Alert, FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, Dimensions, FlatList, Image, PixelRatio, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { RootStackParamList } from '../navigations/StackNavigator';
@@ -14,6 +14,10 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Profile'>;
 const Profile = (props: Props) => {
     const { user, darkMode } = usePrimaryContext();
     const { navigation, route } = props;
+    const fontScale = PixelRatio.getFontScale();
+    const getFontSize = (size: number) => size / fontScale;
+    const fullScreen = Dimensions.get("window").scale;
+    const getIconSize = (size: number) => size / fullScreen;
     const { logout } = useLogout();
     /*const actions = [
         { name: "Your Balls", nav: "UserBuildsList" },
@@ -27,43 +31,41 @@ const Profile = (props: Props) => {
         <SafeAreaView style={{ flex: 1, backgroundColor: (darkMode) ? "#242121" : "#F5F5F5" }}>
             <View style={Styles.headerView}>
                 <TouchableOpacity onPress={() => navigation.navigate("Settings")}>
-                    <Octicon name='gear' size={30} color={(darkMode) ? "white" : "black"}></Octicon>
+                    <Octicon name='gear' size={getIconSize(90)} color={(darkMode) ? "white" : "black"}></Octicon>
                 </TouchableOpacity>
                 <Text style={{ ...Styles.headerText, color: (darkMode) ? "white" : "black" }}>{route.name}</Text>
                 <TouchableOpacity onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}>
-                    <Octicon name='three-bars' size={30} color={(darkMode) ? "white" : "black"}></Octicon>
+                    <Octicon name='three-bars' size={getIconSize(90)} color={(darkMode) ? "white" : "black"}></Octicon>
                 </TouchableOpacity>
             </View>
             <ScrollView>
                 <View style={{ alignItems: 'center', margin: "5%" }}>
                     <Image
                         source={{
-                            uri: user.profilePic,
-                            width: 100,
-                            height: 100
+                            uri: user.profilePic
                         }}
-                        style={{ ...Styles.imageStyle, borderColor: (darkMode) ? "white" : "black", borderWidth: 1 }}
+                        style={{ ...Styles.imageStyle, borderColor: (darkMode) ? "white" : "black", borderWidth: 1, width: getIconSize(300), height: getIconSize(300) }}
                     />
-                    <Text style={{ fontSize: 40, color: (darkMode) ? "white" : "black" }}>{user.nick}</Text>
-                    <Text style={{ fontSize: 20, color: (darkMode) ? "white" : "black" }}>{user.email}</Text>
+                    <Text style={{ fontSize: getFontSize(40), color: (darkMode) ? "white" : "black" }}>{user.nick}</Text>
+                    <Text style={{ fontSize: getFontSize(20), color: (darkMode) ? "white" : "black" }}>{user.email}</Text>
                 </View>
-                <TouchableOpacity style={{ ...Styles.touchable, marginBottom: 10, padding: 20 }} onPress={() => navigation.navigate("UserBuildsList")}>
-                    <Text style={{ fontSize: 20, textAlign: 'center', color: (darkMode) ? "white" : "black" }}>Your Builds</Text>
+                <TouchableOpacity style={{ ...Styles.touchable, marginBottom: "3%", padding: "6%" }} onPress={() => navigation.navigate("UserBuildsList")}>
+                    <Text style={{ fontSize: getFontSize(20), textAlign: 'center', color: (darkMode) ? "white" : "black" }}>Your Builds</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={{ ...Styles.touchable, marginBottom: 10, padding: 20 }} onPress={() => navigation.navigate("UserPostsList")}>
-                    <Text style={{ fontSize: 20, textAlign: 'center', color: (darkMode) ? "white" : "black" }}>Your Posts</Text>
+                <TouchableOpacity style={{ ...Styles.touchable, marginBottom: "3%", padding: "6%" }} onPress={() => navigation.navigate("UserPostsList")}>
+                    <Text style={{ fontSize: getFontSize(20), textAlign: 'center', color: (darkMode) ? "white" : "black" }}>Your Posts</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={{ ...Styles.touchable, marginBottom: 10, padding: 20 }} onPress={() => navigation.navigate("LikedPostsList")}>
-                    <Text style={{ fontSize: 20, textAlign: 'center', color: (darkMode) ? "white" : "black" }}>Liked Posts</Text>
+                <TouchableOpacity style={{ ...Styles.touchable, marginBottom: "3%", padding: "6%" }} onPress={() => navigation.navigate("LikedPostsList")}>
+                    <Text style={{ fontSize: getFontSize(20), textAlign: 'center', color: (darkMode) ? "white" : "black" }}>Liked Posts</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={{ ...Styles.touchable, marginBottom: 10, padding: 20 }} onPress={() => navigation.navigate("WishList")}>
-                    <Text style={{ fontSize: 20, textAlign: 'center', color: (darkMode) ? "white" : "black" }}>Wish List</Text>
+                <TouchableOpacity style={{ ...Styles.touchable, marginBottom: "3%", padding: "6%" }} onPress={() => navigation.navigate("WishList")}>
+                    <Text style={{ fontSize: getFontSize(20), textAlign: 'center', color: (darkMode) ? "white" : "black" }}>Wish List</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={{ ...Styles.touchable, marginBottom: 10, padding: 20 }} onPress={() => navigation.navigate("Friends")}>
-                    <Text style={{ fontSize: 20, textAlign: 'center', color: (darkMode) ? "white" : "black" }}>Friends</Text>
+                <TouchableOpacity style={{ ...Styles.touchable, marginBottom: "3%", padding: "6%" }} onPress={() => navigation.navigate("Friends")}>
+                    <Text style={{ fontSize: getFontSize(20), textAlign: 'center', color: (darkMode) ? "white" : "black" }}>Friends</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={{ ...Styles.touchable, marginBottom: 10, padding: 20, borderColor: "violet" }} onPress={() => logout(navigation)}>
-                    <Text style={{ fontSize: 20, textAlign: 'center', color: (darkMode) ? "white" : "black" }}>Logout</Text>
+                <TouchableOpacity style={{ ...Styles.touchable, marginBottom: "3%", padding: "6%", borderColor: "violet" }} onPress={() => logout(navigation)}>
+                    <Text style={{ fontSize: getFontSize(20), textAlign: 'center', color: (darkMode) ? "white" : "black" }}>Logout</Text>
                 </TouchableOpacity>
             </ScrollView>
         </SafeAreaView>

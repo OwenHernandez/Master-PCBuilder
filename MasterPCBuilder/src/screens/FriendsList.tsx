@@ -22,7 +22,7 @@ const FriendsList = (props: Props) => {
     const getIconSize = (size: number) => size / fullScreen;
     const tempFriendsList: IUserType[] = [
         {
-            nick: "Amigo1jkjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
+            nick: "Amigo1jkjjjjjjjjjjjj",
             email: "amigo1@gmail.com",
             profilePic: "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0=",
         },
@@ -88,7 +88,7 @@ const FriendsList = (props: Props) => {
                     renderItem={(friend) => {
                         return (
 
-                            <TouchableOpacity onPress={() => Alert.alert("Abriria el chat")} style={{ ...Styles.touchable, flexDirection: "row", alignItems: "center", margin: "3%" }}>
+                            <TouchableOpacity onPress={() => navigation.navigate("Chat", { friend: friend.item })} style={{ ...Styles.touchable, flexDirection: "row", alignItems: "center", margin: "3%" }}>
                                 <TouchableOpacity onPress={() => Alert.alert("Abriria el perfil del amigo")}>
                                     <Image
                                         source={{

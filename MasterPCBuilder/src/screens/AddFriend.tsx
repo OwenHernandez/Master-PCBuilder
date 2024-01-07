@@ -43,7 +43,7 @@ const AddFriend = (props: Props) => {
                 <View style={{ backgroundColor: '#524f4f', padding: "10%", borderRadius: 20, alignItems: "center", marginHorizontal: "10%", marginBottom: "2%" }}>
                     <TextInput placeholder='Nick' style={{ ...Styles.textInput, marginBottom: "5%" }} placeholderTextColor={"black"}></TextInput>
                 </View>
-                <TouchableOpacity style={{ ...Styles.touchable }} onPress={() => { Alert.alert("Crearia el post y lo mandaria al social"); navigation.navigate("Social") }}>
+                <TouchableOpacity style={{ ...Styles.touchable }} onPress={() => { Alert.alert("Crearia el amigo y lo mandaria a la lista de amigos"); navigation.navigate("Social") }}>
                     <Text style={{ fontSize: getFontSize(20), color: (darkMode) ? "white" : "black", textAlign: 'center' }}>Add Friend</Text>
                 </TouchableOpacity>
             </View>
