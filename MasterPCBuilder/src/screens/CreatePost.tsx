@@ -46,16 +46,16 @@ const CreatePost = (props: Props) => {
             price: "1000€",
             notes: "jkfdjsgvfjdnjghsridhgjf",
             components: [
-                { name: "CPU", compImage: "https://i.ebayimg.com/images/g/-1sAAOSwtQNlLpw6/s-l1600.jpg", description: "CPU super potente perfecta...", price: "100€", site: "PCCOmponentes" },
-                { name: "CPU", compImage: "https://i.ebayimg.com/images/g/-1sAAOSwtQNlLpw6/s-l1600.jpg", description: "CPU super potente perfecta...", price: "100€", site: "PCCOmponentes" }
+                { name: "CPU", compImage: "https://i.ebayimg.com/images/g/-1sAAOSwtQNlLpw6/s-l1600.jpg", description: "CPU super potente perfecta...", price: "100€", site: "PCCOmponentes", type: "CPU" },
+                { name: "Motherboard", compImage: "https://i.ebayimg.com/images/g/-1sAAOSwtQNlLpw6/s-l1600.jpg", description: "CPU super potente perfecta...", price: "100€", site: "PCCOmponentes", type: "Motherboard" }
             ]
         },
         {
             name: "BuildCoso2",
             price: "1000€",
             components: [
-                { name: "CPU", compImage: "https://i.ebayimg.com/images/g/-1sAAOSwtQNlLpw6/s-l1600.jpg", description: "CPU super potente perfecta...", price: "100€", site: "PCCOmponentes" },
-                { name: "CPU", compImage: "https://i.ebayimg.com/images/g/-1sAAOSwtQNlLpw6/s-l1600.jpg", description: "CPU super potente perfecta...", price: "100€", site: "PCCOmponentes" }
+                { name: "CPU", compImage: "https://i.ebayimg.com/images/g/-1sAAOSwtQNlLpw6/s-l1600.jpg", description: "CPU super potente perfecta...", price: "100€", site: "PCCOmponentes", type: "CPU" },
+                { name: "Motherboard", compImage: "https://i.ebayimg.com/images/g/-1sAAOSwtQNlLpw6/s-l1600.jpg", description: "CPU super potente perfecta...", price: "100€", site: "PCCOmponentes", type: "Motherboard" }
             ]
         }
     ];
@@ -79,9 +79,9 @@ const CreatePost = (props: Props) => {
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
                 <View>
                     <View style={{ backgroundColor: '#524f4f', padding: "10%", borderRadius: 20, alignItems: "center", marginHorizontal: "10%", marginBottom: "2%" }}>
-                        <TextInput placeholder='Title' style={{ ...Styles.textInput, marginBottom: "5%" }} placeholderTextColor={"black"}></TextInput>
-                        <TextInput placeholder='Price' style={{ ...Styles.textInput, marginBottom: "5%" }} placeholderTextColor={"black"}></TextInput>
-                        <TextInput placeholder='Description' style={{ ...Styles.textInput }} placeholderTextColor={"black"} numberOfLines={3} multiline={true}></TextInput>
+                        <TextInput placeholder='Title' style={{ ...Styles.textInput, marginBottom: "5%", width: getIconSize(450) }} placeholderTextColor={"black"}></TextInput>
+                        <TextInput placeholder='Price' style={{ ...Styles.textInput, marginBottom: "5%", width: getIconSize(450) }} placeholderTextColor={"black"}></TextInput>
+                        <TextInput placeholder='Description' style={{ ...Styles.textInput, width: getIconSize(450) }} placeholderTextColor={"black"} numberOfLines={3} multiline={true}></TextInput>
                     </View>
                     <DropDownPicker
                         items={items}

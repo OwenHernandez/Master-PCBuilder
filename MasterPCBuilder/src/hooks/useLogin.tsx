@@ -59,8 +59,8 @@ const useLogin = () => {
     ];
 
     async function getUsers() {
-        //const response = await axios.get("");
-        setUsers(usersTemp);
+        const response = await axios.get("http://172.26.15.0:8080/users");
+        setUsers(response.data);
     }
 
     function changeNick(newNick: string) {

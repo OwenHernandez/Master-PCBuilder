@@ -6,6 +6,7 @@ import { RootStackParamList } from '../navigations/StackNavigator';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { usePrimaryContext } from '../contexts/PrimaryContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { DrawerActions } from '@react-navigation/native';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Settings'>;
 
@@ -38,7 +39,7 @@ const Settings = (props: Props) => {
                     />
                 </TouchableOpacity>
                 <Text style={{ ...Styles.headerText, color: (darkMode) ? "white" : "black", fontSize: getFontSize(20) }}>{route.name}</Text>
-                <TouchableOpacity onPress={() => Alert.alert("Iria al drawer")}>
+                <TouchableOpacity onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}>
                     <Icon name='three-bars' size={getIconSize(90)} color={(darkMode) ? "white" : "black"}></Icon>
                 </TouchableOpacity>
             </View>
