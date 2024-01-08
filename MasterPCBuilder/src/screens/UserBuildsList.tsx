@@ -9,6 +9,7 @@ import { Styles } from '../themes/Styles';
 import Icon from 'react-native-vector-icons/Octicons';
 import { usePrimaryContext } from '../contexts/PrimaryContext';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'UserBuildsList'>;
 
@@ -20,14 +21,16 @@ const UserBuildsList = (props: Props) => {
     const fullScreen = Dimensions.get("window").scale;
     const getIconSize = (size: number) => size / fullScreen;
     const [buildsList, setBuildsList] = useState([{}] as IBuildType[]);
-    const tempBuilds = [
+    const tempBuilds: IBuildType[] = [
         {
             name: "BuildCoso",
             price: "1000€",
             notes: "jkfdjsgvfjdnjghsridhgjf",
             components: [
-                { name: "CPU", compImage: "https://i.ebayimg.com/images/g/-1sAAOSwtQNlLpw6/s-l1600.jpg", description: "CPU super potente perfecta...", price: "100€" },
-                { name: "CPU", compImage: "https://i.ebayimg.com/images/g/-1sAAOSwtQNlLpw6/s-l1600.jpg", description: "CPU super potente perfecta...", price: "100€" }
+                { name: "CPU", compImage: "https://i.ebayimg.com/images/g/-1sAAOSwtQNlLpw6/s-l1600.jpg", description: "CPU super potente perfecta...", price: "100€", site: "PCComponentes", type: "CPU" },
+                { name: "Motherboard", compImage: "https://www.mouser.es/images/marketingid/2020/img/110657914.png?v=101223.0140", description: "CPU super potente perfecta...", price: "100€", site: "PCComponentes", type: "Motherboard" },
+                { name: "RAM", compImage: "https://m.media-amazon.com/images/I/61XmhmEup8L._AC_UF1000,1000_QL80_.jpg", description: "CPU super potente perfecta...", price: "100€", site: "PCComponentes", type: "RAM" },
+                { name: "RAM2", compImage: "https://m.media-amazon.com/images/I/61XmhmEup8L._AC_UF1000,1000_QL80_.jpg", description: "CPU super potente perfecta...", price: "100€", site: "PCComponentes", type: "RAM" }
             ]
         }
     ];
@@ -46,7 +49,7 @@ const UserBuildsList = (props: Props) => {
                         style={{ ...Styles.imageStyle, borderColor: (darkMode) ? "white" : "black", borderWidth: 1, width: getIconSize(110), height: getIconSize(110) }}
                     />
                 </TouchableOpacity>
-                <Text style={{ ...Styles.headerText, color: (darkMode) ? "white" : "black" }}>{route.name}</Text>
+                <Text style={{ ...Styles.headerText, color: (darkMode) ? "white" : "black", fontSize: getFontSize(20) }}>{route.name}</Text>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Material name='keyboard-backspace' size={getIconSize(100)} color={(darkMode) ? "white" : "black"}></Material>
                 </TouchableOpacity>
@@ -55,10 +58,14 @@ const UserBuildsList = (props: Props) => {
                 data={tempBuilds}
                 renderItem={(build) => {
                     return (
-                        <View>
-                            <Text style={{ fontSize: getFontSize(30), color: (darkMode) ? "white" : "black" }}>{build.item.name}</Text>
-                            <Text style={{ fontSize: getFontSize(20), color: (darkMode) ? "white" : "black" }}>{build.item.price}</Text>
-                        </View>
+                        <TouchableOpacity style={Styles.touchable} onPress={() => navigation.navigate("Builder", { build: build.item })}>
+                            <View>
+                                <View style={{ alignItems: "flex-start" }}>
+                                    <Text style={{ fontSize: getFontSize(30), color: (darkMode) ? "white" : "black", marginHorizontal: "10%" }}>{build.item.name}</Text>
+                                    <Text style={{ fontSize: getFontSize(20), color: (darkMode) ? "white" : "black", marginHorizontal: "10%", marginBottom: "5%" }}>{build.item.price}</Text>
+                                </View>
+                            </View>
+                        </TouchableOpacity>
                     )
                 }}
                 keyExtractor={(comp, index) => index + ""}

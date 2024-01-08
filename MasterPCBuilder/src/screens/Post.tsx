@@ -31,7 +31,7 @@ const Post = (props: Props) => {
                         style={{ ...Styles.imageStyle, borderColor: (darkMode) ? "white" : "black", borderWidth: 1, width: getIconSize(110), height: getIconSize(110) }}
                     />
                 </TouchableOpacity>
-                <Text style={{ ...Styles.headerText, color: (darkMode) ? "white" : "black" }}>{post.title}</Text>
+                <Text style={{ ...Styles.headerText, color: (darkMode) ? "white" : "black", fontSize: getFontSize(20) }}>{post.title}</Text>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Material name='keyboard-backspace' size={getIconSize(100)} color={(darkMode) ? "white" : "black"}></Material>
                 </TouchableOpacity>

@@ -10,7 +10,6 @@ export const Styles = StyleSheet.create({
         alignItems: "center"
     },
     headerText: {
-        fontSize: 20,
         color: "white",
         textAlign: 'center'
     },
@@ -18,8 +17,7 @@ export const Styles = StyleSheet.create({
         borderRadius: 20,
         backgroundColor: 'white',
         color: "black",
-        textAlign: 'center',
-        width: 150
+        textAlign: 'center'
     },
     touchable: {
         margin: "5%",

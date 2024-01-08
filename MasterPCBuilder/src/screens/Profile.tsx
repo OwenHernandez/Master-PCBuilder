@@ -33,7 +33,7 @@ const Profile = (props: Props) => {
                 <TouchableOpacity onPress={() => navigation.navigate("Settings")}>
                     <Octicon name='gear' size={getIconSize(90)} color={(darkMode) ? "white" : "black"}></Octicon>
                 </TouchableOpacity>
-                <Text style={{ ...Styles.headerText, color: (darkMode) ? "white" : "black" }}>{route.name}</Text>
+                <Text style={{ ...Styles.headerText, color: (darkMode) ? "white" : "black", fontSize: getFontSize(20) }}>{route.name}</Text>
                 <TouchableOpacity onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}>
                     <Octicon name='three-bars' size={getIconSize(90)} color={(darkMode) ? "white" : "black"}></Octicon>
                 </TouchableOpacity>

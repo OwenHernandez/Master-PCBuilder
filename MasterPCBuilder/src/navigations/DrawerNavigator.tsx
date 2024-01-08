@@ -10,6 +10,7 @@ import Social from '../screens/Social';
 import UserPostsList from '../screens/UserPostsList';
 import SocialTabs from './SocialTabs';
 import FriendsTabs from './FriendsTabs';
+import IBuildType from '../interfaces/IBuildType';
 
 type Props = {}
 
@@ -17,7 +18,7 @@ export type RootDrawerParamList = {
     Landing: undefined;
     Profile: undefined;
     Settings: undefined;
-    Builder: undefined;
+    Builder: { build?: IBuildType };
     Social: undefined;
     Friends: undefined;
 }

@@ -24,43 +24,115 @@ const FriendsList = (props: Props) => {
         {
             nick: "Amigo1jkjjjjjjjjjjjj",
             email: "amigo1@gmail.com",
+            password: "amigo1",
             profilePic: "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0=",
+            friends: [
+                {
+                    nick: "Coso"
+                },
+                {
+                    nick: "Amigo2"
+                }
+            ]
         },
         {
             nick: "Amigo2",
             email: "amigo2@gmail.com",
+            password: "amigo2",
             profilePic: "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0=",
+            friends: [
+                {
+                    nick: "Coso"
+                },
+                {
+                    nick: "Amigo1jkjjjjjjjjjjjj"
+                }
+            ]
         },
         {
             nick: "Amigo2",
             email: "amigo2@gmail.com",
+            password: "amigo2",
             profilePic: "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0=",
+            friends: [
+                {
+                    nick: "Coso"
+                },
+                {
+                    nick: "Amigo1jkjjjjjjjjjjjj"
+                }
+            ]
         },
         {
             nick: "Amigo2",
             email: "amigo2@gmail.com",
+            password: "amigo2",
             profilePic: "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0=",
+            friends: [
+                {
+                    nick: "Coso"
+                },
+                {
+                    nick: "Amigo1jkjjjjjjjjjjjj"
+                }
+            ]
         },
         {
             nick: "Amigo2",
             email: "amigo2@gmail.com",
+            password: "amigo2",
             profilePic: "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0=",
+            friends: [
+                {
+                    nick: "Coso"
+                },
+                {
+                    nick: "Amigo1jkjjjjjjjjjjjj"
+                }
+            ]
         },
         {
             nick: "Amigo2",
             email: "amigo2@gmail.com",
+            password: "amigo2",
             profilePic: "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0=",
+            friends: [
+                {
+                    nick: "Coso"
+                },
+                {
+                    nick: "Amigo1jkjjjjjjjjjjjj"
+                }
+            ]
         },
         {
             nick: "Amigo2",
             email: "amigo2@gmail.com",
+            password: "amigo2",
             profilePic: "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0=",
+            friends: [
+                {
+                    nick: "Coso"
+                },
+                {
+                    nick: "Amigo1jkjjjjjjjjjjjj"
+                }
+            ]
         },
         {
             nick: "Amigo2",
             email: "amigo2@gmail.com",
+            password: "amigo2",
             profilePic: "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0=",
-        }
+            friends: [
+                {
+                    nick: "Coso"
+                },
+                {
+                    nick: "Amigo1jkjjjjjjjjjjjj"
+                }
+            ]
+        },
     ];
     useEffect(() => {
         //Buscaria en la base de datos los que tenga en la wishlist
@@ -77,7 +149,7 @@ const FriendsList = (props: Props) => {
                         style={{ ...Styles.imageStyle, borderColor: (darkMode) ? "white" : "black", borderWidth: 1, width: getIconSize(110), height: getIconSize(110) }}
                     />
                 </TouchableOpacity>
-                <Text style={{ ...Styles.headerText, color: (darkMode) ? "white" : "black" }}>{route.name}</Text>
+                <Text style={{ ...Styles.headerText, color: (darkMode) ? "white" : "black", fontSize: getFontSize(20) }}>{route.name}</Text>
                 <TouchableOpacity onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}>
                     <Octicon name='three-bars' size={30} color={(darkMode) ? "white" : "black"}></Octicon>
                 </TouchableOpacity>

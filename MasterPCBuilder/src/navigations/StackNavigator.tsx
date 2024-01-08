@@ -21,6 +21,7 @@ import FriendsTabs from './FriendsTabs';
 import Chat from '../screens/Chat';
 import IUserType from '../interfaces/IUserType';
 import FriendsProfile from '../screens/FriendsProfile';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type Props = {}
 
@@ -32,7 +33,7 @@ export type RootStackParamList = {
     CreatePost: undefined,
     SearchPost: undefined,
     DrawerNavigator: any,
-    Builder: undefined,
+    Builder: { build?: IBuildType },
     Profile: undefined,
     Settings: undefined,
     UserBuildsList: undefined,
@@ -53,10 +54,23 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator();
 
 const StackNavigator = (props: Props) => {
-    const { darkMode } = usePrimaryContext();
+    const { darkMode, setDarkMode } = usePrimaryContext();
 
     useEffect(() => {
-        //Miraria el darkMode en el asyncStorage y lo pondria en el contexto
+        async function getDarkMode() {
+            let getDarkMode = await AsyncStorage.getItem("darkMode");
+            if (getDarkMode === null) {
+                await AsyncStorage.setItem("darkMode", "true");
+                setDarkMode(true);
+            } else {
+                if (JSON.stringify(getDarkMode) === "\"true\"") {
+                    setDarkMode(true);
+                } else {
+                    setDarkMode(false);
+                }
+            }
+        }
+        getDarkMode();
     }, []);
 
     return (

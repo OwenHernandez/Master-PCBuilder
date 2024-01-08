@@ -24,7 +24,20 @@ const UserPostsList = (props: Props) => {
     const tempPostsList: IPostType[] = [
         {
             title: "Coso",
-            userPosted: { nick: "Coso", email: "coso@gmail.com", profilePic: "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0=" },
+            userPosted: {
+                nick: "Coso",
+                email: "coso@gmail.com",
+                password: "coso",
+                profilePic: "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0=",
+                friends: [
+                    {
+                        "nick": "Amigo2"
+                    },
+                    {
+                        "nick": "Amigo1jkjjjjjjjjjjjj"
+                    }
+                ]
+            },
             image: "https://upload.wikimedia.org/wikipedia/commons/1/16/Computadora-PC.png",
             build: {
                 name: "Coso",
@@ -43,7 +56,20 @@ const UserPostsList = (props: Props) => {
         },
         {
             title: "Coso2gdhftghfyjydjgfjdfjfgdgdf",
-            userPosted: { nick: "Coso2", email: "coso2@gmail.com", profilePic: "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0=" },
+            userPosted: {
+                nick: "Coso",
+                email: "coso@gmail.com",
+                password: "coso",
+                profilePic: "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0=",
+                friends: [
+                    {
+                        "nick": "Amigo2"
+                    },
+                    {
+                        "nick": "Amigo1jkjjjjjjjjjjjj"
+                    }
+                ]
+            },
             image: "https://upload.wikimedia.org/wikipedia/commons/1/16/Computadora-PC.png",
             build: {
                 name: "Coso",
@@ -70,7 +96,7 @@ const UserPostsList = (props: Props) => {
                         style={{ ...Styles.imageStyle, borderColor: (darkMode) ? "white" : "black", borderWidth: 1, width: getIconSize(110), height: getIconSize(110) }}
                     />
                 </TouchableOpacity>
-                <Text style={{ ...Styles.headerText, color: (darkMode) ? "white" : "black" }}>{route.name}</Text>
+                <Text style={{ ...Styles.headerText, color: (darkMode) ? "white" : "black", fontSize: getFontSize(20) }}>{route.name}</Text>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Material name='keyboard-backspace' size={getIconSize(100)} color={(darkMode) ? "white" : "black"}></Material>
                 </TouchableOpacity>
