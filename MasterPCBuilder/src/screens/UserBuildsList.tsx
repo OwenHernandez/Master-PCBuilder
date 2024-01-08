@@ -58,7 +58,7 @@ const UserBuildsList = (props: Props) => {
                 data={tempBuilds}
                 renderItem={(build) => {
                     return (
-                        <TouchableOpacity style={Styles.touchable} onPress={() => navigation.navigate("Builder", { build: build.item })}>
+                        <TouchableOpacity style={Styles.touchable} onPress={() => navigation.navigate("Builder", { build: build.item, builds: tempBuilds })}>
                             <View>
                                 <View style={{ alignItems: "flex-start" }}>
                                     <Text style={{ fontSize: getFontSize(30), color: (darkMode) ? "white" : "black", marginHorizontal: "10%" }}>{build.item.name}</Text>

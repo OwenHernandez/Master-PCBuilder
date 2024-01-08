@@ -33,11 +33,10 @@ export type RootStackParamList = {
     CreatePost: undefined,
     SearchPost: undefined,
     DrawerNavigator: any,
-    Builder: { build?: IBuildType },
+    Builder: { build?: IBuildType, builds?: IBuildType[] },
     Profile: undefined,
     Settings: undefined,
     UserBuildsList: undefined,
-    Build: { build: IBuildType }
     UserPostsList: undefined,
     LikedPostsList: undefined,
     Post: { post: IPostType },
