@@ -1,10 +1,11 @@
 package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence;
 
+import jakarta.persistence.*;
+
 import java.io.Serializable;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
-import java.util.List;
 
 
 /**
@@ -12,7 +13,7 @@ import java.util.List;
  * 
  */
 @Entity
-@Table(name="users")
+@Table(name="USERS")
 @NamedQuery(name="UserEntity.findAll", query="SELECT u FROM UserEntity u")
 public class UserEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -32,17 +33,18 @@ public class UserEntity implements Serializable {
 	private String password;
 
 	private String picture;
+
 	private String role;
 
-	//bi-directional many-to-one association to UserEntity
-	@ManyToOne
-	@JoinColumn(name="FRIEND_ID")
-	private UserEntity user;
-
-	//bi-directional many-to-one association to UserEntity
+	//bi-directional many-to-many association to UserEntity
 	@JsonIgnore
-	@OneToMany(mappedBy="user")
-	private List<UserEntity> users;
+	@ManyToMany
+    @JoinTable(
+        name = "FRIENDS",
+        joinColumns = @JoinColumn(name = "USER_ID1"),
+        inverseJoinColumns = @JoinColumn(name = "USER_ID2")
+    )
+    private List<UserEntity> friends;
 
 	public UserEntity() {
 	}
@@ -111,34 +113,11 @@ public class UserEntity implements Serializable {
 		this.role = role;
 	}
 
-	public UserEntity getUser() {
-		return this.user;
+	public List<UserEntity> getFriends() {
+		return friends;
 	}
 
-	public void setUser(UserEntity user) {
-		this.user = user;
+	public void setFriends(List<UserEntity> friends) {
+		this.friends = friends;
 	}
-
-	public List<UserEntity> getUsers() {
-		return this.users;
-	}
-
-	public void setUsers(List<UserEntity> users) {
-		this.users = users;
-	}
-
-	public UserEntity addUser(UserEntity user) {
-		getUsers().add(user);
-		user.setUser(this);
-
-		return user;
-	}
-
-	public UserEntity removeUser(UserEntity user) {
-		getUsers().remove(user);
-		user.setUser(null);
-
-		return user;
-	}
-
 }

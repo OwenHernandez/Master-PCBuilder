@@ -13,9 +13,10 @@ public class UserDetailsLogin implements UserDetails {
 	public UserDetailsLogin() {
 	}
 
-	String username;
-	String password;
-	String role;
+	private String username;
+	private String password;
+	private String role;
+	private String email;
 
 	public void setUsername(String username) {
 		this.username = username;
@@ -48,6 +49,14 @@ public class UserDetailsLogin implements UserDetails {
 	@Override
 	public String getUsername() {
 		return username;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	@Override

@@ -1,8 +1,7 @@
 package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.config;
 
-import es.iespuertodelacruz.odhh.apitresenrayahex.domain.model.Usuario;
-import es.iespuertodelacruz.odhh.apitresenrayahex.domain.service.UsuarioService;
-import es.iespuertodelacruz.odhh.apitresenrayahex.infrastructure.security.UserDetailsLogin;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.User;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.service.UserService;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.security.UserDetailsLogin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -20,7 +19,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class ApplicationConfig {
 	@Autowired
-	private UsuarioService repository;
+	private UserService repository;
 
 	@Bean
 	public WebMvcConfigurer corsConfigurer() {
@@ -39,11 +38,11 @@ public class ApplicationConfig {
 	@Bean
 	public UserDetailsService userDetailsService() {
 		return username -> {
-			UserEntity entity = repository.findByNombre(username);
+			User entity = repository.findByNick(username);
 			UserDetailsLogin user = new UserDetailsLogin();
 			user.setUsername(entity.getNick());
 			user.setPassword(entity.getPassword());
-			user.setRole(entity.getRol());
+			user.setRole(entity.getRole());
 			return user;
 		};
 	}
