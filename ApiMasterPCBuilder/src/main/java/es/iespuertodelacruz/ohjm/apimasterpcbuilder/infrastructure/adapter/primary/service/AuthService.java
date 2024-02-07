@@ -47,7 +47,7 @@ public class AuthService {
 		User userentity = userService.findByNick(udl.getUsername());
 		UserDetailsLogin userlogin = null;
 		if (userentity != null) {
-			if (userentity.getActive() == 0) {
+			if (userentity.getActive() == 1) {
 				if (passwordEncoder.matches(udl.getPassword(), userentity.getPassword())) {
 					userlogin = new UserDetailsLogin();
 					userlogin.setUsername(userentity.getNick());

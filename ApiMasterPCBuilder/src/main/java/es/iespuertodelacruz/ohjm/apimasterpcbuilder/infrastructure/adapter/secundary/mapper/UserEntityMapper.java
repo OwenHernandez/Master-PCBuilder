@@ -16,23 +16,40 @@ public class UserEntityMapper {
         res.setActive(userEntity.getActive());
         res.setEmail(userEntity.getEmail());
         res.setPicture(userEntity.getPicture());
-        List<User> friends = new ArrayList<>();
-        for (UserEntity ue : userEntity.getFriends()) {
-            User u = new User();
-            u.setId(ue.getId());
-            u.setNick(ue.getNick());
-            u.setPassword(ue.getPassword());
-            u.setRole(ue.getRole());
-            u.setActive(ue.getActive());
-            u.setEmail(ue.getEmail());
-            u.setPicture(ue.getPicture());
-            friends.add(u);
+        res.setHash(userEntity.getHash());
+
+        List<User> friends = null;
+        if (userEntity.getFriends() != null && !userEntity.getFriends().isEmpty()) {
+            friends = new ArrayList<>();
+            for (UserEntity ue : userEntity.getFriends()) {
+                User u = toDomain(ue);
+                friends.add(u);
+            }
         }
         res.setFriends(friends);
         return res;
     }
 
     public UserEntity toPersistance(User user) {
+        UserEntity ue = new UserEntity();
+        ue.setId(user.getId());
+        ue.setNick(user.getNick());
+        ue.setPassword(user.getPassword());
+        ue.setRole(user.getRole());
+        ue.setEmail(user.getEmail());
+        ue.setActive(user.getActive());
+        ue.setHash(user.getHash());
+        ue.setPicture(user.getPicture());
+        List<UserEntity> friends = null;
+        if (user.getFriends() != null && user.getFriends().isEmpty()) {
+            friends = new ArrayList<>();
+            for (User u : user.getFriends()) {
+                UserEntity userEntity = toPersistance(u);
+                friends.add(userEntity);
+            }
+        }
+        ue.setFriends(friends);
 
+        return ue;
     }
 }

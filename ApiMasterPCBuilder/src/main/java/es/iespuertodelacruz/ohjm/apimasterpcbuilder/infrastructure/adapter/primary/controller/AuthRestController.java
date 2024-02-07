@@ -56,13 +56,18 @@ public class AuthRestController {
 	
 	@PostMapping("/register")
 	public ResponseEntity<?> register(@RequestBody RegisterDTO request) {
-		UserDetailsLogin udl = new UserDetailsLogin();
-		udl.setUsername(request.getNick());
-		udl.setPassword(request.getPassword());
-		udl.setEmail(request.getEmail());
-		udl.setRole("ROLE_USER");
-	
-		return ResponseEntity.ok("Registered successfully");
+		if (request != null) {
+			UserDetailsLogin udl = new UserDetailsLogin();
+			udl.setUsername(request.getNick());
+			udl.setPassword(request.getPassword());
+			udl.setEmail(request.getEmail());
+			udl.setRole("ROLE_USER");
+			authService.register(udl);
+
+			return ResponseEntity.ok("Registered successfully");
+		} else {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You have not send anything");
+		}
 	}
 
 	@PostMapping("/login")

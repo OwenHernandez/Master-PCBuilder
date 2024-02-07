@@ -21,6 +21,10 @@ public class UserEntityService implements IUserRepository {
 
     UserEntityMapper mapper;
 
+    public UserEntityService() {
+        mapper = new UserEntityMapper();
+    }
+
     @Override
     public User findById(Integer id) {
         User user = null;
@@ -48,7 +52,7 @@ public class UserEntityService implements IUserRepository {
     public User findByEmail(String email) {
         User user = null;
         if (email != null) {
-            UserEntity ue = repo.findByNick(email);
+            UserEntity ue = repo.findByEmail(email);
             user = mapper.toDomain(ue);
         }
         return user;
@@ -71,11 +75,7 @@ public class UserEntityService implements IUserRepository {
     public User save(User user) {
         User res = null;
         if (user != null) {
-            UserEntity ue = new UserEntity();
-            ue.setId(user.getId());
-            ue.setNick(user.getNick());
-            ue.setPassword(user.getPassword());
-            ue.setRole(user.getRole());
+            UserEntity ue = mapper.toPersistance(user);
             UserEntity save = repo.save(ue);
             res = mapper.toDomain(save);
         }
