@@ -33,6 +33,7 @@
     "react-native-screens": "^3.27.0",
     "react-native-sqlite-storage": "^6.0.1",
     "react-native-system-navigation-bar": "^2.6.3",
+    "react-native-toast-message": "^2.2.0",
     "react-native-webview": "^13.6.3",
     "reflect-metadata": "^0.1.13",
     "typeorm": "^0.3.17"

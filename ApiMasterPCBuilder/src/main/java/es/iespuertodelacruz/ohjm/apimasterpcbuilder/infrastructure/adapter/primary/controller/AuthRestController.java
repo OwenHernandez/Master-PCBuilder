@@ -66,7 +66,7 @@ public class AuthRestController {
 
 			return ResponseEntity.ok("Registered successfully");
 		} else {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You have not send anything");
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You have not sent anything");
 		}
 	}
 
