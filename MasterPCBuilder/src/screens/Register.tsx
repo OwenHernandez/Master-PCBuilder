@@ -5,6 +5,7 @@ import { RootStackParamList } from '../navigations/StackNavigator'
 import useRegister from '../hooks/useRegister';
 import { Styles } from '../themes/Styles';
 import { usePrimaryContext } from '../contexts/PrimaryContext';
+import Toast from 'react-native-toast-message';
 
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Register'>;
@@ -38,6 +39,7 @@ const Register = (props: Props) => {
                     </TouchableOpacity>
                 </View>
                 <Text style={{ color: "red" }}>{errorMsg}</Text>
+                <Toast />
             </View>
         </View >
     )

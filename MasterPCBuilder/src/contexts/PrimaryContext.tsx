@@ -7,18 +7,23 @@ export interface PrimaryContextType {
     setUser: React.Dispatch<React.SetStateAction<IUserType>>;
     darkMode: boolean;
     setDarkMode: React.Dispatch<React.SetStateAction<boolean>>;
+    token: string;
+    setToken: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export const PrimaryContext = createContext<PrimaryContextType>({} as PrimaryContextType);
 
 const PrimaryContextProvider = (props: any) => {
     const [user, setUser] = useState({} as IUserType);
+    const [token, setToken] = useState("");
     const [darkMode, setDarkMode] = useState(true);
     const contextValues: PrimaryContextType = {
         user,
         setUser,
         darkMode,
-        setDarkMode
+        setDarkMode,
+        token,
+        setToken
     };
 
     return (
