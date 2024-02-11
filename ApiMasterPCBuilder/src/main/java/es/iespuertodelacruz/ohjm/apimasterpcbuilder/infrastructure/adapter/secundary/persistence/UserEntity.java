@@ -46,6 +46,7 @@ public class UserEntity implements Serializable {
 	private List<UserEntity> friends;
 
 	//bi-directional many-to-one association to BuildEntity
+	@JsonIgnore
 	@OneToMany(mappedBy="user")
 	private List<BuildEntity> builds;
 
@@ -54,7 +55,8 @@ public class UserEntity implements Serializable {
 	private List<PostEntity> postsMade;
 
 	//bi-directional many-to-many association to Post
-	@ManyToMany(mappedBy="users")
+	@JsonIgnore
+	@ManyToMany(mappedBy="usersWhoLiked")
 	private List<PostEntity> likedPosts;
 
 	public UserEntity() {

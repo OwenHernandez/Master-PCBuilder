@@ -1,6 +1,8 @@
 package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence;
 
 import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.List;
 
@@ -11,7 +13,7 @@ import java.util.List;
  */
 @Entity
 @Table(name="posts")
-@NamedQuery(name="Post.findAll", query="SELECT p FROM Post p")
+@NamedQuery(name="PostEntity.findAll", query="SELECT p FROM PostEntity p")
 public class PostEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -26,10 +28,12 @@ public class PostEntity implements Serializable {
 	private String title;
 
 	//bi-directional many-to-one association to BuildEntity
+	@JsonIgnore
 	@ManyToOne
 	private BuildEntity build;
 
 	//bi-directional many-to-one association to UserEntity
+	@JsonIgnore
 	@ManyToOne
 	private UserEntity user;
 
@@ -37,8 +41,8 @@ public class PostEntity implements Serializable {
 	@ManyToMany
 	@JoinTable(
 			name = "LIKES",
-			joinColumns = @JoinColumn(name = "POST_ID"),
-			inverseJoinColumns = @JoinColumn(name = "USER_ID")
+			joinColumns = {@JoinColumn(name = "POST_ID")},
+			inverseJoinColumns = {@JoinColumn(name = "USER_ID")}
 	)
 	private List<UserEntity> usersWhoLiked;
 

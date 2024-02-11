@@ -1,6 +1,8 @@
 package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence;
 
 import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -37,7 +39,7 @@ public class BuildEntity implements Serializable {
 
 	//bi-directional many-to-one association to Post
 	@OneToMany(mappedBy="build")
-	private List<PostEntity> postEntities;
+	private List<PostEntity> posts;
 
 	public BuildEntity() {
 	}
@@ -105,11 +107,11 @@ public class BuildEntity implements Serializable {
 	}
 
 	public List<PostEntity> getPosts() {
-		return this.postEntities;
+		return this.posts;
 	}
 
 	public void setPosts(List<PostEntity> postEntities) {
-		this.postEntities = postEntities;
+		this.posts = postEntities;
 	}
 
 	public PostEntity addPost(PostEntity postEntity) {

@@ -1,6 +1,8 @@
 package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence;
 
 import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -27,10 +29,12 @@ public class BuildComponentEntity implements Serializable {
 	private double priceAtTheTime;
 
 	//bi-directional many-to-one association to BuildEntity
+	@JsonIgnore
 	@ManyToOne
 	private BuildEntity build;
 
 	//bi-directional many-to-one association to ComponentEntity
+	@JsonIgnore
 	@ManyToOne
 	private ComponentEntity component;
 

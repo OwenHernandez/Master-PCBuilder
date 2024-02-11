@@ -1,6 +1,8 @@
 package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence;
 
 import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.util.List;
@@ -33,6 +35,7 @@ public class ComponentEntity implements Serializable {
 	private List<BuildComponentEntity> buildsComponents;
 
 	//bi-directional many-to-one association to SellerEntity
+	@JsonIgnore
 	@ManyToOne
 	private SellerEntity seller;
 
