@@ -2,7 +2,7 @@ package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secu
 
 import java.io.Serializable;
 import jakarta.persistence.*;
-import java.math.BigDecimal;
+
 import java.util.List;
 
 
@@ -37,7 +37,7 @@ public class BuildEntity implements Serializable {
 
 	//bi-directional many-to-one association to Post
 	@OneToMany(mappedBy="build")
-	private List<Post> posts;
+	private List<PostEntity> postEntities;
 
 	public BuildEntity() {
 	}
@@ -104,26 +104,26 @@ public class BuildEntity implements Serializable {
 		this.user = user;
 	}
 
-	public List<Post> getPosts() {
-		return this.posts;
+	public List<PostEntity> getPosts() {
+		return this.postEntities;
 	}
 
-	public void setPosts(List<Post> posts) {
-		this.posts = posts;
+	public void setPosts(List<PostEntity> postEntities) {
+		this.postEntities = postEntities;
 	}
 
-	public Post addPost(Post post) {
-		getPosts().add(post);
-		post.setBuild(this);
+	public PostEntity addPost(PostEntity postEntity) {
+		getPosts().add(postEntity);
+		postEntity.setBuild(this);
 
-		return post;
+		return postEntity;
 	}
 
-	public Post removePost(Post post) {
-		getPosts().remove(post);
-		post.setBuild(null);
+	public PostEntity removePost(PostEntity postEntity) {
+		getPosts().remove(postEntity);
+		postEntity.setBuild(null);
 
-		return post;
+		return postEntity;
 	}
 
 }

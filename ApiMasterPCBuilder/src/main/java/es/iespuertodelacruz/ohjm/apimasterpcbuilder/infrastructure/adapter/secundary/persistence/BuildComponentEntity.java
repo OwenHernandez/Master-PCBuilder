@@ -20,9 +20,8 @@ public class BuildComponentEntity implements Serializable {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;
 
-	@Temporal(TemporalType.DATE)
 	@Column(name="DATE_CREATED")
-	private Date dateCreated;
+	private long dateCreated;
 
 	@Column(name="PRICE_AT_THE_TIME")
 	private double priceAtTheTime;
@@ -46,11 +45,11 @@ public class BuildComponentEntity implements Serializable {
 		this.id = id;
 	}
 
-	public Date getDateCreated() {
+	public long getDateCreated() {
 		return this.dateCreated;
 	}
 
-	public void setDateCreated(Date dateCreated) {
+	public void setDateCreated(long dateCreated) {
 		this.dateCreated = dateCreated;
 	}
 

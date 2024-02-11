@@ -51,11 +51,11 @@ public class UserEntity implements Serializable {
 
 	//bi-directional many-to-one association to Post
 	@OneToMany(mappedBy="user")
-	private List<Post> posts1;
+	private List<PostEntity> postsMade;
 
 	//bi-directional many-to-many association to Post
 	@ManyToMany(mappedBy="users")
-	private List<Post> posts2;
+	private List<PostEntity> likedPosts;
 
 	public UserEntity() {
 	}
@@ -154,34 +154,34 @@ public class UserEntity implements Serializable {
 		return build;
 	}
 
-	public List<Post> getPosts1() {
-		return this.posts1;
+	public List<PostEntity> getPostsMade() {
+		return this.postsMade;
 	}
 
-	public void setPosts1(List<Post> posts1) {
-		this.posts1 = posts1;
+	public void setPostsMade(List<PostEntity> postsMade) {
+		this.postsMade = postsMade;
 	}
 
-	public Post addPosts1(Post posts1) {
-		getPosts1().add(posts1);
+	public PostEntity addPosts1(PostEntity posts1) {
+		getPostsMade().add(posts1);
 		posts1.setUser(this);
 
 		return posts1;
 	}
 
-	public Post removePosts1(Post posts1) {
-		getPosts1().remove(posts1);
+	public PostEntity removePosts1(PostEntity posts1) {
+		getPostsMade().remove(posts1);
 		posts1.setUser(null);
 
 		return posts1;
 	}
 
-	public List<Post> getPosts2() {
-		return this.posts2;
+	public List<PostEntity> getLikedPosts() {
+		return this.likedPosts;
 	}
 
-	public void setPosts2(List<Post> posts2) {
-		this.posts2 = posts2;
+	public void setLikedPosts(List<PostEntity> likedPosts) {
+		this.likedPosts = likedPosts;
 	}
 
 }

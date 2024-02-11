@@ -12,7 +12,7 @@ import java.util.List;
 @Entity
 @Table(name="posts")
 @NamedQuery(name="Post.findAll", query="SELECT p FROM Post p")
-public class Post implements Serializable {
+public class PostEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -35,10 +35,14 @@ public class Post implements Serializable {
 
 	//bi-directional many-to-many association to UserEntity
 	@ManyToMany
-	@JoinColumn(name="ID")
-	private List<UserEntity> users;
+	@JoinTable(
+			name = "LIKES",
+			joinColumns = @JoinColumn(name = "POST_ID"),
+			inverseJoinColumns = @JoinColumn(name = "USER_ID")
+	)
+	private List<UserEntity> usersWhoLiked;
 
-	public Post() {
+	public PostEntity() {
 	}
 
 	public long getId() {
@@ -89,12 +93,12 @@ public class Post implements Serializable {
 		this.user = user;
 	}
 
-	public List<UserEntity> getUsers() {
-		return this.users;
+	public List<UserEntity> getUsersWhoLiked() {
+		return this.usersWhoLiked;
 	}
 
-	public void setUsers(List<UserEntity> users) {
-		this.users = users;
+	public void setUsersWhoLiked(List<UserEntity> usersWhoLiked) {
+		this.usersWhoLiked = usersWhoLiked;
 	}
 
 }
