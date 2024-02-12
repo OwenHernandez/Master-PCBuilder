@@ -15,11 +15,7 @@ const Login = (props: Props) => {
     const getFontSize = (size: number) => size / fontScale;
     const fullScreen = Dimensions.get("window").scale;
     const getIconSize = (size: number) => size / fullScreen;
-    const { changeNick, changePassword, checkLogin, errorMsg, getUsers } = useLogin();
-
-    useEffect(() => {
-        getUsers();
-    }, []);
+    const { changeNick, changePassword, checkLogin, errorMsg } = useLogin();
 
     return (
         <View style={{ flex: 1 }}>
