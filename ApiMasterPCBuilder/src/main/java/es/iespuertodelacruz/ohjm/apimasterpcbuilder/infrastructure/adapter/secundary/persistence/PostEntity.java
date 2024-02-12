@@ -28,12 +28,10 @@ public class PostEntity implements Serializable {
 	private String title;
 
 	//bi-directional many-to-one association to BuildEntity
-	@JsonIgnore
 	@ManyToOne
 	private BuildEntity build;
 
 	//bi-directional many-to-one association to UserEntity
-	@JsonIgnore
 	@ManyToOne
 	private UserEntity user;
 

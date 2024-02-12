@@ -38,6 +38,7 @@ public class BuildEntity implements Serializable {
 	private UserEntity user;
 
 	//bi-directional many-to-one association to Post
+	@JsonIgnore
 	@OneToMany(mappedBy="build")
 	private List<PostEntity> posts;
 

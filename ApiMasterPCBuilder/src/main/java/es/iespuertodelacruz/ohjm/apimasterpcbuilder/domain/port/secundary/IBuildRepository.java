@@ -14,6 +14,8 @@ public interface IBuildRepository {
 
     boolean deleteById(long id);
 
+    boolean update(Build build);
+
     List<Build> findByName(String name);
 
     List<Build> findByTotalPrice(double totalPrice);

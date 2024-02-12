@@ -75,6 +75,17 @@ public class BuildEntityService implements IBuildRepository {
     }
 
     @Override
+    public boolean update(Build build) {
+        try {//We will need to change it when I do BuildsComponents and Posts
+            BuildEntity be = mapper.toPersistance(build);
+            repo.save(be);
+            return true;
+        } catch (RuntimeException e) {
+            return false;
+        }
+    }
+
+    @Override
     public List<Build> findByName(String name) {
         List<Build> res = null;
         if (name != null) {
@@ -108,6 +119,7 @@ public class BuildEntityService implements IBuildRepository {
     public List<Build> findByUserId(Long userId) {
         List<Build> res = null;
         if (userId != 0) {
+            res = new ArrayList<>();
             List<BuildEntity> list = repo.findByUserId(userId);
             if (list != null) {
                 for (BuildEntity be : list) {

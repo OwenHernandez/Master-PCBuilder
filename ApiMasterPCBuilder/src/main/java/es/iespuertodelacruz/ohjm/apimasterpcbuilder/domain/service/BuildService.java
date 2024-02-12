@@ -43,6 +43,11 @@ public class BuildService implements IBuildService {
     }
 
     @Override
+    public boolean update(Build build) {
+        return repo.update(build);
+    }
+
+    @Override
     public List<Build> findByName(String name) {
 
         if (name == null || name.isBlank()) {

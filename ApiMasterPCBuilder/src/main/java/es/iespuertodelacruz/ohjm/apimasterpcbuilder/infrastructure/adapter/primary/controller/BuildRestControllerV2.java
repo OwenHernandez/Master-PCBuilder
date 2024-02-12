@@ -119,20 +119,19 @@ public class BuildRestControllerV2 {
             User byNick = userService.findByNick(username);
 
             if (byNick != null) {
-                List<Build> byUserId = buildService.findByUserId(byNick.getId());
-                if (byUserId != null) {
-                    for (Build b : byUserId) {
-                        if (b.getId() == id) {
-                            boolean ok = buildService.deleteById(id);
-                            if (ok) {
-                                return ResponseEntity.ok("Build Successfully deleted");
-                            } else {
-                                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong");
-                            }
+                Build buildById = buildService.findById(id);
+                if (buildById != null) {
+                    if (buildById.getUser().getId() == byNick.getId()) {
+                        boolean ok = buildService.deleteById(id);
+
+                        if (ok) {
+                            return ResponseEntity.ok("Build Successfully Deleted");
+                        } else {
+                            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong");
                         }
                     }
                 } else {
-                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("You do not have any builds to delete");
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("build not found");
                 }
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The build with the provided id was not found");
             } else {
@@ -149,10 +148,30 @@ public class BuildRestControllerV2 {
             Object principal =
                     SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             String username = ((UserDetails) principal).getUsername();
-            User byNick = userService.findByNick(username);
+            User userByNick = userService.findByNick(username);
 
-            if (byNick != null) {
-                
+            if (userByNick != null) {
+                Build buildById = buildService.findById(id);
+                if (buildById != null) {
+                    if (buildById.getUser().getId() == userByNick.getId()) {
+                        buildById.setName(buildDTO.getName());
+                        buildById.setNotes(buildDTO.getNotes());
+                        buildById.setTotalPrice(buildDTO.getTotalPrice());
+                        boolean ok = buildService.update(buildById);
+
+                        if (ok) {
+                            return ResponseEntity.ok("Build Successfully updated");
+                        } else {
+                            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong");
+                        }
+                    } else {
+                        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("That is not your build");
+                    }
+                } else {
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Build not found");
+                }
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You should not be here");
             }
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Neither the id nor the build can be null");
