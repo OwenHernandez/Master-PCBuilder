@@ -29,12 +29,17 @@ public class BuildService implements IBuildService {
     }
 
     @Override
-    public Build findById(Integer id) {
+    public Build findById(Long id) {
         Build b = null;
         if (id != null) {
             b = repo.findById(id);
         }
         return b;
+    }
+
+    @Override
+    public boolean deleteById(long id) {
+        return repo.deleteById(id);
     }
 
     @Override
@@ -53,5 +58,10 @@ public class BuildService implements IBuildService {
             return null;
         }
         return repo.findByTotalPrice(totalPrice);
+    }
+
+    @Override
+    public List<Build> findByUserId(Long userId) {
+        return repo.findByUserId(userId);
     }
 }

@@ -52,7 +52,7 @@ public class BuildEntityService implements IBuildRepository {
     }
 
     @Override
-    public Build findById(Integer id) {
+    public Build findById(Long id) {
         Build build = null;
         if (id != null) {
             Optional<BuildEntity> opt = repo.findById(id);
@@ -62,6 +62,16 @@ public class BuildEntityService implements IBuildRepository {
             }
         }
         return build;
+    }
+
+    @Override
+    public boolean deleteById(long id) {
+        try {//We will need to change it when I do BuildsComponents and Posts
+            repo.deleteById(id);
+            return true;
+        } catch (RuntimeException e) {
+            return false;
+        }
     }
 
     @Override
@@ -84,6 +94,21 @@ public class BuildEntityService implements IBuildRepository {
         List<Build> res = null;
         if (totalPrice != 0) {
             List<BuildEntity> list = repo.findByTotalPrice(totalPrice);
+            if (list != null) {
+                for (BuildEntity be : list) {
+                    Build b = mapper.toDomain(be);
+                    res.add(b);
+                }
+            }
+        }
+        return res;
+    }
+
+    @Override
+    public List<Build> findByUserId(Long userId) {
+        List<Build> res = null;
+        if (userId != 0) {
+            List<BuildEntity> list = repo.findByUserId(userId);
             if (list != null) {
                 for (BuildEntity be : list) {
                     Build b = mapper.toDomain(be);

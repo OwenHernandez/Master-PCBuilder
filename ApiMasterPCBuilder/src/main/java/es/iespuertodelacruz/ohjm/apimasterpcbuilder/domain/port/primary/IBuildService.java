@@ -1,6 +1,7 @@
 package es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary;
 
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Build;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.User;
 
 import java.util.List;
 
@@ -10,9 +11,13 @@ public interface IBuildService {
 
     Build save(Build build);
 
-    Build findById(Integer id);
+    Build findById(Long id);
+
+    boolean deleteById(long id);
 
     List<Build> findByName(String name);
 
     List<Build> findByTotalPrice(double totalPrice);
+
+    List<Build> findByUserId(Long userId);
 }

@@ -10,9 +10,13 @@ public interface IBuildRepository {
 
     Build save(Build build);
 
-    Build findById(Integer id);
+    Build findById(Long id);
+
+    boolean deleteById(long id);
 
     List<Build> findByName(String name);
 
     List<Build> findByTotalPrice(double totalPrice);
+
+    List<Build> findByUserId(Long userId);
 }
