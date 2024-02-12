@@ -10,17 +10,20 @@ import Icon from 'react-native-vector-icons/Octicons';
 import { usePrimaryContext } from '../contexts/PrimaryContext';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import axios from 'axios';
+import { Globals } from '../components/Globals';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'UserBuildsList'>;
 
 const UserBuildsList = (props: Props) => {
-    const { user, darkMode } = usePrimaryContext();
+    const { user, darkMode, token } = usePrimaryContext();
     const { navigation, route } = props;
     const fontScale = PixelRatio.getFontScale();
     const getFontSize = (size: number) => size / fontScale;
     const fullScreen = Dimensions.get("window").scale;
     const getIconSize = (size: number) => size / fullScreen;
     const [buildsList, setBuildsList] = useState([{}] as IBuildType[]);
+    /*
     const tempBuilds: IBuildType[] = [
         {
             name: "BuildCoso",
@@ -34,9 +37,19 @@ const UserBuildsList = (props: Props) => {
             ]
         }
     ];
+    */
     useEffect(() => {
-        //Aqui se llamaria a la api para conseguir sus builds
+        getUserBuilds();
     }, []);
+
+    async function getUserBuilds() {
+        try {
+            const response = await axios.get(Globals.IP + "/api/v2/builds", { headers: { "Authorization": "Bearer " + token } });
+            setBuildsList(response.data);
+        } catch (err) {
+            console.log(err);
+        }
+    }
 
     return (
         <View>
@@ -55,10 +68,10 @@ const UserBuildsList = (props: Props) => {
                 </TouchableOpacity>
             </View>
             <FlatList
-                data={tempBuilds}
+                data={buildsList}
                 renderItem={(build) => {
                     return (
-                        <TouchableOpacity style={Styles.touchable} onPress={() => navigation.navigate("Builder", { build: build.item, builds: tempBuilds })}>
+                        <TouchableOpacity style={Styles.touchable} onPress={() => navigation.navigate("Builder", { build: build.item, builds: buildsList })}>
                             <View>
                                 <View style={{ alignItems: "flex-start" }}>
                                     <Text style={{ fontSize: getFontSize(30), color: (darkMode) ? "white" : "black", marginHorizontal: "10%" }}>{build.item.name}</Text>
