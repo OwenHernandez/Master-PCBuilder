@@ -32,9 +32,9 @@ const useLogin = () => {
                     setErrorMsg(response.data);
                 } else {
 
-                    await EncryptedStorage.setItem("token", response.data)
+                    await EncryptedStorage.setItem("token", response.data);
                     setToken(response.data);
-                    const response2 = await axios.get(Globals.IP + "/api/v2/users?nick=" + nick, { headers: { 'Authorization': "Bearer " + token } });
+                    const response2 = await axios.get(Globals.IP + "/api/v2/users?nick=" + nick, { headers: { 'Authorization': "Bearer " + response.data } });
                     const newUser: IUserType = {
                         nick: response2.data.nick,
                         email: response2.data.email,

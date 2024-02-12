@@ -3,7 +3,7 @@ package es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model;
 import java.util.List;
 
 public class User {
-    private int id;
+    private long id;
 
     private byte active;
 
@@ -23,11 +23,11 @@ public class User {
 
     public User() {}
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

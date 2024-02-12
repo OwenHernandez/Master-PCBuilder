@@ -1,11 +1,10 @@
 package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence;
 
-import jakarta.persistence.*;
-
 import java.io.Serializable;
-import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+import java.util.List;
 
 
 /**
@@ -13,14 +12,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  * 
  */
 @Entity
-@Table(name="USERS")
+@Table(name="users")
 @NamedQuery(name="UserEntity.findAll", query="SELECT u FROM UserEntity u")
 public class UserEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private int id;
+	private long id;
 
 	private byte active;
 
@@ -39,21 +38,36 @@ public class UserEntity implements Serializable {
 	//bi-directional many-to-many association to UserEntity
 	@JsonIgnore
 	@ManyToMany
-    @JoinTable(
-        name = "FRIENDS",
-        joinColumns = @JoinColumn(name = "USER_ID1"),
-        inverseJoinColumns = @JoinColumn(name = "USER_ID2")
-    )
-    private List<UserEntity> friends;
+	@JoinTable(
+			name = "FRIENDS",
+			joinColumns = @JoinColumn(name = "USER_ID1"),
+			inverseJoinColumns = @JoinColumn(name = "USER_ID2")
+	)
+	private List<UserEntity> friends;
+
+	//bi-directional many-to-one association to BuildEntity
+	@JsonIgnore
+	@OneToMany(mappedBy="user")
+	private List<BuildEntity> builds;
+
+	//bi-directional many-to-one association to Post
+	@JsonIgnore
+	@OneToMany(mappedBy="user")
+	private List<PostEntity> postsMade;
+
+	//bi-directional many-to-many association to Post
+	@JsonIgnore
+	@ManyToMany(mappedBy="usersWhoLiked")
+	private List<PostEntity> likedPosts;
 
 	public UserEntity() {
 	}
 
-	public int getId() {
+	public long getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -120,4 +134,57 @@ public class UserEntity implements Serializable {
 	public void setFriends(List<UserEntity> friends) {
 		this.friends = friends;
 	}
+
+	public List<BuildEntity> getBuilds() {
+		return this.builds;
+	}
+
+	public void setBuilds(List<BuildEntity> builds) {
+		this.builds = builds;
+	}
+
+	public BuildEntity addBuild(BuildEntity build) {
+		getBuilds().add(build);
+		build.setUser(this);
+
+		return build;
+	}
+
+	public BuildEntity removeBuild(BuildEntity build) {
+		getBuilds().remove(build);
+		build.setUser(null);
+
+		return build;
+	}
+
+	public List<PostEntity> getPostsMade() {
+		return this.postsMade;
+	}
+
+	public void setPostsMade(List<PostEntity> postsMade) {
+		this.postsMade = postsMade;
+	}
+
+	public PostEntity addPosts1(PostEntity posts1) {
+		getPostsMade().add(posts1);
+		posts1.setUser(this);
+
+		return posts1;
+	}
+
+	public PostEntity removePosts1(PostEntity posts1) {
+		getPostsMade().remove(posts1);
+		posts1.setUser(null);
+
+		return posts1;
+	}
+
+	public List<PostEntity> getLikedPosts() {
+		return this.likedPosts;
+	}
+
+	public void setLikedPosts(List<PostEntity> likedPosts) {
+		this.likedPosts = likedPosts;
+	}
+
 }
