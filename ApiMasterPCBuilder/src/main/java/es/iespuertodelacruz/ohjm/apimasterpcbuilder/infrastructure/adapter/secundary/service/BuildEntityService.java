@@ -97,6 +97,7 @@ public class BuildEntityService implements IBuildRepository {
     public List<Build> findByName(String name) {
         List<Build> res = null;
         if (name != null) {
+            res = new ArrayList<>();
             List<BuildEntity> list = repo.findByName(name);
             if (list != null) {
                 for (BuildEntity be : list) {

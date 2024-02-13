@@ -95,6 +95,7 @@ public class ComponentEntityService implements IComponentRepository {
     public List<Component> findByName(String name) {
         List<Component> res = null;
         if (name != null) {
+            res= new ArrayList<>();
             List<ComponentEntity> list = repo.findByName(name);
             if (list != null) {
                 for (ComponentEntity ce : list) {
