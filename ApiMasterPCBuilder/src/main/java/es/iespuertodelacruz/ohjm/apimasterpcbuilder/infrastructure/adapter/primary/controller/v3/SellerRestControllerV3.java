@@ -93,5 +93,58 @@ public class SellerRestControllerV3 {
         }
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getById(@PathVariable("id") Long id) {
+        if (id != null) {
+            Seller byId = sellerService.findById(id);
+            if (byId != null) {
+                return ResponseEntity.ok(byId);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The seller does not exist");
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The id must not be null");
+        }
+    }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable("id") Long id) {
+        if (id != null) {
+            Seller byId = sellerService.findById(id);
+            if (byId != null) {
+                boolean ok = sellerService.deleteById(id);
+                if (ok) {
+                    return ResponseEntity.ok("Seller successfully deleted");
+                } else {
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong");
+                }
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The seller does not exist");
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The id must not be null");
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> update(@RequestBody SellerDTO sellerDTO, @PathVariable("id") Long id) {
+        mapper = new SellerDTOMapper();
+        if (sellerDTO != null && id != null) {
+            Seller byId = sellerService.findById(id);
+            if (byId != null) {
+                Seller seller = mapper.toDomain(sellerDTO);
+                seller.setId(id);
+                boolean ok = sellerService.update(seller);
+                if (ok) {
+                    return ResponseEntity.ok("Seller successfully updated");
+                } else {
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong");
+                }
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The seller does not exist");
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The id must not be null");
+        }
+    }
 }

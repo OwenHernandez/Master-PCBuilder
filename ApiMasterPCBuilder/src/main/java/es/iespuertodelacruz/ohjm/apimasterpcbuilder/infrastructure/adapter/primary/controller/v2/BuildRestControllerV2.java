@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 class BuildDTO {
@@ -19,6 +20,8 @@ class BuildDTO {
     private String notes;
 
     private double totalPrice;
+
+    private String userNick;
 
     //private List<BuildComponent> buildsComponents;
 
@@ -47,6 +50,39 @@ class BuildDTO {
     public void setTotalPrice(double totalPrice) {
         this.totalPrice = totalPrice;
     }
+
+    public String getUserNick() {
+        return userNick;
+    }
+
+    public void setUserNick(String userNick) {
+        this.userNick = userNick;
+    }
+}
+
+class BuildDTOMapper {
+
+    public Build toDomain(BuildDTO buildDTO) {
+        Build build = new Build();
+        build.setName(buildDTO.getName());
+        build.setNotes(buildDTO.getNotes());
+        build.setTotalPrice(build.getTotalPrice());
+
+        return build;
+    }
+
+    public BuildDTO toDTO(Build build) {
+        BuildDTO buildDTO = new BuildDTO();
+        buildDTO.setName(build.getName());
+        buildDTO.setNotes(build.getNotes());
+        buildDTO.setTotalPrice(build.getTotalPrice());
+
+        if (build.getUser() != null) {
+            buildDTO.setUserNick(build.getUser().getNick());
+        }
+
+        return buildDTO;
+    }
 }
 
 @RestController
@@ -60,8 +96,11 @@ public class BuildRestControllerV2 {
     @Autowired
     IUserService userService;
 
+    BuildDTOMapper mapper;
+
     @GetMapping
     public ResponseEntity<?> getByUserId() {
+        mapper = new BuildDTOMapper();
         Object principal =
                 SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = ((UserDetails)principal).getUsername();
@@ -71,7 +110,13 @@ public class BuildRestControllerV2 {
             List<Build> byUserId = buildService.findByUserId(byNick.getId());
 
             if (byUserId != null) {
-                return ResponseEntity.ok(byUserId);
+                List<BuildDTO> res = new ArrayList<>();
+
+                for (Build b : byUserId) {
+                    BuildDTO bdto = mapper.toDTO(b);
+                    res.add(bdto);
+                }
+                return ResponseEntity.ok(res);
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("There is nothing to show");
             }
@@ -82,6 +127,7 @@ public class BuildRestControllerV2 {
 
     @PostMapping
     public ResponseEntity<?> save(@RequestBody BuildDTO buildDTO) {
+        mapper = new BuildDTOMapper();
         if (buildDTO != null) {
             Object principal =
                     SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -89,15 +135,13 @@ public class BuildRestControllerV2 {
             User byNick = userService.findByNick(username);
 
             if (byNick != null) {
-                Build build = new Build();
-                build.setName(buildDTO.getName());
-                build.setNotes(buildDTO.getNotes());
-                build.setTotalPrice(build.getTotalPrice());
+                Build build = mapper.toDomain(buildDTO);
                 build.setUser(byNick);
 
                 Build save = buildService.save(build);
                 if (save != null) {
-                    return ResponseEntity.ok(save);
+                    BuildDTO bdto = mapper.toDTO(save);
+                    return ResponseEntity.ok(bdto);
                 } else {
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong");
                 }
@@ -105,7 +149,7 @@ public class BuildRestControllerV2 {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You should not be here");
             }
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The build must not be null");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The body must not be null");
         }
     }
 
