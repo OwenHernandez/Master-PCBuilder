@@ -26,6 +26,7 @@ public class SellerEntity implements Serializable {
 	private String name;
 
 	//bi-directional many-to-one association to ComponentEntity
+	@JsonIgnore
 	@OneToMany(mappedBy="seller")
 	private List<ComponentEntity> components;
 

@@ -35,7 +35,6 @@ public class ComponentEntity implements Serializable {
 	private List<BuildComponentEntity> buildsComponents;
 
 	//bi-directional many-to-one association to SellerEntity
-	@JsonIgnore
 	@ManyToOne
 	private SellerEntity seller;
 

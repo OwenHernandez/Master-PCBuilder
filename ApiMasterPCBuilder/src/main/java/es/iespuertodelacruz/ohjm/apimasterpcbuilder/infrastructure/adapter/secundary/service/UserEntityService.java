@@ -26,7 +26,7 @@ public class UserEntityService implements IUserRepository {
     }
 
     @Override
-    public User findById(Integer id) {
+    public User findById(Long id) {
         User user = null;
         if (id != null) {
             Optional<UserEntity> opt = repo.findById(id);

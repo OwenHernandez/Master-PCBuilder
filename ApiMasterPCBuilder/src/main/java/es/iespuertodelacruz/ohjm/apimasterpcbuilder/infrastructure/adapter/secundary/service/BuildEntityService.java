@@ -42,13 +42,17 @@ public class BuildEntityService implements IBuildRepository {
 
     @Override
     public Build save(Build build) {
-        Build res = null;
-        if (build != null) {
-            BuildEntity be = mapper.toPersistance(build);
-            BuildEntity save = repo.save(be);
-            res = mapper.toDomain(save);
+        try {
+            Build res = null;
+            if (build != null) {
+                BuildEntity be = mapper.toPersistance(build);
+                BuildEntity save = repo.save(be);
+                res = mapper.toDomain(save);
+            }
+            return res;
+        } catch (RuntimeException e) {
+            return null;
         }
-        return res;
     }
 
     @Override
@@ -78,8 +82,12 @@ public class BuildEntityService implements IBuildRepository {
     public boolean update(Build build) {
         try {//We will need to change it when I do BuildsComponents and Posts
             BuildEntity be = mapper.toPersistance(build);
-            repo.save(be);
-            return true;
+            BuildEntity save = repo.save(be);
+
+            if (save != null)
+                return true;
+            else
+                return false;
         } catch (RuntimeException e) {
             return false;
         }
