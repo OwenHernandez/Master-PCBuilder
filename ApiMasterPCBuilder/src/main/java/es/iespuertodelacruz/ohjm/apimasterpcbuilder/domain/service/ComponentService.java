@@ -1,0 +1,75 @@
+package es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.service;
+
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Build;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Component;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.IBuildService;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.IComponentService;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.secundary.IBuildRepository;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.secundary.IComponentRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class ComponentService implements IComponentService {
+
+    @Autowired
+    IComponentRepository repo;
+
+    @Override
+    public List<Component> findAll() {
+        return repo.findAll();
+    }
+
+    @Override
+    public Component save(Component component) {
+
+        if (component == null) {
+            return null;
+        }
+        return repo.save(component);
+    }
+
+    @Override
+    public Component findById(Long id) {
+        Component component = null;
+        if (id != null) {
+            component = repo.findById(id);
+        }
+        return component;
+    }
+
+    @Override
+    public boolean deleteById(long id) {
+        return repo.deleteById(id);
+    }
+
+    @Override
+    public boolean update(Build build) {
+        return repo.update(build);
+    }
+
+    @Override
+    public List<Component> findByName(String name) {
+
+        if (name == null || name.isBlank()) {
+            return null;
+        }
+        return repo.findByName(name);
+    }
+
+    @Override
+    public List<Component> findByPrice(double price) {
+
+        if (price == 0) {
+            return null;
+        }
+        return repo.findByPrice(price);
+    }
+
+    @Override
+    public List<Component> findBySellerId(Long sellerId) {
+        return repo.findBySellerId(sellerId);
+    }
+}

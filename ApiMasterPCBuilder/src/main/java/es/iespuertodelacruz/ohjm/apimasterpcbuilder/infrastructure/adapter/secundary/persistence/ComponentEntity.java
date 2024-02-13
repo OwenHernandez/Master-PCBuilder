@@ -31,6 +31,7 @@ public class ComponentEntity implements Serializable {
 	private double price;
 
 	//bi-directional many-to-one association to BuildComponentEntity
+	@JsonIgnore
 	@OneToMany(mappedBy="component")
 	private List<BuildComponentEntity> buildsComponents;
 
