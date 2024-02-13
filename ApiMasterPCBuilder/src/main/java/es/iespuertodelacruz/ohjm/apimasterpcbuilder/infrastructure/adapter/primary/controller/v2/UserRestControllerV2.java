@@ -1,8 +1,9 @@
-package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.controller;
+package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.controller.v2;
 
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.User;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -96,11 +97,10 @@ public class UserRestControllerV2 {
     UserDTOMapper mapper;
 
     @GetMapping
-    public ResponseEntity<?> getAllOrByNick(@RequestParam(name = "nick", required = false) String nick) {
+    public ResponseEntity<?> getByNick(@RequestParam("nick") String nick) {
         mapper = new UserDTOMapper();
         if (nick == null) {
-            List<User> all = userService.findAll();
-            return ResponseEntity.ok(all);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The nick parameter is required");
         } else {
             User byNick = userService.findByNick(nick);
             UserDTO userDTO = mapper.toDTO(byNick);

@@ -40,7 +40,7 @@ public class SellerService implements ISellerService {
     }
 
     @Override
-    public List<Seller> findByName(String name) {
+    public Seller findByName(String name) {
         return repo.findByName(name);
     }
 }

@@ -1,4 +1,4 @@
-package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.controller;
+package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.controller.v1;
 
 
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.User;

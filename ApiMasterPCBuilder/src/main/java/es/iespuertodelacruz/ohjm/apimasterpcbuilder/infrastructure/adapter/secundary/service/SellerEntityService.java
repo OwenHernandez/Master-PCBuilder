@@ -8,11 +8,13 @@ import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secun
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.SellerEntity;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.repository.ISellerEntityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class SellerEntityService implements ISellerRepository {
 
     @Autowired

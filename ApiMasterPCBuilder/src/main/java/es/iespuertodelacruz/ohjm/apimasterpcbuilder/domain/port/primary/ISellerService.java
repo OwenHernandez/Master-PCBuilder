@@ -16,5 +16,5 @@ public interface ISellerService {
 
     boolean update(Seller seller);
 
-    List<Seller> findByName(String name);
+    Seller findByName(String name);
 }
