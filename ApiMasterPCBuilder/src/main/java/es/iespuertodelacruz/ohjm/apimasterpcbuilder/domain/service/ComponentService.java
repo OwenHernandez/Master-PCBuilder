@@ -46,8 +46,8 @@ public class ComponentService implements IComponentService {
     }
 
     @Override
-    public boolean update(Build build) {
-        return repo.update(build);
+    public boolean update(Component component) {
+        return repo.update(component);
     }
 
     @Override

@@ -15,7 +15,7 @@ public interface IComponentService {
 
     boolean deleteById(long id);
 
-    boolean update(Build build);
+    boolean update(Component component);
 
     List<Component> findByName(String name);
 
