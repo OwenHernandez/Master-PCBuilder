@@ -13,6 +13,7 @@ import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secun
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -48,7 +49,7 @@ public class ComponentEntityService implements IComponentRepository {
                 res = mapper.toDomain(save);
             }
             return res;
-        } catch (RuntimeException e) {
+        } catch (RuntimeException | ParseException e) {
             return null;
         }
     }
@@ -86,7 +87,7 @@ public class ComponentEntityService implements IComponentRepository {
                 return true;
             else
                 return false;
-        } catch (RuntimeException e) {
+        } catch (RuntimeException | ParseException e) {
             return false;
         }
     }

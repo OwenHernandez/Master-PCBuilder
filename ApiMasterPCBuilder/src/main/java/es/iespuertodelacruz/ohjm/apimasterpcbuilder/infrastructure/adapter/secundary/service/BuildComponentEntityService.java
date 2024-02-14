@@ -6,11 +6,14 @@ import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secun
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.BuildComponentEntity;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.repository.IBuildComponentEntityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class BuildComponentEntityService implements IBuildComponentRepository {
 
     @Autowired
@@ -35,7 +38,7 @@ public class BuildComponentEntityService implements IBuildComponentRepository {
             BuildComponentEntity bce = mapper.toPersistance(bc);
             BuildComponentEntity save = repo.save(bce);
             return mapper.toDomain(save);
-        } catch (RuntimeException e) {
+        } catch (RuntimeException | ParseException e) {
             return null;
         }
     }
@@ -50,7 +53,7 @@ public class BuildComponentEntityService implements IBuildComponentRepository {
             BuildComponentEntity bce = mapper.toPersistance(bc);
             repo.save(bce);
             return true;
-        } catch (RuntimeException e) {
+        } catch (RuntimeException | ParseException e) {
             return false;
         }
     }

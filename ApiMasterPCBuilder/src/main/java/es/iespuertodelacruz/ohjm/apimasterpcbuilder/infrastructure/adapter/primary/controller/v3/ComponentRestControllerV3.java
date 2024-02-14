@@ -4,89 +4,14 @@ import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Component;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Seller;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.IComponentService;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.ISellerService;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.ComponentDTO;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.mapper.ComponentDTOMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
-class ComponentDTO {
-    private String description;
-
-    private String image;
-
-    private String name;
-
-    private double price;
-
-    private String sellerName;
-
-    public ComponentDTO() {}
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public String getSellerName() {
-        return sellerName;
-    }
-
-    public void setSellerName(String sellerName) {
-        this.sellerName = sellerName;
-    }
-}
-
-class ComponentDTOMapper {
-    public Component toDomain(ComponentDTO componentDTO) {
-        Component component = new Component();
-        component.setName(componentDTO.getName());
-        component.setImage(componentDTO.getImage());
-        component.setDescription(componentDTO.getDescription());
-        component.setPrice(componentDTO.getPrice());
-
-        return component;
-    }
-
-    public ComponentDTO toDTO(Component component) {
-        ComponentDTO componentDTO = new ComponentDTO();
-        componentDTO.setName(component.getName());
-        componentDTO.setImage(component.getImage());
-        componentDTO.setDescription(component.getDescription());
-        componentDTO.setPrice(component.getPrice());
-        componentDTO.setSellerName(component.getSeller().getName());
-
-        return componentDTO;
-    }
-}
 
 @RestController
 @CrossOrigin

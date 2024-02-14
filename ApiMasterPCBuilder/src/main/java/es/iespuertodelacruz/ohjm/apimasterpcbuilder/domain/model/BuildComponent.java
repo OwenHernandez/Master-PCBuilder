@@ -4,7 +4,7 @@ public class BuildComponent {
 
     private long id;
 
-    private long dateCreated;
+    private String dateCreated;
 
     private double priceAtTheTime;
 
@@ -22,11 +22,11 @@ public class BuildComponent {
         this.id = id;
     }
 
-    public long getDateCreated() {
+    public String getDateCreated() {
         return dateCreated;
     }
 
-    public void setDateCreated(long dateCreated) {
+    public void setDateCreated(String dateCreated) {
         this.dateCreated = dateCreated;
     }
 

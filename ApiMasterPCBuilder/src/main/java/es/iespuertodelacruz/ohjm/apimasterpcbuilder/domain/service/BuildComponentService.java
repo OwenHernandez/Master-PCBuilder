@@ -4,9 +4,11 @@ import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.BuildComponent;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.IBuildComponentService;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.secundary.IBuildComponentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class BuildComponentService implements IBuildComponentService {
 
     @Autowired

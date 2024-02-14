@@ -1,9 +1,16 @@
 package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.controller.v2;
 
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Build;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.BuildComponent;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Component;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.User;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.IBuildService;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.IComponentService;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.IUserService;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.BuildInputDTO;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.BuildOutputDTO;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.mapper.BuildInputDTOMapper;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.mapper.BuildOutputDTOMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,79 +18,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-
-class BuildDTO {
-    private String name;
-
-    private String notes;
-
-    private double totalPrice;
-
-    private String userNick;
-
-    //private List<BuildComponent> buildsComponents;
-
-    public BuildDTO() {}
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getNotes() {
-        return notes;
-    }
-
-    public void setNotes(String notes) {
-        this.notes = notes;
-    }
-
-    public double getTotalPrice() {
-        return totalPrice;
-    }
-
-    public void setTotalPrice(double totalPrice) {
-        this.totalPrice = totalPrice;
-    }
-
-    public String getUserNick() {
-        return userNick;
-    }
-
-    public void setUserNick(String userNick) {
-        this.userNick = userNick;
-    }
-}
-
-class BuildDTOMapper {
-
-    public Build toDomain(BuildDTO buildDTO) {
-        Build build = new Build();
-        build.setName(buildDTO.getName());
-        build.setNotes(buildDTO.getNotes());
-        build.setTotalPrice(build.getTotalPrice());
-
-        return build;
-    }
-
-    public BuildDTO toDTO(Build build) {
-        BuildDTO buildDTO = new BuildDTO();
-        buildDTO.setName(build.getName());
-        buildDTO.setNotes(build.getNotes());
-        buildDTO.setTotalPrice(build.getTotalPrice());
-
-        if (build.getUser() != null) {
-            buildDTO.setUserNick(build.getUser().getNick());
-        }
-
-        return buildDTO;
-    }
-}
 
 @RestController
 @CrossOrigin
@@ -96,24 +34,28 @@ public class BuildRestControllerV2 {
     @Autowired
     IUserService userService;
 
-    BuildDTOMapper mapper;
+    @Autowired
+    IComponentService componentService;
+
+    BuildOutputDTOMapper outputDTOMapper = new BuildOutputDTOMapper();
+
+    BuildInputDTOMapper inputDTOMapper = new BuildInputDTOMapper();
 
     @GetMapping
     public ResponseEntity<?> getByUserId() {
-        mapper = new BuildDTOMapper();
         Object principal =
                 SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username = ((UserDetails)principal).getUsername();
+        String username = ((UserDetails) principal).getUsername();
         User byNick = userService.findByNick(username);
 
         if (byNick != null) {
             List<Build> byUserId = buildService.findByUserId(byNick.getId());
 
             if (byUserId != null) {
-                List<BuildDTO> res = new ArrayList<>();
+                List<BuildOutputDTO> res = new ArrayList<>();
 
                 for (Build b : byUserId) {
-                    BuildDTO bdto = mapper.toDTO(b);
+                    BuildOutputDTO bdto = outputDTOMapper.toDTO(b);
                     res.add(bdto);
                 }
                 return ResponseEntity.ok(res);
@@ -126,22 +68,38 @@ public class BuildRestControllerV2 {
     }
 
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody BuildDTO buildDTO) {
-        mapper = new BuildDTOMapper();
-        if (buildDTO != null) {
+    public ResponseEntity<?> save(@RequestBody BuildInputDTO buildInputDTO) {
+        if (buildInputDTO != null) {
             Object principal =
                     SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             String username = ((UserDetails) principal).getUsername();
             User byNick = userService.findByNick(username);
 
             if (byNick != null) {
-                Build build = mapper.toDomain(buildDTO);
+                Build build = inputDTOMapper.toDomain(buildInputDTO);
+                build.setBuildsComponents(new ArrayList<>());
+                for (Long compId : buildInputDTO.getComponentsIds()) {
+                    Component compById = componentService.findById(compId);
+                    if (compById == null) {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The components must exist");
+                    }
+                    BuildComponent bc = new BuildComponent();
+                    bc.setPriceAtTheTime(compById.getPrice());
+
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    Date date = new Date();
+                    String dateStr = sdf.format(date);
+                    bc.setDateCreated(dateStr);
+
+                    bc.setComponent(compById);
+                    build.getBuildsComponents().add(bc);
+                }
                 build.setUser(byNick);
 
                 Build save = buildService.save(build);
                 if (save != null) {
-                    BuildDTO bdto = mapper.toDTO(save);
-                    return ResponseEntity.ok(bdto);
+                    BuildOutputDTO outputDTO = outputDTOMapper.toDTO(save);
+                    return ResponseEntity.ok(outputDTO);
                 } else {
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong");
                 }
@@ -155,7 +113,6 @@ public class BuildRestControllerV2 {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteById(@PathVariable("id") Long id) {
-
         if (id != null) {
             Object principal =
                     SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -187,8 +144,8 @@ public class BuildRestControllerV2 {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@RequestBody BuildDTO buildDTO, @PathVariable("id") Long id) {
-        if (buildDTO != null && id != null) {
+    public ResponseEntity<?> update(@RequestBody BuildInputDTO buildInputDTO, @PathVariable("id") Long id) {
+        if (buildInputDTO != null && id != null) {
             Object principal =
                     SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             String username = ((UserDetails) principal).getUsername();
@@ -198,10 +155,29 @@ public class BuildRestControllerV2 {
                 Build buildById = buildService.findById(id);
                 if (buildById != null) {
                     if (buildById.getUser().getId() == userByNick.getId()) {
-                        buildById.setName(buildDTO.getName());
-                        buildById.setNotes(buildDTO.getNotes());
-                        buildById.setTotalPrice(buildDTO.getTotalPrice());
-                        boolean ok = buildService.update(buildById);
+                        Build build = inputDTOMapper.toDomain(buildInputDTO);
+                        if (build.getBuildsComponents() == null) {
+                            build.setBuildsComponents(new ArrayList<>());
+                        }
+                        for (Long compId : buildInputDTO.getComponentsIds()) {
+                            Component compById = componentService.findById(compId);
+                            if (compById == null) {
+                                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The components must exist");
+                            }
+                            BuildComponent bc = new BuildComponent();
+                            bc.setPriceAtTheTime(compById.getPrice());
+
+                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                            Date date = new Date();
+                            String dateStr = sdf.format(date);
+                            bc.setDateCreated(dateStr);
+
+                            bc.setComponent(compById);
+                            build.getBuildsComponents().add(bc);
+                        }
+                        build.setId(buildById.getId());
+                        build.setUser(userByNick);
+                        boolean ok = buildService.update(build);
 
                         if (ok) {
                             return ResponseEntity.ok("Build Successfully updated");

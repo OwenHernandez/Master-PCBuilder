@@ -3,32 +3,38 @@ package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secu
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.BuildComponent;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.BuildComponentEntity;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class BuildComponentEntityMapper {
-
-    BuildEntityMapper buildMapper = new BuildEntityMapper();
-
-    ComponentEntityMapper componentMapper = new ComponentEntityMapper();
 
     public BuildComponent toDomain(BuildComponentEntity bce) {
 
         BuildComponent res = new BuildComponent();
         res.setId(bce.getId());
-        res.setDateCreated(bce.getDateCreated());
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date(bce.getDateCreated());
+        String dateStr = sdf.format(date);
+        res.setDateCreated(dateStr);
+
         res.setPriceAtTheTime(bce.getPriceAtTheTime());
-        res.setBuild(buildMapper.toDomain(bce.getBuild()));
-        res.setComponent(componentMapper.toDomain(bce.getComponent()));
 
         return res;
     }
 
-    public BuildComponentEntity toPersistance(BuildComponent bc) {
+    public BuildComponentEntity toPersistance(BuildComponent bc) throws ParseException {
 
         BuildComponentEntity res = new BuildComponentEntity();
         res.setId(bc.getId());
-        res.setDateCreated(bc.getDateCreated());
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = sdf.parse(bc.getDateCreated());
+        long dateLong = date.getTime();
+        res.setDateCreated(dateLong);
+
         res.setPriceAtTheTime(bc.getPriceAtTheTime());
-        res.setBuild(buildMapper.toPersistance(bc.getBuild()));
-        res.setComponent(componentMapper.toPersistance(bc.getComponent()));
 
         return res;
     }

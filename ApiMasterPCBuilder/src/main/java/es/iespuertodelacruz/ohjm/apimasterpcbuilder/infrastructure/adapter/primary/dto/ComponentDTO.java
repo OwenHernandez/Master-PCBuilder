@@ -1,11 +1,6 @@
-package es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model;
+package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto;
 
-import java.util.List;
-
-public class Component {
-
-    private long id;
-
+public class ComponentDTO {
     private String description;
 
     private String image;
@@ -14,18 +9,9 @@ public class Component {
 
     private double price;
 
-    private List<BuildComponent> buildsComponents;
+    private String sellerName;
 
-    private Seller seller;
-
-    public Component() {}
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
+    public ComponentDTO() {
     }
 
     public String getDescription() {
@@ -60,19 +46,11 @@ public class Component {
         this.price = price;
     }
 
-    public Seller getSeller() {
-        return seller;
+    public String getSellerName() {
+        return sellerName;
     }
 
-    public void setSeller(Seller seller) {
-        this.seller = seller;
-    }
-
-    public List<BuildComponent> getBuildsComponents() {
-        return buildsComponents;
-    }
-
-    public void setBuildsComponents(List<BuildComponent> buildsComponents) {
-        this.buildsComponents = buildsComponents;
+    public void setSellerName(String sellerName) {
+        this.sellerName = sellerName;
     }
 }

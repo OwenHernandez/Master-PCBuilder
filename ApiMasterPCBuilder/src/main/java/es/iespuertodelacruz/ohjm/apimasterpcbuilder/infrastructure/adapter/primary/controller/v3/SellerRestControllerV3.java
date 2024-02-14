@@ -2,54 +2,14 @@ package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.prim
 
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Seller;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.ISellerService;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.SellerDTO;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.mapper.SellerDTOMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
-class SellerDTO {
-    private String name;
-
-    private String image;
-
-    public SellerDTO() {}
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-}
-
-class SellerDTOMapper {
-    public Seller toDomain(SellerDTO sellerDTO) {
-        Seller seller = new Seller();
-        seller.setName(sellerDTO.getName());
-        seller.setImage(sellerDTO.getImage());
-
-        return seller;
-    }
-
-    public SellerDTO toDTO(Seller seller) {
-        SellerDTO sellerDTO = new SellerDTO();
-        sellerDTO.setName(seller.getName());
-        sellerDTO.setImage(seller.getImage());
-
-        return sellerDTO;
-    }
-}
 
 @RestController
 @CrossOrigin

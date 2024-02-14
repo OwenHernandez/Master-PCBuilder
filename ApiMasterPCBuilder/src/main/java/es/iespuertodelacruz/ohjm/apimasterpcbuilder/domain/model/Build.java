@@ -14,9 +14,9 @@ public class Build {
 
     private User user;
 
-    //private List<BuildComponent> buildsComponents;
+    private List<BuildComponent> buildsComponents;
 
-    //private List<Post> postEntities;
+    //private List<Post> post;
 
     public Build() {}
 
@@ -58,5 +58,13 @@ public class Build {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public List<BuildComponent> getBuildsComponents() {
+        return buildsComponents;
+    }
+
+    public void setBuildsComponents(List<BuildComponent> buildsComponents) {
+        this.buildsComponents = buildsComponents;
     }
 }
