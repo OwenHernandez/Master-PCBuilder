@@ -1,18 +1,27 @@
 package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence;
 
 import java.io.Serializable;
+import java.util.List;
+
+import jakarta.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
-import java.util.List;
+
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 
 
 /**
- * The persistent class for the users database table.
+ * The persistent class for the USERS database table.
  * 
  */
 @Entity
-@Table(name="users")
+@Table(name="USERS")
 @NamedQuery(name="UserEntity.findAll", query="SELECT u FROM UserEntity u")
 public class UserEntity implements Serializable {
 	private static final long serialVersionUID = 1L;

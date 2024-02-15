@@ -80,7 +80,7 @@ public class AuthRestController {
 		
 		String token = authService.authenticate(udl);
 		if (token.equals(ErrGlobals.NOT_ACTIVE) || token.equals(ErrGlobals.INC_PASS_USR))
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(token);
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(token);
 		else
 			return ResponseEntity.ok(token);
 	}

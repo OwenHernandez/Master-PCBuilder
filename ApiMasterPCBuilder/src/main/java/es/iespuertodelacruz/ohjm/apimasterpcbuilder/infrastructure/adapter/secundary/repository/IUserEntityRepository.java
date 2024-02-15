@@ -6,9 +6,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface IUserEntityRepository extends JpaRepository<UserEntity, Long> {
-    @Query(value = "SELECT * FROM USERS u WHERE u.nick = :nick", nativeQuery = true)
+    @Query(value = "SELECT * FROM USERS u WHERE u.NICK = :nick", nativeQuery = true)
     UserEntity findByNick(@Param("nick") String nick);
 
-    @Query(value = "SELECT * FROM USERS u WHERE u.email = :email", nativeQuery = true)
+    @Query(value = "SELECT * FROM USERS u WHERE u.EMAIL = :email", nativeQuery = true)
     UserEntity findByEmail(@Param("email") String email);
 }

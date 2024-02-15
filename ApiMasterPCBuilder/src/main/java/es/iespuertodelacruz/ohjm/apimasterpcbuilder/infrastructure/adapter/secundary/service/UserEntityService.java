@@ -43,6 +43,9 @@ public class UserEntityService implements IUserRepository {
         User user = null;
         if (nick != null) {
             UserEntity ue = repo.findByNick(nick);
+            if (ue == null) {
+                return null;
+            }
             user = mapper.toDomain(ue);
         }
         return user;

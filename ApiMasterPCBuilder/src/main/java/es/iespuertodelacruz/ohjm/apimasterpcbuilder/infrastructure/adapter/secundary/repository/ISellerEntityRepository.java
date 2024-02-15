@@ -7,6 +7,6 @@ import org.springframework.data.repository.query.Param;
 
 public interface ISellerEntityRepository extends JpaRepository<SellerEntity, Long> {
 
-    @Query(value = "SELECT * FROM SELLERS s WHERE s.name = :name", nativeQuery = true)
+    @Query(value = "SELECT * FROM SELLERS s WHERE s.NAME = :name", nativeQuery = true)
     SellerEntity findByName(@Param("name") String name);
 }
