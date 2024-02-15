@@ -10,10 +10,11 @@ import java.util.List;
 
 public class BuildOutputDTOMapper {
 
-    ComponentDTOMapper compDTOMapper = new ComponentDTOMapper();
+    ComponentInputDTOMapper compDTOMapper = new ComponentInputDTOMapper();
 
     public Build toDomain(BuildOutputDTO buildOutputDTO) {
         Build build = new Build();
+        build.setId(buildOutputDTO.getId());
         build.setName(buildOutputDTO.getName());
         build.setNotes(buildOutputDTO.getNotes());
         build.setTotalPrice(buildOutputDTO.getTotalPrice());
@@ -35,6 +36,7 @@ public class BuildOutputDTOMapper {
 
     public BuildOutputDTO toDTO(Build build) {
         BuildOutputDTO buildOutputDTO = new BuildOutputDTO();
+        buildOutputDTO.setId(build.getId());
         buildOutputDTO.setName(build.getName());
         buildOutputDTO.setNotes(build.getNotes());
         buildOutputDTO.setTotalPrice(build.getTotalPrice());

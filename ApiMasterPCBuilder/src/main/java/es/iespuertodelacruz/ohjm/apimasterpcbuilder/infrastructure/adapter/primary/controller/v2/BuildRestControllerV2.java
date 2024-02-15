@@ -78,11 +78,13 @@ public class BuildRestControllerV2 {
             if (byNick != null) {
                 Build build = inputDTOMapper.toDomain(buildInputDTO);
                 build.setBuildsComponents(new ArrayList<>());
+                double totalPrice = 0;
                 for (Long compId : buildInputDTO.getComponentsIds()) {
                     Component compById = componentService.findById(compId);
                     if (compById == null) {
                         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The components must exist");
                     }
+                    totalPrice += compById.getPrice();
                     BuildComponent bc = new BuildComponent();
                     bc.setPriceAtTheTime(compById.getPrice());
 
@@ -94,6 +96,7 @@ public class BuildRestControllerV2 {
                     bc.setComponent(compById);
                     build.getBuildsComponents().add(bc);
                 }
+                build.setTotalPrice(totalPrice);
                 build.setUser(byNick);
 
                 Build save = buildService.save(build);
@@ -112,7 +115,7 @@ public class BuildRestControllerV2 {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteById(@PathVariable("id") Long id) {
+    public ResponseEntity<?> delete(@PathVariable("id") Long id) {
         if (id != null) {
             Object principal =
                     SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -156,6 +159,7 @@ public class BuildRestControllerV2 {
                 if (buildById != null) {
                     if (buildById.getUser().getId() == userByNick.getId()) {
                         Build build = inputDTOMapper.toDomain(buildInputDTO);
+                        double totalPrice = 0;
                         if (build.getBuildsComponents() == null) {
                             build.setBuildsComponents(new ArrayList<>());
                         }
@@ -164,6 +168,7 @@ public class BuildRestControllerV2 {
                             if (compById == null) {
                                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The components must exist");
                             }
+                            totalPrice += compById.getPrice();
                             BuildComponent bc = new BuildComponent();
                             bc.setPriceAtTheTime(compById.getPrice());
 
@@ -175,6 +180,7 @@ public class BuildRestControllerV2 {
                             bc.setComponent(compById);
                             build.getBuildsComponents().add(bc);
                         }
+                        build.setTotalPrice(totalPrice);
                         build.setId(buildById.getId());
                         build.setUser(userByNick);
                         boolean ok = buildService.update(build);

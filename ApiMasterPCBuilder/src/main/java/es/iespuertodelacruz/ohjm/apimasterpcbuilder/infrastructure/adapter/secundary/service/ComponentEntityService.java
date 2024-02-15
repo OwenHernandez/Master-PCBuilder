@@ -69,7 +69,7 @@ public class ComponentEntityService implements IComponentRepository {
 
     @Override
     public boolean deleteById(long id) {
-        try {//We will need to change it when I do BuildsComponents and Posts
+        try {//We will need to change it when I do BuildsComponents
             repo.deleteById(id);
             return true;
         } catch (RuntimeException e) {
@@ -79,14 +79,16 @@ public class ComponentEntityService implements IComponentRepository {
 
     @Override
     public boolean update(Component component) {
-        try {//We will need to change it when I do BuildsComponents and Posts
-            ComponentEntity ce = mapper.toPersistance(component);
-            ComponentEntity save = repo.save(ce);
+        try {
+            Optional<ComponentEntity> byId = repo.findById(component.getId());
+            if (byId.isPresent()) {
+                ComponentEntity ce = mapper.toPersistance(component);
+                ComponentEntity save = repo.save(ce);
 
-            if (save != null)
                 return true;
-            else
+            } else {
                 return false;
+            }
         } catch (RuntimeException | ParseException e) {
             return false;
         }

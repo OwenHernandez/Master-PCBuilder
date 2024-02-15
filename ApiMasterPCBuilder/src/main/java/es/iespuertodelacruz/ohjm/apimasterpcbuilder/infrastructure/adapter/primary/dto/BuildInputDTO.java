@@ -8,8 +8,6 @@ public class BuildInputDTO {
 
     private String notes;
 
-    private double totalPrice;
-
     private List<Long> componentsIds;
 
     public BuildInputDTO() {}
@@ -28,14 +26,6 @@ public class BuildInputDTO {
 
     public void setNotes(String notes) {
         this.notes = notes;
-    }
-
-    public double getTotalPrice() {
-        return totalPrice;
-    }
-
-    public void setTotalPrice(double totalPrice) {
-        this.totalPrice = totalPrice;
     }
 
     public List<Long> getComponentsIds() {

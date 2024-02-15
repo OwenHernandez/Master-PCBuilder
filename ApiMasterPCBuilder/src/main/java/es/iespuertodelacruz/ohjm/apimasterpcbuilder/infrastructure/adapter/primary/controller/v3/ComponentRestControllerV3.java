@@ -4,13 +4,16 @@ import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Component;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Seller;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.IComponentService;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.ISellerService;
-import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.ComponentDTO;
-import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.mapper.ComponentDTOMapper;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.ComponentInputDTO;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.ComponentOutputDTO;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.mapper.ComponentInputDTOMapper;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.mapper.ComponentOutputDTOMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -24,34 +27,48 @@ public class ComponentRestControllerV3 {
     @Autowired
     ISellerService sellerService;
 
-    ComponentDTOMapper mapper = new ComponentDTOMapper();
+    ComponentInputDTOMapper inputDTOMapper = new ComponentInputDTOMapper();
+
+    ComponentOutputDTOMapper outputDTOMapper = new ComponentOutputDTOMapper();
 
     @GetMapping
     public ResponseEntity<?> getAllOrByName(@RequestParam(value = "name", required = false) String name) {
         if (name == null) {
             List<Component> all = componentService.findAll();
-            return ResponseEntity.ok(all);
+            List<ComponentInputDTO> allDTO = new ArrayList<>();
+            for (Component comp : all) {
+                ComponentInputDTO compOutputDTO = outputDTOMapper.toDTO(comp);
+                allDTO.add(compOutputDTO);
+            }
+            return ResponseEntity.ok(allDTO);
         } else {
             List<Component> components = componentService.findByName(name);
-            if (components == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The requested components were not found");
+            List<ComponentInputDTO> componentsDTO = new ArrayList<>();
+            if (components != null) {
+                for (Component comp : components) {
+                    ComponentInputDTO compOutputDTO = outputDTOMapper.toDTO(comp);
+                    componentsDTO.add(compOutputDTO);
+                }
+
+                return ResponseEntity.ok(componentsDTO);
             } else {
-                return ResponseEntity.ok(components);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The requested components were not found");
             }
         }
     }
 
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody ComponentDTO componentDTO) {
-        if (componentDTO != null) {
-            Seller sellerByName = sellerService.findByName(componentDTO.getSellerName());
+    public ResponseEntity<?> save(@RequestBody ComponentInputDTO componentInputDTO) {
+        if (componentInputDTO != null) {
+            Seller sellerByName = sellerService.findByName(componentInputDTO.getSellerName());
             if (sellerByName != null) {
-                Component component = mapper.toDomain(componentDTO);
+                Component component = inputDTOMapper.toDomain(componentInputDTO);
                 component.setSeller(sellerByName);
                 Component save = componentService.save(component);
 
                 if (save != null) {
-                    return ResponseEntity.ok(save);
+                    ComponentInputDTO compOutputDTO = outputDTOMapper.toDTO(save);
+                    return ResponseEntity.ok(compOutputDTO);
                 } else {
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong");
                 }
@@ -68,7 +85,8 @@ public class ComponentRestControllerV3 {
         if (id != null) {
             Component byId = componentService.findById(id);
             if (byId != null) {
-                return ResponseEntity.ok(byId);
+                ComponentInputDTO compOutputDTO = outputDTOMapper.toDTO(byId);
+                return ResponseEntity.ok(compOutputDTO);
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The component does not exist");
             }
@@ -97,13 +115,13 @@ public class ComponentRestControllerV3 {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@RequestBody ComponentDTO componentDTO, @PathVariable("id") Long id) {
-        if (componentDTO != null && id != null) {
+    public ResponseEntity<?> update(@RequestBody ComponentInputDTO componentInputDTO, @PathVariable("id") Long id) {
+        if (componentInputDTO != null && id != null) {
             Component byId = componentService.findById(id);
             if (byId != null) {
-                Seller sellerByName = sellerService.findByName(componentDTO.getSellerName());
+                Seller sellerByName = sellerService.findByName(componentInputDTO.getSellerName());
                 if (sellerByName != null) {
-                    Component component = mapper.toDomain(componentDTO);
+                    Component component = inputDTOMapper.toDomain(componentInputDTO);
                     component.setId(id);
                     component.setSeller(sellerByName);
                     boolean ok = componentService.update(component);

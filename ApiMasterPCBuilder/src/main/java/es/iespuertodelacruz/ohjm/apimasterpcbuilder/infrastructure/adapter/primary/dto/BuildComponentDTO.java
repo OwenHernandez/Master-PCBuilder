@@ -1,13 +1,11 @@
 package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto;
 
-import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Component;
-
 public class BuildComponentDTO {
     private String dateCreated;
 
     private double priceAtTheTime;
 
-    private ComponentDTO component;
+    private ComponentInputDTO component;
 
     public BuildComponentDTO() {
     }
@@ -28,11 +26,11 @@ public class BuildComponentDTO {
         this.priceAtTheTime = priceAtTheTime;
     }
 
-    public ComponentDTO getComponent() {
+    public ComponentInputDTO getComponent() {
         return component;
     }
 
-    public void setComponent(ComponentDTO component) {
+    public void setComponent(ComponentInputDTO component) {
         this.component = component;
     }
 }

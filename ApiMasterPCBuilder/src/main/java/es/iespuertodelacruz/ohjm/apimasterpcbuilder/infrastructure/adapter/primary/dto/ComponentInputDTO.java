@@ -1,6 +1,6 @@
 package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto;
 
-public class ComponentDTO {
+public class ComponentInputDTO {
     private String description;
 
     private String image;
@@ -11,7 +11,7 @@ public class ComponentDTO {
 
     private String sellerName;
 
-    public ComponentDTO() {
+    public ComponentInputDTO() {
     }
 
     public String getDescription() {

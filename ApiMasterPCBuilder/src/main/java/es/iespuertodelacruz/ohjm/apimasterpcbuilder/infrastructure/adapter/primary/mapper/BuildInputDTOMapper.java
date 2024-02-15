@@ -10,7 +10,6 @@ public class BuildInputDTOMapper {
         Build build = new Build();
         build.setName(buildInputDTO.getName());
         build.setNotes(buildInputDTO.getNotes());
-        build.setTotalPrice(buildInputDTO.getTotalPrice());
 
         return build;
     }
@@ -19,7 +18,6 @@ public class BuildInputDTOMapper {
         BuildInputDTO buildInputDTO = new BuildInputDTO();
         buildInputDTO.setName(build.getName());
         buildInputDTO.setNotes(build.getNotes());
-        buildInputDTO.setTotalPrice(build.getTotalPrice());
         for (BuildComponent bc : build.getBuildsComponents()) {
             buildInputDTO.getComponentsIds().add(bc.getComponent().getId());
         }
