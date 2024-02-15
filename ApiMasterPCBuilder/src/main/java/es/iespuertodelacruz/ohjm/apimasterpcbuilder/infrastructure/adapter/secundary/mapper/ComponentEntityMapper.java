@@ -23,13 +23,14 @@ public class ComponentEntityMapper {
         res.setPrice(componentEntity.getPrice());
         res.setImage(componentEntity.getImage());
         res.setSeller(sellerMapper.toDomain(componentEntity.getSeller()));
-        if (res.getBuildsComponents() == null) {
-            res.setBuildsComponents(new ArrayList<>());
+        if (componentEntity.getBuildsComponents() != null) {
+            if (res.getBuildsComponents() == null) {
+                res.setBuildsComponents(new ArrayList<>());
+            }
+            for (BuildComponentEntity bce : componentEntity.getBuildsComponents()) {
+                res.getBuildsComponents().add(bcMapper.toDomain(bce));
+            }
         }
-        for (BuildComponentEntity bce : componentEntity.getBuildsComponents()) {
-            res.getBuildsComponents().add(bcMapper.toDomain(bce));
-        }
-
         return res;
     }
 
@@ -42,13 +43,15 @@ public class ComponentEntityMapper {
         res.setPrice(component.getPrice());
         res.setImage(component.getImage());
         res.setSeller(sellerMapper.toPersistance(component.getSeller()));
-        if (res.getBuildsComponents() == null) {
-            res.setBuildsComponents(new ArrayList<>());
-        }
-        for (BuildComponent bc : component.getBuildsComponents()) {
-            res.getBuildsComponents().add(bcMapper.toPersistance(bc));
-        }
+        if (component.getBuildsComponents() != null) {
 
+            if (res.getBuildsComponents() == null) {
+                res.setBuildsComponents(new ArrayList<>());
+            }
+            for (BuildComponent bc : component.getBuildsComponents()) {
+                res.getBuildsComponents().add(bcMapper.toPersistance(bc));
+            }
+        }
         return res;
     }
 }

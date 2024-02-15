@@ -6,8 +6,10 @@ import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.secundary.IBuild
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.secundary.IComponentRepository;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.mapper.BuildEntityMapper;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.mapper.ComponentEntityMapper;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.BuildComponentEntity;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.BuildEntity;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.ComponentEntity;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.repository.IBuildComponentEntityRepository;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.repository.IBuildEntityRepository;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.repository.IComponentEntityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,9 @@ public class ComponentEntityService implements IComponentRepository {
 
     @Autowired
     IComponentEntityRepository repo;
+
+    @Autowired
+    IBuildComponentEntityRepository bceRepo;
 
     private ComponentEntityMapper mapper = new ComponentEntityMapper();
 
@@ -50,6 +55,7 @@ public class ComponentEntityService implements IComponentRepository {
             }
             return res;
         } catch (RuntimeException | ParseException e) {
+            System.out.println(e.getMessage());
             return null;
         }
     }
@@ -69,10 +75,23 @@ public class ComponentEntityService implements IComponentRepository {
 
     @Override
     public boolean deleteById(long id) {
-        try {//We will need to change it when I do BuildsComponents
-            repo.deleteById(id);
-            return true;
+        try {
+            Optional<ComponentEntity> byId = repo.findById(id);
+
+            if (byId.isPresent()) {
+                ComponentEntity comp = byId.get();
+                if (comp.getBuildsComponents() != null) {
+                    for (BuildComponentEntity bce : comp.getBuildsComponents()) {
+                        bceRepo.delete(bce);
+                    }
+                }
+                repo.delete(comp);
+                return true;
+            } else {
+                return false;
+            }
         } catch (RuntimeException e) {
+            e.printStackTrace();
             return false;
         }
     }
