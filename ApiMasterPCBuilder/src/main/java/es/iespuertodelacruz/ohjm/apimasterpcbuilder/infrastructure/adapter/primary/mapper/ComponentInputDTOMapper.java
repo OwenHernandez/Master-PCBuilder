@@ -9,6 +9,7 @@ public class ComponentInputDTOMapper {
         component.setName(componentInputDTO.getName());
         component.setImage(componentInputDTO.getImage());
         component.setDescription(componentInputDTO.getDescription());
+        component.setType(componentInputDTO.getType());
         component.setPrice(componentInputDTO.getPrice());
 
         return component;
@@ -19,6 +20,7 @@ public class ComponentInputDTOMapper {
         componentInputDTO.setName(component.getName());
         componentInputDTO.setImage(component.getImage());
         componentInputDTO.setDescription(component.getDescription());
+        componentInputDTO.setType(component.getType());
         componentInputDTO.setPrice(component.getPrice());
         componentInputDTO.setSellerName(component.getSeller().getName());
 

@@ -69,6 +69,10 @@ public class UserEntity implements Serializable {
 	@ManyToMany(mappedBy="usersWhoLiked")
 	private List<PostEntity> likedPosts;
 
+	@JsonIgnore
+	@OneToMany(mappedBy = "user")
+	private List<ComponentEntity> componentsCreated;
+
 	public UserEntity() {
 	}
 

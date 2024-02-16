@@ -1,4 +1,4 @@
-package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.controller.v3;
+package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.controller.v2;
 
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Component;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Seller;
@@ -7,7 +7,6 @@ import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.ICompone
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.ISellerService;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.IUserService;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.ComponentInputDTO;
-import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.ComponentOutputDTO;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.mapper.ComponentInputDTOMapper;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.mapper.ComponentOutputDTOMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +21,8 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/api/v3/components")
-public class ComponentRestControllerV3 {
+@RequestMapping("/api/v2/components")
+public class ComponentRestControllerV2 {
 
     @Autowired
     IComponentService componentService;
@@ -114,16 +113,28 @@ public class ComponentRestControllerV3 {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
         if (id != null) {
-            Component byId = componentService.findById(id);
-            if (byId != null) {
-                boolean ok = componentService.deleteById(id);
-                if (ok) {
-                    return ResponseEntity.ok("Component successfully deleted");
+            Object principal =
+                    SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            String username = ((UserDetails) principal).getUsername();
+            User userByNick = userService.findByNick(username);
+            if (userByNick != null) {
+                Component byId = componentService.findById(id);
+                if (byId != null) {
+                    if (byId.getUserWhoCreated().getId() == userByNick.getId()) {
+                        boolean ok = componentService.deleteById(id);
+                        if (ok) {
+                            return ResponseEntity.ok("Component successfully deleted");
+                        } else {
+                            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong");
+                        }
+                    } else {
+                        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("That is not your component");
+                    }
                 } else {
-                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong");
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The component does not exist");
                 }
             } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The component does not exist");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You should not be here");
             }
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The id must not be null");
@@ -133,25 +144,37 @@ public class ComponentRestControllerV3 {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@RequestBody ComponentInputDTO componentInputDTO, @PathVariable("id") Long id) {
         if (componentInputDTO != null && id != null) {
-            Component byId = componentService.findById(id);
-            if (byId != null) {
-                Seller sellerByName = sellerService.findByName(componentInputDTO.getSellerName());
-                if (sellerByName != null) {
-                    Component component = inputDTOMapper.toDomain(componentInputDTO);
-                    component.setId(id);
-                    component.setSeller(sellerByName);
-                    component.setUserWhoCreated(byId.getUserWhoCreated());
-                    boolean ok = componentService.update(component);
-                    if (ok) {
-                        return ResponseEntity.ok("Component successfully updated");
+            Object principal =
+                    SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            String username = ((UserDetails) principal).getUsername();
+            User userByNick = userService.findByNick(username);
+            if (userByNick != null) {
+                Component byId = componentService.findById(id);
+                if (byId != null) {
+                    if (byId.getUserWhoCreated().getId() == userByNick.getId()) {
+                        Seller sellerByName = sellerService.findByName(componentInputDTO.getSellerName());
+                        if (sellerByName != null) {
+                            Component component = inputDTOMapper.toDomain(componentInputDTO);
+                            component.setId(id);
+                            component.setSeller(sellerByName);
+                            component.setUserWhoCreated(userByNick);
+                            boolean ok = componentService.update(component);
+                            if (ok) {
+                                return ResponseEntity.ok("Component successfully updated");
+                            } else {
+                                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong");
+                            }
+                        } else {
+                            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The seller must exist");
+                        }
                     } else {
-                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong");
+                        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("That is not your component");
                     }
                 } else {
-                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The seller must exist");
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The component does not exist");
                 }
             } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The component does not exist");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You should not be here");
             }
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The id must not be null");

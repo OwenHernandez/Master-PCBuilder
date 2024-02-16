@@ -11,6 +11,7 @@ public class ComponentOutputDTOMapper {
         component.setId(componentOutputDTO.getId());
         component.setName(componentOutputDTO.getName());
         component.setImage(componentOutputDTO.getImage());
+        component.setType(componentOutputDTO.getType());
         component.setDescription(componentOutputDTO.getDescription());
         component.setPrice(componentOutputDTO.getPrice());
 
@@ -21,10 +22,12 @@ public class ComponentOutputDTOMapper {
         ComponentOutputDTO componentOutputDTO = new ComponentOutputDTO();
         componentOutputDTO.setId(component.getId());
         componentOutputDTO.setName(component.getName());
+        componentOutputDTO.setType(component.getType());
         componentOutputDTO.setImage(component.getImage());
         componentOutputDTO.setDescription(component.getDescription());
         componentOutputDTO.setPrice(component.getPrice());
         componentOutputDTO.setSellerName(component.getSeller().getName());
+        componentOutputDTO.setUserNick(component.getUserWhoCreated().getNick());
 
         return componentOutputDTO;
     }

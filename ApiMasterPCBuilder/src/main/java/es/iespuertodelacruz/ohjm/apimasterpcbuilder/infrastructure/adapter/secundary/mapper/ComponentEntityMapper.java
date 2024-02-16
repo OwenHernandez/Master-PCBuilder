@@ -12,6 +12,8 @@ public class ComponentEntityMapper {
 
     SellerEntityMapper sellerMapper = new SellerEntityMapper();
 
+    UserEntityMapper userMapper = new UserEntityMapper();
+
     BuildComponentEntityMapper bcMapper = new BuildComponentEntityMapper();
 
     public Component toDomain(ComponentEntity componentEntity) {
@@ -21,8 +23,10 @@ public class ComponentEntityMapper {
         res.setName(componentEntity.getName());
         res.setDescription(componentEntity.getDescription());
         res.setPrice(componentEntity.getPrice());
+        res.setType(componentEntity.getType());
         res.setImage(componentEntity.getImage());
         res.setSeller(sellerMapper.toDomain(componentEntity.getSeller()));
+        res.setUserWhoCreated(userMapper.toDomain(componentEntity.getUser()));
         if (componentEntity.getBuildsComponents() != null) {
             if (res.getBuildsComponents() == null) {
                 res.setBuildsComponents(new ArrayList<>());
@@ -40,9 +44,11 @@ public class ComponentEntityMapper {
         res.setId(component.getId());
         res.setName(component.getName());
         res.setDescription(component.getDescription());
+        res.setType(component.getType());
         res.setPrice(component.getPrice());
         res.setImage(component.getImage());
         res.setSeller(sellerMapper.toPersistance(component.getSeller()));
+        res.setUser(userMapper.toPersistance(component.getUserWhoCreated()));
         if (component.getBuildsComponents() != null) {
 
             if (res.getBuildsComponents() == null) {

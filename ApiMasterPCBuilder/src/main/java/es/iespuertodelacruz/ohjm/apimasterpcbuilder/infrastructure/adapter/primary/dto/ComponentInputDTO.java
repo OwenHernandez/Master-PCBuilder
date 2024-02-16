@@ -7,6 +7,8 @@ public class ComponentInputDTO {
 
     private String name;
 
+    private String type;
+
     private double price;
 
     private String sellerName;
@@ -52,5 +54,13 @@ public class ComponentInputDTO {
 
     public void setSellerName(String sellerName) {
         this.sellerName = sellerName;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

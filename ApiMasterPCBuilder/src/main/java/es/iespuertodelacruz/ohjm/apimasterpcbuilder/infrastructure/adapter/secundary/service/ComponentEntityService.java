@@ -55,7 +55,6 @@ public class ComponentEntityService implements IComponentRepository {
             }
             return res;
         } catch (RuntimeException | ParseException e) {
-            System.out.println(e.getMessage());
             return null;
         }
     }
@@ -91,7 +90,6 @@ public class ComponentEntityService implements IComponentRepository {
                 return false;
             }
         } catch (RuntimeException e) {
-            e.printStackTrace();
             return false;
         }
     }

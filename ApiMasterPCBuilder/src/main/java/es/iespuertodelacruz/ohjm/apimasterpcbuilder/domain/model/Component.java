@@ -12,11 +12,15 @@ public class Component {
 
     private String name;
 
+    private String type;
+
     private double price;
 
     private List<BuildComponent> buildsComponents;
 
     private Seller seller;
+
+    private User userWhoCreated;
 
     public Component() {}
 
@@ -52,6 +56,14 @@ public class Component {
         this.name = name;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public double getPrice() {
         return price;
     }
@@ -74,5 +86,13 @@ public class Component {
 
     public void setBuildsComponents(List<BuildComponent> buildsComponents) {
         this.buildsComponents = buildsComponents;
+    }
+
+    public User getUserWhoCreated() {
+        return userWhoCreated;
+    }
+
+    public void setUserWhoCreated(User userWhoCreated) {
+        this.userWhoCreated = userWhoCreated;
     }
 }

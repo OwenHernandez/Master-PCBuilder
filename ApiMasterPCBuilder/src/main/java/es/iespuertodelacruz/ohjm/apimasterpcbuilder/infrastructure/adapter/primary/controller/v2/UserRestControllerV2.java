@@ -17,11 +17,10 @@ public class UserRestControllerV2 {
     @Autowired
     IUserService userService;
 
-    UserDTOMapper mapper;
+    UserDTOMapper mapper = new UserDTOMapper();
 
     @GetMapping
     public ResponseEntity<?> getByNick(@RequestParam("nick") String nick) {
-        mapper = new UserDTOMapper();
         if (nick == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The nick parameter is required");
         } else {
