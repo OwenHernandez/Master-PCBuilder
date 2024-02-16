@@ -1,8 +1,10 @@
 export default interface IComponentType {
+    id: number;
     name: string;
-    price: string;
+    price: number;
     type: string;
-    compImage: string;
+    image: string;
     description: string;
-    site: string;
+    sellerName: string;
+    userNick: string;
 }
