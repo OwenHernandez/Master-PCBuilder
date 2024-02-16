@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Image, Alert, FlatList, ScrollView, Modal, StyleSheet, PixelRatio, Dimensions, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, Image, FlatList, ScrollView, Modal, StyleSheet, PixelRatio, Dimensions, TextInput } from 'react-native';
 import React, { useEffect, useState } from 'react'
 import { Styles } from '../themes/Styles';
 import Octicons from 'react-native-vector-icons/Octicons';
@@ -13,33 +13,21 @@ import { RootStackParamList } from '../navigations/StackNavigator';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import IBuildType from '../interfaces/IBuildType';
 import IComponentType from '../interfaces/IComponentType';
+import axios from 'axios';
+import { Globals } from '../components/Globals';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Builder'>;
 
 const Builder = (props: Props) => {
-    const { user, darkMode } = usePrimaryContext();
+    const { user, darkMode, token } = usePrimaryContext();
     const { navigation, route } = props;
     const build = route.params?.build;
     const builds = route.params?.builds;
     const [buildTemp, setBuildTemp] = useState({} as IBuildType);
     const [buildsTemp, setBuildsTemp] = useState({} as IBuildType[]);
     const [modalCompType, setModalCompType] = useState("");
-    /*
-    const [cpuSelected, setcpuSelected] = useState({} as IComponentType);
-    const [motherboardSelected, setMotherboardSelected] = useState({} as IComponentType);
-    const [ramSelected, setramSelected] = useState([{}] as IComponentType[]);
-    const [gpuSelected, setgpuSelected] = useState({} as IComponentType);
-    const [driveSelected, setDriveSelected] = useState([{}] as IComponentType[]);
-    const [towerSelected, setTowerSelected] = useState({} as IComponentType);
-    const [fanSelected, setFanSelected] = useState([{}] as IComponentType[]);
-    const [psuSelected, setpsuSelected] = useState({} as IComponentType);
-    const [tvSelected, setTVSelected] = useState([{}] as IComponentType[]);
-    const [keyboardSelected, setKeyboardSelected] = useState({} as IComponentType);
-    const [MouseSelected, setMouseSelected] = useState({} as IComponentType);
-    const [headphonesSelected, setHeadphonesSelected] = useState({} as IComponentType);
-    const [speakersSelected, setSpeakerSelected] = useState({} as IComponentType);
-    const [microphoneSelected, setMicrophoneSelected] = useState({} as IComponentType);
-    */
+    const [components, setComponents] = useState([{}] as IComponentType[]);
+    const [totalPrice, setTotalPrice] = useState(0);
     const [modalVisible, setModalVisible] = useState(false);
     const [mainVisible, setMainVisible] = useState(false);
     const [periVisible, setPeriVisible] = useState(false);
@@ -64,35 +52,47 @@ const Builder = (props: Props) => {
     function removeFromBuild(comp: IComponentType) {
         let prevComp = buildTemp.components;
         setBuildTemp((prevBuild) => ({ ...prevBuild, components: [...prevComp.filter((compFilt) => comp.name !== compFilt.name)] }));
+        setTotalPrice(prevPrice => prevPrice - comp.price);
+    }
+
+    function setComponentToBuild(comp: IComponentType) {
+        if (buildTemp !== undefined && buildTemp !== null) {
+            let prevComp = buildTemp.components;
+            setBuildTemp((prevBuild) => ({ ...prevBuild, components: [...prevComp, comp] }));
+        } else {
+            setBuildTemp((prevBuild) => ({ ...prevBuild, components: [comp] }));
+        }
+        setTotalPrice(prevPrice => prevPrice + comp.price);
+        setModalVisible(false);
+    }
+
+    async function getComponents() {
+        const response = await axios.get(Globals.IP + "/api/v2/components", { headers: { "Authorization": "Bearer " + token } });
+        setComponents(response.data);
     }
 
     useEffect(() => {
         if (build !== null) {
             setBuildTemp(build);
+            if (build !== undefined && build.components !== null) {
+                build.components.forEach(comp => {
+                    setTotalPrice(prevPrice => prevPrice + comp.price);
+                });
+            }
         }
         if (builds !== null) {
             setBuildsTemp(builds);
         }
-        //Aqui se llamaria a las apis de los otros
+        getComponents();
     }, [build]);
-
-    const components = [
-        { name: "CPU", compImage: "https://i.ebayimg.com/images/g/-1sAAOSwtQNlLpw6/s-l1600.jpg", description: "CPU super potente perfecta...", price: "100€", site: "PCComponentes", type: "CPU" },
-        { name: "Motherboard", compImage: "https://www.mouser.es/images/marketingid/2020/img/110657914.png?v=101223.0140", description: "CPU super potente perfecta...", price: "100€", site: "PCComponentes", type: "Motherboard" },
-        { name: "Tower", compImage: "https://upload.wikimedia.org/wikipedia/commons/a/a4/Falcon_Northwest_Talon.png", description: "CPU super potente perfecta...", price: "100€", site: "PCComponentes", type: "Tower" },
-        { name: "GPU", compImage: "https://i.ebayimg.com/images/g/-1sAAOSwtQNlLpw6/s-l1600.jpg", description: "CPU super potente perfecta...", price: "100€", site: "PCComponentes", type: "GPU" },
-        { name: "RAM", compImage: "https://m.media-amazon.com/images/I/61XmhmEup8L._AC_UF1000,1000_QL80_.jpg", description: "CPU super potente perfecta...", price: "100€", site: "PCComponentes", type: "RAM" },
-        { name: "RAM2", compImage: "https://m.media-amazon.com/images/I/61XmhmEup8L._AC_UF1000,1000_QL80_.jpg", description: "CPU super potente perfecta...", price: "100€", site: "PCComponentes", type: "RAM" },
-        { name: "Drive", compImage: "https://www.computerstore.es/70797-home_default/ssdsamsung25gb97evoplusnvmem2.jpg", description: "CPU super potente perfecta...", price: "100€", site: "PCComponentes", type: "Drive" }
-    ];
 
     const touchablesMain = [
         { name: "CPU", icon: "cpu", type: "CPU", importIcon: "Octicon" },
         { name: "Motherboard", icon: "developer-board", type: "Motherboard", importIcon: "Material" },
         { name: "Memory RAM", icon: "memory", type: "RAM", importIcon: "FontAwesome5" },
-        { name: "Drives", icon: "harddisk", type: "Drive", importIcon: "Material" },
+        { name: "Drive", icon: "harddisk", type: "Drive", importIcon: "Material" },
         { name: "Tower", icon: "desktop-tower", type: "Tower", importIcon: "Material" },
-        { name: "Fans", icon: "fan", type: "Fan", importIcon: "Material" },
+        { name: "Fan", icon: "fan", type: "Fan", importIcon: "Material" },
         { name: "PSU", icon: "power", type: "PSU", importIcon: "Material" },
         { name: "GPU", icon: (darkMode) ? "../../img/tarjeta-grafica_light.png" : "../../img/tarjeta-grafica_dark.png", type: "GPU", importIcon: "Image" }
     ];
@@ -126,7 +126,12 @@ const Builder = (props: Props) => {
             </View>
             <View style={{ flex: 1 }}>
                 <View style={{ flexDirection: "row", justifyContent: "space-around", margin: "10%", alignItems: "center" }}>
-                    <TextInput maxLength={20} defaultValue={(build !== null && build !== undefined) && build.name} placeholder='Put the name of the build' placeholderTextColor={(darkMode) ? "white" : "black"} style={{ borderWidth: 2, borderColor: "#ca2613", borderRadius: 20, paddingHorizontal: "5%", width: "80%", fontSize: getFontSize(20), color: (darkMode) ? "white" : "black" }}></TextInput>
+                    <TextInput
+                        maxLength={20}
+                        defaultValue={(build !== null && build !== undefined) && build.name}
+                        placeholder='Put the name of the build' placeholderTextColor={(darkMode) ? "white" : "black"}
+                        style={{ borderWidth: 2, borderColor: "#ca2613", borderRadius: 20, paddingHorizontal: "5%", width: "80%", fontSize: getFontSize(20), color: (darkMode) ? "white" : "black" }}
+                    ></TextInput>
                 </View>
                 <TouchableOpacity style={{ ...Styles.touchable, alignItems: 'center', marginVertical: "5%", flexDirection: "row", justifyContent: "space-between" }} onPress={toggleMain}>
                     <Text style={{ fontSize: getFontSize(25), color: (darkMode) ? "white" : "black" }}>Main Components:</Text>
@@ -143,7 +148,7 @@ const Builder = (props: Props) => {
                                     <View>
                                         <TouchableOpacity onPress={() => toggleModal(touch.item.type)}>
                                             {
-                                                (buildTemp !== null && buildTemp !== undefined) &&
+                                                (buildTemp !== null && buildTemp !== undefined && buildTemp.components !== undefined) &&
                                                 buildTemp.components.map((comp) => {
                                                     if (comp.type === touch.item.type) {
                                                         return (
@@ -173,7 +178,7 @@ const Builder = (props: Props) => {
                                     <View>
                                         <TouchableOpacity onPress={() => toggleModal(touch.item.type)}>
                                             {
-                                                (buildTemp !== null && buildTemp !== undefined) &&
+                                                (buildTemp !== null && buildTemp !== undefined && buildTemp.components !== undefined) &&
                                                 buildTemp.components.map((comp) => {
                                                     if (comp.type === touch.item.type) {
                                                         return (
@@ -203,7 +208,7 @@ const Builder = (props: Props) => {
                                     <View>
                                         <TouchableOpacity onPress={() => toggleModal(touch.item.type)}>
                                             {
-                                                (buildTemp !== null && buildTemp !== undefined) &&
+                                                (buildTemp !== null && buildTemp !== undefined && buildTemp.components !== undefined) &&
                                                 buildTemp.components.map((comp) => {
                                                     if (comp.type === touch.item.type) {
                                                         return (
@@ -233,7 +238,7 @@ const Builder = (props: Props) => {
                                     <View>
                                         <TouchableOpacity onPress={() => toggleModal(touch.item.type)}>
                                             {
-                                                (buildTemp !== null && buildTemp !== undefined) &&
+                                                (buildTemp !== null && buildTemp !== undefined && buildTemp.components !== undefined) &&
                                                 buildTemp.components.map((comp) => {
                                                     if (comp.type === touch.item.type) {
                                                         return (
@@ -248,7 +253,7 @@ const Builder = (props: Props) => {
                                                 })
                                             }
                                         </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => Alert.alert("Abrira un modal con las opciones de gpus")} style={{ ...Styles.touchable, flexDirection: 'row' }}>
+                                        <TouchableOpacity onPress={() => toggleModal(touch.item.type)} style={{ ...Styles.touchable, flexDirection: 'row' }}>
                                             <Image
                                                 source={(!darkMode) ? require("../../img/tarjeta-grafica_dark.png") : require("../../img/tarjeta-grafica_light.png")}
                                                 style={{ width: getIconSize(150), height: getIconSize(150) }}
@@ -278,7 +283,7 @@ const Builder = (props: Props) => {
                                     <View>
                                         <TouchableOpacity onPress={() => toggleModal(touch.item.type)}>
                                             {
-                                                (buildTemp !== null && buildTemp !== undefined) &&
+                                                (buildTemp !== null && buildTemp !== undefined && buildTemp.components !== undefined) &&
                                                 buildTemp.components.map((comp) => {
                                                     if (comp.type === touch.item.type) {
                                                         return (
@@ -308,7 +313,7 @@ const Builder = (props: Props) => {
                                     <View>
                                         <TouchableOpacity onPress={() => toggleModal(touch.item.type)}>
                                             {
-                                                (buildTemp !== null && buildTemp !== undefined) &&
+                                                (buildTemp !== null && buildTemp !== undefined && buildTemp.components !== undefined) &&
                                                 buildTemp.components.map((comp) => {
                                                     if (comp.type === touch.item.type) {
                                                         return (
@@ -338,7 +343,7 @@ const Builder = (props: Props) => {
                                     <View>
                                         <TouchableOpacity onPress={() => toggleModal(touch.item.type)}>
                                             {
-                                                (buildTemp !== null && buildTemp !== undefined) &&
+                                                (buildTemp !== null && buildTemp !== undefined && buildTemp.components !== undefined) &&
                                                 buildTemp.components.map((comp) => {
                                                     if (comp.type === touch.item.type) {
                                                         return (
@@ -369,7 +374,7 @@ const Builder = (props: Props) => {
                 }
             </View>
             <View style={{ ...Styles.headerView, borderTopColor: "#ca2613" }}>
-                <Text style={{ ...Styles.headerText, color: (darkMode) ? "white" : "black" }}>Price Range: {/*Precio*/}€</Text>
+                <Text style={{ ...Styles.headerText, color: (darkMode) ? "white" : "black" }}>Price Range: {totalPrice}€</Text>
                 <TouchableOpacity onPress={() => {
 
                     navigation.navigate("UserBuildsList");
@@ -397,7 +402,7 @@ const Builder = (props: Props) => {
                             renderItem={(comp) => {
                                 if (comp.item.type === modalCompType) {
                                     return (
-                                        <TouchableOpacity onPress={() => Alert.alert("pondria el componente en el buildTemp")}>
+                                        <TouchableOpacity onPress={() => setComponentToBuild(comp.item)}>
                                             <Component comp={comp.item} />
                                         </TouchableOpacity>
                                     );

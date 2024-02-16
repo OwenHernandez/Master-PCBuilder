@@ -18,7 +18,7 @@ export type RootDrawerParamList = {
     Landing: undefined;
     Profile: undefined;
     Settings: undefined;
-    Builder: { build?: IBuildType };
+    Builder: { build?: IBuildType, builds?: IBuildType[] };
     Social: undefined;
     Friends: undefined;
 }
