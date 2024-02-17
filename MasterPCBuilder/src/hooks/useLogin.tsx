@@ -36,9 +36,10 @@ const useLogin = () => {
                     setToken(response.data);
                     const response2 = await axios.get(Globals.IP + "/api/v2/users?nick=" + nick, { headers: { 'Authorization': "Bearer " + response.data } });
                     const newUser: IUserType = {
+                        id: response2.data.id,
                         nick: response2.data.nick,
                         email: response2.data.email,
-                        profilePic: response2.data.picture ?? "https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png?x=480&quality=40",
+                        picture: response2.data.picture ?? "https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png?x=480&quality=40",
                         friends: response2.data.friends
                     }
                     setUser(newUser);

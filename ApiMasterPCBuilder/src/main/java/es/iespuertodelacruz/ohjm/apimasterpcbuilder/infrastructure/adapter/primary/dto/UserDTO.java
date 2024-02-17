@@ -3,12 +3,22 @@ package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.prim
 import java.util.List;
 
 public class UserDTO {
-    String nick;
-    String email;
-    String picture;
-    List<UserDTO> friends;
+
+    private long id;
+    private String nick;
+    private String email;
+    private String picture;
+    private List<UserDTO> friends;
 
     public UserDTO() {
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getNick() {

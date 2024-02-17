@@ -17,6 +17,7 @@ const PrimaryContextProvider = (props: any) => {
     const [user, setUser] = useState({} as IUserType);
     const [token, setToken] = useState("");
     const [darkMode, setDarkMode] = useState(true);
+
     const contextValues: PrimaryContextType = {
         user,
         setUser,

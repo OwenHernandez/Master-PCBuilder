@@ -44,8 +44,6 @@ const DrawerNavigator = (props: Props) => {
             <Drawer.Screen name="Social" component={SocialTabs} />
             <Drawer.Screen name="Friends" component={FriendsTabs} />
             <Drawer.Screen name="Settings" component={Settings} />
-            {/*<Drawer.Screen name="UserPostsList" component={UserPostsList} />*/}
-            {/*<Drawer.Screen name="StackNavigator" component={StackNavigator} options={{}} />*/}
         </Drawer.Navigator>
     )
 }

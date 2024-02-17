@@ -10,7 +10,9 @@ import java.util.List;
 
 public class BuildOutputDTOMapper {
 
-    ComponentInputDTOMapper compDTOMapper = new ComponentInputDTOMapper();
+    ComponentOutputDTOMapper outputDTOMapper = new ComponentOutputDTOMapper();
+
+    ComponentInputDTOMapper inputDTOMapper = new ComponentInputDTOMapper();
 
     public Build toDomain(BuildOutputDTO buildOutputDTO) {
         Build build = new Build();
@@ -24,7 +26,7 @@ public class BuildOutputDTOMapper {
                 BuildComponent bc = new BuildComponent();
                 bc.setDateCreated(bcDTO.getDateCreated());
                 bc.setPriceAtTheTime(bcDTO.getPriceAtTheTime());
-                bc.setComponent(compDTOMapper.toDomain(bcDTO.getComponent()));
+                bc.setComponent(inputDTOMapper.toDomain(bcDTO.getComponent()));
                 bcList.add(bc);
             }
             build.setBuildsComponents(bcList);
@@ -46,7 +48,7 @@ public class BuildOutputDTOMapper {
                 BuildComponentDTO bcDTO = new BuildComponentDTO();
                 bcDTO.setDateCreated(bc.getDateCreated());
                 bcDTO.setPriceAtTheTime(bc.getPriceAtTheTime());
-                bcDTO.setComponent(compDTOMapper.toDTO(bc.getComponent()));
+                bcDTO.setComponent(outputDTOMapper.toDTO(bc.getComponent()));
                 bcDTOList.add(bcDTO);
             }
             buildOutputDTO.setBuildsComponents(bcDTOList);

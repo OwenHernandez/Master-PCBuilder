@@ -1,8 +1,11 @@
 import IComponentType from "./IComponentType";
+import IBuildComponentType from "./IBuildComponentType";
 
 export default interface IBuildType {
+    id: number;
     name: string;
-    price: string;
+    totalPrice: number;
     notes?: string;
-    components: Array<IComponentType>
+    userNick: string;
+    buildsComponents: Array<IBuildComponentType>;
 }

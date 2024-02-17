@@ -129,7 +129,7 @@ const Chat = (props: Props) => {
                 <TouchableOpacity onPress={() => navigation.navigate("FriendsProfile", { friend: friend })}>
                     <Image
                         source={{
-                            uri: friend.profilePic
+                            uri: friend.picture
                         }}
                         style={{ ...Styles.imageStyle, borderColor: (darkMode) ? "white" : "black", borderWidth: 1, width: getIconSize(110), height: getIconSize(110) }}
                     />
