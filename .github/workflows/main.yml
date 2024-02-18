@@ -1,0 +1,28 @@
+name: Deploy to DigitalOcean
+
+on:
+  push:
+    branches:
+      - main  # Cambia 'main' por el nombre de tu rama principal si es diferente
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          
+      - name: Build and package with Maven
+        run: mvn clean package  # Asegúrate de que este comando sea el adecuado para tu proyecto
+      
+      - name: Deploy to DigitalOcean
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+          cmd: 'apps create ApiMasterPCBuilder --spec app.yaml'  # Reemplaza 'your-app-name' y 'app.yaml' con los valores apropiados
