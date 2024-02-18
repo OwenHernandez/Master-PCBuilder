@@ -20,7 +20,7 @@ jobs:
           distribution: 'zulu'  # Especifica la distribución de Linux que estás utilizando
           
       - name: Build and package with Maven
-        run: cd ApiMasterPCBuilder | mvn clean package  # Asegúrate de que este comando sea el adecuado para tu proyecto
+        run: mvn -f ApiMasterPCBuilder/pom.xml clean package  # Asegúrate de que este comando sea el adecuado para tu proyecto
       
       - name: Deploy to DigitalOcean
         uses: digitalocean/action-doctl@v2
