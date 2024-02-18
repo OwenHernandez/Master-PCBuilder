@@ -1,9 +1,21 @@
 name: ApiMasterPCBuilder
 region: SFO3
 services:
-- name: tu-servicio
-  environment_slug: java
-  github:
-    branch: main
-    deploy_on_push: true
-  http_port: 8080
+  - name: start-mongodb
+    environment_slug: container
+    container:
+      image: mongo:latest  # Usa la imagen de MongoDB
+    run_command: ["docker", "run", "--name", "mongodb", "-d", "-p", "27017:27017", "mongo:latest"]  # Comando para iniciar MongoDB
+    github:
+      branch: main
+      deploy_on_push: true
+
+  - name: deploy-api
+    environment_slug: java
+    github:
+      branch: main
+      deploy_on_push: true
+    http_port: 8080
+    depends_on:
+      - mongodb  # Dependencia de MongoDB, asegura que este servicio se inicie primero
+
