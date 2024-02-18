@@ -57,7 +57,7 @@ const UserBuildsList = (props: Props) => {
                 <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
                     <Image
                         source={{
-                            uri: user.profilePic
+                            uri: user.picture
                         }}
                         style={{ ...Styles.imageStyle, borderColor: (darkMode) ? "white" : "black", borderWidth: 1, width: getIconSize(110), height: getIconSize(110) }}
                     />
@@ -75,7 +75,7 @@ const UserBuildsList = (props: Props) => {
                             <View>
                                 <View style={{ alignItems: "flex-start" }}>
                                     <Text style={{ fontSize: getFontSize(30), color: (darkMode) ? "white" : "black", marginHorizontal: "10%" }}>{build.item.name}</Text>
-                                    <Text style={{ fontSize: getFontSize(20), color: (darkMode) ? "white" : "black", marginHorizontal: "10%", marginBottom: "5%" }}>{build.item.price}</Text>
+                                    <Text style={{ fontSize: getFontSize(20), color: (darkMode) ? "white" : "black", marginHorizontal: "10%", marginBottom: "5%" }}>{build.item.totalPrice}</Text>
                                 </View>
                             </View>
                         </TouchableOpacity>

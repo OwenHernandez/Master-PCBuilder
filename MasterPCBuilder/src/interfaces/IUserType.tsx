@@ -1,6 +1,7 @@
 export default interface IUserType {
+    id: number;
     nick: string;
     email: string;
-    profilePic: string;
+    picture: string;
     friends: IUserType[];
 }

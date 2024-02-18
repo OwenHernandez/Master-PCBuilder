@@ -24,8 +24,8 @@ public class AuthService {
 	private MailService mailService;
 
 	public void register(UserDetailsLogin udl) {
-		int numAleatorio = (int) (Math.random() * 100000000);
-		String hash = passwordEncoder.encode(numAleatorio + "");
+		int numRnd = (int) (Math.random() * 100000000);
+		String hash = passwordEncoder.encode(numRnd + "");
 		User user = new User();
 		user.setNick(udl.getUsername());
 		user.setPassword(passwordEncoder.encode(udl.getPassword()));
@@ -39,7 +39,7 @@ public class AuthService {
 		userDetails.setPassword(save.getPassword());
 		userDetails.setEmail(save.getEmail());
 		userDetails.setRole(save.getRole());
-		mailService.send(save.getEmail(), "Por favor verifique su correo",
+		mailService.send(save.getEmail(), "Please verify your email",
 				"http://localhost:8080/api/v1/verify?usermail=" + save.getEmail() + "&hash=" + save.getHash());
 	}
 

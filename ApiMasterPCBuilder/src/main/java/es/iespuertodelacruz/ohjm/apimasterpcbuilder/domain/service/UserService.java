@@ -29,7 +29,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User findById(Integer id) {
+    public User findById(Long id) {
         User u = null;
         if (id != null) {
             u = repo.findById(id);

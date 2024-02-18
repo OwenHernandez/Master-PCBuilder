@@ -1,5 +1,5 @@
 import { StyleSheet, Text, TouchableOpacity, View, Alert, Image, Switch, PixelRatio, Dimensions } from 'react-native';
-import React from 'react'
+import React, {useState} from 'react'
 import { Styles } from '../themes/Styles';
 import Icon from 'react-native-vector-icons/Octicons';
 import { RootStackParamList } from '../navigations/StackNavigator';
@@ -7,16 +7,39 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { usePrimaryContext } from '../contexts/PrimaryContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { DrawerActions } from '@react-navigation/native';
+import * as ImagePicker from 'react-native-image-picker';
+import {ImagePickerResponse} from "react-native-image-picker";
+import RNFetchBlob from "rn-fetch-blob";
+import axios from "axios";
+import {Globals} from "../components/Globals";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Settings'>;
 
 const Settings = (props: Props) => {
-    const { user, darkMode, setDarkMode } = usePrimaryContext();
+    const { user, setUser, darkMode, setDarkMode, token } = usePrimaryContext();
     const { navigation, route } = props;
     const fontScale = PixelRatio.getFontScale();
     const getFontSize = (size: number) => size / fontScale;
     const fullScreen = Dimensions.get("window").scale;
     const getIconSize = (size: number) => size / fullScreen;
+    function openGallery(){
+        ImagePicker.launchImageLibrary({mediaType:'photo'}, async (response: ImagePickerResponse) => {
+            if (response.didCancel) {
+                console.log('The user has cancelled the image picker');
+            } else if (response.errorMessage) {
+                console.log('Error while trying to open gallery:', response.errorMessage);
+            } else {
+                const imageFile = await RNFetchBlob.fs.readFile(response.assets[0].uri, 'base64');
+
+                const responseAxios = await axios.put(Globals.IP + "/api/v2/users/" + user.id,
+                    { picture: response.assets[0].fileName, pictureBase64: imageFile, password: "" },
+                    { headers: { 'Authorization': "Bearer " + token } }
+                );
+                setUser({...user, picture: response.assets[0].uri});
+
+            }
+        });
+    }
 
     async function changeDarkMode() {
         setDarkMode(!darkMode);
@@ -33,7 +56,7 @@ const Settings = (props: Props) => {
                 <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
                     <Image
                         source={{
-                            uri: user.profilePic
+                            uri: user.picture
                         }}
                         style={{ ...Styles.imageStyle, borderColor: (darkMode) ? "white" : "black", borderWidth: 1, width: getIconSize(110), height: getIconSize(110) }}
                     />
@@ -57,13 +80,10 @@ const Settings = (props: Props) => {
                 <Text style={{ fontSize: 20, textAlign: 'center', color: (darkMode) ? "white" : "black" }}>Change Mode to Dark/Light</Text>
             </TouchableOpacity>
             */}
-            <TouchableOpacity style={{ ...Styles.touchable }} onPress={() => Alert.alert("Abriria un modal para cambiar el nick (siempre cuando no exista)")}>
-                <Text style={{ fontSize: getFontSize(20), textAlign: 'center', color: (darkMode) ? "white" : "black" }}>Change Nick</Text>
-            </TouchableOpacity>
             <TouchableOpacity style={{ ...Styles.touchable }} onPress={() => Alert.alert("Te enviaria un email para cambiar la password")}>
                 <Text style={{ fontSize: getFontSize(20), textAlign: 'center', color: (darkMode) ? "white" : "black" }}>Change Password</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={{ ...Styles.touchable }} onPress={() => Alert.alert("Abriria un modal para cambiar la imagen de fondo")}>
+            <TouchableOpacity style={{ ...Styles.touchable }} onPress={openGallery}>
                 <Text style={{ fontSize: getFontSize(20), textAlign: 'center', color: (darkMode) ? "white" : "black" }}>Change Profile Picture</Text>
             </TouchableOpacity>
         </View >
