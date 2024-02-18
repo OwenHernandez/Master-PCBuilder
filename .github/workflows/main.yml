@@ -17,7 +17,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '17'
-          distribution: 'ubuntu-latest'  # Especifica la distribución de Linux que estás utilizando
+          distribution: 'zulu'  # Especifica la distribución de Linux que estás utilizando
           
       - name: Build and package with Maven
         run: mvn clean package  # Asegúrate de que este comando sea el adecuado para tu proyecto
