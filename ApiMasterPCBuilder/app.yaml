@@ -1,0 +1,9 @@
+name: ApiMasterPCBuilder
+region: SFO3
+services:
+- name: tu-servicio
+  environment_slug: java
+  github:
+    branch: main
+    deploy_on_push: true
+  http_port: 8080
