@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import java.math.BigDecimal;
+
 import java.util.List;
 
 
@@ -13,7 +13,7 @@ import java.util.List;
  * 
  */
 @Entity
-@Table(name="components")
+@Table(name="COMPONENTS")
 @NamedQuery(name="ComponentEntity.findAll", query="SELECT c FROM ComponentEntity c")
 public class ComponentEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -28,14 +28,20 @@ public class ComponentEntity implements Serializable {
 
 	private String name;
 
+	private String type;
+
 	private double price;
 
+	//bi-directional many-to-one association to UserEntity
+	@ManyToOne
+	private UserEntity user;
+
 	//bi-directional many-to-one association to BuildComponentEntity
+	@JsonIgnore
 	@OneToMany(mappedBy="component")
 	private List<BuildComponentEntity> buildsComponents;
 
 	//bi-directional many-to-one association to SellerEntity
-	@JsonIgnore
 	@ManyToOne
 	private SellerEntity seller;
 
@@ -82,6 +88,14 @@ public class ComponentEntity implements Serializable {
 		this.price = price;
 	}
 
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
 	public List<BuildComponentEntity> getBuildsComponents() {
 		return this.buildsComponents;
 	}
@@ -112,4 +126,11 @@ public class ComponentEntity implements Serializable {
 		this.seller = seller;
 	}
 
+	public UserEntity getUser() {
+		return user;
+	}
+
+	public void setUser(UserEntity user) {
+		this.user = user;
+	}
 }

@@ -1,5 +1,5 @@
 import { Dimensions, Image, PixelRatio, ScrollView, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
+import React, {useState} from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { RootStackParamList } from '../navigations/StackNavigator';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -8,17 +8,28 @@ import useLogout from '../hooks/useLogout';
 import { Styles } from '../themes/Styles';
 import Octicon from 'react-native-vector-icons/Octicons';
 import { DrawerActions } from '@react-navigation/native';
+import axios from "axios";
+import {Globals} from "../components/Globals";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Profile'>;
 
 const Profile = (props: Props) => {
-    const { user, darkMode } = usePrimaryContext();
+    const { user, darkMode, token } = usePrimaryContext();
     const { navigation, route } = props;
+    const [img, setImg] = useState<any>();
     const fontScale = PixelRatio.getFontScale();
     const getFontSize = (size: number) => size / fontScale;
     const fullScreen = Dimensions.get("window").scale;
     const getIconSize = (size: number) => size / fullScreen;
     const { logout } = useLogout();
+
+    async function getImage() {
+        const response = await axios.get(
+            Globals.IP + "/api/v2/users/" + user.id + "/" + user.picture,
+            { headers:{ "Authorization": "Bearer " + token }}
+        );
+        setImg(response.data);
+    }
     /*const actions = [
         { name: "Your Balls", nav: "UserBuildsList" },
         { name: "Your Posts", nav: "UserPostsList" },
@@ -42,7 +53,7 @@ const Profile = (props: Props) => {
                 <View style={{ alignItems: 'center', margin: "5%" }}>
                     <Image
                         source={{
-                            uri: user.profilePic
+                            uri: img
                         }}
                         style={{ ...Styles.imageStyle, borderColor: (darkMode) ? "white" : "black", borderWidth: 1, width: getIconSize(300), height: getIconSize(300) }}
                     />

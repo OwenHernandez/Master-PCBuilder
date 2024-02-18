@@ -26,7 +26,7 @@ public class UserEntityService implements IUserRepository {
     }
 
     @Override
-    public User findById(Integer id) {
+    public User findById(Long id) {
         User user = null;
         if (id != null) {
             Optional<UserEntity> opt = repo.findById(id);
@@ -43,6 +43,9 @@ public class UserEntityService implements IUserRepository {
         User user = null;
         if (nick != null) {
             UserEntity ue = repo.findByNick(nick);
+            if (ue == null) {
+                return null;
+            }
             user = mapper.toDomain(ue);
         }
         return user;

@@ -13,7 +13,7 @@ import java.util.Date;
  * 
  */
 @Entity
-@Table(name="builds_components")
+@Table(name="BUILDS_COMPONENTS")
 @NamedQuery(name="BuildComponentEntity.findAll", query="SELECT b FROM BuildComponentEntity b")
 public class BuildComponentEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -34,7 +34,6 @@ public class BuildComponentEntity implements Serializable {
 	private BuildEntity build;
 
 	//bi-directional many-to-one association to ComponentEntity
-	@JsonIgnore
 	@ManyToOne
 	private ComponentEntity component;
 

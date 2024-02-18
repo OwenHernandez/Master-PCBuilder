@@ -1,4 +1,4 @@
-package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.controller;
+package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.controller.v1;
 
 
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.User;
@@ -80,7 +80,7 @@ public class AuthRestController {
 		
 		String token = authService.authenticate(udl);
 		if (token.equals(ErrGlobals.NOT_ACTIVE) || token.equals(ErrGlobals.INC_PASS_USR))
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(token);
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(token);
 		else
 			return ResponseEntity.ok(token);
 	}

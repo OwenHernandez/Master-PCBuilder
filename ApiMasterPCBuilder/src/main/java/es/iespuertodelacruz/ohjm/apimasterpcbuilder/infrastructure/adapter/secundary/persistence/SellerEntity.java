@@ -12,7 +12,7 @@ import java.util.List;
  * 
  */
 @Entity
-@Table(name="sellers")
+@Table(name="SELLERS")
 @NamedQuery(name="SellerEntity.findAll", query="SELECT s FROM SellerEntity s")
 public class SellerEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -26,6 +26,7 @@ public class SellerEntity implements Serializable {
 	private String name;
 
 	//bi-directional many-to-one association to ComponentEntity
+	@JsonIgnore
 	@OneToMany(mappedBy="seller")
 	private List<ComponentEntity> components;
 

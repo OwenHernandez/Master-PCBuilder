@@ -12,7 +12,7 @@ import java.util.List;
  * 
  */
 @Entity
-@Table(name="posts")
+@Table(name="POSTS")
 @NamedQuery(name="PostEntity.findAll", query="SELECT p FROM PostEntity p")
 public class PostEntity implements Serializable {
 	private static final long serialVersionUID = 1L;

@@ -10,7 +10,7 @@ public interface IUserRepository {
 
     User save(User user);
 
-    User findById(Integer id);
+    User findById(Long id);
 
     User findByNick(String nick);
 

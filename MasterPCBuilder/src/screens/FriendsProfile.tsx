@@ -27,7 +27,7 @@ const FriendsProfile = (props: Props) => {
                 <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
                     <Image
                         source={{
-                            uri: user.profilePic
+                            uri: user.picture
                         }}
                         style={{ ...Styles.imageStyle, borderColor: (darkMode) ? "white" : "black", borderWidth: 1, width: getIconSize(110), height: getIconSize(110) }}
                     />
@@ -40,7 +40,7 @@ const FriendsProfile = (props: Props) => {
             <View style={{ alignItems: 'center', margin: "5%" }}>
                 <Image
                     source={{
-                        uri: friend.profilePic
+                        uri: friend.picture
                     }}
                     style={{ ...Styles.imageStyle, borderColor: (darkMode) ? "white" : "black", borderWidth: 1, width: getIconSize(300), height: getIconSize(300) }}
                 />
