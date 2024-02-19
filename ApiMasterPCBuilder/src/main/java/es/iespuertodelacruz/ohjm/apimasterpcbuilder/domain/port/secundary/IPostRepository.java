@@ -1,10 +1,10 @@
-package es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary;
+package es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.secundary;
 
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Post;
 
 import java.util.List;
 
-public interface IPostService {
+public interface IPostRepository {
 
     List<Post> findAll();
 
