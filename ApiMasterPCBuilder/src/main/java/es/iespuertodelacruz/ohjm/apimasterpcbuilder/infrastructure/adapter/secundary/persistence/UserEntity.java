@@ -200,4 +200,11 @@ public class UserEntity implements Serializable {
 		this.likedPosts = likedPosts;
 	}
 
+	public List<ComponentEntity> getComponentsCreated() {
+		return componentsCreated;
+	}
+
+	public void setComponentsCreated(List<ComponentEntity> componentsCreated) {
+		this.componentsCreated = componentsCreated;
+	}
 }

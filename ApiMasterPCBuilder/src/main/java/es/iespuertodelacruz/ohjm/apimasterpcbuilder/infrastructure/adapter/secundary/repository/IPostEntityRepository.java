@@ -9,12 +9,12 @@ import java.util.List;
 
 public interface IPostEntityRepository extends JpaRepository<PostEntity, Long> {
 
-    @Query(value = "SELECT * FROM PostEntity p WHERE p.title = :title", nativeQuery = true)
+    @Query(value = "SELECT * FROM POSTS p WHERE p.TITLE = :title", nativeQuery = true)
     List<PostEntity> findByTitle(@Param("title") String title);
 
-    @Query(value = "SELECT * FROM PostEntity p WHERE p.build_id = :buildId", nativeQuery = true)
+    @Query(value = "SELECT * FROM POSTS p WHERE p.BUILD_ID = :buildId", nativeQuery = true)
     List<PostEntity> findByBuildId(@Param("buildId") Long buildId);
 
-    @Query(value = "SELECT * FROM PostEntity p WHERE p.user_id = :userId", nativeQuery = true)
+    @Query(value = "SELECT * FROM POSTS p WHERE p.USER_ID = :userId", nativeQuery = true)
     List<PostEntity> findByUserId(@Param("userId") Long userId);
 }

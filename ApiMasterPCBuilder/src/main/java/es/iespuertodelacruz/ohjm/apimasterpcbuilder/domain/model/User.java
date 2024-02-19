@@ -21,6 +21,12 @@ public class User {
 
     private List<User> friends;
 
+    private List<Component> componentsCreated;
+
+    private List<Post> postsMade;
+
+    private List<Post> likedPosts;
+
     public User() {}
 
     public long getId() {
@@ -93,5 +99,29 @@ public class User {
 
     public void setFriends(List<User> friends) {
         this.friends = friends;
+    }
+
+    public List<Component> getComponentsCreated() {
+        return componentsCreated;
+    }
+
+    public void setComponentsCreated(List<Component> componentsCreated) {
+        this.componentsCreated = componentsCreated;
+    }
+
+    public List<Post> getPostsMade() {
+        return postsMade;
+    }
+
+    public void setPostsMade(List<Post> postsMade) {
+        this.postsMade = postsMade;
+    }
+
+    public List<Post> getLikedPosts() {
+        return likedPosts;
+    }
+
+    public void setLikedPosts(List<Post> likedPosts) {
+        this.likedPosts = likedPosts;
     }
 }

@@ -20,6 +20,7 @@ public class PostEntityMapper {
         res.setId(postEntity.getId());
         res.setTitle(postEntity.getTitle());
         res.setDescription(postEntity.getDescription());
+        res.setImage(postEntity.getImage());
         if (postEntity.getBuild() != null) {
             res.setBuild(buildMapper.toDomain(postEntity.getBuild()));
         }
@@ -42,6 +43,7 @@ public class PostEntityMapper {
         res.setId(post.getId());
         res.setTitle(post.getTitle());
         res.setDescription(post.getDescription());
+        res.setImage(post.getImage());
         if (post.getBuild() != null) {
             res.setBuild(buildMapper.toPersistence(post.getBuild()));
         }
