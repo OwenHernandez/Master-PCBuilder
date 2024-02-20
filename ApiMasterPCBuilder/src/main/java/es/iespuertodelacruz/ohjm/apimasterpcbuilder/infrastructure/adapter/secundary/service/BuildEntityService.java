@@ -2,15 +2,11 @@ package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secu
 
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Build;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.BuildComponent;
-import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Component;
-import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.User;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.secundary.IBuildRepository;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.mapper.BuildEntityMapper;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.mapper.ComponentEntityMapper;
-import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.mapper.UserEntityMapper;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.BuildComponentEntity;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.BuildEntity;
-import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.UserEntity;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.repository.IBuildComponentEntityRepository;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.repository.IBuildEntityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +16,6 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Logger;
 
 @Service
 public class BuildEntityService implements IBuildRepository {
@@ -51,7 +46,7 @@ public class BuildEntityService implements IBuildRepository {
     @Override
     public Build save(Build build) {
         try {
-            BuildEntity be = mapper.toPersistance(build);
+            BuildEntity be = mapper.toPersistence(build);
             Optional<BuildEntity> findOpt = repo.findById(build.getId());
             if (!findOpt.isPresent()) {
                 /*
@@ -132,7 +127,7 @@ public class BuildEntityService implements IBuildRepository {
                         bceRepo.delete(bce);
                     }
                 }
-                BuildEntity be = mapper.toPersistance(build);
+                BuildEntity be = mapper.toPersistence(build);
                 BuildEntity save = repo.save(be);
 
                 if (be.getBuildsComponents() != null) {

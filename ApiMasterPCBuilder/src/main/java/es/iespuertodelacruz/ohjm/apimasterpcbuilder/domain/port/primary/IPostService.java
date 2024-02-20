@@ -8,7 +8,7 @@ public interface IPostService {
 
     List<Post> findAll();
 
-    Post save(Post build);
+    Post save(Post post);
 
     Post findById(Long id);
 

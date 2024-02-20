@@ -6,6 +6,7 @@ import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secun
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.UserEntity;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 
 public class PostEntityMapper {
 
@@ -17,9 +18,9 @@ public class PostEntityMapper {
         Post res = new Post();
 
         res.setId(postEntity.getId());
+        res.setTitle(postEntity.getTitle());
         res.setDescription(postEntity.getDescription());
         res.setImage(postEntity.getImage());
-        res.setTitle(postEntity.getTitle());
         if (postEntity.getBuild() != null) {
             res.setBuild(buildMapper.toDomain(postEntity.getBuild()));
         }
@@ -27,6 +28,7 @@ public class PostEntityMapper {
             res.setUser(userMapper.toDomain(postEntity.getUser()));
         }
         if (postEntity.getUsersWhoLiked() != null) {
+            res.setUsersWhoLiked(new ArrayList<>());
             for (UserEntity userEntity : postEntity.getUsersWhoLiked()) {
                 res.getUsersWhoLiked().add(userMapper.toDomain(userEntity));
             }
@@ -35,20 +37,21 @@ public class PostEntityMapper {
         return res;
     }
 
-    public PostEntity toPersistance(Post post) throws ParseException {
+    public PostEntity toPersistence(Post post) throws ParseException {
         PostEntity res = new PostEntity();
 
         res.setId(post.getId());
+        res.setTitle(post.getTitle());
         res.setDescription(post.getDescription());
         res.setImage(post.getImage());
-        res.setTitle(post.getTitle());
         if (post.getBuild() != null) {
-            res.setBuild(buildMapper.toPersistance(post.getBuild()));
+            res.setBuild(buildMapper.toPersistence(post.getBuild()));
         }
         if (post.getUser() != null) {
             res.setUser(userMapper.toPersistance(post.getUser()));
         }
         if (post.getUsersWhoLiked() != null) {
+            res.setUsersWhoLiked(new ArrayList<>());
             for (User user : post.getUsersWhoLiked()) {
                 res.getUsersWhoLiked().add(userMapper.toPersistance(user));
             }

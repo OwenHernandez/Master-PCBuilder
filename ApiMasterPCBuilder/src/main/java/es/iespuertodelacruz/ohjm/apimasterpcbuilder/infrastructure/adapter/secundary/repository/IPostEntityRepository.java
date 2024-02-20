@@ -7,13 +7,14 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface IPostEntityRepository extends JpaRepository<PostEntity, Long>{
-    @Query(value = "SELECT * FROM Posts p WHERE p.TITLE = :title", nativeQuery = true)
+public interface IPostEntityRepository extends JpaRepository<PostEntity, Long> {
+
+    @Query(value = "SELECT * FROM POSTS p WHERE p.TITLE = :title", nativeQuery = true)
     List<PostEntity> findByTitle(@Param("title") String title);
 
-    @Query(value = "SELECT * FROM Posts p WHERE p.BUILD_ID = :buildId", nativeQuery = true)
+    @Query(value = "SELECT * FROM POSTS p WHERE p.BUILD_ID = :buildId", nativeQuery = true)
     List<PostEntity> findByBuildId(@Param("buildId") Long buildId);
 
-    @Query(value = "SELECT * FROM Posts p WHERE p.USER_ID = :userId", nativeQuery = true)
-    List<PostEntity> findByUserId(Long userId);
+    @Query(value = "SELECT * FROM POSTS p WHERE p.USER_ID = :userId", nativeQuery = true)
+    List<PostEntity> findByUserId(@Param("userId") Long userId);
 }

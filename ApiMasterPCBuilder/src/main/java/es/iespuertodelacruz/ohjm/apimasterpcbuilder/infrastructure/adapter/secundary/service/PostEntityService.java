@@ -24,26 +24,14 @@ public class PostEntityService implements IPostRepository {
     @Override
     public List<Post> findAll() {
         List<Post> res = new ArrayList<>();
-        List<PostEntity> all = repo.findAll();
-
-        for (PostEntity postEntity : all) {
-            Post post = mapper.toDomain(postEntity);
-            res.add(post);
-        }
-
+        repo.findAll().forEach(postEntity -> res.add(mapper.toDomain(postEntity)));
         return res;
     }
 
     @Override
     public Post save(Post post) {
         try {
-            if (post != null) {
-                PostEntity postEntity = mapper.toPersistance(post);
-                PostEntity save = repo.save(postEntity);
-                return mapper.toDomain(save);
-            } else {
-                return null;
-            }
+            return mapper.toDomain(repo.save(mapper.toPersistence(post)));
         } catch (RuntimeException | ParseException e) {
             return null;
         }
@@ -51,14 +39,10 @@ public class PostEntityService implements IPostRepository {
 
     @Override
     public Post findById(Long id) {
-        try {
-            if (id != null) {
-                Optional<PostEntity> postEntity = repo.findById(id);
-                return postEntity.map(entity -> mapper.toDomain(entity)).orElse(null);
-            } else {
-                return null;
-            }
-        } catch (RuntimeException e) {
+        Optional<PostEntity> byId = repo.findById(id);
+        if (byId.isPresent()) {
+            return mapper.toDomain(byId.get());
+        } else {
             return null;
         }
     }
@@ -66,13 +50,11 @@ public class PostEntityService implements IPostRepository {
     @Override
     public boolean deleteById(long id) {
         try {
-            Optional<PostEntity> byId = repo.findById(id);
-            if (byId.isPresent()) {
-                repo.deleteById(id);
-                return true;
-            } else {
+            if (!repo.existsById(id)) {
                 return false;
             }
+            repo.deleteById(id);
+            return true;
         } catch (RuntimeException e) {
             return false;
         }
@@ -81,14 +63,11 @@ public class PostEntityService implements IPostRepository {
     @Override
     public boolean update(Post post) {
         try {
-            Optional<PostEntity> byId = repo.findById(post.getId());
-            if (byId.isPresent()) {
-                PostEntity postEntity = mapper.toPersistance(post);
-                repo.save(postEntity);
-                return true;
-            } else {
+            if (!repo.existsById(post.getId())) {
                 return false;
             }
+            repo.save(mapper.toPersistence(post));
+            return true;
         } catch (RuntimeException | ParseException e) {
             return false;
         }
@@ -96,69 +75,45 @@ public class PostEntityService implements IPostRepository {
 
     @Override
     public List<Post> findByTitle(String title) {
-        try {
-            if (title != null) {
-                List<PostEntity> byTitle = repo.findByTitle(title);
-                if (byTitle != null) {
-                    List<Post> res = new ArrayList<>();
-                    for (PostEntity postEntity : byTitle) {
-                        Post post = mapper.toDomain(postEntity);
-                        res.add(post);
-                    }
-                    return res;
-                } else {
-                    return null;
-                }
-            } else {
-                return null;
-            }
-        } catch (RuntimeException e) {
+        if (title == null) {
+            return null;
+        }
+        List<PostEntity> byTitle = repo.findByTitle(title);
+        if (byTitle != null) {
+            List<Post> res = new ArrayList<>();
+            byTitle.forEach(postEntity -> res.add(mapper.toDomain(postEntity)));
+            return res;
+        } else {
             return null;
         }
     }
 
     @Override
     public List<Post> findByBuildId(Long buildId) {
-        try {
-            if (buildId != null) {
-                List<PostEntity> byBuildId = repo.findByBuildId(buildId);
-                if (byBuildId != null) {
-                    List<Post> res = new ArrayList<>();
-                    for (PostEntity postEntity : byBuildId) {
-                        Post post = mapper.toDomain(postEntity);
-                        res.add(post);
-                    }
-                    return res;
-                } else {
-                    return null;
-                }
-            } else {
-                return null;
-            }
-        } catch (RuntimeException e) {
+        if (buildId == null) {
+            return null;
+        }
+        List<PostEntity> byBuildId = repo.findByBuildId(buildId);
+        if (byBuildId != null) {
+            List<Post> res = new ArrayList<>();
+            byBuildId.forEach(postEntity -> res.add(mapper.toDomain(postEntity)));
+            return res;
+        } else {
             return null;
         }
     }
 
     @Override
     public List<Post> findByUserId(Long userId) {
-        try {
-            if (userId != null) {
-                List<PostEntity> byUserId = repo.findByUserId(userId);
-                if (byUserId != null) {
-                    List<Post> res = new ArrayList<>();
-                    for (PostEntity postEntity : byUserId) {
-                        Post post = mapper.toDomain(postEntity);
-                        res.add(post);
-                    }
-                    return res;
-                } else {
-                    return null;
-                }
-            } else {
-                return null;
-            }
-        } catch (RuntimeException e) {
+        if (userId == null) {
+            return null;
+        }
+        List<PostEntity> byUserId = repo.findByUserId(userId);
+        if (byUserId != null) {
+            List<Post> res = new ArrayList<>();
+            byUserId.forEach(postEntity -> res.add(mapper.toDomain(postEntity)));
+            return res;
+        } else {
             return null;
         }
     }
