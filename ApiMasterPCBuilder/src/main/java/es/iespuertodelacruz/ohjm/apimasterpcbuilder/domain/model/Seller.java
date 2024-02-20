@@ -10,7 +10,7 @@ public class Seller {
 
     private String name;
 
-    //private List<Component> components;
+    private List<Component> components;
 
     public Seller() {
     }
@@ -37,5 +37,13 @@ public class Seller {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public List<Component> getComponents() {
+        return components;
+    }
+
+    public void setComponents(List<Component> components) {
+        this.components = components;
     }
 }

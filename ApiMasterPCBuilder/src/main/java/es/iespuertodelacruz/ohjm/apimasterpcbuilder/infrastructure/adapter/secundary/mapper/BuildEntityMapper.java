@@ -7,7 +7,6 @@ import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secun
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class BuildEntityMapper {
 
@@ -34,7 +33,7 @@ public class BuildEntityMapper {
         return res;
     }
 
-    public BuildEntity toPersistance(Build build) throws ParseException {
+    public BuildEntity toPersistence(Build build) throws ParseException {
 
         BuildEntity res = new BuildEntity();
         res.setId(build.getId());
