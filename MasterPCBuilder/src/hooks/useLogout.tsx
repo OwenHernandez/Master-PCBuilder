@@ -3,15 +3,18 @@ import React from 'react'
 import { usePrimaryContext } from '../contexts/PrimaryContext';
 import { RootStackParamList } from '../navigations/StackNavigator';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import EncryptedStorage from "react-native-encrypted-storage";
 
 type Props = {}
 
 const useLogout = () => {
-    const { user, setUser } = usePrimaryContext();
+    const { user, setUser, setToken } = usePrimaryContext();
 
-    function logout(navigation: NativeStackNavigationProp<RootStackParamList, any, undefined>) {
-        //setUser("");
-        navigation.navigate("Login");
+    async function logout(navigation: NativeStackNavigationProp<RootStackParamList, any, undefined>) {
+        setUser(null);
+        setToken("");
+        await EncryptedStorage.setItem("token", "");
+        navigation.navigate("Landing");
     }
 
     return {
@@ -20,5 +23,3 @@ const useLogout = () => {
 }
 
 export default useLogout
-
-const styles = StyleSheet.create({})

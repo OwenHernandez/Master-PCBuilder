@@ -10,6 +10,7 @@ import { RootStackParamList } from '../navigations/StackNavigator';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import DropDownPicker, { ItemType, ValueType } from 'react-native-dropdown-picker';
 import IBuildType from '../interfaces/IBuildType';
+import HeaderScreen from "../components/HeaderScreen";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'CreatePost'>;
 
@@ -30,7 +31,7 @@ const CreatePost = (props: Props) => {
 
     useEffect(() => {
         //Cargaria de la api rest los builds que ha hecho esa persona
-
+        /*
         tempBuilds.forEach((build) => {
             let item: ItemType<ValueType> = {
                 label: build.name,
@@ -38,44 +39,12 @@ const CreatePost = (props: Props) => {
             }
             setItems(prevItems => [...prevItems, item]);
         });
+        */
     }, []);
-
-    const tempBuilds: IBuildType[] = [
-        {
-            name: "BuildCoso",
-            price: "1000€",
-            notes: "jkfdjsgvfjdnjghsridhgjf",
-            components: [
-                { name: "CPU", compImage: "https://i.ebayimg.com/images/g/-1sAAOSwtQNlLpw6/s-l1600.jpg", description: "CPU super potente perfecta...", price: "100€", site: "PCCOmponentes", type: "CPU" },
-                { name: "Motherboard", compImage: "https://i.ebayimg.com/images/g/-1sAAOSwtQNlLpw6/s-l1600.jpg", description: "CPU super potente perfecta...", price: "100€", site: "PCCOmponentes", type: "Motherboard" }
-            ]
-        },
-        {
-            name: "BuildCoso2",
-            price: "1000€",
-            components: [
-                { name: "CPU", compImage: "https://i.ebayimg.com/images/g/-1sAAOSwtQNlLpw6/s-l1600.jpg", description: "CPU super potente perfecta...", price: "100€", site: "PCCOmponentes", type: "CPU" },
-                { name: "Motherboard", compImage: "https://i.ebayimg.com/images/g/-1sAAOSwtQNlLpw6/s-l1600.jpg", description: "CPU super potente perfecta...", price: "100€", site: "PCCOmponentes", type: "Motherboard" }
-            ]
-        }
-    ];
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: (darkMode) ? "#242121" : "#F5F5F5" }}>
-            <View style={Styles.headerView}>
-                <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
-                    <Image
-                        source={{
-                            uri: user.picture
-                        }}
-                        style={{ ...Styles.imageStyle, borderColor: (darkMode) ? "white" : "black", borderWidth: 1, width: getIconSize(110), height: getIconSize(110) }}
-                    />
-                </TouchableOpacity>
-                <Text style={{ ...Styles.headerText, color: (darkMode) ? "white" : "black", fontSize: getFontSize(20) }}>{route.name}</Text>
-                <TouchableOpacity onPress={() => navigation.dispatch(DrawerActions.openDrawer())}>
-                    <Octicons name='three-bars' size={getIconSize(100)} color={(darkMode) ? "white" : "black"}></Octicons>
-                </TouchableOpacity>
-            </View>
+            <HeaderScreen name={route.name} navigation={navigation} profile={false} drawer={true}/>
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
                 <View>
                     <View style={{ backgroundColor: '#524f4f', padding: "10%", borderRadius: 20, alignItems: "center", marginHorizontal: "10%", marginBottom: "2%" }}>

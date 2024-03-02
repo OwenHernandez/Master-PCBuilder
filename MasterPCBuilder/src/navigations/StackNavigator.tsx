@@ -1,10 +1,8 @@
-import { StatusBar, StyleSheet, Text, View } from 'react-native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { useEffect } from 'react'
 import Register from '../screens/Register';
 import Login from '../screens/Login';
 import Profile from '../screens/Profile';
-import UserPostsList from '../screens/UserPostsList';
 import Post from '../screens/Post';
 import UserBuildsList from '../screens/UserBuildsList';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -15,7 +13,6 @@ import Landing from '../screens/Landing';
 import { usePrimaryContext } from '../contexts/PrimaryContext';
 import IPostType from '../interfaces/IPostType';
 import IBuildType from '../interfaces/IBuildType';
-import LikedPostsList from '../screens/LikedPostsList';
 import DrawerNavigator from './DrawerNavigator';
 import FriendsTabs from './FriendsTabs';
 import Chat from '../screens/Chat';
@@ -31,20 +28,16 @@ export type RootStackParamList = {
     Login: undefined,
     Social: undefined,
     CreatePost: undefined,
-    SearchPost: undefined,
     DrawerNavigator: any,
     Builder: { build?: IBuildType, builds?: IBuildType[] },
     Profile: undefined,
     Settings: undefined,
     UserBuildsList: undefined,
-    UserPostsList: undefined,
-    LikedPostsList: undefined,
     Post: { post: IPostType },
     WishList: undefined,
     Friends: undefined,
-    FriendsList: undefined,
+    "Friends List": undefined,
     AddFriend: undefined,
-    SearchFriends: undefined,
     Chat: { friend: IUserType },
     FriendsProfile: { friend: IUserType }
 };
@@ -86,8 +79,6 @@ const StackNavigator = (props: Props) => {
             <Stack.Screen name="Register" component={Register} />
             <Stack.Screen name="DrawerNavigator" component={DrawerNavigator} />
             <Stack.Screen name="UserBuildsList" component={UserBuildsList} />
-            <Stack.Screen name="LikedPostsList" component={LikedPostsList} />
-            <Stack.Screen name="UserPostsList" component={UserPostsList} />
             <Stack.Screen name="Post" component={Post} />
             <Stack.Screen name="WishList" component={WishList} />
             <Stack.Screen name="Friends" component={FriendsTabs} />

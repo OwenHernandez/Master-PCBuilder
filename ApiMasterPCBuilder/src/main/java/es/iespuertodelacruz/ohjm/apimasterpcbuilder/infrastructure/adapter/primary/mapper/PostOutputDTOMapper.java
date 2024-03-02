@@ -3,12 +3,14 @@ package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.prim
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Post;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.User;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.PostOutputDTO;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.UserDTO;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PostOutputDTOMapper {
 
+    UserDTOMapper userDTOMapper = new UserDTOMapper();
     public PostOutputDTO toDTO(Post post) {
         PostOutputDTO outputDTO = new PostOutputDTO();
         outputDTO.setId(post.getId());
@@ -16,14 +18,14 @@ public class PostOutputDTOMapper {
         outputDTO.setImage(post.getImage());
         outputDTO.setTitle(post.getTitle());
         outputDTO.setBuildId(post.getBuild().getId());
-        outputDTO.setUserId(post.getUser().getId());
+        outputDTO.setUserId(userDTOMapper.toDTO(post.getUser()));
         if (post.getUsersWhoLiked() != null) {
-            List<Long> usersWhoLikedIds = new ArrayList<>();
+            List<UserDTO> usersWhoLiked = new ArrayList<>();
             for (User user : post.getUsersWhoLiked()) {
-                usersWhoLikedIds.add(user.getId());
+                usersWhoLiked.add(userDTOMapper.toDTO(user));
             }
 
-            outputDTO.setUsersWhoLikedIds(usersWhoLikedIds);
+            outputDTO.setUsersWhoLikedIds(usersWhoLiked);
         }
         return outputDTO;
     }

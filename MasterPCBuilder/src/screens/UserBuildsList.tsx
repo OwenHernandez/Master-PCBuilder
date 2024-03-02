@@ -12,6 +12,7 @@ import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
 import { Globals } from '../components/Globals';
+import HeaderScreen from "../components/HeaderScreen";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'UserBuildsList'>;
 
@@ -53,20 +54,7 @@ const UserBuildsList = (props: Props) => {
 
     return (
         <View>
-            <View style={Styles.headerView}>
-                <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
-                    <Image
-                        source={{
-                            uri: user.picture
-                        }}
-                        style={{ ...Styles.imageStyle, borderColor: (darkMode) ? "white" : "black", borderWidth: 1, width: getIconSize(110), height: getIconSize(110) }}
-                    />
-                </TouchableOpacity>
-                <Text style={{ ...Styles.headerText, color: (darkMode) ? "white" : "black", fontSize: getFontSize(20) }}>{route.name}</Text>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Material name='keyboard-backspace' size={getIconSize(100)} color={(darkMode) ? "white" : "black"}></Material>
-                </TouchableOpacity>
-            </View>
+            <HeaderScreen name={"Your Builds"} navigation={navigation} profile={false} drawer={false}/>
             <FlatList
                 data={buildsList}
                 renderItem={(build) => {

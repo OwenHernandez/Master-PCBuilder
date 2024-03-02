@@ -8,6 +8,7 @@ import { Styles } from '../themes/Styles';
 import Icon from 'react-native-vector-icons/Octicons';
 import { usePrimaryContext } from '../contexts/PrimaryContext';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
+import HeaderScreen from "../components/HeaderScreen";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Post'>;
 
@@ -22,20 +23,7 @@ const Post = (props: Props) => {
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
-            <View style={Styles.headerView}>
-                <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
-                    <Image
-                        source={{
-                            uri: user.picture
-                        }}
-                        style={{ ...Styles.imageStyle, borderColor: (darkMode) ? "white" : "black", borderWidth: 1, width: getIconSize(110), height: getIconSize(110) }}
-                    />
-                </TouchableOpacity>
-                <Text style={{ ...Styles.headerText, color: (darkMode) ? "white" : "black", fontSize: getFontSize(20) }}>{post.title}</Text>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Material name='keyboard-backspace' size={getIconSize(100)} color={(darkMode) ? "white" : "black"}></Material>
-                </TouchableOpacity>
-            </View>
+            <HeaderScreen name={route.name} navigation={navigation} profile={true} drawer={false}/>
             <View style={{ maxHeight: "90%" }}>
                 <View style={{ flexDirection: "row" }}>
                     <Image

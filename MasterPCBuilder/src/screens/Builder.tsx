@@ -198,7 +198,7 @@ const Builder = (props: Props) => {
 
     return (
         <View style={{ flex: 1, backgroundColor: (darkMode) ? "#242121" : "#F5F5F5" }}>
-            <HeaderScreen name={route.name} navigation={navigation} profile={false}/>
+            <HeaderScreen name={route.name} navigation={navigation} profile={false} drawer={true}/>
             <View style={{ flex: 1 }}>
                 <View style={{
                     flexDirection: "row",

@@ -79,8 +79,25 @@ public class UserEntityService implements IUserRepository {
         User res = null;
         if (user != null) {
             UserEntity ue = mapper.toPersistance(user);
+            if (user.getFriends() != null && !user.getFriends().isEmpty()) {
+                List<UserEntity> friends = new ArrayList<>();
+                for (User u : user.getFriends()) {
+                    UserEntity ueFriend = mapper.toPersistance(u);
+                    friends.add(ueFriend);
+                }
+                ue.setFriends(friends);
+            }
             UserEntity save = repo.save(ue);
+
             res = mapper.toDomain(save);
+            if (user.getFriends() != null && !user.getFriends().isEmpty()) {
+                List<User> friends = new ArrayList<>();
+                for (UserEntity ueFriend : save.getFriends()) {
+                    User u = mapper.toDomain(ueFriend);
+                    friends.add(u);
+                }
+                res.setFriends(friends);
+            }
         }
         return res;
     }

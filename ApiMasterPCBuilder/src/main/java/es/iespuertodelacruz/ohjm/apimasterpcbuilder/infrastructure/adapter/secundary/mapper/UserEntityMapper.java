@@ -22,6 +22,7 @@ public class UserEntityMapper {
         if (userEntity.getFriends() != null && !userEntity.getFriends().isEmpty()) {
             friends = new ArrayList<>();
             for (UserEntity ue : userEntity.getFriends()) {
+                ue.setFriends(null);
                 User u = toDomain(ue);
                 friends.add(u);
             }
@@ -40,15 +41,7 @@ public class UserEntityMapper {
         ue.setActive(user.getActive());
         ue.setHash(user.getHash());
         ue.setPicture(user.getPicture());
-        List<UserEntity> friends = null;
-        if (user.getFriends() != null && user.getFriends().isEmpty()) {
-            friends = new ArrayList<>();
-            for (User u : user.getFriends()) {
-                UserEntity userEntity = toPersistance(u);
-                friends.add(userEntity);
-            }
-        }
-        ue.setFriends(friends);
+        ue.setFriends(null);
 
         return ue;
     }

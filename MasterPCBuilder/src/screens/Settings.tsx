@@ -12,6 +12,7 @@ import {ImagePickerResponse} from "react-native-image-picker";
 import RNFetchBlob from "rn-fetch-blob";
 import axios from "axios";
 import {Globals} from "../components/Globals";
+import HeaderScreen from "../components/HeaderScreen";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Settings'>;
 
@@ -55,20 +56,7 @@ const Settings = (props: Props) => {
 
     return (
         <View style={{ flex: 1, backgroundColor: (darkMode) ? "#242121" : "#F5F5F5" }}>
-            <View style={Styles.headerView}>
-                <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
-                    <Image
-                        source={{
-                            uri: user.picture
-                        }}
-                        style={{ ...Styles.imageStyle, borderColor: (darkMode) ? "white" : "black", borderWidth: 1, width: getIconSize(110), height: getIconSize(110) }}
-                    />
-                </TouchableOpacity>
-                <Text style={{ ...Styles.headerText, color: (darkMode) ? "white" : "black", fontSize: getFontSize(20) }}>{route.name}</Text>
-                <TouchableOpacity onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}>
-                    <Icon name='three-bars' size={getIconSize(90)} color={(darkMode) ? "white" : "black"}></Icon>
-                </TouchableOpacity>
-            </View>
+            <HeaderScreen name={route.name} navigation={navigation} profile={false} drawer={true}/>
             <View style={{ ...Styles.touchable, justifyContent: "center", flexDirection: "row", marginTop: "10%" }}>
                 <Text style={{ fontSize: getFontSize(18), color: (darkMode) ? "white" : "black" }}>Change the mode to {darkMode ? "light" : "dark"}   </Text>
                 <Switch

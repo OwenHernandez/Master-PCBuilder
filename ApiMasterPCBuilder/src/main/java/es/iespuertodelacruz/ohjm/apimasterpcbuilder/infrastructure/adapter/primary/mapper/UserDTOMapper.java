@@ -35,6 +35,7 @@ public class UserDTOMapper {
         if (user.getFriends() != null && !user.getFriends().isEmpty()) {
             friends = new ArrayList<>();
             for (User u : user.getFriends()) {
+                u.setFriends(null);
                 UserDTO uDTO = toDTO(u);
                 friends.add(uDTO);
             }
