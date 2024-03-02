@@ -80,6 +80,7 @@ public class UserRestControllerV2 {
 
     @GetMapping("/img/{id}/{filename}")
     public ResponseEntity<?> getFiles(@PathVariable("id") long userId, @PathVariable("filename") String filename) {
+        System.out.println("coso");
         User byId = userService.findById(userId);
         if (byId == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The user does not exist");
@@ -93,7 +94,7 @@ public class UserRestControllerV2 {
             if (byId.getId() != userByNick.getId()) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not that user");
             }
-            Resource resource = storageService.get(byId.getNick() + "_" + filename);
+            Resource resource = storageService.get(filename);
 
             String contentType = null;
             try {

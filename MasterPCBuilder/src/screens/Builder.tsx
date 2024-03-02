@@ -28,6 +28,7 @@ import IComponentType from '../interfaces/IComponentType';
 import axios from 'axios';
 import { Globals } from '../components/Globals';
 import IBuildComponentType from "../interfaces/IBuildComponentType";
+import HeaderScreen from "../components/HeaderScreen";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Builder'>;
 
@@ -38,6 +39,7 @@ const Builder = (props: Props) => {
     const builds = route.params?.builds;
     const [msg, setMsg] = useState("");
     const [buildTemp, setBuildTemp] = useState({} as IBuildType);
+    const [buildUpt, setBuildUpt] = useState({} as IBuildType);
     const [buildsTemp, setBuildsTemp] = useState({} as IBuildType[]);
     const [modalCompType, setModalCompType] = useState("");
     const [components, setComponents] = useState([{}] as IComponentType[]);
@@ -55,9 +57,12 @@ const Builder = (props: Props) => {
             setBuildTemp(build);
             setTotalPrice(0);
             if (build !== undefined && build.buildsComponents !== null) {
+                setBuildUpt(build);
                 build.buildsComponents.forEach(buildComp => {
                     setTotalPrice(prevPrice => prevPrice + buildComp.component.price);
                 });
+            } else {
+                setBuildUpt(undefined);
             }
         }
         if (builds !== null) {
@@ -70,6 +75,7 @@ const Builder = (props: Props) => {
         setBuildTemp(null);
         setMsg("");
         setTotalPrice(0);
+        setBuildUpt(undefined);
     }
 
     const toggleModal = (modalType: string) => {
@@ -192,27 +198,7 @@ const Builder = (props: Props) => {
 
     return (
         <View style={{ flex: 1, backgroundColor: (darkMode) ? "#242121" : "#F5F5F5" }}>
-            <View style={Styles.headerView}>
-                <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
-                    <Image
-                        source={{
-                            uri: user.picture,
-                            width: getIconSize(110),
-                            height: getIconSize(110)
-                        }}
-                        style={{ ...Styles.imageStyle, borderColor: (darkMode) ? "white" : "black", borderWidth: 1 }}
-                    />
-                </TouchableOpacity>
-                <Text style={{
-                    ...Styles.headerText,
-                    color: (darkMode) ? "white" : "black",
-                    fontSize: getFontSize(20)
-                }}>{route.name}</Text>
-                <TouchableOpacity onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}>
-                    <Octicons name='three-bars' size={getIconSize(100)}
-                        color={(darkMode) ? "white" : "black"}></Octicons>
-                </TouchableOpacity>
-            </View>
+            <HeaderScreen name={route.name} navigation={navigation} profile={false}/>
             <View style={{ flex: 1 }}>
                 <View style={{
                     flexDirection: "row",
@@ -574,7 +560,7 @@ const Builder = (props: Props) => {
                     Range: {totalPrice}€</Text>
                 <Text style={{ ...Styles.headerText, color: "red" }}>{msg}</Text>
                 <TouchableOpacity onPress={() => {
-                    if (buildTemp === null) {
+                    if (buildUpt === undefined) {
                         saveBuild();
                     } else {
                         updateBuild();
@@ -583,7 +569,7 @@ const Builder = (props: Props) => {
                     <Text style={{
                         ...Styles.headerText,
                         color: (darkMode) ? "white" : "black"
-                    }}>{(buildTemp === null) ? "Save" : "Update"}</Text>
+                    }}>{(buildUpt === undefined) ? "Save" : "Update"}</Text>
                 </TouchableOpacity>
             </View>
             <Modal

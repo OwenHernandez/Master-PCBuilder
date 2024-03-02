@@ -30,12 +30,15 @@ const Settings = (props: Props) => {
                 console.log('Error while trying to open gallery:', response.errorMessage);
             } else {
                 const imageFile = await RNFetchBlob.fs.readFile(response.assets[0].uri, 'base64');
-
-                const responseAxios = await axios.put(Globals.IP + "/api/v2/users/" + user.id,
-                    { picture: response.assets[0].fileName, pictureBase64: imageFile, password: "" },
-                    { headers: { 'Authorization': "Bearer " + token } }
-                );
-                setUser({...user, picture: response.assets[0].uri});
+                try {
+                    const responseAxios = await axios.put(Globals.IP + "/api/v2/users/" + user.id,
+                        {picture: response.assets[0].fileName, pictureBase64: imageFile, password: ""},
+                        {headers: {'Authorization': "Bearer " + token}}
+                    );
+                    setUser({...user, picture: response.assets[0].uri});
+                } catch (error) {
+                    console.log("Error while trying to change the picture: ", error);
+                }
 
             }
         });

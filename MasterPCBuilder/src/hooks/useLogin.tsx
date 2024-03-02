@@ -7,6 +7,7 @@ import IUserType from '../interfaces/IUserType';
 import axios from 'axios';
 import { Globals } from '../components/Globals';
 import EncryptedStorage from 'react-native-encrypted-storage';
+import RNFetchBlob from "rn-fetch-blob";
 
 const useLogin = () => {
     const { setUser, setToken, token } = usePrimaryContext();
@@ -26,27 +27,34 @@ const useLogin = () => {
     async function checkLogin(navigation: NativeStackNavigationProp<RootStackParamList, "Login", undefined>) {
         if (nick !== "" && password !== "") {
             try {
-                const response = await axios.post(Globals.IP + "/api/v1/login", { nick, password });
+                const loginResponse = await axios.post(Globals.IP + "/api/v1/login", { nick, password });
 
-                if (response.data === Globals.INC_PASS_USR || response.data === Globals.NOT_ACTIVE) {
-                    setErrorMsg(response.data);
+                if (loginResponse.data === Globals.INC_PASS_USR || loginResponse.data === Globals.NOT_ACTIVE) {
+                    setErrorMsg(loginResponse.data);
                 } else {
 
-                    await EncryptedStorage.setItem("token", response.data);
-                    setToken(response.data);
-                    const response2 = await axios.get(Globals.IP + "/api/v2/users?nick=" + nick, { headers: { 'Authorization': "Bearer " + response.data } });
+                    await EncryptedStorage.setItem("token", loginResponse.data);
+                    setToken(loginResponse.data);
+                    const byNickResponse = await axios.get(Globals.IP + "/api/v2/users?nick=" + nick, { headers: { 'Authorization': "Bearer " + loginResponse.data } });
+                    const response = await RNFetchBlob.fetch(
+                        'GET',
+                        Globals.IP + '/api/v2/users/img/' + byNickResponse.data.id + '/' + byNickResponse.data.picture,
+                        {Authorization: `Bearer ${loginResponse.data}`}
+                    );
+
+                    const base64Data = response.base64() ?? "https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png?x=480&quality=40";
                     const newUser: IUserType = {
-                        id: response2.data.id,
-                        nick: response2.data.nick,
-                        email: response2.data.email,
-                        picture: response2.data.picture ?? "https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png?x=480&quality=40",
-                        friends: response2.data.friends
+                        id: byNickResponse.data.id,
+                        nick: byNickResponse.data.nick,
+                        email: byNickResponse.data.email,
+                        picture: base64Data,
+                        friends: byNickResponse.data.friends
                     }
                     setUser(newUser);
                     navigation.navigate("DrawerNavigator");
                 }
             } catch (err) {
-                console.log(err);
+                console.error(err);
             }
         } else {
             setErrorMsg("The inputs can't be empty");

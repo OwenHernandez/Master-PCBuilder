@@ -9,6 +9,7 @@ import java.util.List;
 public class UserDTOMapper {
     public User toDomain(UserDTO userDTO) {
         User user = new User();
+        user.setId(userDTO.getId());
         user.setNick(userDTO.getNick());
         user.setEmail(userDTO.getEmail());
         user.setPicture(userDTO.getPicture());
@@ -26,6 +27,7 @@ public class UserDTOMapper {
 
     public UserDTO toDTO(User user) {
         UserDTO userDTO = new UserDTO();
+        userDTO.setId(user.getId());
         userDTO.setNick(user.getNick());
         userDTO.setEmail(user.getEmail());
         userDTO.setPicture(user.getPicture());

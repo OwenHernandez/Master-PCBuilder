@@ -10,6 +10,7 @@ import Octicon from 'react-native-vector-icons/Octicons';
 import { DrawerActions } from '@react-navigation/native';
 import axios from "axios";
 import {Globals} from "../components/Globals";
+import HeaderScreen from "../components/HeaderScreen";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Profile'>;
 
@@ -23,13 +24,6 @@ const Profile = (props: Props) => {
     const getIconSize = (size: number) => size / fullScreen;
     const { logout } = useLogout();
 
-    async function getImage() {
-        const response = await axios.get(
-            Globals.IP + "/api/v2/users/" + user.id + "/" + user.picture,
-            { headers:{ "Authorization": "Bearer " + token }}
-        );
-        setImg(response.data);
-    }
     /*const actions = [
         { name: "Your Balls", nav: "UserBuildsList" },
         { name: "Your Posts", nav: "UserPostsList" },
@@ -40,20 +34,12 @@ const Profile = (props: Props) => {
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: (darkMode) ? "#242121" : "#F5F5F5" }}>
-            <View style={Styles.headerView}>
-                <TouchableOpacity onPress={() => navigation.navigate("Settings")}>
-                    <Octicon name='gear' size={getIconSize(90)} color={(darkMode) ? "white" : "black"}></Octicon>
-                </TouchableOpacity>
-                <Text style={{ ...Styles.headerText, color: (darkMode) ? "white" : "black", fontSize: getFontSize(20) }}>{route.name}</Text>
-                <TouchableOpacity onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}>
-                    <Octicon name='three-bars' size={getIconSize(90)} color={(darkMode) ? "white" : "black"}></Octicon>
-                </TouchableOpacity>
-            </View>
+            <HeaderScreen name={route.name} navigation={navigation} profile={true}/>
             <ScrollView>
                 <View style={{ alignItems: 'center', margin: "5%" }}>
                     <Image
                         source={{
-                            uri: img
+                            uri: "data:image/jpeg;base64," + user.picture,
                         }}
                         style={{ ...Styles.imageStyle, borderColor: (darkMode) ? "white" : "black", borderWidth: 1, width: getIconSize(300), height: getIconSize(300) }}
                     />

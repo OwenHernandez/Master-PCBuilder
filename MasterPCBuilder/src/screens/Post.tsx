@@ -54,11 +54,11 @@ const Post = (props: Props) => {
                 <Text style={{ fontSize: 25, color: (darkMode) ? "white" : "black", borderColor: "#ca2613", borderWidth: 2, borderTopWidth: 0 }}>Components Used:{"\n"}</Text>
                 <FlatList
                     contentContainerStyle={{ borderColor: "#ca2613", borderWidth: 2, borderTopWidth: 0 }}
-                    data={post.build.components}
-                    renderItem={(component) => {
+                    data={post.build.buildsComponents}
+                    renderItem={(buildComponent) => {
                         return (
                             <View>
-                                <Component comp={component.item} />
+                                <Component comp={buildComponent.item.component} />
                                 <TouchableOpacity style={{ ...Styles.touchable, alignItems: 'center' }} onPress={() => Alert.alert("añadiría a los favoritos")}>
                                     <Text style={{ color: (darkMode) ? "white" : "black" }}>Add to Wish List</Text>
                                 </TouchableOpacity>
