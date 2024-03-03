@@ -7,7 +7,6 @@ import { usePrimaryContext } from '../contexts/PrimaryContext'
 import Settings from '../screens/Settings';
 import Builder from '../screens/Builder';
 import Social from '../screens/Social';
-import UserPostsList from '../screens/UserPostsList';
 import SocialTabs from './SocialTabs';
 import FriendsTabs from './FriendsTabs';
 import IBuildType from '../interfaces/IBuildType';

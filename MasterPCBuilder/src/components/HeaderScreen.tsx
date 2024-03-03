@@ -2,10 +2,11 @@ import {Dimensions, Image, PixelRatio, Text, TouchableOpacity, View} from "react
 import {Styles} from "../themes/Styles";
 import {DrawerActions} from "@react-navigation/native";
 import Octicons from "react-native-vector-icons/Octicons";
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {usePrimaryContext} from "../contexts/PrimaryContext";
 import Octicon from "react-native-vector-icons/Octicons";
 import Material from "react-native-vector-icons/MaterialCommunityIcons";
+import IUserType from "../interfaces/IUserType";
 
 type Props = {
     name: string;
@@ -21,7 +22,6 @@ const HeaderScreen = (props: Props) => {
     const getFontSize = (size: number) => size / fontScale;
     const fullScreen = Dimensions.get("window").scale;
     const getIconSize = (size: number) => size / fullScreen;
-
     return (
         <View style={Styles.headerView}>
             {(profile) ?
@@ -40,7 +40,6 @@ const HeaderScreen = (props: Props) => {
                     />
                 </TouchableOpacity>
             }
-
             <Text style={{
                 ...Styles.headerText,
                 color: (darkMode) ? "white" : "black",
