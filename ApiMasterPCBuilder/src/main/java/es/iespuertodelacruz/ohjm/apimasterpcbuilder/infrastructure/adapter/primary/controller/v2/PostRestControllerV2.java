@@ -12,13 +12,18 @@ import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.prima
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.mapper.PostInputDTOMapper;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.mapper.PostOutputDTOMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 @RestController
@@ -83,6 +88,10 @@ public class PostRestControllerV2 {
                     if (build.getUser().getId() != byNick.getId()) {
                         return ResponseEntity.status(HttpStatus.FORBIDDEN).body("That is not your build");
                     }
+                    String codedPicture = inputDTO.getImage64();
+                    byte[] photoBytes = Base64.getDecoder().decode(codedPicture);
+                    String newFileName = storageService.save(byNick.getNick() + "_" + inputDTO.getImage(), photoBytes);
+                    post.setImage(newFileName);
                     post.setBuild(build);
                     Post save = service.save(post);
                     if (save != null) {
@@ -98,6 +107,45 @@ public class PostRestControllerV2 {
             }
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Post must not be null");
+        }
+    }
+
+    @GetMapping("/img/{id}/{filename}")
+    public ResponseEntity<?> getFiles(@PathVariable("id") long postId, @PathVariable("filename") String filename) {
+        Post byId = service.findById(postId);
+        if (byId == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The user does not exist");
+        }
+        Object principal =
+                SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = ((UserDetails) principal).getUsername();
+        User userByNick = userService.findByNick(username);
+
+        if (userByNick != null) {
+            if (!byId.getImage().equals(filename)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("That is not the right image");
+            }
+            Resource resource = storageService.get(filename);
+
+            String contentType = null;
+            try {
+                contentType = URLConnection.guessContentTypeFromStream(resource.getInputStream());
+            } catch (IOException ex) {
+                System.out.println("Could not determine file type.");
+            }
+            if (contentType == null) {
+                contentType = "application/octet-stream";
+            }
+
+            String headerValue = "attachment; filename=\"" + resource.getFilename() + "\"";
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(contentType))
+                    .header(
+                            org.springframework.http.HttpHeaders.CONTENT_DISPOSITION,
+                            headerValue
+                    ).body(resource);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You should not be here");
         }
     }
 

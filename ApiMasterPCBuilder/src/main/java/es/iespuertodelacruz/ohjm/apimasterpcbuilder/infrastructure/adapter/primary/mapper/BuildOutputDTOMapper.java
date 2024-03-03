@@ -48,7 +48,9 @@ public class BuildOutputDTOMapper {
                 BuildComponentDTO bcDTO = new BuildComponentDTO();
                 bcDTO.setDateCreated(bc.getDateCreated());
                 bcDTO.setPriceAtTheTime(bc.getPriceAtTheTime());
-                bcDTO.setComponent(outputDTOMapper.toDTO(bc.getComponent()));
+                if (bc.getComponent() != null) {
+                    bcDTO.setComponent(outputDTOMapper.toDTO(bc.getComponent()));
+                }
                 bcDTOList.add(bcDTO);
             }
             buildOutputDTO.setBuildsComponents(bcDTOList);

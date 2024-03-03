@@ -1,3 +1,5 @@
+.ApiMasterPCBuilder/img/*
+
 # Xcode
 !**/*.xcodeproj
 !**/*.pbxproj

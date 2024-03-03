@@ -3,26 +3,15 @@ import {
     Text,
     SafeAreaView,
     TouchableOpacity,
-    Image,
     PixelRatio,
     Dimensions,
-    TextInput,
-    FlatList,
-    Alert
+    TextInput
 } from 'react-native'
-import React, {useEffect, useState} from 'react'
+import React, {useState} from 'react'
 import {usePrimaryContext} from '../contexts/PrimaryContext';
-import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
-import Octicons from 'react-native-vector-icons/Octicons';
-import {DrawerActions} from '@react-navigation/native';
 import {Styles} from '../themes/Styles';
-import {RootTabsParamList} from '../navigations/SocialTabs';
 import {RootStackParamList} from '../navigations/StackNavigator';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import DropDownPicker, {ItemType, ValueType} from 'react-native-dropdown-picker';
-import IBuildType from '../interfaces/IBuildType';
-import Material from 'react-native-vector-icons/MaterialCommunityIcons';
-import Octicon from 'react-native-vector-icons/Octicons';
 import HeaderScreen from "../components/HeaderScreen";
 import axios from "axios";
 import {Globals} from "../components/Globals";

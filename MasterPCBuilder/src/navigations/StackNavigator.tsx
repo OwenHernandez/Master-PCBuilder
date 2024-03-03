@@ -34,6 +34,7 @@ export type RootStackParamList = {
     Settings: undefined,
     UserBuildsList: undefined,
     Post: { post: IPostType },
+    Posts: {posts?: IPostType[]},
     WishList: undefined,
     Friends: undefined,
     "Friends List": undefined,

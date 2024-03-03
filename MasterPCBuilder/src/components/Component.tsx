@@ -19,16 +19,16 @@ const Component = (props: Props) => {
         <View style={{ flex: 1, flexDirection: 'row' }}>
             <Image
                 source={{
-                    uri: comp.image
+                    uri: comp?.image
                 }}
                 style={{ margin: "2%", width: getIconSize(300), height: getIconSize(300) }}
             />
             <View style={{ maxWidth: "65%" }}>
-                <Text style={{ fontSize: 20, color: (darkMode) ? "white" : "black", marginRight: "10%" }}>{comp.name}</Text>
-                <Text style={{ fontSize: 20, color: (darkMode) ? "white" : "black" }}>{comp.price}€</Text>
-                <Text style={{ fontSize: 15, color: (darkMode) ? "white" : "black" }}>Description: {"\n"}{comp.description}</Text>
-                <Text style={{ fontSize: 15, color: (darkMode) ? "white" : "black" }}>Sold by:{"\n"}{comp.sellerName}</Text>
-                <Text style={{ fontSize: 15, color: (darkMode) ? "white" : "black" }}>Created by:{"\n"}{comp.userNick}</Text>
+                <Text style={{ fontSize: 20, color: (darkMode) ? "white" : "black", marginRight: "10%" }}>{comp?.name}</Text>
+                <Text style={{ fontSize: 20, color: (darkMode) ? "white" : "black" }}>{comp?.price}€</Text>
+                <Text style={{ fontSize: 15, color: (darkMode) ? "white" : "black" }}>Description: {"\n"}{comp?.description}</Text>
+                <Text style={{ fontSize: 15, color: (darkMode) ? "white" : "black" }}>Sold by:{"\n"}{comp?.sellerName}</Text>
+                <Text style={{ fontSize: 15, color: (darkMode) ? "white" : "black" }}>Created by:{"\n"}{comp?.userNick}</Text>
             </View>
         </View>
     )

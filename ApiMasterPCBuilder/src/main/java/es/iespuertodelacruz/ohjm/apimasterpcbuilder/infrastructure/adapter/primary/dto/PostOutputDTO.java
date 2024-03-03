@@ -12,7 +12,7 @@ public class PostOutputDTO {
 
     private String title;
 
-    private long buildId;
+    private BuildOutputDTO build;
 
     private UserDTO user;
 
@@ -52,19 +52,19 @@ public class PostOutputDTO {
         this.title = title;
     }
 
-    public long getBuildId() {
-        return buildId;
+    public BuildOutputDTO getBuild() {
+        return build;
     }
 
-    public void setBuildId(long buildId) {
-        this.buildId = buildId;
+    public void setBuild(BuildOutputDTO build) {
+        this.build = build;
     }
 
     public UserDTO getUser() {
         return user;
     }
 
-    public void setUserId(UserDTO user) {
+    public void setUser(UserDTO user) {
         this.user = user;
     }
 
@@ -72,7 +72,7 @@ public class PostOutputDTO {
         return usersWhoLiked;
     }
 
-    public void setUsersWhoLikedIds(List<UserDTO> usersWhoLiked) {
+    public void setUsersWhoLiked(List<UserDTO> usersWhoLiked) {
         this.usersWhoLiked = usersWhoLiked;
     }
 }

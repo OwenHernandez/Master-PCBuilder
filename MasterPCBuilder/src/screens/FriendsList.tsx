@@ -1,5 +1,4 @@
 import {
-    Alert,
     Dimensions,
     FlatList,
     Image,
@@ -12,22 +11,17 @@ import {
 } from 'react-native'
 import React, {useEffect, useState} from 'react'
 import {Styles} from '../themes/Styles';
-import Component from '../components/Component';
 import {usePrimaryContext} from '../contexts/PrimaryContext';
 import {RootStackParamList} from '../navigations/StackNavigator';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import Icon from 'react-native-vector-icons/Octicons';
 import IUserType from '../interfaces/IUserType';
-import Material from 'react-native-vector-icons/MaterialCommunityIcons';
-import Octicon from 'react-native-vector-icons/Octicons';
-import {DrawerActions} from '@react-navigation/native';
 import HeaderScreen from "../components/HeaderScreen";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Friends List'>;
 
 const FriendsList = (props: Props) => {
-    const {navigation, route} = props;
+    const {navigation} = props;
     const {user, darkMode} = usePrimaryContext();
     const fontScale = PixelRatio.getFontScale();
     const getFontSize = (size: number) => size / fontScale;
@@ -51,7 +45,7 @@ const FriendsList = (props: Props) => {
                 }}>
                     <TextInput
                         placeholder='Search a friend by name'
-                        placeholderTextColor={(darkMode) ? "white" : "black"}
+                        placeholderTextColor={"#a3a3a3"}
                         style={{
                             borderWidth: 2,
                             borderColor: "#ca2613",

@@ -13,12 +13,14 @@ import HeaderScreen from "../components/HeaderScreen";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import axios from "axios";
 import {Globals} from "../components/Globals";
+import RNFetchBlob from "rn-fetch-blob";
 
-type Props = NativeStackScreenProps<RootStackParamList, 'Social'>;
+type Props = NativeStackScreenProps<RootStackParamList, 'Posts'>;
 
 const Social = (props: Props) => {
     const {user, darkMode, token} = usePrimaryContext();
     const {navigation, route} = props;
+    const posts = route.params?.posts;
     const fontScale = PixelRatio.getFontScale();
     const getFontSize = (size: number) => size / fontScale;
     const fullScreen = Dimensions.get("window").scale;
@@ -27,14 +29,32 @@ const Social = (props: Props) => {
     const [postsByTitle, setPostsByTitle] = useState([{}] as IPostType[]);
 
     useEffect(() => {
+        setPostsList([]);
+        setPostsByTitle([]);
         getPosts();
-    }, []);
+    }, [posts]);
 
     async function getPosts() {
         try {
             const response = await axios.get(Globals.IP + "/api/v2/posts", {headers: {"Authorization": "Bearer " + token}});
-            setPostsList(response.data);
-            setPostsByTitle(response.data);
+            for (const post of response.data) {
+                const getPostFile = await RNFetchBlob.fetch(
+                    'GET',
+                    Globals.IP + '/api/v2/posts/img/' + post.id + '/' + post.image,
+                    {Authorization: `Bearer ${token}`}
+                );
+                post.image = getPostFile.base64();
+                const getUserFile = await RNFetchBlob.fetch(
+                    'GET',
+                    Globals.IP + '/api/v2/users/img/' + post.user.id + '/' + post.user.picture,
+                    {Authorization: `Bearer ${token}`}
+                );
+                console.log(post.user);
+                post.user.picture = getUserFile.base64();
+                console.log(post.user);
+                setPostsList(prevPosts => [...prevPosts, post]);
+                setPostsByTitle(prevPosts => [...prevPosts, post]);
+            }
         } catch (e) {
             console.log(e);
         }
@@ -52,7 +72,7 @@ const Social = (props: Props) => {
                 }}>
                     <TextInput
                         placeholder='Search a post by title'
-                        placeholderTextColor={(darkMode) ? "white" : "black"}
+                        placeholderTextColor={"#a3a3a3"}
                         style={{
                             borderWidth: 2,
                             borderColor: "#ca2613",
@@ -128,14 +148,14 @@ const Social = (props: Props) => {
                                             <Text style={{
                                                 fontSize: getFontSize(15),
                                                 color: (darkMode) ? "white" : "black"
-                                            }}>Price: {post.item.priceRange}</Text>
+                                            }}>Price: {post.item.build?.totalPrice}€</Text>
                                         </View>
 
                                     </View>
                                     <View style={{alignItems: "center"}}>
                                         <Image
                                             source={{
-                                                uri: post.item.image
+                                                uri: "data:image/jpeg;base64," + post.item.image
                                             }}
                                             style={{
                                                 width: getIconSize(900),

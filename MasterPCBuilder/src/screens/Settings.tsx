@@ -36,7 +36,7 @@ const Settings = (props: Props) => {
                         {picture: response.assets[0].fileName, pictureBase64: imageFile, password: ""},
                         {headers: {'Authorization': "Bearer " + token}}
                     );
-                    setUser({...user, picture: response.assets[0].uri});
+                    setUser({...user, picture: imageFile});
                 } catch (error) {
                     console.log("Error while trying to change the picture: ", error);
                 }

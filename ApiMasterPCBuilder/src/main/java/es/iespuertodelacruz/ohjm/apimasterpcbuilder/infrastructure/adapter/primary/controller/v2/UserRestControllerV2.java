@@ -72,8 +72,8 @@ public class UserRestControllerV2 {
                     byId.setPassword(userDTO.getPassword());
                 }
 
-                userService.save(byId);
-                return ResponseEntity.ok().build();
+                User save = userService.save(byId);
+                return ResponseEntity.ok(mapper.toDTO(save));
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You should not be here");
             }
@@ -92,9 +92,6 @@ public class UserRestControllerV2 {
         User userByNick = userService.findByNick(username);
 
         if (userByNick != null) {
-            if (byId.getId() != userByNick.getId()) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not that user");
-            }
             Resource resource = storageService.get(filename);
 
             String contentType = null;

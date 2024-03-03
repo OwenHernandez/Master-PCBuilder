@@ -20,7 +20,6 @@ const Post = (props: Props) => {
     const getFontSize = (size: number) => size / fontScale;
     const fullScreen = Dimensions.get("window").scale;
     const getIconSize = (size: number) => size / fullScreen;
-
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <HeaderScreen name={route.name} navigation={navigation} profile={true} drawer={false}/>
@@ -28,14 +27,12 @@ const Post = (props: Props) => {
                 <View style={{ flexDirection: "row" }}>
                     <Image
                         source={{
-                            uri: post.image,
-                            width: 150,
-                            height: 150
+                            uri: "data:image/jpeg;base64," + post.image
                         }}
-                        style={{ margin: "5%", width: getIconSize(300), height: getIconSize(300) }}
+                        style={{ margin: "5%", width: getIconSize(300), height: getIconSize(300), borderRadius: 20 }}
                     />
                     <View style={{}}>
-                        <Text style={{ fontSize: 25, color: (darkMode) ? "white" : "black" }}>Cost: {post.priceRange}</Text>
+                        <Text style={{ fontSize: 25, color: (darkMode) ? "white" : "black" }}>Cost: {post.build.totalPrice}€</Text>
                         <Text style={{ fontSize: 15, maxWidth: "73%", color: (darkMode) ? "white" : "black" }}>Description: {"\n\n"}{post.description}{"\n\n"}</Text>
                     </View>
                 </View>
@@ -54,7 +51,6 @@ const Post = (props: Props) => {
                         );
                     }}
                     keyExtractor={(comp, index) => index + ""}
-                //ItemSeparatorComponent={() => <Text style={{ color: "#ca2613" }}>―――――――――――――</Text>}
                 />
             </View>
         </SafeAreaView>
