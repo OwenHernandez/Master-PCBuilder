@@ -73,6 +73,14 @@ public class UserEntity implements Serializable {
 	@OneToMany(mappedBy = "user")
 	private List<ComponentEntity> componentsCreated;
 
+	@ManyToMany
+	@JoinTable(
+			name = "WISHLIST",
+			joinColumns = @JoinColumn(name = "USER_ID"),
+			inverseJoinColumns = @JoinColumn(name = "COMPONENT_ID")
+	)
+	private List<ComponentEntity> componentsWanted;
+
 	public UserEntity() {
 	}
 
@@ -206,5 +214,13 @@ public class UserEntity implements Serializable {
 
 	public void setComponentsCreated(List<ComponentEntity> componentsCreated) {
 		this.componentsCreated = componentsCreated;
+	}
+
+	public List<ComponentEntity> getComponentsWanted() {
+		return componentsWanted;
+	}
+
+	public void setComponentsWanted(List<ComponentEntity> componentsWanted) {
+		this.componentsWanted = componentsWanted;
 	}
 }

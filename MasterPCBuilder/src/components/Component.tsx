@@ -1,14 +1,16 @@
-import { Dimensions, Image, PixelRatio, StyleSheet, Text, View } from 'react-native'
+import { Alert, Dimensions, Image, PixelRatio, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import IComponentType from '../interfaces/IComponentType'
 import { usePrimaryContext } from '../contexts/PrimaryContext';
+import { Styles } from '../themes/Styles';
 
 type Props = {
     comp: IComponentType;
+    wished: boolean;
 }
 
 const Component = (props: Props) => {
-    const { comp } = props;
+    const { comp, wished } = props;
     const { darkMode } = usePrimaryContext();
     const fontScale = PixelRatio.getFontScale();
     const getFontSize = (size: number) => size / fontScale;
@@ -29,6 +31,16 @@ const Component = (props: Props) => {
                 <Text style={{ fontSize: 15, color: (darkMode) ? "white" : "black" }}>Description: {"\n"}{comp?.description}</Text>
                 <Text style={{ fontSize: 15, color: (darkMode) ? "white" : "black" }}>Sold by:{"\n"}{comp?.sellerName}</Text>
                 <Text style={{ fontSize: 15, color: (darkMode) ? "white" : "black" }}>Created by:{"\n"}{comp?.userNick}</Text>
+                {
+                    (wished) ?
+                        <TouchableOpacity style={{ ...Styles.touchable, alignItems: 'center' }} onPress={() => Alert.alert("Quitaria de favorito")}>
+                            <Text style={{ color: (darkMode) ? "white" : "black" }}>Remove From Wish List</Text>
+                        </TouchableOpacity>
+                        :
+                        <TouchableOpacity style={{ ...Styles.touchable, alignItems: 'center' }} onPress={() => Alert.alert("Quitaria de favorito")}>
+                            <Text style={{ color: (darkMode) ? "white" : "black" }}>Remove From Wish List</Text>
+                        </TouchableOpacity>
+                }
             </View>
         </View>
     )

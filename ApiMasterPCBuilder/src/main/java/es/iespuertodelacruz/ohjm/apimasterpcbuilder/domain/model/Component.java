@@ -22,6 +22,8 @@ public class Component {
 
     private User userWhoCreated;
 
+    private List<User> usersWhoWants;
+
     public Component() {}
 
     public long getId() {
@@ -94,5 +96,13 @@ public class Component {
 
     public void setUserWhoCreated(User userWhoCreated) {
         this.userWhoCreated = userWhoCreated;
+    }
+
+    public List<User> getUsersWhoWants() {
+        return usersWhoWants;
+    }
+
+    public void setUsersWhoWants(List<User> usersWhoWants) {
+        this.usersWhoWants = usersWhoWants;
     }
 }

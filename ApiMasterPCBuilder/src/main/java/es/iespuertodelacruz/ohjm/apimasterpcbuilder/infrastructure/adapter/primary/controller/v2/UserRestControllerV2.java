@@ -40,7 +40,6 @@ public class UserRestControllerV2 {
         } else {
             User byNick = userService.findByNick(nick);
             UserDTO userDTO = mapper.toDTO(byNick);
-            System.out.println(userDTO.getFriends());
             return ResponseEntity.ok(userDTO);
         }
     }

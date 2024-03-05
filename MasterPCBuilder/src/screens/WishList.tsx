@@ -8,6 +8,7 @@ import { RootStackParamList } from '../navigations/StackNavigator';
 import Icon from 'react-native-vector-icons/Octicons';
 import Component from '../components/Component';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
+import HeaderScreen from '../components/HeaderScreen';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'WishList'>;
 
@@ -18,40 +19,27 @@ const WishList = (props: Props) => {
     const getFontSize = (size: number) => size / fontScale;
     const fullScreen = Dimensions.get("window").scale;
     const getIconSize = (size: number) => size / fullScreen;
-    const [wishList, setWishList] = useState({} as IComponentType[]);
-    const tempWishList: IComponentType[] = [
-        { name: "CPU", compImage: "https://i.ebayimg.com/images/g/-1sAAOSwtQNlLpw6/s-l1600.jpg", description: "CPU super potente perfecta...", price: "100€", site: "PCComponentes" },
-        { name: "MotherBoard", compImage: "https://i.ebayimg.com/images/g/-1sAAOSwtQNlLpw6/s-l1600.jpg", description: "CPU super potente perfecta...", price: "100€", site: "PCComponentes" }
-    ];
+    const [wishList, setWishList] = useState([{}] as IComponentType[]);
+    const [wished, setWished] = useState(false);
+
     useEffect(() => {
-        //Buscaria en la base de datos los que tenga en la wishlist
+        setWishList(user.componentsWished);
     }, []);
 
     return (
         <View>
-            <View style={Styles.headerView}>
-                <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
-                    <Image
-                        source={{
-                            uri: user.picture
-                        }}
-                        style={{ ...Styles.imageStyle, borderColor: (darkMode) ? "white" : "black", borderWidth: 1, width: getIconSize(110), height: getIconSize(110) }}
-                    />
-                </TouchableOpacity>
-                <Text style={{ ...Styles.headerText, color: (darkMode) ? "white" : "black", fontSize: getFontSize(20) }}>{route.name}</Text>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Material name='keyboard-backspace' size={getIconSize(100)} color={(darkMode) ? "white" : "black"}></Material>
-                </TouchableOpacity>
-            </View>
+            <HeaderScreen name={"Wish List"} navigation={navigation} profile={false} drawer={false} />
             <FlatList
-                data={tempWishList}
+                data={wishList}
                 renderItem={(comp) => {
+                    user.componentsWished.forEach((compWished) => {
+                        if (comp.item.id === compWished.id) {
+                            setWished(true);
+                        }
+                    });
                     return (
                         <View>
-                            <Component comp={comp.item} />
-                            <TouchableOpacity style={{ ...Styles.touchable, alignItems: 'center' }} onPress={() => Alert.alert("Quitaria de favorito")}>
-                                <Text style={{ color: (darkMode) ? "white" : "black" }}>Remove From Wish List</Text>
-                            </TouchableOpacity>
+                            <Component comp={comp.item} wished={wished} />
                         </View>
                     )
                 }}

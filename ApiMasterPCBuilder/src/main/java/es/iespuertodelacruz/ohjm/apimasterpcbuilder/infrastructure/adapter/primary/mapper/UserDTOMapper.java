@@ -1,12 +1,16 @@
 package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.mapper;
 
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Component;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.User;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.ComponentOutputDTO;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.UserDTO;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class UserDTOMapper {
+
+    ComponentOutputDTOMapper compMapper = new ComponentOutputDTOMapper();
     public User toDomain(UserDTO userDTO) {
         User user = new User();
         user.setId(userDTO.getId());
@@ -31,6 +35,15 @@ public class UserDTOMapper {
         userDTO.setNick(user.getNick());
         userDTO.setEmail(user.getEmail());
         userDTO.setPicture(user.getPicture());
+        if (user.getComponentsWanted() != null && !user.getComponentsWanted().isEmpty()) {
+            List<ComponentOutputDTO> componentsWanted = new ArrayList<>();
+            for (Component c : user.getComponentsWanted()) {
+                ComponentOutputDTO cDTO = compMapper.toDTO(c);
+
+                componentsWanted.add(cDTO);
+            }
+            userDTO.setComponentsWanted(componentsWanted);
+        }
         List<UserDTO> friends = null;
         if (user.getFriends() != null && !user.getFriends().isEmpty()) {
             friends = new ArrayList<>();

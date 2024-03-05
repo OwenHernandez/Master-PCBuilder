@@ -39,7 +39,7 @@ const useLogin = () => {
                     const response = await RNFetchBlob.fetch(
                         'GET',
                         Globals.IP + '/api/v2/users/img/' + byNickResponse.data.id + '/' + byNickResponse.data.picture,
-                        {Authorization: `Bearer ${loginResponse.data}`}
+                        { Authorization: `Bearer ${loginResponse.data}` }
                     );
                     let picture = ""
                     if (response.data !== Globals.IMG_NOT_FOUND) {
@@ -51,7 +51,8 @@ const useLogin = () => {
                         nick: byNickResponse.data.nick,
                         email: byNickResponse.data.email,
                         picture: picture,
-                        friends: byNickResponse.data.friends
+                        friends: byNickResponse.data.friends,
+                        componentsWished: byNickResponse.data.componentsWanted
                     }
                     setUser(newUser);
                     navigation.navigate("DrawerNavigator");

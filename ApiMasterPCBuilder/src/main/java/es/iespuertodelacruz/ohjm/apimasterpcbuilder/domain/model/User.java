@@ -27,6 +27,8 @@ public class User {
 
     private List<Post> likedPosts;
 
+    private List<Component> componentsWanted;
+
     public User() {}
 
     public long getId() {
@@ -123,5 +125,13 @@ public class User {
 
     public void setLikedPosts(List<Post> likedPosts) {
         this.likedPosts = likedPosts;
+    }
+
+    public List<Component> getComponentsWanted() {
+        return componentsWanted;
+    }
+
+    public void setComponentsWanted(List<Component> componentsWanted) {
+        this.componentsWanted = componentsWanted;
     }
 }

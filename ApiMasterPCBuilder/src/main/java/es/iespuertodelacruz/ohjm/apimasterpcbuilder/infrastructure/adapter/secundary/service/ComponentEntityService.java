@@ -6,6 +6,7 @@ import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.secundary.IBuild
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.secundary.IComponentRepository;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.mapper.BuildEntityMapper;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.mapper.ComponentEntityMapper;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.mapper.UserEntityMapper;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.BuildComponentEntity;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.BuildEntity;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.ComponentEntity;
@@ -31,6 +32,8 @@ public class ComponentEntityService implements IComponentRepository {
 
     private ComponentEntityMapper mapper = new ComponentEntityMapper();
 
+    UserEntityMapper userMapper = new UserEntityMapper();
+
     @Override
     public List<Component> findAll() {
         List<Component> res = new ArrayList<>();
@@ -38,6 +41,7 @@ public class ComponentEntityService implements IComponentRepository {
 
         for (ComponentEntity ce : all) {
             Component c = mapper.toDomain(ce);
+            c.setUserWhoCreated(userMapper.toDomain(ce.getUser()));
             res.add(c);
         }
 
@@ -50,6 +54,7 @@ public class ComponentEntityService implements IComponentRepository {
             Component res = null;
             if (component != null) {
                 ComponentEntity ce = mapper.toPersistance(component);
+                ce.setUser(userMapper.toPersistance(component.getUserWhoCreated()));
                 ComponentEntity save = repo.save(ce);
                 res = mapper.toDomain(save);
             }
@@ -67,6 +72,7 @@ public class ComponentEntityService implements IComponentRepository {
             if (opt.isPresent()) {
                 ComponentEntity componentEntity = opt.get();
                 component = mapper.toDomain(componentEntity);
+                component.setUserWhoCreated(userMapper.toDomain(opt.get().getUser()));
             }
         }
         return component;
