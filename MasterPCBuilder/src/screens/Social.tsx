@@ -43,15 +43,21 @@ const Social = (props: Props) => {
                     Globals.IP + '/api/v2/posts/img/' + post.id + '/' + post.image,
                     {Authorization: `Bearer ${token}`}
                 );
-                post.image = getPostFile.base64();
+                if (getPostFile.data !== Globals.IMG_NOT_FOUND) {
+                    post.image = getPostFile.base64();
+                } else {
+                    post.image = "";
+                }
                 const getUserFile = await RNFetchBlob.fetch(
                     'GET',
                     Globals.IP + '/api/v2/users/img/' + post.user.id + '/' + post.user.picture,
                     {Authorization: `Bearer ${token}`}
                 );
-                console.log(post.user);
-                post.user.picture = getUserFile.base64();
-                console.log(post.user);
+                if (getUserFile.data !== Globals.IMG_NOT_FOUND) {
+                    post.user.picture = getUserFile.base64();
+                } else {
+                    post.user.picture = "";
+                }
                 setPostsList(prevPosts => [...prevPosts, post]);
                 setPostsByTitle(prevPosts => [...prevPosts, post]);
             }
@@ -115,7 +121,7 @@ const Social = (props: Props) => {
                                                 onPress={() => Alert.alert("Iria al perfil de la otra persona")}>
                                                 <Image
                                                     source={{
-                                                        uri: "data:image/jpeg;base64," + post.item.user?.picture
+                                                        uri: (post.item.user?.picture !== "") ? "data:image/jpeg;base64," + post.item.user?.picture : "https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png?x=480&quality=40",
                                                     }}
                                                     style={{
                                                         ...Styles.imageStyle,

@@ -80,7 +80,7 @@ public class FileStorageService {
 
     }
 
-    public Resource get(String filename) {
+    public Resource get(String filename) throws RuntimeException {
         try {
             Path pathForFilename = root.resolve(filename);
 

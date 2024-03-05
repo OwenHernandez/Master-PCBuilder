@@ -27,11 +27,16 @@ const FriendsList = (props: Props) => {
     const getFontSize = (size: number) => size / fontScale;
     const fullScreen = Dimensions.get("window").scale;
     const getIconSize = (size: number) => size / fullScreen;
+    const [friendsList, setFriendsList] = useState([{}] as IUserType[]);
     const [friendsByName, setFriendsByName] = useState([{}] as IUserType[]);
 
     useEffect(() => {
+        setFriendsList(user.friends);
+
         setFriendsByName(user.friends);
     }, [user]);
+
+
 
     return (
         <View style={{backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"}}>
@@ -57,9 +62,9 @@ const FriendsList = (props: Props) => {
                         }}
                         onChangeText={(text) => {
                             if (text === "")
-                                setFriendsByName(user.friends);
+                                setFriendsByName(friendsList);
                             else
-                                setFriendsByName(user.friends.filter((friend) => friend.nick.toLowerCase().includes(text)))
+                                setFriendsByName(friendsList.filter((friend) => friend.nick.toLowerCase().includes(text)))
                         }}
                     ></TextInput>
                     <FontAwesome5Icon name="search" size={getIconSize(80)}
@@ -79,7 +84,7 @@ const FriendsList = (props: Props) => {
                                 <TouchableOpacity onPress={() => navigation.navigate("FriendsProfile")}>
                                     <Image
                                         source={{
-                                            uri: friend.item.picture
+                                            uri: (friend.item.picture !== "") ? friend.item.picture : "https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png?x=480&quality=40",
                                         }}
                                         style={{
                                             ...Styles.imageStyle,

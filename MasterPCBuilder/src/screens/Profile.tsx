@@ -39,7 +39,7 @@ const Profile = (props: Props) => {
                 <View style={{ alignItems: 'center', margin: "5%" }}>
                     <Image
                         source={{
-                            uri: "data:image/jpeg;base64," + user?.picture,
+                            uri: (user?.picture) ? "data:image/jpeg;base64," + user?.picture  : "https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png?x=480&quality=40",
                         }}
                         style={{ ...Styles.imageStyle, borderColor: (darkMode) ? "white" : "black", borderWidth: 1, width: getIconSize(300), height: getIconSize(300) }}
                     />

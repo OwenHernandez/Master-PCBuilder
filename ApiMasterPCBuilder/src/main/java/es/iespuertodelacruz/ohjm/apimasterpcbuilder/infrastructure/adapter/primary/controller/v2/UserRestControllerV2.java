@@ -92,8 +92,12 @@ public class UserRestControllerV2 {
         User userByNick = userService.findByNick(username);
 
         if (userByNick != null) {
-            Resource resource = storageService.get(filename);
-
+            Resource resource = null;
+            try {
+                resource = storageService.get(filename);
+            } catch (RuntimeException e) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The file does not exist");
+            }
             String contentType = null;
             try {
                 contentType = URLConnection.guessContentTypeFromStream(resource.getInputStream());

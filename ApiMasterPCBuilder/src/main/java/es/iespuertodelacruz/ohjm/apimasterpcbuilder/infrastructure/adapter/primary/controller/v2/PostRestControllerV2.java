@@ -25,6 +25,7 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @CrossOrigin
@@ -114,7 +115,7 @@ public class PostRestControllerV2 {
     public ResponseEntity<?> getFiles(@PathVariable("id") long postId, @PathVariable("filename") String filename) {
         Post byId = service.findById(postId);
         if (byId == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The user does not exist");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The post does not exist");
         }
         Object principal =
                 SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -125,8 +126,12 @@ public class PostRestControllerV2 {
             if (!byId.getImage().equals(filename)) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("That is not the right image");
             }
-            Resource resource = storageService.get(filename);
-
+            Resource resource = null;
+            try {
+                resource = storageService.get(filename);
+            } catch (RuntimeException e) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The file does not exist");
+            }
             String contentType = null;
             try {
                 contentType = URLConnection.guessContentTypeFromStream(resource.getInputStream());

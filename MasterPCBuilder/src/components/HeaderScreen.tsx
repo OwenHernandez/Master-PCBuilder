@@ -32,7 +32,7 @@ const HeaderScreen = (props: Props) => {
                 <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
                     <Image
                         source={{
-                            uri: "data:image/jpeg;base64," + user?.picture,
+                            uri: (user?.picture !== "") ? "data:image/jpeg;base64," + user?.picture : "https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png?x=480&quality=40",
                             width: getIconSize(100),
                             height: getIconSize(100)
                         }}

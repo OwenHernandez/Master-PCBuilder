@@ -41,13 +41,16 @@ const useLogin = () => {
                         Globals.IP + '/api/v2/users/img/' + byNickResponse.data.id + '/' + byNickResponse.data.picture,
                         {Authorization: `Bearer ${loginResponse.data}`}
                     );
+                    let picture = ""
+                    if (response.data !== Globals.IMG_NOT_FOUND) {
+                        picture = response.base64();
+                    }
 
-                    const base64Data = response.base64() ?? "https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png?x=480&quality=40";
                     const newUser: IUserType = {
                         id: byNickResponse.data.id,
                         nick: byNickResponse.data.nick,
                         email: byNickResponse.data.email,
-                        picture: base64Data,
+                        picture: picture,
                         friends: byNickResponse.data.friends
                     }
                     setUser(newUser);
