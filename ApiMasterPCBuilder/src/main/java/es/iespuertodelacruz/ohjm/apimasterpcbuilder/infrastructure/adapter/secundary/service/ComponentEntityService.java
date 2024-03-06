@@ -57,6 +57,7 @@ public class ComponentEntityService implements IComponentRepository {
                 ce.setUser(userMapper.toPersistance(component.getUserWhoCreated()));
                 ComponentEntity save = repo.save(ce);
                 res = mapper.toDomain(save);
+                res.setUserWhoCreated(userMapper.toDomain(ce.getUser()));
             }
             return res;
         } catch (RuntimeException | ParseException e) {
@@ -76,6 +77,23 @@ public class ComponentEntityService implements IComponentRepository {
             }
         }
         return component;
+    }
+
+    @Override
+    public List<Component> findByUserId(Long userId) {
+        List<Component> res = null;
+        if (userId != null) {
+            res= new ArrayList<>();
+            List<ComponentEntity> list = repo.findByUserId(userId);
+            if (list != null) {
+                for (ComponentEntity ce : list) {
+                    Component c = mapper.toDomain(ce);
+                    c.setUserWhoCreated(userMapper.toDomain(ce.getUser()));
+                    res.add(c);
+                }
+            }
+        }
+        return res;
     }
 
     @Override

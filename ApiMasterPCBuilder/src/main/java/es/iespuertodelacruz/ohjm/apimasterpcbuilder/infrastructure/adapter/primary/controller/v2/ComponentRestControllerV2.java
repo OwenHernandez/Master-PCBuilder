@@ -49,16 +49,8 @@ public class ComponentRestControllerV2 {
     ComponentOutputDTOMapper outputDTOMapper = new ComponentOutputDTOMapper();
 
     @GetMapping
-    public ResponseEntity<?> getAllOrByName(@RequestParam(value = "name", required = false) String name) {
-        if (name == null) {
-            List<Component> all = componentService.findAll();
-            List<ComponentOutputDTO> allDTO = new ArrayList<>();
-            for (Component comp : all) {
-                ComponentOutputDTO compOutputDTO = outputDTOMapper.toDTO(comp);
-                allDTO.add(compOutputDTO);
-            }
-            return ResponseEntity.ok(allDTO);
-        } else {
+    public ResponseEntity<?> getAllOrByName(@RequestParam(value = "name", required = false) String name, @RequestParam(value = "userId", required = false) Long userId) {
+        if (name != null) {
             List<Component> components = componentService.findByName(name);
             List<ComponentOutputDTO> componentsDTO = new ArrayList<>();
             if (components != null) {
@@ -71,6 +63,27 @@ public class ComponentRestControllerV2 {
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The requested components were not found");
             }
+        } else if (userId != null) {
+            List<Component> components = componentService.findByUserId(userId);
+            List<ComponentOutputDTO> componentsDTO = new ArrayList<>();
+            if (components != null) {
+                for (Component comp : components) {
+                    ComponentOutputDTO compOutputDTO = outputDTOMapper.toDTO(comp);
+                    componentsDTO.add(compOutputDTO);
+                }
+
+                return ResponseEntity.ok(componentsDTO);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The requested components were not found");
+            }
+        } else {
+            List<Component> all = componentService.findAll();
+            List<ComponentOutputDTO> allDTO = new ArrayList<>();
+            for (Component comp : all) {
+                ComponentOutputDTO compOutputDTO = outputDTOMapper.toDTO(comp);
+                allDTO.add(compOutputDTO);
+            }
+            return ResponseEntity.ok(allDTO);
         }
     }
 

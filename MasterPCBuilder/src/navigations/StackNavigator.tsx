@@ -19,6 +19,7 @@ import Chat from '../screens/Chat';
 import IUserType from '../interfaces/IUserType';
 import OtherUserProfile from '../screens/OtherUserProfile';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import IComponentType from "../interfaces/IComponentType";
 
 type Props = {}
 
@@ -39,12 +40,13 @@ export type RootStackParamList = {
     Friends: undefined,
     "Friends List": undefined,
     SearchUsers: undefined,
+    CreateComponent: undefined,
+    "Components List": { components?: IComponentType[] },
     Chat: { userSelected: IUserType },
     OtherUserProfile: { userSelected: IUserType }
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
-const Tab = createBottomTabNavigator();
 
 const StackNavigator = (props: Props) => {
     const { darkMode, setDarkMode } = usePrimaryContext();

@@ -18,4 +18,7 @@ public interface IComponentEntityRepository extends JpaRepository<ComponentEntit
 
     @Query(value = "SELECT * FROM COMPONENTS c WHERE c.SELLER_ID = :seller_id", nativeQuery = true)
     List<ComponentEntity> findBySellerId(@Param("seller_id") Long sellerId);
+
+    @Query(value = "SELECT * FROM COMPONENTS c WHERE c.USER_ID = :user_id", nativeQuery = true)
+    List<ComponentEntity> findByUserId(@Param("user_id") Long userId);
 }

@@ -39,7 +39,7 @@ public class UserRestControllerV2 {
     UserDTOMapper mapper = new UserDTOMapper();
 
     @GetMapping
-    public ResponseEntity<?> getAllOrByNick(@RequestParam(name = "nick", required = false) String nick) {
+    public ResponseEntity<?> getAllOrByNickOrByBuild(@RequestParam(value = "nick", required = false) String nick) {
         if (nick != null) {
             User byNick = userService.findByNick(nick);
             UserDTO userDTO = mapper.toDTO(byNick);
@@ -189,9 +189,6 @@ public class UserRestControllerV2 {
         if (compById == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The component does not exist");
         }
-        for (Component c : byId.getComponentsWanted()) {
-            System.out.println("coso1: " + c.getId());
-        }
         if (byId.getComponentsWanted() == null) {
             byId.setComponentsWanted(new ArrayList<>());
         }
@@ -199,9 +196,6 @@ public class UserRestControllerV2 {
             byId.getComponentsWanted().remove(compById);
         } else {
             byId.getComponentsWanted().add(compById);
-        }
-        for (Component c : byId.getComponentsWanted()) {
-            System.out.println("coso2: " + c.getId());
         }
         User save = userService.save(byId);
         if (save != null) {
