@@ -129,8 +129,7 @@ public class UserRestControllerV2 {
     }
 
     @PutMapping("/friends/{id}/{friendId}")
-    public ResponseEntity<?> addFriend(@PathVariable("id") long id, @PathVariable("friendId") long friendId) {
-        System.out.println("coso");
+    public ResponseEntity<?> addRemoveFriend(@PathVariable("id") long id, @PathVariable("friendId") long friendId) {
         User byId = userService.findById(id);
         User friend = userService.findById(friendId);
         if (byId == null) {
@@ -147,7 +146,6 @@ public class UserRestControllerV2 {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You should not be here");
         }
         if (byId.getId() != userByNick.getId()) {
-            System.out.println("coso2");
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not that user");
         }
         if (friend.getId() == byId.getId()) {
@@ -157,9 +155,10 @@ public class UserRestControllerV2 {
             byId.setFriends(new ArrayList<>());
         }
         if (byId.getFriends().contains(friend)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You are already friends");
+            byId.getFriends().remove(friend);
+        } else {
+            byId.getFriends().add(friend);
         }
-        byId.getFriends().add(friend);
         User save = userService.save(byId);
         if (save != null) {
             return ResponseEntity.ok(mapper.toDTO(save));

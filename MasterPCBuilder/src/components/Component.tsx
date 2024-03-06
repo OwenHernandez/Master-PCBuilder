@@ -29,6 +29,7 @@ const Component = (props: Props) => {
     const getFontSize = (size: number) => size / fontScale;
     const fullScreen = Dimensions.get("window").scale;
     const getIconSize = (size: number) => size / fullScreen;
+
     async function addRemoveWishList() {
         try {
             const response = await axios.put(

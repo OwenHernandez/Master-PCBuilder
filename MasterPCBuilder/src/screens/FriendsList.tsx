@@ -32,11 +32,8 @@ const FriendsList = (props: Props) => {
 
     useEffect(() => {
         setFriendsList(user.friends);
-
         setFriendsByName(user.friends);
     }, [user]);
-
-
 
     return (
         <View style={{backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"}}>
@@ -74,14 +71,14 @@ const FriendsList = (props: Props) => {
                     data={friendsByName}
                     renderItem={(friend) => {
                         return (
-                            <TouchableOpacity onPress={() => navigation.navigate("Chat", {friend: friend.item})}
+                            <TouchableOpacity onPress={() => navigation.navigate("Chat", {userSelected: friend.item})}
                                               style={{
                                                   ...Styles.touchable,
                                                   flexDirection: "row",
                                                   alignItems: "center",
                                                   margin: "3%"
                                               }}>
-                                <TouchableOpacity onPress={() => navigation.navigate("FriendsProfile")}>
+                                <TouchableOpacity onPress={() => navigation.navigate("OtherUserProfile", {userSelected: friend.item})}>
                                     <Image
                                         source={{
                                             uri: (friend.item.picture !== "") ? "data:image/jpeg;base64," + friend.item.picture : "https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png?x=480&quality=40",

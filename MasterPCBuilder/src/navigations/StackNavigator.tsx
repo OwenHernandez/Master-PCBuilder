@@ -17,7 +17,7 @@ import DrawerNavigator from './DrawerNavigator';
 import FriendsTabs from './FriendsTabs';
 import Chat from '../screens/Chat';
 import IUserType from '../interfaces/IUserType';
-import FriendsProfile from '../screens/FriendsProfile';
+import OtherUserProfile from '../screens/OtherUserProfile';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type Props = {}
@@ -38,9 +38,9 @@ export type RootStackParamList = {
     WishList: undefined,
     Friends: undefined,
     "Friends List": undefined,
-    AddFriend: undefined,
-    Chat: { friend: IUserType },
-    FriendsProfile: { friend: IUserType }
+    SearchUsers: undefined,
+    Chat: { userSelected: IUserType },
+    OtherUserProfile: { userSelected: IUserType }
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -84,7 +84,7 @@ const StackNavigator = (props: Props) => {
             <Stack.Screen name="WishList" component={WishList} />
             <Stack.Screen name="Friends" component={FriendsTabs} />
             <Stack.Screen name="Chat" component={Chat} />
-            <Stack.Screen name="FriendsProfile" component={FriendsProfile} />
+            <Stack.Screen name="OtherUserProfile" component={OtherUserProfile} />
         </Stack.Navigator>
     )
 }

@@ -19,9 +19,9 @@ import RNFetchBlob from "rn-fetch-blob";
 import IUserType from "../interfaces/IUserType";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 
-type Props = NativeStackScreenProps<RootStackParamList, 'AddFriend'>;
+type Props = NativeStackScreenProps<RootStackParamList, 'SearchUsers'>;
 
-const AddFriend = (props: Props) => {
+const SearchUsers = (props: Props) => {
     const {user, darkMode, token, setUser} = usePrimaryContext();
     const {navigation, route} = props;
     const fontScale = PixelRatio.getFontScale();
@@ -32,27 +32,9 @@ const AddFriend = (props: Props) => {
     const [userList, setUserList] = useState([{}] as IUserType[]);
     const [usersByNick, setUsersByNick] = useState([{}] as IUserType[]);
 
-    async function addFriend() {
-        try {
-            const getFriend = await axios.get(Globals.IP + "/api/v2/users?nick=" + friendNick, {headers: {"Authorization": "Bearer " + token}});
-            const response = await axios.put(Globals.IP + "/api/v2/users/friends/" + user.id + "/" + getFriend.data.id, null, {headers: {"Authorization": "Bearer " + token}});
-            setUser(prevUser => {
-                return {
-                    ...prevUser,
-                    friends: response.data.friends
-                }
-            });
-            setFriendNick("");
-            navigation.navigate("Friends List");
-        } catch (e) {
-            console.log(e);
-        }
-
-    }
-
     useEffect(() => {
         getUsers();
-    }, []);
+    }, [user]);
 
     async function getUsers() {
         try {
@@ -118,7 +100,7 @@ const AddFriend = (props: Props) => {
                     data={usersByNick}
                     renderItem={(u) => {
                         return (
-                            <TouchableOpacity onPress={() => navigation.navigate("FriendsProfile")}
+                            <TouchableOpacity onPress={() => navigation.navigate("OtherUserProfile", {userSelected: u.item})}
                                               style={{
                                                   ...Styles.touchable,
                                                   flexDirection: "row",
@@ -152,4 +134,4 @@ const AddFriend = (props: Props) => {
     )
 }
 
-export default AddFriend
+export default SearchUsers

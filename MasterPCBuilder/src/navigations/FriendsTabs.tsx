@@ -5,13 +5,13 @@ import Ionicon from 'react-native-vector-icons/Ionicons';
 import { usePrimaryContext } from '../contexts/PrimaryContext';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import FriendsList from '../screens/FriendsList';
-import AddFriend from '../screens/AddFriend';
+import SearchUsers from '../screens/SearchUsers';
 
 type Props = {}
 
 export type FriendsTabsParamList = {
     "Friends List": undefined;
-    Add: undefined;
+    "Search Users": undefined;
 }
 
 const Tab = createBottomTabNavigator<FriendsTabsParamList>();
@@ -25,7 +25,7 @@ const FriendsTabs = (props: Props) => {
 
     return (
         <Tab.Navigator initialRouteName='Friends List' screenOptions={{ headerShown: false }}>
-            <Tab.Screen name="Add"
+            <Tab.Screen name="Search Users"
                 options={{
                     tabBarIcon: ({ focused }) => <Material name={(focused) ? "plus-circle" : "plus-circle-outline"} size={getIconSize(80)} color={(darkMode) ? "white" : "black"} />,
                     tabBarInactiveBackgroundColor: (darkMode) ? "#242121" : "#F5F5F5", tabBarActiveBackgroundColor: (darkMode) ? "#242121" : "#F5F5F5",
@@ -33,7 +33,7 @@ const FriendsTabs = (props: Props) => {
                     tabBarLabelStyle: { fontSize: getFontSize(13) },
                     tabBarStyle: { borderTopColor: "#ca2613", borderTopWidth: 2 }
                 }}
-                component={AddFriend}
+                component={SearchUsers}
             />
             <Tab.Screen name="Friends List"
                 options={{

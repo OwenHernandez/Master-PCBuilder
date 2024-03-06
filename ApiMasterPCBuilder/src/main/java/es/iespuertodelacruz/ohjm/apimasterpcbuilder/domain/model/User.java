@@ -1,6 +1,7 @@
 package es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model;
 
 import java.util.List;
+import java.util.Objects;
 
 public class User {
     private long id;
@@ -30,6 +31,14 @@ public class User {
     private List<Component> componentsWanted;
 
     public User() {}
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id == user.id;
+    }
 
     public long getId() {
         return id;
