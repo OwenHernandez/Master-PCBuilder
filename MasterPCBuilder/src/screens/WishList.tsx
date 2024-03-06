@@ -23,8 +23,8 @@ const WishList = (props: Props) => {
     const [wished, setWished] = useState(false);
 
     useEffect(() => {
-        setWishList(user.componentsWished);
-    }, []);
+        setWishList(user.componentsWanted);
+    }, [user]);
 
     return (
         <View>
@@ -32,7 +32,8 @@ const WishList = (props: Props) => {
             <FlatList
                 data={wishList}
                 renderItem={(comp) => {
-                    user.componentsWished.forEach((compWished) => {
+                    setWished(false);
+                    user.componentsWanted?.forEach((compWished) => {
                         if (comp.item.id === compWished.id) {
                             setWished(true);
                         }
@@ -50,5 +51,3 @@ const WishList = (props: Props) => {
 }
 
 export default WishList
-
-const styles = StyleSheet.create({})

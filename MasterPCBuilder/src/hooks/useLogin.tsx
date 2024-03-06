@@ -36,24 +36,38 @@ const useLogin = () => {
                     await EncryptedStorage.setItem("token", loginResponse.data);
                     setToken(loginResponse.data);
                     const byNickResponse = await axios.get(Globals.IP + "/api/v2/users?nick=" + nick, { headers: { 'Authorization': "Bearer " + loginResponse.data } });
-                    const response = await RNFetchBlob.fetch(
+                    const userPicResponse = await RNFetchBlob.fetch(
                         'GET',
                         Globals.IP + '/api/v2/users/img/' + byNickResponse.data.id + '/' + byNickResponse.data.picture,
                         { Authorization: `Bearer ${loginResponse.data}` }
                     );
                     let picture = ""
-                    if (response.data !== Globals.IMG_NOT_FOUND) {
-                        picture = response.base64();
+                    if (userPicResponse.data !== Globals.IMG_NOT_FOUND) {
+                        picture = userPicResponse.base64();
                     }
 
-                    const newUser: IUserType = {
+                    let newUser: IUserType = {
                         id: byNickResponse.data.id,
                         nick: byNickResponse.data.nick,
                         email: byNickResponse.data.email,
                         picture: picture,
                         friends: byNickResponse.data.friends,
-                        componentsWished: byNickResponse.data.componentsWanted
+                        componentsWanted: byNickResponse.data.componentsWanted
                     }
+
+                    for (const friend of newUser.friends) {
+                        const friendPicResponse = await RNFetchBlob.fetch(
+                            'GET',
+                            Globals.IP + '/api/v2/users/img/' + friend.id + '/' + friend.picture,
+                            { Authorization: `Bearer ${loginResponse.data}` }
+                        );
+                        picture = ""
+                        if (friendPicResponse.data !== Globals.IMG_NOT_FOUND) {
+                            picture = friendPicResponse.base64();
+                        }
+                        friend.picture = picture;
+                    }
+
                     setUser(newUser);
                     navigation.navigate("DrawerNavigator");
                 }
@@ -74,5 +88,3 @@ const useLogin = () => {
 }
 
 export default useLogin
-
-const styles = StyleSheet.create({})

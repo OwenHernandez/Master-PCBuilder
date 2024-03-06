@@ -42,18 +42,18 @@ public class ComponentRestControllerV3 {
     public ResponseEntity<?> getAllOrByName(@RequestParam(value = "name", required = false) String name) {
         if (name == null) {
             List<Component> all = componentService.findAll();
-            List<ComponentInputDTO> allDTO = new ArrayList<>();
+            List<ComponentOutputDTO> allDTO = new ArrayList<>();
             for (Component comp : all) {
-                ComponentInputDTO compOutputDTO = outputDTOMapper.toDTO(comp);
+                ComponentOutputDTO compOutputDTO = outputDTOMapper.toDTO(comp);
                 allDTO.add(compOutputDTO);
             }
             return ResponseEntity.ok(allDTO);
         } else {
             List<Component> components = componentService.findByName(name);
-            List<ComponentInputDTO> componentsDTO = new ArrayList<>();
+            List<ComponentOutputDTO> componentsDTO = new ArrayList<>();
             if (components != null) {
                 for (Component comp : components) {
-                    ComponentInputDTO compOutputDTO = outputDTOMapper.toDTO(comp);
+                    ComponentOutputDTO compOutputDTO = outputDTOMapper.toDTO(comp);
                     componentsDTO.add(compOutputDTO);
                 }
 
@@ -80,7 +80,7 @@ public class ComponentRestControllerV3 {
                     Component save = componentService.save(component);
 
                     if (save != null) {
-                        ComponentInputDTO compOutputDTO = outputDTOMapper.toDTO(save);
+                        ComponentOutputDTO compOutputDTO = outputDTOMapper.toDTO(save);
                         return ResponseEntity.ok(compOutputDTO);
                     } else {
                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong");
@@ -101,7 +101,7 @@ public class ComponentRestControllerV3 {
         if (id != null) {
             Component byId = componentService.findById(id);
             if (byId != null) {
-                ComponentInputDTO compOutputDTO = outputDTOMapper.toDTO(byId);
+                ComponentOutputDTO compOutputDTO = outputDTOMapper.toDTO(byId);
                 return ResponseEntity.ok(compOutputDTO);
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The component does not exist");

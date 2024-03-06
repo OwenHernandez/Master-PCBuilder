@@ -84,7 +84,7 @@ const FriendsList = (props: Props) => {
                                 <TouchableOpacity onPress={() => navigation.navigate("FriendsProfile")}>
                                     <Image
                                         source={{
-                                            uri: (friend.item.picture !== "") ? friend.item.picture : "https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png?x=480&quality=40",
+                                            uri: (friend.item.picture !== "") ? "data:image/jpeg;base64," + friend.item.picture : "https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png?x=480&quality=40",
                                         }}
                                         style={{
                                             ...Styles.imageStyle,

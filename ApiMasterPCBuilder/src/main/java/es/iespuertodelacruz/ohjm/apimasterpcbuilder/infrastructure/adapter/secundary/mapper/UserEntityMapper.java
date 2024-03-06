@@ -5,6 +5,7 @@ import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.User;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.ComponentEntity;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.UserEntity;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,18 +55,35 @@ public class UserEntityMapper {
         return res;
     }
 
-    public UserEntity toPersistance(User user) {
-        UserEntity ue = new UserEntity();
-        ue.setId(user.getId());
-        ue.setNick(user.getNick());
-        ue.setPassword(user.getPassword());
-        ue.setRole(user.getRole());
-        ue.setEmail(user.getEmail());
-        ue.setActive(user.getActive());
-        ue.setHash(user.getHash());
-        ue.setPicture(user.getPicture());
-        ue.setFriends(null);
+    public UserEntity toPersistance(User user) throws ParseException {
+        UserEntity res = new UserEntity();
+        res.setId(user.getId());
+        res.setNick(user.getNick());
+        res.setPassword(user.getPassword());
+        res.setRole(user.getRole());
+        res.setEmail(user.getEmail());
+        res.setActive(user.getActive());
+        res.setHash(user.getHash());
+        res.setPicture(user.getPicture());
+        if (user.getComponentsCreated() != null && !user.getComponentsCreated().isEmpty()) {
+            res.setComponentsCreated(new ArrayList<>());
+            for (Component c : user.getComponentsCreated()) {
+                ComponentEntity ce = compMapper.toPersistance(c);
+                ce.setUser(res);
+                res.getComponentsCreated().add(ce);
+            }
+        }
 
-        return ue;
+        if (user.getComponentsWanted() != null) {
+            res.setComponentsWanted(new ArrayList<>());
+            for (Component c : user.getComponentsWanted()) {
+                ComponentEntity ce = compMapper.toPersistance(c);
+                ce.setUser(res);
+                res.getComponentsWanted().add(ce);
+            }
+        }
+        res.setFriends(null);
+
+        return res;
     }
 }

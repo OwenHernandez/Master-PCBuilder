@@ -12,30 +12,6 @@ public class BuildOutputDTOMapper {
 
     ComponentOutputDTOMapper outputDTOMapper = new ComponentOutputDTOMapper();
 
-    ComponentInputDTOMapper inputDTOMapper = new ComponentInputDTOMapper();
-
-    public Build toDomain(BuildOutputDTO buildOutputDTO) {
-        Build build = new Build();
-        build.setId(buildOutputDTO.getId());
-        build.setName(buildOutputDTO.getName());
-        build.setNotes(buildOutputDTO.getNotes());
-        build.setTotalPrice(buildOutputDTO.getTotalPrice());
-        if (buildOutputDTO.getBuildsComponents() != null) {
-            List<BuildComponent> bcList = new ArrayList<>();
-            for (BuildComponentDTO bcDTO : buildOutputDTO.getBuildsComponents()) {
-                BuildComponent bc = new BuildComponent();
-                bc.setDateCreated(bcDTO.getDateCreated());
-                bc.setPriceAtTheTime(bcDTO.getPriceAtTheTime());
-                bc.setComponent(inputDTOMapper.toDomain(bcDTO.getComponent()));
-                bcList.add(bc);
-            }
-            build.setBuildsComponents(bcList);
-        }
-
-
-        return build;
-    }
-
     public BuildOutputDTO toDTO(Build build) {
         BuildOutputDTO buildOutputDTO = new BuildOutputDTO();
         buildOutputDTO.setId(build.getId());

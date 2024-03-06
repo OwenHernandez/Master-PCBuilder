@@ -6,5 +6,5 @@ export default interface IUserType {
     email: string;
     picture: string;
     friends: IUserType[];
-    componentsWished: IComponentType[];
+    componentsWanted: IComponentType[];
 }

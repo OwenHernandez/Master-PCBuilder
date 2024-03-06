@@ -1,6 +1,8 @@
 package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.controller.v2;
 
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Component;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.User;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.IComponentService;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.IUserService;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.service.FileStorageService;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.UserDTO;
@@ -29,18 +31,25 @@ public class UserRestControllerV2 {
     IUserService userService;
 
     @Autowired
+    IComponentService componentService;
+
+    @Autowired
     FileStorageService storageService;
 
     UserDTOMapper mapper = new UserDTOMapper();
 
     @GetMapping
-    public ResponseEntity<?> getByNick(@RequestParam("nick") String nick) {
-        if (nick == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The nick parameter is required");
-        } else {
+    public ResponseEntity<?> getAllOrByNick(@RequestParam(name = "nick", required = false) String nick) {
+        if (nick != null) {
             User byNick = userService.findByNick(nick);
             UserDTO userDTO = mapper.toDTO(byNick);
             return ResponseEntity.ok(userDTO);
+        } else {
+            ArrayList<UserDTO> res = new ArrayList<>();
+            for (User u : userService.findAll()) {
+                res.add(mapper.toDTO(u));
+            }
+            return ResponseEntity.ok(res);
         }
     }
 
@@ -151,6 +160,50 @@ public class UserRestControllerV2 {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You are already friends");
         }
         byId.getFriends().add(friend);
+        User save = userService.save(byId);
+        if (save != null) {
+            return ResponseEntity.ok(mapper.toDTO(save));
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
+        }
+    }
+
+    @PutMapping("/{id}/wishlist/{componentId}")
+    public ResponseEntity<?> addRemoveFromWishlist(@PathVariable("id") long id, @PathVariable("componentId") long componentId) {
+        User byId = userService.findById(id);
+        if (byId == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The user does not exist");
+        }
+        Object principal =
+                SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = ((UserDetails) principal).getUsername();
+
+        User userByNick = userService.findByNick(username);
+
+        if (userByNick == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You should not be here");
+        }
+        if (byId.getId() != userByNick.getId()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not that user");
+        }
+        Component compById = componentService.findById(componentId);
+        if (compById == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The component does not exist");
+        }
+        for (Component c : byId.getComponentsWanted()) {
+            System.out.println("coso1: " + c.getId());
+        }
+        if (byId.getComponentsWanted() == null) {
+            byId.setComponentsWanted(new ArrayList<>());
+        }
+        if (byId.getComponentsWanted().contains(compById)) {
+            byId.getComponentsWanted().remove(compById);
+        } else {
+            byId.getComponentsWanted().add(compById);
+        }
+        for (Component c : byId.getComponentsWanted()) {
+            System.out.println("coso2: " + c.getId());
+        }
         User save = userService.save(byId);
         if (save != null) {
             return ResponseEntity.ok(mapper.toDTO(save));
