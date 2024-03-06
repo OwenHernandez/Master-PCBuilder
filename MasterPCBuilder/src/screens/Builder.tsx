@@ -286,7 +286,7 @@ const Builder = (props: Props) => {
                                                             buildTemp.buildsComponents.map((buildComp) => {
                                                                 if (buildComp.component.type === touch.item.type) {
                                                                     setWished(false);
-                                                                    user.componentsWished.forEach((compWished) => {
+                                                                    user.componentsWanted.forEach((compWished) => {
                                                                         if (buildComp.component.id === compWished.id) {
                                                                             setWished(true);
                                                                         }
@@ -329,7 +329,7 @@ const Builder = (props: Props) => {
                                                             buildTemp.buildsComponents.map((buildComp) => {
                                                                 if (buildComp.component.type === touch.item.type) {
                                                                     setWished(false);
-                                                                    user.componentsWished.forEach((compWished) => {
+                                                                    user.componentsWanted.forEach((compWished) => {
                                                                         if (buildComp.component.id === compWished.id) {
                                                                             setWished(true);
                                                                         }
@@ -372,7 +372,7 @@ const Builder = (props: Props) => {
                                                             buildTemp.buildsComponents.map((buildComp) => {
                                                                 if (buildComp.component.type === touch.item.type) {
                                                                     setWished(false);
-                                                                    user.componentsWished.forEach((compWished) => {
+                                                                    user.componentsWanted.forEach((compWished) => {
                                                                         if (buildComp.component.id === compWished.id) {
                                                                             setWished(true);
                                                                         }
@@ -415,7 +415,7 @@ const Builder = (props: Props) => {
                                                             buildTemp.buildsComponents.map((buildComp) => {
                                                                 if (buildComp.component.type === touch.item.type) {
                                                                     setWished(false);
-                                                                    user.componentsWished.forEach((compWished) => {
+                                                                    user.componentsWanted.forEach((compWished) => {
                                                                         if (buildComp.component.id === compWished.id) {
                                                                             setWished(true);
                                                                         }
@@ -497,7 +497,7 @@ const Builder = (props: Props) => {
                                                             buildTemp.buildsComponents.map((buildComp) => {
                                                                 if (buildComp.component.type === touch.item.type) {
                                                                     setWished(false);
-                                                                    user.componentsWished.forEach((compWished) => {
+                                                                    user.componentsWanted.forEach((compWished) => {
                                                                         if (buildComp.component.id === compWished.id) {
                                                                             setWished(true);
                                                                         }
@@ -539,7 +539,7 @@ const Builder = (props: Props) => {
                                                             buildTemp.buildsComponents.map((buildComp) => {
                                                                 if (buildComp.component.type === touch.item.type) {
                                                                     setWished(false);
-                                                                    user.componentsWished.forEach((compWished) => {
+                                                                    user.componentsWanted.forEach((compWished) => {
                                                                         if (buildComp.component.id === compWished.id) {
                                                                             setWished(true);
                                                                         }
@@ -581,7 +581,7 @@ const Builder = (props: Props) => {
                                                             buildTemp.buildsComponents.map((buildComp) => {
                                                                 if (buildComp.component.type === touch.item.type) {
                                                                     setWished(false);
-                                                                    user.componentsWished.forEach((compWished) => {
+                                                                    user.componentsWanted.forEach((compWished) => {
                                                                         if (buildComp.component.id === compWished.id) {
                                                                             setWished(true);
                                                                         }
@@ -681,7 +681,7 @@ const Builder = (props: Props) => {
                             renderItem={(comp) => {
                                 if (comp.item.type === modalCompType) {
                                     setWished(false);
-                                    user.componentsWished.forEach((compWished) => {
+                                    user.componentsWanted.forEach((compWished) => {
                                         if (comp.item.id === compWished.id) {
                                             setWished(true);
                                         }

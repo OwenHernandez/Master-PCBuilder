@@ -62,7 +62,7 @@ const OtherUserProfile = (props: Props) => {
                 const friendPicResponse = await RNFetchBlob.fetch(
                     'GET',
                     Globals.IP + '/api/v2/users/img/' + friend.id + '/' + friend.picture,
-                    { Authorization: `Bearer ${token}` }
+                    {Authorization: `Bearer ${token}`}
                 );
                 let picture = ""
                 if (friendPicResponse.data !== Globals.IMG_NOT_FOUND) {

@@ -43,7 +43,7 @@ const Post = (props: Props) => {
                     renderItem={(buildComponent) => {
                         return (
                             <View>
-                                <Component comp={buildComponent.item.component} />
+                                <Component comp={buildComponent.item.component} wished={true}/>
                                 <TouchableOpacity style={{ ...Styles.touchable, alignItems: 'center' }} onPress={() => Alert.alert("añadiría a los favoritos")}>
                                     <Text style={{ color: (darkMode) ? "white" : "black" }}>Add to Wish List</Text>
                                 </TouchableOpacity>
