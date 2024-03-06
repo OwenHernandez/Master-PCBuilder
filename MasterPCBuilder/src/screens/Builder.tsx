@@ -9,7 +9,7 @@ import {
     PixelRatio,
     Dimensions,
     TextInput,
-    KeyboardAvoidingView, Platform
+    KeyboardAvoidingView, Platform, ScrollView
 } from 'react-native';
 import React, { useEffect, useState } from 'react'
 import { Styles } from '../themes/Styles';
@@ -46,6 +46,8 @@ const Builder = (props: Props) => {
     const [modalPeriVisible, setModalPeriVisible] = useState(false);
     const [mainVisible, setMainVisible] = useState(false);
     const [periVisible, setPeriVisible] = useState(false);
+    const [componentsSelected, setComponentsSelected] = useState([] as IComponentType[]);
+
     const fontScale = PixelRatio.getFontScale();
     const getFontSize = (size: number) => size / fontScale;
     const fullScreen = Dimensions.get("window").scale;
@@ -71,6 +73,7 @@ const Builder = (props: Props) => {
     }, [build]);
 
     function newBuild() {
+        setComponentsSelected([]);
         setBuildTemp(null);
         setMsg("");
         setTotalPrice(0);
@@ -201,73 +204,32 @@ const Builder = (props: Props) => {
     ];
 
     return (
-        <View style={{ flex: 1, backgroundColor: (darkMode) ? "#242121" : "#F5F5F5" }}>
+        <View style={{flex:1}}>
+        <ScrollView style={{ flex: 1, backgroundColor: (darkMode) ? "#242121" : "#F5F5F5" }}>
             <HeaderScreen name={route.name} navigation={navigation} profile={false} drawer={true}/>
-            <View style={{ flex: 1 }}>
-                <View style={{
-                    flexDirection: "row",
-                    justifyContent: "space-around",
+            <View style={{ flexDirection: "row",flex:0.5,paddingVertical:"2%",justifyContent:"space-around"}}>
+                <TouchableOpacity style={{
+                    ...Styles.touchable,
+                    alignItems: 'center',
                     margin: "5%",
-                    marginTop: "10%",
-                    alignItems: "center"
-                }}>
-                    <TextInput
-                        maxLength={20}
-                        defaultValue={(buildTemp !== null && buildTemp !== undefined) && buildTemp.name}
-                        placeholder='name' placeholderTextColor="#a3a3a3"
-                        style={{
-                            borderWidth: 2,
-                            borderColor: "#ca2613",
-                            borderRadius: 20,
-                            paddingHorizontal: "5%",
-                            width: "80%",
-                            fontSize: getFontSize(20),
-                            color: (darkMode) ? "white" : "black"
-                        }}
-                        onChangeText={(text) => setBuildTemp((prevBuild) => ({ ...prevBuild, name: text }))}
-                    ></TextInput>
-                </View>
-                <View
-                    style={{ flexDirection: "row", justifyContent: "space-around", margin: "5%", alignItems: "center" }}>
-                    <TextInput
-                        maxLength={20}
-                        defaultValue={(buildTemp !== null && buildTemp !== undefined) && buildTemp.notes}
-                        placeholder='notes' placeholderTextColor="#a3a3a3"
-                        style={{
-                            borderWidth: 2,
-                            borderColor: "#ca2613",
-                            borderRadius: 20,
-                            paddingHorizontal: "5%",
-                            width: "80%",
-                            fontSize: getFontSize(20),
-                            color: (darkMode) ? "white" : "black"
-                        }}
-                        onChangeText={(text) => setBuildTemp((prevBuild) => ({ ...prevBuild, notes: text }))}
-                    ></TextInput>
-                </View>
-                    <TouchableOpacity style={{
-                        ...Styles.touchable,
-                        alignItems: 'center',
-                        marginVertical: "5%",
-                        flexDirection: "row",
-                        justifyContent: "space-between"
-                    }} onPress={toggleModalMainCategories}>
-                        <Text style={{ fontSize: getFontSize(25), color: (darkMode) ? "white" : "black" }}>Main
-                            Components:</Text>
-                        <FontAwesome5 name={(modalMainVisible) ? "chevron-up" : "chevron-down"} size={getIconSize(100)}
-                                      color={(darkMode) ? "white" : "black"} />
-                        <Modal
-                            animationType="slide"
-                            transparent={true}
-                            visible={modalMainVisible}
-                            onRequestClose={() => setModalMainVisible(!modalVisible)}
-                        >
-                            <View style={{ flexDirection: "row", justifyContent: "flex-end",backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"}}>
-                                <TouchableOpacity onPress={() => setModalMainVisible(!modalMainVisible)}>
-                                    <Material style={{marginTop:"5%",margin:"2%"}} name='close-box' size={getIconSize(100)}
-                                              color={(darkMode) ? "white" : "black"}></Material>
-                                </TouchableOpacity>
-                            </View>
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    width: 170,
+                    height: 170,
+                }} onPress={toggleModalMainCategories}>
+                    <Text style={{ fontSize: getFontSize(23), color: (darkMode) ? "white" : "black" }}>Components</Text>
+                    <Modal
+                        animationType="slide"
+                        transparent={true}
+                        visible={modalMainVisible}
+                        onRequestClose={() => setModalMainVisible(!modalVisible)}
+                    >
+                        <View style={{ flexDirection: "row", justifyContent: "flex-end",backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"}}>
+                            <TouchableOpacity onPress={() => setModalMainVisible(!modalMainVisible)}>
+                                <Material style={{marginTop:"5%",margin:"2%"}} name='close-box' size={getIconSize(100)}
+                                          color={(darkMode) ? "white" : "black"}></Material>
+                            </TouchableOpacity>
+                        </View>
                         {
                             (modalMainVisible) &&
                             <FlatList
@@ -430,19 +392,19 @@ const Builder = (props: Props) => {
                                 }}
                             />
                         }
-                        </Modal>
-                    </TouchableOpacity>
+                    </Modal>
+                </TouchableOpacity>
 
                 <TouchableOpacity style={{
                     ...Styles.touchable,
                     alignItems: 'center',
-                    marginVertical: "5%",
+                    margin: "5%",
                     flexDirection: "row",
+                    width: 170,
+                    height: 170,
                     justifyContent: "space-between"
                 }} onPress={toggleModalPeriCategories}>
-                    <Text style={{ fontSize: getFontSize(25), color: (darkMode) ? "white" : "black" }}>Peripherals:</Text>
-                    <FontAwesome5 name={(modalPeriVisible) ? "chevron-up" : "chevron-down"} size={getIconSize(100)}
-                                  color={(darkMode) ? "white" : "black"} />
+                    <Text style={{ fontSize: getFontSize(25), color: (darkMode) ? "white" : "black" }}>Peripherals</Text>
                     <Modal
                         animationType="slide"
                         transparent={true}
@@ -456,163 +418,172 @@ const Builder = (props: Props) => {
                             </TouchableOpacity>
                         </View>
                         {
-                    (modalPeriVisible) &&
-                    <FlatList
-                        style={{ backgroundColor: (darkMode) ? "#242121" : "#F5F5F5" }}
-                        data={touchablesPeri}
-                        keyExtractor={(touch, index) => index + ""}
-                        renderItem={(touch) => {
-                            switch (touch.item.importIcon) {
-                                case "Octicon" :
-                                    return (
-                                        <View>
-                                            <TouchableOpacity onPress={() => toggleModal(touch.item.type)}>
-                                                {
-                                                    (buildTemp !== null && buildTemp !== undefined && buildTemp.buildsComponents !== undefined) &&
-                                                    buildTemp.buildsComponents.map((buildComp) => {
-                                                        if (buildComp.component.type === touch.item.type) {
-                                                            return (
-                                                                <View style={{ ...Styles.touchable, flexDirection: 'row' }}>
-                                                                    <Component comp={buildComp.component} />
-                                                                    <TouchableOpacity
-                                                                        onPress={() => removeFromBuild(buildComp.component)}>
-                                                                        <Material name='close-box' size={getIconSize(100)}
-                                                                                  color={(darkMode) ? "white" : "black"}></Material>
-                                                                    </TouchableOpacity>
-                                                                </View>
-                                                            );
+                            (modalPeriVisible) &&
+                            <FlatList
+                                style={{ backgroundColor: (darkMode) ? "#242121" : "#F5F5F5" }}
+                                data={touchablesPeri}
+                                keyExtractor={(touch, index) => index + ""}
+                                renderItem={(touch) => {
+                                    switch (touch.item.importIcon) {
+                                        case "Octicon" :
+                                            return (
+                                                <View>
+                                                    <TouchableOpacity onPress={() => toggleModal(touch.item.type)}>
+                                                        {
+                                                            (buildTemp !== null && buildTemp !== undefined && buildTemp.buildsComponents !== undefined) &&
+                                                            buildTemp.buildsComponents.map((buildComp) => {
+                                                                if (buildComp.component.type === touch.item.type) {
+                                                                    return (
+                                                                        <View style={{ ...Styles.touchable, flexDirection: 'row' }}>
+                                                                            <Component comp={buildComp.component} />
+                                                                            <TouchableOpacity
+                                                                                onPress={() => removeFromBuild(buildComp.component)}>
+                                                                                <Material name='close-box' size={getIconSize(100)}
+                                                                                          color={(darkMode) ? "white" : "black"}></Material>
+                                                                            </TouchableOpacity>
+                                                                        </View>
+                                                                    );
+                                                                }
+                                                            })
                                                         }
-                                                    })
-                                                }
-                                            </TouchableOpacity>
-                                            <TouchableOpacity onPress={() => toggleModal(touch.item.type)}>
-                                                <View style={{ ...Styles.touchable, flexDirection: 'row' }}>
-                                                    <Octicons name={touch.item.icon} size={getIconSize(150)}
-                                                              color={(darkMode) ? "white" : "black"}></Octicons>
-                                                    <View style={{ flex: 1, alignItems: "center" }}>
-                                                        <Text style={{
-                                                            fontSize: getFontSize(30),
-                                                            color: (darkMode) ? "white" : "black"
-                                                        }}>{touch.item.name}</Text>
-                                                    </View>
+                                                    </TouchableOpacity>
+                                                    <TouchableOpacity onPress={() => toggleModal(touch.item.type)}>
+                                                        <View style={{ ...Styles.touchable, flexDirection: 'row' }}>
+                                                            <Octicons name={touch.item.icon} size={getIconSize(150)}
+                                                                      color={(darkMode) ? "white" : "black"}></Octicons>
+                                                            <View style={{ flex: 1, alignItems: "center" }}>
+                                                                <Text style={{
+                                                                    fontSize: getFontSize(30),
+                                                                    color: (darkMode) ? "white" : "black"
+                                                                }}>{touch.item.name}</Text>
+                                                            </View>
+                                                        </View>
+                                                    </TouchableOpacity>
                                                 </View>
-                                            </TouchableOpacity>
-                                        </View>
-                                    );
-                                case "Material" :
-                                    return (
-                                        <View>
-                                            <TouchableOpacity onPress={() => toggleModal(touch.item.type)}>
-                                                {
-                                                    (buildTemp !== null && buildTemp !== undefined && buildTemp.buildsComponents !== undefined) &&
-                                                    buildTemp.buildsComponents.map((buildComp) => {
-                                                        if (buildComp.component.type === touch.item.type) {
-                                                            return (
-                                                                <View style={{ ...Styles.touchable, flexDirection: 'row' }}>
-                                                                    <Component comp={buildComp.component} />
-                                                                    <TouchableOpacity
-                                                                        onPress={() => removeFromBuild(buildComp.component)}>
-                                                                        <Material name='close-box' size={getIconSize(100)}
-                                                                                  color={(darkMode) ? "white" : "black"}></Material>
-                                                                    </TouchableOpacity>
-                                                                </View>
-                                                            );
+                                            );
+                                        case "Material" :
+                                            return (
+                                                <View>
+                                                    <TouchableOpacity onPress={() => toggleModal(touch.item.type)}>
+                                                        {
+                                                            (buildTemp !== null && buildTemp !== undefined && buildTemp.buildsComponents !== undefined) &&
+                                                            buildTemp.buildsComponents.map((buildComp) => {
+                                                                if (buildComp.component.type === touch.item.type) {
+                                                                    return (
+                                                                        <View style={{ ...Styles.touchable, flexDirection: 'row' }}>
+                                                                            <Component comp={buildComp.component} />
+                                                                            <TouchableOpacity
+                                                                                onPress={() => removeFromBuild(buildComp.component)}>
+                                                                                <Material name='close-box' size={getIconSize(100)}
+                                                                                          color={(darkMode) ? "white" : "black"}></Material>
+                                                                            </TouchableOpacity>
+                                                                        </View>
+                                                                    );
+                                                                }
+                                                            })
                                                         }
-                                                    })
-                                                }
-                                            </TouchableOpacity>
-                                            <TouchableOpacity onPress={() => toggleModal(touch.item.type)}>
-                                                <View style={{ ...Styles.touchable, flexDirection: 'row' }}>
-                                                    <Material name={touch.item.icon} size={getIconSize(150)}
-                                                              color={(darkMode) ? "white" : "black"}></Material>
-                                                    <View style={{ flex: 1, alignItems: "center" }}>
-                                                        <Text style={{
-                                                            fontSize: getFontSize(30),
-                                                            color: (darkMode) ? "white" : "black"
-                                                        }}>{touch.item.name}</Text>
-                                                    </View>
+                                                    </TouchableOpacity>
+                                                    <TouchableOpacity onPress={() => toggleModal(touch.item.type)}>
+                                                        <View style={{ ...Styles.touchable, flexDirection: 'row' }}>
+                                                            <Material name={touch.item.icon} size={getIconSize(150)}
+                                                                      color={(darkMode) ? "white" : "black"}></Material>
+                                                            <View style={{ flex: 1, alignItems: "center" }}>
+                                                                <Text style={{
+                                                                    fontSize: getFontSize(30),
+                                                                    color: (darkMode) ? "white" : "black"
+                                                                }}>{touch.item.name}</Text>
+                                                            </View>
+                                                        </View>
+                                                    </TouchableOpacity>
                                                 </View>
-                                            </TouchableOpacity>
-                                        </View>
-                                    );
-                                case "FontAwesome5":
-                                    return (
-                                        <View>
-                                            <TouchableOpacity onPress={() => toggleModal(touch.item.type)}>
-                                                {
-                                                    (buildTemp !== null && buildTemp !== undefined && buildTemp.buildsComponents !== undefined) &&
-                                                    buildTemp.buildsComponents.map((buildComp) => {
-                                                        if (buildComp.component.type === touch.item.type) {
-                                                            return (
-                                                                <View style={{ ...Styles.touchable, flexDirection: 'row' }}>
-                                                                    <Component comp={buildComp.component} />
-                                                                    <TouchableOpacity
-                                                                        onPress={() => removeFromBuild(buildComp.component)}>
-                                                                        <Material name='close-box' size={getIconSize(100)}
-                                                                                  color={(darkMode) ? "white" : "black"}></Material>
-                                                                    </TouchableOpacity>
-                                                                </View>
-                                                            );
+                                            );
+                                        case "FontAwesome5":
+                                            return (
+                                                <View>
+                                                    <TouchableOpacity onPress={() => toggleModal(touch.item.type)}>
+                                                        {
+                                                            (buildTemp !== null && buildTemp !== undefined && buildTemp.buildsComponents !== undefined) &&
+                                                            buildTemp.buildsComponents.map((buildComp) => {
+                                                                if (buildComp.component.type === touch.item.type) {
+                                                                    return (
+                                                                        <View style={{ ...Styles.touchable, flexDirection: 'row' }}>
+                                                                            <Component comp={buildComp.component} />
+                                                                            <TouchableOpacity
+                                                                                onPress={() => removeFromBuild(buildComp.component)}>
+                                                                                <Material name='close-box' size={getIconSize(100)}
+                                                                                          color={(darkMode) ? "white" : "black"}></Material>
+                                                                            </TouchableOpacity>
+                                                                        </View>
+                                                                    );
+                                                                }
+                                                            })
                                                         }
-                                                    })
-                                                }
-                                            </TouchableOpacity>
-                                            <TouchableOpacity onPress={() => toggleModal(touch.item.type)}>
-                                                <View style={{ ...Styles.touchable, flexDirection: 'row' }}>
-                                                    <FontAwesome5 name={touch.item.icon} size={getIconSize(150)}
-                                                                  color={(darkMode) ? "white" : "black"}></FontAwesome5>
-                                                    <View style={{ flex: 1, alignItems: "center" }}>
-                                                        <Text style={{
-                                                            fontSize: getFontSize(30),
-                                                            color: (darkMode) ? "white" : "black"
-                                                        }}>{touch.item.name}</Text>
-                                                    </View>
+                                                    </TouchableOpacity>
+                                                    <TouchableOpacity onPress={() => toggleModal(touch.item.type)}>
+                                                        <View style={{ ...Styles.touchable, flexDirection: 'row' }}>
+                                                            <FontAwesome5 name={touch.item.icon} size={getIconSize(150)}
+                                                                          color={(darkMode) ? "white" : "black"}></FontAwesome5>
+                                                            <View style={{ flex: 1, alignItems: "center" }}>
+                                                                <Text style={{
+                                                                    fontSize: getFontSize(30),
+                                                                    color: (darkMode) ? "white" : "black"
+                                                                }}>{touch.item.name}</Text>
+                                                            </View>
+                                                        </View>
+                                                    </TouchableOpacity>
                                                 </View>
-                                            </TouchableOpacity>
-                                        </View>
-                                    );
+                                            );
+                                    }
                                 }
-                            }
+                                }
+                            />
                         }
-                    />
-                }
                     </Modal>
                 </TouchableOpacity>
             </View>
-            <KeyboardAvoidingView
-                behavior={Platform.OS === "ios" ? "padding" : "height"}
-                keyboardVerticalOffset={65}
-                enabled={Platform.OS === "ios"}
-            >
-                <TouchableOpacity style={{ ...Styles.touchable }} onPress={newBuild}>
-                    <Text style={{
-                        fontSize: getFontSize(20),
-                        textAlign: 'center',
-                        color: (darkMode) ? "white" : "black"
-                    }}>New Build</Text>
-                </TouchableOpacity>
-            </KeyboardAvoidingView>
-            <View style={{
-                ...Styles.headerView,
-                borderTopColor: "#ca2613",
-                backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"
-            }}>
-                <Text style={{ ...Styles.headerText, color: (darkMode) ? "white" : "black" }}>Price
-                    Range: {totalPrice}€</Text>
-                <Text style={{ ...Styles.headerText, color: "red" }}>{msg}</Text>
-                <TouchableOpacity onPress={() => {
-                    if (buildUpt === undefined) {
-                        saveBuild();
-                    } else {
-                        updateBuild();
-                    }
+            <ScrollView style={{ flex: 1 }}>
+                <View style={{
+                    flexDirection: "row",
+                    justifyContent: "space-around",
+                    margin: "5%",
+                    alignItems: "center"
                 }}>
-                    <Text style={{
-                        ...Styles.headerText,
-                        color: (darkMode) ? "white" : "black"
-                    }}>{(buildUpt === undefined) ? "Save" : "Update"}</Text>
-                </TouchableOpacity>
-            </View>
+                    <TextInput
+                        maxLength={20}
+                        defaultValue={(buildTemp !== null && buildTemp !== undefined) && buildTemp.name}
+                        placeholder='name' placeholderTextColor="#a3a3a3"
+                        style={{
+                            borderWidth: 2,
+                            borderColor: "#ca2613",
+                            borderRadius: 20,
+                            paddingLeft: "5%",
+                            width: "100%",
+                            fontSize: getFontSize(20),
+                            color: (darkMode) ? "white" : "black"
+                        }}
+                        onChangeText={(text) => setBuildTemp((prevBuild) => ({ ...prevBuild, name: text }))}
+                    ></TextInput>
+                </View>
+                <View
+                    style={{ flexDirection: "row", justifyContent: "space-around", margin: "5%", alignItems: "center" }}>
+                    <TextInput
+                        maxLength={20}
+                        defaultValue={(buildTemp !== null && buildTemp !== undefined) && buildTemp.notes}
+                        placeholder='notes' placeholderTextColor="#a3a3a3"
+                        style={{
+                            borderWidth: 2,
+                            borderColor: "#ca2613",
+                            borderRadius: 20,
+                            paddingLeft: 20,
+                            width: "100%",
+                            fontSize: getFontSize(20),
+                            color: (darkMode) ? "white" : "black"
+                        }}
+                        onChangeText={(text) => setBuildTemp((prevBuild) => ({ ...prevBuild, notes: text }))}
+                    ></TextInput>
+                </View>
+            </ScrollView>
+
             <Modal
                 animationType="slide"
                 transparent={true}
@@ -638,7 +609,9 @@ const Builder = (props: Props) => {
                             renderItem={(comp) => {
                                 if (comp.item.type === modalCompType) {
                                     return (
-                                        <TouchableOpacity onPress={() => setComponentToBuild(comp.item)}>
+                                        <TouchableOpacity onPress={() =>{
+                                            setComponentsSelected([...componentsSelected, comp.item]);
+                                            setComponentToBuild(comp.item)}}>
                                             <Component comp={comp.item} />
                                         </TouchableOpacity>
                                     );
@@ -649,6 +622,44 @@ const Builder = (props: Props) => {
                     </View>
                 </View>
             </Modal>
+        </ScrollView>
+            <View style={{flex:0.6}}>
+            <FlatList style={{backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"}} numColumns={2} data={componentsSelected} renderItem={(component)=>{
+                return <View style={{width:"20%"}}>
+                    {
+                        component.item!==null?<Component comp={component.item} />:null
+                    }
+                </View>
+            }}/>
+            </View>
+    <View style={{
+        ...Styles.headerView,
+        borderTopColor: "#ca2613",
+        backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"
+    }}>
+        <Text style={{ ...Styles.headerText, color: (darkMode) ? "white" : "black" }}>Price
+            Range: {totalPrice}€</Text>
+        <Text style={{ ...Styles.headerText, color: "red" }}>{msg}</Text>
+        <TouchableOpacity>
+            <Text style={{
+                ...Styles.headerText,
+                color: (darkMode) ? "white" : "black"
+            }} onPress={newBuild}>New Build</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => {
+            if (buildUpt === undefined) {
+                saveBuild();
+            } else {
+                updateBuild();
+            }
+        }}>
+            <Text style={{
+                ...Styles.headerText,
+                color: (darkMode) ? "white" : "black"
+            }}>{(buildUpt === undefined) ? "Save" : "Update"}</Text>
+        </TouchableOpacity>
+
+    </View>
         </View>
     )
 }
