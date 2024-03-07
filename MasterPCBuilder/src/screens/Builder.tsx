@@ -625,7 +625,7 @@ const Builder = (props: Props) => {
         </ScrollView>
             <View style={{flex:0.6}}>
             <FlatList style={{backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"}} numColumns={2} data={componentsSelected} renderItem={(component)=>{
-                return <View style={{width:"20%"}}>
+                return <View style={{width:160}}>
                     {
                         component.item!==null?<Component comp={component.item} />:null
                     }
