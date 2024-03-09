@@ -58,7 +58,7 @@ const ComponentScreen = (props: Props) => {
     }
 
     async function editComponent() {
-        //navigation.navigate("Edit Component", {comp: comp});
+        navigation.navigate("EditComponent", {comp: comp});
     }
 
     return (
@@ -131,7 +131,7 @@ const ComponentScreen = (props: Props) => {
                     </TouchableOpacity>
             }
             <TouchableOpacity style={{...Styles.touchable, alignItems: 'center', marginVertical: "3%"}}
-                              onPress={addRemoveWishList}>
+                              onPress={editComponent}>
                 <Text style={{color: (darkMode) ? "white" : "black"}}>Edit Component</Text>
             </TouchableOpacity>
             <TouchableOpacity style={{...Styles.touchable, alignItems: 'center', marginVertical: "3%"}}

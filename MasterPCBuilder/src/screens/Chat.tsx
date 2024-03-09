@@ -167,7 +167,7 @@ const Chat = (props: Props) => {
             <View style={{ flexDirection: "row", justifyContent: "space-around", alignItems: "center", marginBottom: "3%" }}>
                 <TextInput placeholder='Say something to your friend' placeholderTextColor={(darkMode) ? "white" : "black"} style={{ borderWidth: 2, borderColor: "#ca2613", borderRadius: 20, paddingHorizontal: "5%", width: "80%", fontSize: getFontSize(15), color: (darkMode) ? "white" : "black" }}></TextInput>
                 <TouchableOpacity onPress={() => Alert.alert("enviaria el mensaje")}>
-                    <Material name="send" size={getIconSize(80)}></Material>
+                    <Material name="send" size={getIconSize(80)} color={(!darkMode) ? "black" : "white"}></Material>
                 </TouchableOpacity>
             </View>
         </SafeAreaView>

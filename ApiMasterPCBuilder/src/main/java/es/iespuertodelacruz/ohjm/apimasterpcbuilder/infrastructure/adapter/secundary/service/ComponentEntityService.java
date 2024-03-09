@@ -2,6 +2,7 @@ package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secu
 
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Build;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Component;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.User;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.secundary.IBuildRepository;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.secundary.IComponentRepository;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.mapper.BuildEntityMapper;
@@ -127,7 +128,14 @@ public class ComponentEntityService implements IComponentRepository {
             Optional<ComponentEntity> byId = repo.findById(component.getId());
             if (byId.isPresent()) {
                 ComponentEntity ce = mapper.toPersistance(component);
-                ComponentEntity save = repo.save(ce);
+                ce.setUser(userMapper.toPersistance(component.getUserWhoCreated()));
+                if (component.getUsersWhoWants() != null && !component.getUsersWhoWants().isEmpty()) {
+                    ce.setUsersWhoWants(new ArrayList<>());
+                    for (User user : component.getUsersWhoWants()) {
+                        ce.getUsersWhoWants().add(userMapper.toPersistance(user));
+                    }
+                }
+                repo.save(ce);
 
                 return true;
             } else {

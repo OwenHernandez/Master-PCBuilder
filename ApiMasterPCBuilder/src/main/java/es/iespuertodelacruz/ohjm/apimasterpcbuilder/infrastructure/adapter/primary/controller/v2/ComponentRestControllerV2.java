@@ -225,10 +225,15 @@ public class ComponentRestControllerV2 {
                     if (byId.getUserWhoCreated().getId() == userByNick.getId()) {
                         Seller sellerByName = sellerService.findByName(componentInputDTO.getSellerName());
                         if (sellerByName != null) {
+                            String codedPicture = componentInputDTO.getImage64();
+                            byte[] photoBytes = Base64.getDecoder().decode(codedPicture);
+                            String newFileName = storageService.save(userByNick.getNick() + "_" + componentInputDTO.getImage(), photoBytes);
+                            componentInputDTO.setImage(newFileName);
                             Component component = inputDTOMapper.toDomain(componentInputDTO);
                             component.setId(id);
                             component.setSeller(sellerByName);
                             component.setUserWhoCreated(userByNick);
+                            component.setUsersWhoWants(byId.getUsersWhoWants());
                             boolean ok = componentService.update(component);
                             if (ok) {
                                 return ResponseEntity.ok("Component successfully updated");

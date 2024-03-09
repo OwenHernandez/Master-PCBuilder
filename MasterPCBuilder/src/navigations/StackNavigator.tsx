@@ -5,7 +5,6 @@ import Login from '../screens/Login';
 import Post from '../screens/Post';
 import UserBuildsList from '../screens/UserBuildsList';
 import WishList from '../screens/WishList';
-import Landing from '../screens/Landing';
 import { usePrimaryContext } from '../contexts/PrimaryContext';
 import IPostType from '../interfaces/IPostType';
 import IBuildType from '../interfaces/IBuildType';
@@ -17,11 +16,11 @@ import OtherUserProfile from '../screens/OtherUserProfile';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import IComponentType from "../interfaces/IComponentType";
 import ComponentScreen from "../screens/ComponentScreen";
+import EditComponent from "../screens/EditComponent";
 
 type Props = {}
 
 export type RootStackParamList = {
-    Landing: undefined,
     Register: undefined,
     Login: undefined,
     Social: undefined,
@@ -41,7 +40,8 @@ export type RootStackParamList = {
     "Components List": { components?: IComponentType[] },
     Chat: { userSelected: IUserType },
     OtherUserProfile: { userSelected: IUserType },
-    ComponentScreen: { comp: IComponentType, wished: boolean }
+    ComponentScreen: { comp: IComponentType },
+    EditComponent: { comp: IComponentType }
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -75,7 +75,6 @@ const StackNavigator = (props: Props) => {
                 }
             }}
         >
-            <Stack.Screen name='Landing' component={Landing} />
             <Stack.Screen name="Login" component={Login} />
             <Stack.Screen name="Register" component={Register} />
             <Stack.Screen name="DrawerNavigator" component={DrawerNavigator} />
@@ -86,6 +85,7 @@ const StackNavigator = (props: Props) => {
             <Stack.Screen name="Chat" component={Chat} />
             <Stack.Screen name="OtherUserProfile" component={OtherUserProfile} />
             <Stack.Screen name="ComponentScreen" component={ComponentScreen} />
+            <Stack.Screen name="EditComponent" component={EditComponent} />
         </Stack.Navigator>
     )
 }
