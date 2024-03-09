@@ -108,6 +108,9 @@ public class ComponentEntityService implements IComponentRepository {
                         bceRepo.delete(bce);
                     }
                 }
+                if (comp.getUsersWhoWants() != null && !comp.getUsersWhoWants().isEmpty()) {
+                    comp.getUsersWhoWants().clear();
+                }
                 repo.delete(comp);
                 return true;
             } else {

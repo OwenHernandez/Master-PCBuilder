@@ -2,13 +2,9 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { useEffect } from 'react'
 import Register from '../screens/Register';
 import Login from '../screens/Login';
-import Profile from '../screens/Profile';
 import Post from '../screens/Post';
 import UserBuildsList from '../screens/UserBuildsList';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Settings from '../screens/Settings';
 import WishList from '../screens/WishList';
-import FriendsList from '../screens/FriendsList';
 import Landing from '../screens/Landing';
 import { usePrimaryContext } from '../contexts/PrimaryContext';
 import IPostType from '../interfaces/IPostType';
@@ -20,6 +16,7 @@ import IUserType from '../interfaces/IUserType';
 import OtherUserProfile from '../screens/OtherUserProfile';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import IComponentType from "../interfaces/IComponentType";
+import ComponentScreen from "../screens/ComponentScreen";
 
 type Props = {}
 
@@ -43,7 +40,8 @@ export type RootStackParamList = {
     CreateComponent: undefined,
     "Components List": { components?: IComponentType[] },
     Chat: { userSelected: IUserType },
-    OtherUserProfile: { userSelected: IUserType }
+    OtherUserProfile: { userSelected: IUserType },
+    ComponentScreen: { comp: IComponentType, wished: boolean }
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -87,6 +85,7 @@ const StackNavigator = (props: Props) => {
             <Stack.Screen name="Friends" component={FriendsTabs} />
             <Stack.Screen name="Chat" component={Chat} />
             <Stack.Screen name="OtherUserProfile" component={OtherUserProfile} />
+            <Stack.Screen name="ComponentScreen" component={ComponentScreen} />
         </Stack.Navigator>
     )
 }

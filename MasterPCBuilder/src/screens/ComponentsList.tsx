@@ -21,6 +21,7 @@ import axios from "axios";
 import {Globals} from "../components/Globals";
 import IComponentType from "../interfaces/IComponentType";
 import Component from "../components/Component";
+import RNFetchBlob from "rn-fetch-blob";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Components List'>;
 
@@ -44,9 +45,22 @@ const ComponentsList = (props: Props) => {
 
     async function getUserComponents() {
         try {
-            const response = await axios.get(Globals.IP + "/api/v2/components?userId=" + user.id, {headers: {"Authorization": "Bearer " + token}});
-            setComponentsList(response.data);
-            setComponentsByName(response.data);
+            const getCompsResponse = await axios.get(Globals.IP + "/api/v2/components?userId=" + user.id, {headers: {"Authorization": "Bearer " + token}});
+            for (let comp of getCompsResponse.data) {
+                const getImgResponse = await RNFetchBlob.fetch(
+                    'GET',
+                    Globals.IP + '/api/v2/components/img/' + comp.id + '/' + comp.image,
+                    {Authorization: `Bearer ${token}`}
+                );
+                let picture = ""
+                if (getImgResponse.data !== Globals.IMG_NOT_FOUND) {
+                    picture = getImgResponse.base64();
+                }
+                comp.image = picture;
+                setComponentsList(prevComps => [...prevComps, comp]);
+                setComponentsByName(prevComps => [...prevComps, comp]);
+            }
+
         } catch (e) {
             console.log(e);
         }
@@ -55,7 +69,7 @@ const ComponentsList = (props: Props) => {
     return (
         <View style={{backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"}}>
             <HeaderScreen name={"Components List"} navigation={navigation} profile={false} drawer={true}/>
-            <View style={{height: "90%"}}>
+            <View style={{height: "89%"}}>
                 <View style={{
                     flexDirection: "row",
                     justifyContent: "space-around",
@@ -86,15 +100,18 @@ const ComponentsList = (props: Props) => {
                 </View>
                 <FlatList
                     data={componentsByName}
+                    numColumns={2}
                     renderItem={(comp) => {
-                        setWished(false);
+                        comp.item.wished = false;
                         user.componentsWanted.forEach((compWished) => {
                             if (comp.item.id === compWished.id) {
-                                setWished(true);
+                                comp.item.wished = true;
                             }
                         });
                         return (
-                            <Component comp={comp.item} wished={wished} />
+                            <TouchableOpacity style={{...Styles.touchable, width: getIconSize(435)}} onPress={() => navigation.navigate("ComponentScreen", { comp: comp.item, wished})}>
+                                <Component comp={comp.item} />
+                            </TouchableOpacity>
                         )
                     }}
                     keyExtractor={(comp, index) => index + ""}
