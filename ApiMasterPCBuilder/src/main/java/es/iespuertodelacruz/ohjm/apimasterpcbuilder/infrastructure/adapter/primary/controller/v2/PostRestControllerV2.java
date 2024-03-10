@@ -257,49 +257,13 @@ public class PostRestControllerV2 {
                     if (id != userByNick.getId()) {
                         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You cannot like with another user id");
                     }
-                    if (postById.getUsersWhoLiked().contains(userByNick)) {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You already liked this post");
-                    }
                     User userById = userService.findById(userId);
                     if (userById != null) {
-                        postById.getUsersWhoLiked().add(userById);
-                        boolean ok = service.update(postById);
-                        if (ok) {
-                            return ResponseEntity.ok("Post Successfully Liked");
+                        if (postById.getUsersWhoLiked().contains(userByNick)) {
+                            postById.getUsersWhoLiked().remove(userById);
                         } else {
-                            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong");
+                            postById.getUsersWhoLiked().add(userById);
                         }
-                    } else {
-                        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-                    }
-                } else {
-                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The post with the provided id was not found");
-                }
-            } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You should not be here");
-            }
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The id must not be null");
-        }
-    }
-
-    @PutMapping("/{id}/dislike/{userId}")
-    public ResponseEntity<?> dislike(@PathVariable("id") Long id, @PathVariable("userId") Long userId) {
-        if (id != null && userId != null) {
-            Object principal =
-                    SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            String username = ((UserDetails) principal).getUsername();
-            User userByNick = userService.findByNick(username);
-
-            if (userByNick != null) {
-                Post postById = service.findById(id);
-                if (postById != null) {
-                    if (id != userByNick.getId()) {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You cannot like with another user id");
-                    }
-                    User userById = userService.findById(userId);
-                    if (userById != null) {
-                        postById.getUsersWhoLiked().remove(userById);
                         boolean ok = service.update(postById);
                         if (ok) {
                             return ResponseEntity.ok("Post Successfully Liked");

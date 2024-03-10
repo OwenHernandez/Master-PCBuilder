@@ -77,12 +77,12 @@ const Component = (props: Props) => {
                     (comp?.wished) ?
                         <TouchableOpacity style={{...Styles.touchable, borderRadius: 15}}
                                           onPress={addRemoveWishList}>
-                            <Text style={{color: (darkMode) ? "white" : "black"}}>Remove From Wish List</Text>
+                            <Text style={{color: (darkMode) ? "white" : "black", textAlign: "center"}}>Remove From Wish List</Text>
                         </TouchableOpacity>
                         :
                         <TouchableOpacity style={{...Styles.touchable, borderRadius: 15}}
                                           onPress={addRemoveWishList}>
-                            <Text style={{color: (darkMode) ? "white" : "black"}}>Add to Wish
+                            <Text style={{color: (darkMode) ? "white" : "black", textAlign: "center"}}>Add to Wish
                                 List</Text>
                         </TouchableOpacity>
                 }

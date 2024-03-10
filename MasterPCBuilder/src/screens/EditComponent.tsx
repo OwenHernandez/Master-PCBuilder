@@ -22,6 +22,7 @@ import axios from "axios";
 import * as ImagePicker from "react-native-image-picker";
 import {ImagePickerResponse} from "react-native-image-picker";
 import RNFetchBlob from "rn-fetch-blob";
+import Toast from "react-native-toast-message";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'EditComponent'>;
 
@@ -96,19 +97,29 @@ const EditComponent = (props: Props) => {
     }
 
     async function editComponent() {
-        try {
-            const updateResponse = await axios.put(Globals.IP + "/api/v2/components/" + comp?.id, {
-                name,
-                description,
-                price: Number(price),
-                sellerName: selectedSeller.value,
-                type: selectedType.value,
-                image,
-                image64
-            }, {headers: {"Authorization": "Bearer " + token}});
-            navigation.navigate("Components List", {components: []});
-        } catch (e) {
-            console.log(e);
+        if (!isNaN(Number(price))) {
+            try {
+                const updateResponse = await axios.put(Globals.IP + "/api/v2/components/" + comp?.id, {
+                    name,
+                    description,
+                    price: Number(price),
+                    sellerName: selectedSeller.value,
+                    type: selectedType.value,
+                    image,
+                    image64
+                }, {headers: {"Authorization": "Bearer " + token}});
+                navigation.navigate("Components List", {components: []});
+            } catch (e) {
+                console.log(e);
+            }
+        } else {
+            Toast.show({
+                type: "error",
+                position: "bottom",
+                text1: "Price must be a number",
+                text1Style: {fontSize: getFontSize(15)},
+                visibilityTime: 3000
+            });
         }
     }
 
@@ -301,6 +312,7 @@ const EditComponent = (props: Props) => {
                     </TouchableOpacity>
                 </View>
             </ScrollView>
+            <Toast />
         </SafeAreaView>
     )
 }

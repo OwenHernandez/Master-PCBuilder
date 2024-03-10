@@ -3,7 +3,7 @@ import {
     Dimensions,
     Image,
     PixelRatio,
-    SafeAreaView,
+    SafeAreaView, ScrollView,
     StyleSheet,
     Text,
     TouchableOpacity,
@@ -65,79 +65,87 @@ const ComponentScreen = (props: Props) => {
         <SafeAreaView style={{flex: 1}}>
             <HeaderScreen name={"Component"} navigation={navigation} profile={false}
                           drawer={false}/>
-            <View style={{alignItems: 'center', marginHorizontal: "5%", marginTop: "5%"}}>
-                <Image
-                    source={{
-                        uri: "data:image/jpeg;base64," + comp?.image
-                    }}
-                    style={{margin: "2%", width: getIconSize(500), height: getIconSize(500), borderRadius: 10}}
-                />
-
-                <View style={{}}>
+            <ScrollView style={{flex: 1}}>
+                <View style={{flex: 1, margin: "5%"}}>
+                    <Image
+                        source={{
+                            uri: "data:image/jpeg;base64," + comp?.image
+                        }}
+                        style={{margin: "2%", width: getIconSize(500), height: getIconSize(500), borderRadius: 10, alignSelf: "center"}}
+                    />
                     <Text style={{
                         fontSize: getFontSize(30),
                         color: (darkMode) ? "white" : "black",
-                        marginRight: "10%"
+                        textAlign: "center"
                     }}>{comp?.name}</Text>
-                    <View style={{flexDirection: "row", justifyContent: "space-between"}}>
-                        <Text style={{
-                            fontSize: getFontSize(20),
-                            color: (darkMode) ? "white" : "black"
-                        }}><Material name={"keyboard-arrow-right"} size={getIconSize(40)}/>Price:</Text>
-                        <Text style={{fontSize: getFontSize(20), color: (darkMode) ? "white" : "black"}}>{comp?.price}€</Text>
-                    </View>
-                    <View style={{flexDirection: "row", justifyContent: "space-between"}}>
-                        <Text style={{
-                            fontSize: getFontSize(20),
-                            color: (darkMode) ? "white" : "black"
-                        }}><Material name={"keyboard-arrow-right"} size={getIconSize(40)}/>Sold by:</Text>
-                        <Text style={{
-                            fontSize: getFontSize(20),
-                            color: (darkMode) ? "white" : "black"
-                        }}>{comp?.sellerName}</Text>
-                    </View>
-                    <View style={{flexDirection: "row", justifyContent: "space-between"}}>
-                        <Text style={{
-                            fontSize: getFontSize(20),
-                            color: (darkMode) ? "white" : "black"
-                        }}><Material name={"keyboard-arrow-right"} size={getIconSize(40)}/>Created by:</Text>
-                        <Text style={{
-                            fontSize: getFontSize(20),
-                            color: (darkMode) ? "white" : "black"
-                        }}>{comp?.userNick}</Text>
-                    </View>
-                    <View style={{}}>
-                        <Text style={{
-                            fontSize: getFontSize(20),
-                            color: (darkMode) ? "white" : "black"
-                        }}><Material name={"keyboard-arrow-right"} size={getIconSize(40)}/>Description:</Text>
-                        <Text style={{
-                            fontSize: getFontSize(15),
-                            color: (darkMode) ? "white" : "black"
-                        }}>{"\n"}{comp?.description}</Text>
+
+                    <View style={{flex: 1, width: getIconSize(1000), justifyContent: "flex-end"}}>
+                        <View style={{flexDirection: "row", justifyContent: "space-between"}}>
+                            <Text style={{
+                                fontSize: getFontSize(20),
+                                color: (darkMode) ? "white" : "black"
+                            }}><Material name={"keyboard-arrow-right"} size={getIconSize(40)}/>Price:</Text>
+                            <Text style={{
+                                fontSize: getFontSize(20),
+                                color: (darkMode) ? "white" : "black"
+                            }}>{comp?.price}€</Text>
+                        </View>
+                        <View style={{flexDirection: "row", justifyContent: "space-between"}}>
+                            <Text style={{
+                                fontSize: getFontSize(20),
+                                color: (darkMode) ? "white" : "black"
+                            }}><Material name={"keyboard-arrow-right"} size={getIconSize(40)}/>Sold by:</Text>
+                            <Text style={{
+                                fontSize: getFontSize(20),
+                                color: (darkMode) ? "white" : "black"
+                            }}>{comp?.sellerName}</Text>
+                        </View>
+                        <View style={{flexDirection: "row", justifyContent: "space-between"}}>
+                            <Text style={{
+                                fontSize: getFontSize(20),
+                                color: (darkMode) ? "white" : "black"
+                            }}><Material name={"keyboard-arrow-right"} size={getIconSize(40)}/>Created by:</Text>
+                            <Text style={{
+                                fontSize: getFontSize(20),
+                                color: (darkMode) ? "white" : "black"
+                            }}>{comp?.userNick}</Text>
+                        </View>
+                        <View style={{}}>
+                            <Text style={{
+                                fontSize: getFontSize(20),
+                                color: (darkMode) ? "white" : "black"
+                            }}><Material name={"keyboard-arrow-right"} size={getIconSize(40)}/>Description:</Text>
+                            <Text style={{
+                                fontSize: getFontSize(15),
+                                color: (darkMode) ? "white" : "black",
+                                margin: "2%"
+                            }}>{comp?.description}</Text>
+                        </View>
+                        {
+                            (comp?.wished) ?
+                                <TouchableOpacity
+                                    style={{...Styles.touchable, alignItems: 'center', marginBottom: "3%"}}
+                                    onPress={addRemoveWishList}>
+                                    <Text style={{color: (darkMode) ? "white" : "black"}}>Remove From Wish List</Text>
+                                </TouchableOpacity>
+                                :
+                                <TouchableOpacity
+                                    style={{...Styles.touchable, alignItems: 'center', marginBottom: "3%"}}
+                                    onPress={addRemoveWishList}>
+                                    <Text style={{color: (darkMode) ? "white" : "black"}}>Add to Wish List</Text>
+                                </TouchableOpacity>
+                        }
+                        <TouchableOpacity style={{...Styles.touchable, alignItems: 'center', marginVertical: "3%"}}
+                                          onPress={editComponent}>
+                            <Text style={{color: (darkMode) ? "white" : "black"}}>Edit Component</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={{...Styles.touchable, alignItems: 'center', marginVertical: "3%"}}
+                                          onPress={deleteComponent}>
+                            <Text style={{color: (darkMode) ? "white" : "black"}}>Delete Component</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
-            </View>
-            {
-                (comp?.wished) ?
-                    <TouchableOpacity style={{...Styles.touchable, alignItems: 'center', marginBottom: "3%"}}
-                                      onPress={addRemoveWishList}>
-                        <Text style={{color: (darkMode) ? "white" : "black"}}>Remove From Wish List</Text>
-                    </TouchableOpacity>
-                    :
-                    <TouchableOpacity style={{...Styles.touchable, alignItems: 'center', marginBottom: "3%"}}
-                                      onPress={addRemoveWishList}>
-                        <Text style={{color: (darkMode) ? "white" : "black"}}>Add to Wish List</Text>
-                    </TouchableOpacity>
-            }
-            <TouchableOpacity style={{...Styles.touchable, alignItems: 'center', marginVertical: "3%"}}
-                              onPress={editComponent}>
-                <Text style={{color: (darkMode) ? "white" : "black"}}>Edit Component</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={{...Styles.touchable, alignItems: 'center', marginVertical: "3%"}}
-                              onPress={deleteComponent}>
-                <Text style={{color: (darkMode) ? "white" : "black"}}>Delete Component</Text>
-            </TouchableOpacity>
+            </ScrollView>
         </SafeAreaView>
     )
 }
