@@ -8,6 +8,8 @@ public class BuildInputDTO {
 
     private String notes;
 
+    private String category;
+
     private List<Long> componentsIds;
 
     public BuildInputDTO() {}
@@ -26,6 +28,14 @@ public class BuildInputDTO {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public List<Long> getComponentsIds() {

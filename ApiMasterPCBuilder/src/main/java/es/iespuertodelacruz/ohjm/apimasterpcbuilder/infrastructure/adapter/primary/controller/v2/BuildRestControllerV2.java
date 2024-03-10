@@ -22,6 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @CrossOrigin
@@ -76,6 +77,9 @@ public class BuildRestControllerV2 {
             User byNick = userService.findByNick(username);
 
             if (byNick != null) {
+                if (!buildInputDTO.getCategory().equals("Gaming") && !buildInputDTO.getCategory().equals("Work") && !buildInputDTO.getCategory().equals("Budget")) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The category must be Gaming, Work or Budget");
+                }
                 Build build = inputDTOMapper.toDomain(buildInputDTO);
                 build.setBuildsComponents(new ArrayList<>());
                 double totalPrice = 0;

@@ -17,6 +17,7 @@ public class BuildOutputDTOMapper {
         buildOutputDTO.setId(build.getId());
         buildOutputDTO.setName(build.getName());
         buildOutputDTO.setNotes(build.getNotes());
+        buildOutputDTO.setCategory(build.getCategory());
         buildOutputDTO.setTotalPrice(build.getTotalPrice());
         if (build.getBuildsComponents() != null) {
             List<BuildComponentDTO> bcDTOList = new ArrayList<>();
