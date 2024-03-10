@@ -77,6 +77,9 @@ const Settings = (props: Props) => {
             <TouchableOpacity style={{ ...Styles.touchable }} onPress={openGallery}>
                 <Text style={{ fontSize: getFontSize(20), textAlign: 'center', color: (darkMode) ? "white" : "black" }}>Change Profile Picture</Text>
             </TouchableOpacity>
+            <TouchableOpacity style={{ ...Styles.touchable }} onPress={openGallery}>
+                <Text style={{ fontSize: getFontSize(20), textAlign: 'center', color: (darkMode) ? "white" : "black" }}>Support</Text>
+            </TouchableOpacity>
         </View >
     )
 }
