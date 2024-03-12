@@ -43,20 +43,44 @@ const Social = (props: Props) => {
                     Globals.IP + '/api/v2/posts/img/' + post.id + '/' + post.image,
                     {Authorization: `Bearer ${token}`}
                 );
-                post.image = getPostFile.base64();
+                if (getPostFile.data !== Globals.IMG_NOT_FOUND) {
+                    post.image = getPostFile.base64();
+                } else {
+                    post.image = "";
+                }
                 const getUserFile = await RNFetchBlob.fetch(
                     'GET',
                     Globals.IP + '/api/v2/users/img/' + post.user.id + '/' + post.user.picture,
                     {Authorization: `Bearer ${token}`}
                 );
-                console.log(post.user);
-                post.user.picture = getUserFile.base64();
-                console.log(post.user);
+                if (getUserFile.data !== Globals.IMG_NOT_FOUND) {
+                    post.user.picture = getUserFile.base64();
+                } else {
+                    post.user.picture = "";
+                }
+                if (post.usersWhoLiked.includes(user?.id)) {
+                    post.liked = true;
+                } else {
+                    post.liked = false;
+                }
                 setPostsList(prevPosts => [...prevPosts, post]);
                 setPostsByTitle(prevPosts => [...prevPosts, post]);
             }
         } catch (e) {
             console.log(e);
+        }
+    }
+
+    async function addRemoveLike(post: IPostType) {
+        try {
+            const response = await axios.put(
+                Globals.IP + "/api/v2/posts/" + post.id + "/like" + user?.id,
+                null,
+                {headers: {Authorization: "Bearer " + token}}
+            );
+            post.liked = !post.liked;
+        } catch (err) {
+            console.log(err);
         }
     }
 
@@ -112,10 +136,10 @@ const Social = (props: Props) => {
                                         }}>
                                             <TouchableOpacity
                                                 style={{alignItems: "center", flexDirection: "row"}}
-                                                onPress={() => Alert.alert("Iria al perfil de la otra persona")}>
+                                                onPress={() => navigation.navigate("OtherUserProfile", {userSelected: post.item.user})}>
                                                 <Image
                                                     source={{
-                                                        uri: "data:image/jpeg;base64," + post.item.user?.picture
+                                                        uri: (post.item.user?.picture !== "") ? "data:image/jpeg;base64," + post.item.user?.picture : "https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png?x=480&quality=40",
                                                     }}
                                                     style={{
                                                         ...Styles.imageStyle,

@@ -27,9 +27,11 @@ const FriendsList = (props: Props) => {
     const getFontSize = (size: number) => size / fontScale;
     const fullScreen = Dimensions.get("window").scale;
     const getIconSize = (size: number) => size / fullScreen;
+    const [friendsList, setFriendsList] = useState([{}] as IUserType[]);
     const [friendsByName, setFriendsByName] = useState([{}] as IUserType[]);
 
     useEffect(() => {
+        setFriendsList(user.friends);
         setFriendsByName(user.friends);
     }, [user]);
 
@@ -57,9 +59,9 @@ const FriendsList = (props: Props) => {
                         }}
                         onChangeText={(text) => {
                             if (text === "")
-                                setFriendsByName(user.friends);
+                                setFriendsByName(friendsList);
                             else
-                                setFriendsByName(user.friends.filter((friend) => friend.nick.toLowerCase().includes(text)))
+                                setFriendsByName(friendsList.filter((friend) => friend.nick.toLowerCase().includes(text)))
                         }}
                     ></TextInput>
                     <FontAwesome5Icon name="search" size={getIconSize(80)}
@@ -69,17 +71,17 @@ const FriendsList = (props: Props) => {
                     data={friendsByName}
                     renderItem={(friend) => {
                         return (
-                            <TouchableOpacity onPress={() => navigation.navigate("Chat", {friend: friend.item})}
+                            <TouchableOpacity onPress={() => navigation.navigate("Chat", {userSelected: friend.item})}
                                               style={{
                                                   ...Styles.touchable,
                                                   flexDirection: "row",
                                                   alignItems: "center",
                                                   margin: "3%"
                                               }}>
-                                <TouchableOpacity onPress={() => navigation.navigate("FriendsProfile")}>
+                                <TouchableOpacity onPress={() => navigation.navigate("OtherUserProfile", {userSelected: friend.item})}>
                                     <Image
                                         source={{
-                                            uri: friend.item.picture
+                                            uri: (friend.item.picture !== "") ? "data:image/jpeg;base64," + friend.item.picture : "https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png?x=480&quality=40",
                                         }}
                                         style={{
                                             ...Styles.imageStyle,

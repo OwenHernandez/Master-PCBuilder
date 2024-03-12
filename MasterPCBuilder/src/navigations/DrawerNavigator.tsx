@@ -11,6 +11,7 @@ import SocialTabs from './SocialTabs';
 import FriendsTabs from './FriendsTabs';
 import IBuildType from '../interfaces/IBuildType';
 import Icon from "react-native-vector-icons/Octicons";
+import ComponentsTabs from "./ComponentsTabs";
 
 type Props = {}
 
@@ -18,6 +19,7 @@ export type RootDrawerParamList = {
     Landing: undefined;
     Profile: undefined;
     Settings: undefined;
+    Components: undefined;
     Builder: { build?: IBuildType, builds?: IBuildType[] };
     Social: undefined;
     Friends: undefined;
@@ -45,6 +47,7 @@ const DrawerNavigator = (props: Props) => {
             <Drawer.Screen name="Social" component={SocialTabs}/>
             <Drawer.Screen name="Friends" component={FriendsTabs}/>
             <Drawer.Screen name="Settings" component={Settings}/>
+            <Drawer.Screen name="Components" component={ComponentsTabs} />
         </Drawer.Navigator>
     )
 

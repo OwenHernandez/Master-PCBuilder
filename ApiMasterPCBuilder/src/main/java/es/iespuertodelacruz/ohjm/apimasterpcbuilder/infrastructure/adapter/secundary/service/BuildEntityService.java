@@ -49,14 +49,6 @@ public class BuildEntityService implements IBuildRepository {
             BuildEntity be = mapper.toPersistence(build);
             Optional<BuildEntity> findOpt = repo.findById(build.getId());
             if (!findOpt.isPresent()) {
-                /*
-                if (build.getAlumno() != null) {
-                    Optional<Alumno> findOptAl = alumnoRepository.findById(element.getAlumno().getDni());
-                    if (!findOptAl.isPresent()) {
-                        throw new RuntimeException("No se permite el guardado en cascada");
-                    }
-                }
-                */
                 BuildEntity save = repo.save(be);
                 if (be.getBuildsComponents() != null) {
                     for (int i = 0; i < build.getBuildsComponents().size(); i++) {
@@ -77,6 +69,7 @@ public class BuildEntityService implements IBuildRepository {
                 throw new RuntimeException("The build must not exist");
             }
         } catch (RuntimeException | ParseException e) {
+            e.printStackTrace();
             return null;
         }
     }

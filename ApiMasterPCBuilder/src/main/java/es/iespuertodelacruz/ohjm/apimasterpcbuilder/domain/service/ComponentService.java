@@ -72,4 +72,13 @@ public class ComponentService implements IComponentService {
     public List<Component> findBySellerId(Long sellerId) {
         return repo.findBySellerId(sellerId);
     }
+
+    @Override
+    public List<Component> findByUserId(Long userId) {
+
+        if (userId == 0) {
+            return null;
+        }
+        return repo.findByUserId(userId);
+    }
 }

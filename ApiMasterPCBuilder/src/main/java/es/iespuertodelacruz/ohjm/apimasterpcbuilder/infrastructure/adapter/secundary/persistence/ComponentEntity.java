@@ -45,6 +45,10 @@ public class ComponentEntity implements Serializable {
 	@ManyToOne
 	private SellerEntity seller;
 
+	@JsonIgnore
+	@ManyToMany(mappedBy="componentsWanted")
+	private List<UserEntity> usersWhoWants;
+
 	public ComponentEntity() {
 	}
 
@@ -132,5 +136,13 @@ public class ComponentEntity implements Serializable {
 
 	public void setUser(UserEntity user) {
 		this.user = user;
+	}
+
+	public List<UserEntity> getUsersWhoWants() {
+		return this.usersWhoWants;
+	}
+
+	public void setUsersWhoWants(List<UserEntity> usersWhoWants) {
+		this.usersWhoWants = usersWhoWants;
 	}
 }

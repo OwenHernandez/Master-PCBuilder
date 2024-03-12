@@ -2,14 +2,9 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { useEffect } from 'react'
 import Register from '../screens/Register';
 import Login from '../screens/Login';
-import Profile from '../screens/Profile';
 import Post from '../screens/Post';
 import UserBuildsList from '../screens/UserBuildsList';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Settings from '../screens/Settings';
 import WishList from '../screens/WishList';
-import FriendsList from '../screens/FriendsList';
-import Landing from '../screens/Landing';
 import { usePrimaryContext } from '../contexts/PrimaryContext';
 import IPostType from '../interfaces/IPostType';
 import IBuildType from '../interfaces/IBuildType';
@@ -17,13 +12,15 @@ import DrawerNavigator from './DrawerNavigator';
 import FriendsTabs from './FriendsTabs';
 import Chat from '../screens/Chat';
 import IUserType from '../interfaces/IUserType';
-import FriendsProfile from '../screens/FriendsProfile';
+import OtherUserProfile from '../screens/OtherUserProfile';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import IComponentType from "../interfaces/IComponentType";
+import ComponentScreen from "../screens/ComponentScreen";
+import EditComponent from "../screens/EditComponent";
 
 type Props = {}
 
 export type RootStackParamList = {
-    Landing: undefined,
     Register: undefined,
     Login: undefined,
     Social: undefined,
@@ -38,13 +35,16 @@ export type RootStackParamList = {
     WishList: undefined,
     Friends: undefined,
     "Friends List": undefined,
-    AddFriend: undefined,
-    Chat: { friend: IUserType },
-    FriendsProfile: { friend: IUserType }
+    SearchUsers: undefined,
+    CreateComponent: undefined,
+    "Components List": { components?: IComponentType[] },
+    Chat: { userSelected: IUserType },
+    OtherUserProfile: { userSelected: IUserType },
+    ComponentScreen: { comp: IComponentType },
+    EditComponent: { comp: IComponentType }
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
-const Tab = createBottomTabNavigator();
 
 const StackNavigator = (props: Props) => {
     const { darkMode, setDarkMode } = usePrimaryContext();
@@ -75,7 +75,6 @@ const StackNavigator = (props: Props) => {
                 }
             }}
         >
-            <Stack.Screen name='Landing' component={Landing} />
             <Stack.Screen name="Login" component={Login} />
             <Stack.Screen name="Register" component={Register} />
             <Stack.Screen name="DrawerNavigator" component={DrawerNavigator} />
@@ -84,7 +83,9 @@ const StackNavigator = (props: Props) => {
             <Stack.Screen name="WishList" component={WishList} />
             <Stack.Screen name="Friends" component={FriendsTabs} />
             <Stack.Screen name="Chat" component={Chat} />
-            <Stack.Screen name="FriendsProfile" component={FriendsProfile} />
+            <Stack.Screen name="OtherUserProfile" component={OtherUserProfile} />
+            <Stack.Screen name="ComponentScreen" component={ComponentScreen} />
+            <Stack.Screen name="EditComponent" component={EditComponent} />
         </Stack.Navigator>
     )
 }

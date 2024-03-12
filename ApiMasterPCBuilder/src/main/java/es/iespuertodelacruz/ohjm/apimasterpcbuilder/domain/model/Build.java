@@ -10,6 +10,8 @@ public class Build {
 
     private String notes;
 
+    private String category;
+
     private double totalPrice;
 
     private User user;
@@ -42,6 +44,14 @@ public class Build {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public double getTotalPrice() {

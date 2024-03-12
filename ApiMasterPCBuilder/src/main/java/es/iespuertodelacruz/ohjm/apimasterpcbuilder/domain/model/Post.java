@@ -1,6 +1,7 @@
 package es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Post {
 
@@ -19,6 +20,14 @@ public class Post {
     private List<User> usersWhoLiked;
 
     public Post() {}
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Post post = (Post) o;
+        return id == post.id;
+    }
 
     public long getId() {
         return id;

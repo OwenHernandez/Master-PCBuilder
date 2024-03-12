@@ -7,4 +7,5 @@ export default interface IComponentType {
     description: string;
     sellerName: string;
     userNick: string;
+    wished?: boolean;
 }

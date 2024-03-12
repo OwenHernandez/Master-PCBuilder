@@ -2,8 +2,10 @@ package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secu
 
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Build;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.BuildComponent;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Component;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.BuildComponentEntity;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.BuildEntity;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.ComponentEntity;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -14,6 +16,8 @@ public class BuildEntityMapper {
 
     BuildComponentEntityMapper bcMapper = new BuildComponentEntityMapper();
 
+    ComponentEntityMapper componentMapper = new ComponentEntityMapper();
+
     public Build toDomain(BuildEntity buildEntity) {
 
         Build res = new Build();
@@ -21,12 +25,19 @@ public class BuildEntityMapper {
         res.setName(buildEntity.getName());
         res.setNotes(buildEntity.getNotes());
         res.setTotalPrice(buildEntity.getTotalPrice());
+        res.setCategory(buildEntity.getCategory());
         res.setUser(userMapper.toDomain(buildEntity.getUser()));
         if (res.getBuildsComponents() == null) {
             res.setBuildsComponents(new ArrayList<>());
         }
         for (BuildComponentEntity bce : buildEntity.getBuildsComponents()) {
-            res.getBuildsComponents().add(bcMapper.toDomain(bce));
+            BuildComponent bc = bcMapper.toDomain(bce);
+            Component comp = componentMapper.toDomain(bce.getComponent());
+            if (bce.getComponent().getUser() != null) {
+                comp.setUserWhoCreated(userMapper.toDomain(bce.getComponent().getUser()));
+            }
+            bc.setComponent(comp);
+            res.getBuildsComponents().add(bc);
         }
 
 
@@ -40,12 +51,17 @@ public class BuildEntityMapper {
         res.setName(build.getName());
         res.setNotes(build.getNotes());
         res.setTotalPrice(build.getTotalPrice());
+        res.setCategory(build.getCategory());
         res.setUser(userMapper.toPersistance(build.getUser()));
         if (res.getBuildsComponents() == null) {
             res.setBuildsComponents(new ArrayList<>());
         }
         for (BuildComponent bc : build.getBuildsComponents()) {
-            res.getBuildsComponents().add(bcMapper.toPersistance(bc));
+            BuildComponentEntity bce = bcMapper.toPersistance(bc);
+            ComponentEntity comp = componentMapper.toPersistance(bc.getComponent());
+            comp.setUser(userMapper.toPersistance(bc.getComponent().getUserWhoCreated()));
+            bce.setComponent(comp);
+            res.getBuildsComponents().add(bce);
         }
 
         return res;

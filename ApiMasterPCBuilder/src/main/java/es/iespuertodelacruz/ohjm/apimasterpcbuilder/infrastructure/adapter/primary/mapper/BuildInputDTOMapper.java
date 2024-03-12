@@ -10,18 +10,8 @@ public class BuildInputDTOMapper {
         Build build = new Build();
         build.setName(buildInputDTO.getName());
         build.setNotes(buildInputDTO.getNotes());
+        build.setCategory(buildInputDTO.getCategory());
 
         return build;
-    }
-
-    public BuildInputDTO toDTO(Build build) {
-        BuildInputDTO buildInputDTO = new BuildInputDTO();
-        buildInputDTO.setName(build.getName());
-        buildInputDTO.setNotes(build.getNotes());
-        for (BuildComponent bc : build.getBuildsComponents()) {
-            buildInputDTO.getComponentsIds().add(bc.getComponent().getId());
-        }
-
-        return buildInputDTO;
     }
 }
