@@ -14,7 +14,7 @@ const useLogout = () => {
         //setUser(null);
         setToken("");
         await EncryptedStorage.setItem("token", "");
-        navigation.navigate("Landing");
+        navigation.navigate("Login");
     }
 
     return {

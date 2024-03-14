@@ -33,6 +33,7 @@ public class ComponentEntity implements Serializable {
 	private double price;
 
 	//bi-directional many-to-one association to UserEntity
+	@JsonIgnore
 	@ManyToOne
 	private UserEntity user;
 

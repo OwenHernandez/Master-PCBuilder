@@ -102,7 +102,7 @@ const DrawerNavigator = (props: Props) => {
                             labelStyle={{color: (darkMode) ? "white" : "black"}}
                             icon={() => <Icon name="sign-out" color={darkMode ? 'white' : 'black'}/>}
                             label="Logout"
-                            onPress={() => navigation.navigate("Landing")}
+                            onPress={() => navigation.navigate("Login")}
                         />
                     </View>
                 </View>

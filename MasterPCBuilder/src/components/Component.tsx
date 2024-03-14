@@ -59,7 +59,7 @@ const Component = (props: Props) => {
                         }}
                     />
                 </View>
-                <View style={{justifyContent: "center"}}>
+                <View style={{justifyContent: "center",paddingHorizontal:"5%"}}>
                     <Text style={{
                         fontSize: getFontSize(20),
                         color: (darkMode) ? "white" : "black",
@@ -68,7 +68,6 @@ const Component = (props: Props) => {
                     <Text style={{
                         fontSize: getFontSize(20),
                         color: (darkMode) ? "white" : "black",
-                        textAlign: "right"
                     }}>{comp?.price}€</Text>
                 </View>
             </View>

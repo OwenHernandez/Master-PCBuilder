@@ -38,7 +38,7 @@ export type RootStackParamList = {
     SearchUsers: undefined,
     CreateComponent: undefined,
     "Components List": { components?: IComponentType[] },
-    Chat: { userSelected: IUserType },
+    Chat: { friend: IUserType },
     OtherUserProfile: { userSelected: IUserType },
     ComponentScreen: { comp: IComponentType },
     EditComponent: { comp: IComponentType }

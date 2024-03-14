@@ -104,6 +104,14 @@ const Register = (props: Props) => {
                                 fontSize: getFontSize(20)
                             }}>Register</Text>
                         </TouchableOpacity>
+                        <TouchableOpacity style={{...Styles.touchable, width: getIconSize(450)}}
+                                          onPress={() => navigation.navigate("Login")}>
+                            <Text style={{
+                                color: (darkMode) ? "white" : "black",
+                                textAlign: "center",
+                                fontSize: getFontSize(20)
+                            }}>Volver</Text>
+                        </TouchableOpacity>
                     </View>
                     <Toast/>
                 </View>

@@ -28,7 +28,6 @@ const Login = (props: Props) => {
     const fullScreen = Dimensions.get("window").scale;
     const getIconSize = (size: number) => size / fullScreen;
     const {changeNick, changePassword, checkLogin, errorMsg, nick, password} = useLogin();
-
     return (
         <View style={{flex: 1}}>
             <View style={{...Styles.headerView, flexDirection: "column"}}>

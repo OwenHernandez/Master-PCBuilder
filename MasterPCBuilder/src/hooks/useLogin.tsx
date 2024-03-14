@@ -67,23 +67,26 @@ const useLogin = () => {
                 friends: byNickResponse.data.friends,
                 componentsWanted: byNickResponse.data.componentsWanted
             }
-
-            for (const friend of newUser.friends) {
-                const friendPicResponse = await RNFetchBlob.fetch(
-                    'GET',
-                    Globals.IP + '/api/v2/users/img/' + friend.id + '/' + friend.picture,
-                    {Authorization: `Bearer ${loginResponse.data}`}
-                );
-                picture = ""
-                if (friendPicResponse.data !== Globals.IMG_NOT_FOUND) {
-                    picture = friendPicResponse.base64();
+            console.log(newUser);
+            if (newUser.friends !== null) {
+                for (const friend of newUser.friends) {
+                    const friendPicResponse = await RNFetchBlob.fetch(
+                        'GET',
+                        Globals.IP + '/api/v2/users/img/' + friend.id + '/' + friend.picture,
+                        {Authorization: `Bearer ${loginResponse.data}`}
+                    );
+                    picture = ""
+                    if (friendPicResponse.data !== Globals.IMG_NOT_FOUND) {
+                        picture = friendPicResponse.base64();
+                    }
+                    friend.picture = picture;
                 }
-                friend.picture = picture;
             }
-
+            console.log("pasa de aqui");
             setUser(newUser);
             navigation.navigate("DrawerNavigator");
         } catch (err) {
+            console.log("LOCURA")
             console.log(err);
             Toast.show({
                 position: 'bottom',

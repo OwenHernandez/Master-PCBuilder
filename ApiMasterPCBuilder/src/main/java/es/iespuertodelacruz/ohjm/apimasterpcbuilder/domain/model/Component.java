@@ -114,4 +114,18 @@ public class Component {
     public void setUsersWhoWants(List<User> usersWhoWants) {
         this.usersWhoWants = usersWhoWants;
     }
+
+    @Override
+    public String toString() {
+        return "ComponentEntity{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", type='" + type + '\'' +
+                ", price=" + price +
+                ", sellerId=" + (seller != null ? seller.getId() : "null") +
+                ", userWhoCreatedId=" + (userWhoCreated != null ? userWhoCreated.getId() : "null") +
+
+                '}';
+    }
+
 }

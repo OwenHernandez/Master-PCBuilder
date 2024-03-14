@@ -77,4 +77,17 @@ public class Build {
     public void setBuildsComponents(List<BuildComponent> buildsComponents) {
         this.buildsComponents = buildsComponents;
     }
+
+    @Override
+    public String toString() {
+        return "Build{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", notes='" + notes + '\'' +
+                ", category='" + category + '\'' +
+                ", totalPrice=" + totalPrice +
+                ", user=" + user.toString() +
+                ", buildsComponents=" + buildsComponents +
+                '}';
+    }
 }

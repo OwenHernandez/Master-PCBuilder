@@ -113,6 +113,14 @@ const OtherUserProfile = (props: Props) => {
                     fontSize: getFontSize(20),
                     textAlign: 'center',
                     color: (darkMode) ? "white" : "black"
+                }}>Block user</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{...Styles.touchable, marginBottom: "3%", padding: "6%"}}
+                              onPress={() => Alert.alert("No esta implementado")}>
+                <Text style={{
+                    fontSize: getFontSize(20),
+                    textAlign: 'center',
+                    color: (darkMode) ? "white" : "black"
                 }}>Follow</Text>
             </TouchableOpacity>
         </SafeAreaView>

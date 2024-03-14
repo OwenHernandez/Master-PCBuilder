@@ -46,7 +46,7 @@ const Builder = (props: Props) => {
     const [modalPeriVisible, setModalPeriVisible] = useState(false);
     const [mainVisible, setMainVisible] = useState(false);
     const [periVisible, setPeriVisible] = useState(false);
-    const [componentsSelected, setComponentsSelected] = useState([] as IComponentType[]);
+    const [componentsSelected, setComponentsSelected] = useState([] as IBuildComponentType[]);
 
     const fontScale = PixelRatio.getFontScale();
     const getFontSize = (size: number) => size / fontScale;
@@ -144,20 +144,41 @@ const Builder = (props: Props) => {
 
     async function saveBuild() {
         let compIdArray: number[] = [];
-        buildTemp.buildsComponents.forEach((buildComp) => {
+        console.log(buildTemp)
+        componentsSelected.forEach((buildComp) => {
             compIdArray.push(buildComp.component.id);
         })
-        const response = await axios.post(
-            Globals.IP + "/api/v2/builds",
-            { name: buildTemp.name, notes: buildTemp.notes ?? null, componentsIds: compIdArray },
-            { headers: { "Authorization": "Bearer " + token } }
-        );
-        if (response.status === 200) {
-            setBuildsTemp(undefined);
-            navigation.navigate("UserBuildsList");
-        } else {
-            setMsg(response.statusText);
+        const newBuildTemp:IBuildType={
+            id:null,
+            name:buildTemp.name,
+            notes:buildTemp.notes,
+            category:buildTemp.category,
+            buildsComponents:componentsSelected,
+            totalPrice:totalPrice,
+            userNick:user.nick
         }
+        try {
+            const response = await axios.post(
+                Globals.IP + "/api/v2/builds",
+                {
+                    name: buildTemp.name,
+                    notes: buildTemp.notes ?? null,
+                    componentsIds: compIdArray,
+                    category: buildTemp.category
+                },
+                {headers: {"Authorization": "Bearer " + token}}
+            );
+            console.log("pasa")
+            if (response.status === 200) {
+                setBuildsTemp(undefined);
+                navigation.navigate("UserBuildsList");
+            } else {
+                setMsg(response.statusText);
+            }
+        }catch (err){
+            console.log(err)
+        }
+
     }
 
     async function updateBuild() {
@@ -582,7 +603,24 @@ const Builder = (props: Props) => {
                             onChangeText={(text) => setBuildTemp((prevBuild) => ({ ...prevBuild, notes: text }))}
                         ></TextInput>
                     </View>
-                </ScrollView>
+                    <View
+                        style={{ flexDirection: "row", justifyContent: "space-around", margin: "5%", alignItems: "center" }}>
+                        <TextInput
+                            maxLength={20}
+                            defaultValue={(buildTemp !== null && buildTemp !== undefined) && buildTemp.category}
+                            placeholder='category' placeholderTextColor="#a3a3a3"
+                            style={{
+                                borderWidth: 2,
+                                borderColor: "#ca2613",
+                                borderRadius: 20,
+                                paddingLeft: 20,
+                                width: "100%",
+                                fontSize: getFontSize(20),
+                                color: (darkMode) ? "white" : "black"
+                            }}
+                            onChangeText={(text) => setBuildTemp((prevBuild) => ({ ...prevBuild, category: text }))}
+                        ></TextInput>
+                    </View>
 
                 <Modal
                     animationType="slide"
@@ -610,7 +648,12 @@ const Builder = (props: Props) => {
                                     if (comp.item.type === modalCompType) {
                                         return (
                                             <TouchableOpacity onPress={() =>{
-                                                setComponentsSelected([...componentsSelected, comp.item]);
+                                                let newBuildComp: IBuildComponentType = {
+                                                    dateCreated: new Date().toISOString().slice(0, 10),
+                                                    priceAtTheTime: comp.item.price,
+                                                    component: comp.item
+                                                };
+                                                setComponentsSelected([...componentsSelected, newBuildComp]);
                                                 setComponentToBuild(comp.item)}}>
                                                 <Component comp={comp.item} />
                                             </TouchableOpacity>
@@ -623,15 +666,18 @@ const Builder = (props: Props) => {
                     </View>
                 </Modal>
             </ScrollView>
-            <View style={{flex:0.6}}>
-                <FlatList style={{backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"}} numColumns={2} data={componentsSelected} renderItem={(component)=>{
+            </ScrollView>
+
+            <View style={{backgroundColor: (darkMode) ? "#242121" : "#F5F5F5",flex:0.6}}>
+                <FlatList style={{margin:"5%",paddingHorizontal:"5%"}} numColumns={2} data={componentsSelected} renderItem={(component)=>{
                     return <View style={{width:160}}>
                         {
-                            component.item!==null?<Component comp={component.item} />:null
+                            component.item!==null?<Component comp={component.item.component} />:null
                         }
                     </View>
                 }}/>
             </View>
+
             <View style={{
                 ...Styles.headerView,
                 borderTopColor: "#ca2613",

@@ -56,8 +56,8 @@ const Profile = (props: Props) => {
                     >
                         <LinearGradient colors={['rgba(0, 0, 0, 0)','rgba(0, 0, 0, 0)' ,'#3e423f', (darkMode) ? "#242121" : "#F5F5F5"]}style={{flex:1,justifyContent:"flex-end",alignItems:"baseline"}} >
                             <View style={{  justifyContent: 'space-between', margin: "3%" }}>
-                            <Text style={{ fontSize: getFontSize(40), color: (darkMode) ? "white" : "black" }}>{user?.nick}</Text>
-                            <Text style={{ fontSize: getFontSize(20), color: (darkMode) ? "white" : "black" }}>{user?.email}</Text>
+                                <Text style={{ fontSize: getFontSize(40), color: (darkMode) ? "white" : "black" }}>{user?.nick}</Text>
+                                <Text style={{ fontSize: getFontSize(20), color: (darkMode) ? "white" : "black" }}>{user?.email}</Text>
                             </View>
                             </LinearGradient>
                     </ImageBackground>
@@ -75,10 +75,10 @@ const Profile = (props: Props) => {
                                                       alignItems: "center",
                                                       margin: 3
                                                   }}>
-                                    <TouchableOpacity onPress={() => navigation.navigate("FriendsProfile")}>
+                                    <TouchableOpacity onPress={() => navigation.navigate("OtherUserProfile", {userSelected:friend.item})}>
                                         <Image
                                             source={{
-                                                uri: friend.item.picture
+                                                uri: (friend.item.picture !== "") ? "data:image/jpeg;base64," + friend.item.picture : "https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png?x=480&quality=40"
                                             }}
                                             style={{
                                                 ...Styles.imageStyle,

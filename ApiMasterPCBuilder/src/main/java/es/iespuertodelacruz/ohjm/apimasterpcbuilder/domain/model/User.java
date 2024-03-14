@@ -143,4 +143,18 @@ public class User {
     public void setComponentsWanted(List<Component> componentsWanted) {
         this.componentsWanted = componentsWanted;
     }
+
+    @Override
+    public String toString() {
+        return "UserEntity{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", nick='" + nick + '\'' +
+                ", role='" + role + '\'' +
+                // possibly include counts instead of full details
+                ", numberOfFriends=" + (friends != null ? friends.size() : "0") +
+                ", numberOfComponentsWanted=" + (componentsWanted != null ? componentsWanted.size() : "0") +
+                '}';
+    }
+
 }

@@ -14,7 +14,7 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Chat'>;
 const Chat = (props: Props) => {
     const { user, darkMode } = usePrimaryContext();
     const { navigation, route } = props;
-    const userSelected = route.params.userSelected;
+    const userSelected = route.params.friend;
     const fontScale = PixelRatio.getFontScale();
     const getFontSize = (size: number) => size / fontScale;
     const fullScreen = Dimensions.get("window").scale;
