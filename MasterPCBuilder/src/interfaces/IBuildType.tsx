@@ -7,6 +7,6 @@ export default interface IBuildType {
     totalPrice: number;
     notes?: string;
     userNick: string;
-    category: any;
+    category: string;
     buildsComponents: Array<IBuildComponentType>;
 }
