@@ -27,8 +27,8 @@ public class ComponentEntityMapper {
         res.setType(componentEntity.getType());
         res.setImage(componentEntity.getImage());
         res.setSeller(sellerMapper.toDomain(componentEntity.getSeller()));
-        //res.setUserWhoCreated(userMapper.toDomain(componentEntity.getUser()));
-        /*
+        /*res.setUserWhoCreated(userMapper.toDomain(componentEntity.getUser()));
+
         if (componentEntity.getUsersWhoWants() != null) {
             if (res.getUsersWhoWants() == null) {
                 res.setUsersWhoWants(new ArrayList<>());
@@ -36,8 +36,8 @@ public class ComponentEntityMapper {
             for (UserEntity ue : componentEntity.getUsersWhoWants()) {
                 res.getUsersWhoWants().add(userMapper.toDomain(ue));
             }
-        }
-        */
+        }*/
+
 
         if (componentEntity.getBuildsComponents() != null) {
             if (res.getBuildsComponents() == null) {

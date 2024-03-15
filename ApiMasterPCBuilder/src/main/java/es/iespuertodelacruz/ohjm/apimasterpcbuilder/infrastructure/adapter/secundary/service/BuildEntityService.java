@@ -2,11 +2,14 @@ package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secu
 
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Build;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.BuildComponent;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Component;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.secundary.IBuildRepository;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.mapper.BuildEntityMapper;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.mapper.ComponentEntityMapper;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.mapper.UserEntityMapper;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.BuildComponentEntity;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.BuildEntity;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.UserEntity;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.repository.IBuildComponentEntityRepository;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.repository.IBuildEntityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +32,7 @@ public class BuildEntityService implements IBuildRepository {
     BuildEntityMapper mapper = new BuildEntityMapper();
 
     ComponentEntityMapper compMapper = new ComponentEntityMapper();
-
+    UserEntityMapper userMapper = new UserEntityMapper();
     @Override
     public List<Build> findAll() {
         List<Build> res = new ArrayList<>();
@@ -191,6 +194,7 @@ public class BuildEntityService implements IBuildRepository {
         if (userId != null) {
             res = new ArrayList<>();
             List<BuildEntity> list = repo.findByUserId(userId);
+            ArrayList<BuildComponent> bceList = new ArrayList<>();
             if (list != null) {
                 for (BuildEntity be : list) {
                     Build b = mapper.toDomain(be);
@@ -198,7 +202,20 @@ public class BuildEntityService implements IBuildRepository {
                         BuildComponent bc = b.getBuildsComponents().get(i);
                         BuildComponentEntity bce = be.getBuildsComponents().get(i);
                         bc.setComponent(compMapper.toDomain(bce.getComponent()));
+                        Component component = bc.getComponent();
+                        component.setUserWhoCreated(userMapper.toDomain(bce.getComponent().getUser()));
+
+                        if (bce.getComponent().getUsersWhoWants() != null) {
+                            if (component.getUsersWhoWants() == null) {
+                                component.setUsersWhoWants(new ArrayList<>());
+                            }
+                            for (UserEntity ue : bce.getComponent().getUsersWhoWants()) {
+                                component.getUsersWhoWants().add(userMapper.toDomain(ue));
+                            }
+                        }
+                        bceList.add(bc);
                     }
+                    b.setBuildsComponents(bceList);
                     res.add(b);
                 }
             }

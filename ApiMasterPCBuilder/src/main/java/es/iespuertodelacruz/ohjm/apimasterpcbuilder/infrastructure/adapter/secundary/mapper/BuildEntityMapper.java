@@ -9,9 +9,10 @@ import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secun
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 public class BuildEntityMapper {
-
+    Logger log;
     UserEntityMapper userMapper = new UserEntityMapper();
 
     BuildComponentEntityMapper bcMapper = new BuildComponentEntityMapper();
