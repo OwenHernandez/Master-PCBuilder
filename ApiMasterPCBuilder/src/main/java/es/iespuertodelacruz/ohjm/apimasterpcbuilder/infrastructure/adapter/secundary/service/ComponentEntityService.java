@@ -2,10 +2,12 @@ package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secu
 
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Build;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Component;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.User;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.secundary.IBuildRepository;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.secundary.IComponentRepository;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.mapper.BuildEntityMapper;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.mapper.ComponentEntityMapper;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.mapper.UserEntityMapper;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.BuildComponentEntity;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.BuildEntity;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.ComponentEntity;
@@ -31,6 +33,8 @@ public class ComponentEntityService implements IComponentRepository {
 
     private ComponentEntityMapper mapper = new ComponentEntityMapper();
 
+    UserEntityMapper userMapper = new UserEntityMapper();
+
     @Override
     public List<Component> findAll() {
         List<Component> res = new ArrayList<>();
@@ -38,6 +42,7 @@ public class ComponentEntityService implements IComponentRepository {
 
         for (ComponentEntity ce : all) {
             Component c = mapper.toDomain(ce);
+            c.setUserWhoCreated(userMapper.toDomain(ce.getUser()));
             res.add(c);
         }
 
@@ -50,8 +55,10 @@ public class ComponentEntityService implements IComponentRepository {
             Component res = null;
             if (component != null) {
                 ComponentEntity ce = mapper.toPersistance(component);
+                ce.setUser(userMapper.toPersistance(component.getUserWhoCreated()));
                 ComponentEntity save = repo.save(ce);
                 res = mapper.toDomain(save);
+                res.setUserWhoCreated(userMapper.toDomain(ce.getUser()));
             }
             return res;
         } catch (RuntimeException | ParseException e) {
@@ -67,9 +74,27 @@ public class ComponentEntityService implements IComponentRepository {
             if (opt.isPresent()) {
                 ComponentEntity componentEntity = opt.get();
                 component = mapper.toDomain(componentEntity);
+                component.setUserWhoCreated(userMapper.toDomain(opt.get().getUser()));
             }
         }
         return component;
+    }
+
+    @Override
+    public List<Component> findByUserId(Long userId) {
+        List<Component> res = null;
+        if (userId != null) {
+            res= new ArrayList<>();
+            List<ComponentEntity> list = repo.findByUserId(userId);
+            if (list != null) {
+                for (ComponentEntity ce : list) {
+                    Component c = mapper.toDomain(ce);
+                    c.setUserWhoCreated(userMapper.toDomain(ce.getUser()));
+                    res.add(c);
+                }
+            }
+        }
+        return res;
     }
 
     @Override
@@ -83,6 +108,9 @@ public class ComponentEntityService implements IComponentRepository {
                     for (BuildComponentEntity bce : comp.getBuildsComponents()) {
                         bceRepo.delete(bce);
                     }
+                }
+                if (comp.getUsersWhoWants() != null && !comp.getUsersWhoWants().isEmpty()) {
+                    comp.getUsersWhoWants().clear();
                 }
                 repo.delete(comp);
                 return true;
@@ -100,7 +128,14 @@ public class ComponentEntityService implements IComponentRepository {
             Optional<ComponentEntity> byId = repo.findById(component.getId());
             if (byId.isPresent()) {
                 ComponentEntity ce = mapper.toPersistance(component);
-                ComponentEntity save = repo.save(ce);
+                ce.setUser(userMapper.toPersistance(component.getUserWhoCreated()));
+                if (component.getUsersWhoWants() != null && !component.getUsersWhoWants().isEmpty()) {
+                    ce.setUsersWhoWants(new ArrayList<>());
+                    for (User user : component.getUsersWhoWants()) {
+                        ce.getUsersWhoWants().add(userMapper.toPersistance(user));
+                    }
+                }
+                repo.save(ce);
 
                 return true;
             } else {

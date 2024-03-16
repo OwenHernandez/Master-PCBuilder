@@ -50,6 +50,17 @@ public class BuildComponent {
         return component;
     }
 
+    @Override
+    public String toString() {
+        return "BuildComponent{" +
+                "id=" + id +
+                ", dateCreated='" + dateCreated + '\'' +
+                ", priceAtTheTime=" + priceAtTheTime +
+                ", build=" + build +
+                ", component=" + component +
+                '}';
+    }
+
     public void setComponent(Component component) {
         this.component = component;
     }

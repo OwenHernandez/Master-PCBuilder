@@ -5,6 +5,8 @@ public class ComponentInputDTO {
 
     private String image;
 
+    private String image64;
+
     private String name;
 
     private String type;
@@ -62,5 +64,13 @@ public class ComponentInputDTO {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getImage64() {
+        return image64;
+    }
+
+    public void setImage64(String image64) {
+        this.image64 = image64;
     }
 }

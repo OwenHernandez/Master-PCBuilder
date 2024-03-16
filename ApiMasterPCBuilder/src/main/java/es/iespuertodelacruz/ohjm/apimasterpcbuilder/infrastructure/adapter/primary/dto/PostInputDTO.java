@@ -6,6 +6,8 @@ public class PostInputDTO {
 
     private String image;
 
+    private String image64;
+
     private String title;
 
     private long buildId;
@@ -42,5 +44,13 @@ public class PostInputDTO {
 
     public void setBuildId(long buildId) {
         this.buildId = buildId;
+    }
+
+    public String getImage64() {
+        return image64;
+    }
+
+    public void setImage64(String image64) {
+        this.image64 = image64;
     }
 }

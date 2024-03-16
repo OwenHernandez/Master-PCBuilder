@@ -11,6 +11,8 @@ public class BuildOutputDTO {
 
     private double totalPrice;
 
+    private String category;
+
     private String userNick;
 
     private List<BuildComponentDTO> buildsComponents;
@@ -39,6 +41,14 @@ public class BuildOutputDTO {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public double getTotalPrice() {

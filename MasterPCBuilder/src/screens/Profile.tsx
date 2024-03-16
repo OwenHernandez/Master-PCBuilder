@@ -1,4 +1,14 @@
-import { Dimensions, Image, PixelRatio, ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import {
+    ImageBackground,
+    Dimensions,
+    Image,
+    PixelRatio,
+    ScrollView,
+    Text,
+    TouchableOpacity,
+    View,
+    FlatList
+} from 'react-native'
 import React, {useState} from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { RootStackParamList } from '../navigations/StackNavigator';
@@ -10,6 +20,9 @@ import Octicon from 'react-native-vector-icons/Octicons';
 import { DrawerActions } from '@react-navigation/native';
 import axios from "axios";
 import {Globals} from "../components/Globals";
+import HeaderScreen from "../components/HeaderScreen";
+import LinearGradient from 'react-native-linear-gradient';
+import {FAB} from "react-native-elements";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Profile'>;
 
@@ -23,13 +36,6 @@ const Profile = (props: Props) => {
     const getIconSize = (size: number) => size / fullScreen;
     const { logout } = useLogout();
 
-    async function getImage() {
-        const response = await axios.get(
-            Globals.IP + "/api/v2/users/" + user.id + "/" + user.picture,
-            { headers:{ "Authorization": "Bearer " + token }}
-        );
-        setImg(response.data);
-    }
     /*const actions = [
         { name: "Your Balls", nav: "UserBuildsList" },
         { name: "Your Posts", nav: "UserPostsList" },
@@ -40,41 +46,70 @@ const Profile = (props: Props) => {
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: (darkMode) ? "#242121" : "#F5F5F5" }}>
-            <View style={Styles.headerView}>
-                <TouchableOpacity onPress={() => navigation.navigate("Settings")}>
-                    <Octicon name='gear' size={getIconSize(90)} color={(darkMode) ? "white" : "black"}></Octicon>
-                </TouchableOpacity>
-                <Text style={{ ...Styles.headerText, color: (darkMode) ? "white" : "black", fontSize: getFontSize(20) }}>{route.name}</Text>
-                <TouchableOpacity onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}>
-                    <Octicon name='three-bars' size={getIconSize(90)} color={(darkMode) ? "white" : "black"}></Octicon>
-                </TouchableOpacity>
-            </View>
+            <HeaderScreen name={route.name} navigation={navigation} profile={true} drawer={true}/>
             <ScrollView>
-                <View style={{ alignItems: 'center', margin: "5%" }}>
-                    <Image
+                <View style={{ alignItems: 'center' }}>
+                    <ImageBackground
                         source={{
-                            uri: img
+                            uri: (user?.picture) ? "data:image/jpeg;base64," + user?.picture  : "https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png?x=480&quality=40",
                         }}
-                        style={{ ...Styles.imageStyle, borderColor: (darkMode) ? "white" : "black", borderWidth: 1, width: getIconSize(300), height: getIconSize(300) }}
-                    />
-                    <Text style={{ fontSize: getFontSize(40), color: (darkMode) ? "white" : "black" }}>{user.nick}</Text>
-                    <Text style={{ fontSize: getFontSize(20), color: (darkMode) ? "white" : "black" }}>{user.email}</Text>
+                        style={{ ...Styles.imageStyle, width: "100%", height: 300}}
+                    >
+                        <LinearGradient colors={['rgba(0, 0, 0, 0)','rgba(0, 0, 0, 0)' ,'#3e423f', (darkMode) ? "#242121" : "#F5F5F5"]}style={{flex:1,justifyContent:"flex-end",alignItems:"baseline"}} >
+                            <View style={{  justifyContent: 'space-between', margin: "3%" }}>
+                                <Text style={{ fontSize: getFontSize(40), color: (darkMode) ? "white" : "black" }}>{user?.nick}</Text>
+                                <Text style={{ fontSize: getFontSize(20), color: (darkMode) ? "white" : "black" }}>{user?.email}</Text>
+                            </View>
+                            </LinearGradient>
+                    </ImageBackground>
                 </View>
-                <TouchableOpacity style={{ ...Styles.touchable, marginBottom: "3%", padding: "6%" }} onPress={() => navigation.navigate("UserBuildsList")}>
-                    <Text style={{ fontSize: getFontSize(20), textAlign: 'center', color: (darkMode) ? "white" : "black" }}>Your Builds</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{ ...Styles.touchable, marginBottom: "3%", padding: "6%" }} onPress={() => navigation.navigate("UserPostsList")}>
-                    <Text style={{ fontSize: getFontSize(20), textAlign: 'center', color: (darkMode) ? "white" : "black" }}>Your Posts</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{ ...Styles.touchable, marginBottom: "3%", padding: "6%" }} onPress={() => navigation.navigate("LikedPostsList")}>
-                    <Text style={{ fontSize: getFontSize(20), textAlign: 'center', color: (darkMode) ? "white" : "black" }}>Liked Posts</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{ ...Styles.touchable, marginBottom: "3%", padding: "6%" }} onPress={() => navigation.navigate("WishList")}>
-                    <Text style={{ fontSize: getFontSize(20), textAlign: 'center', color: (darkMode) ? "white" : "black" }}>Wish List</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{ ...Styles.touchable, marginBottom: "3%", padding: "6%" }} onPress={() => navigation.navigate("Friends")}>
-                    <Text style={{ fontSize: getFontSize(20), textAlign: 'center', color: (darkMode) ? "white" : "black" }}>Friends</Text>
-                </TouchableOpacity>
+                <View style={{margin:"5%",}}>
+                    <Text style={{ fontSize: getFontSize(40), color: (darkMode) ? "white" : "black" }}>Friends</Text>
+                    {
+                        user.friends!==null?
+                            <FlatList style={{}} horizontal={true} data={user.friends} renderItem={(friend)=>{
+                            return <View style={{width:100,margin:3}}>
+                                <TouchableOpacity onPress={() => navigation.navigate("Chat", {friend: friend.item})}
+                                                  style={{
+                                                      ...Styles.touchable,
+                                                      flexDirection: "row",
+                                                      alignItems: "center",
+                                                      margin: 3
+                                                  }}>
+                                    <TouchableOpacity onPress={() => navigation.navigate("OtherUserProfile", {userSelected:friend.item})}>
+                                        <Image
+                                            source={{
+                                                uri: (friend.item.picture !== "") ? "data:image/jpeg;base64," + friend.item.picture : "https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png?x=480&quality=40"
+                                            }}
+                                            style={{
+                                                ...Styles.imageStyle,
+                                                borderColor: (darkMode) ? "white" : "black",
+                                                borderWidth: 1,
+                                                width: 30,
+                                                height: 30
+                                            }}
+                                        />
+                                    </TouchableOpacity>
+                                    <Text style={{
+                                        color: (darkMode) ? "white" : "black",
+                                        marginLeft: 5,
+                                        marginRight: 13
+                                    }}>{friend.item.nick}</Text>
+                                </TouchableOpacity>
+                            </View>
+                            }}/>:<></>
+                            //<Text style={{ fontSize: getFontSize(20), color: (darkMode) ? "white" : "black" }}>You have no friends</Text>
+                    }
+                </View>
+                <View style={{flexDirection:"row",justifyContent:"space-around",marginHorizontal:"5%"}}>
+                    <TouchableOpacity style={{ ...Styles.touchable,width:170,margin:"2%", marginBottom: "3%", padding: "6%" }} onPress={() => navigation.navigate("UserBuildsList")}>
+                        <Text style={{ fontSize: getFontSize(20), textAlign: 'center', color: (darkMode) ? "white" : "black" }}>Your Builds</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{ ...Styles.touchable,width:170,margin:"2%", marginBottom: "3%", padding: "6%" }} onPress={() => navigation.navigate("WishList")}>
+                        <Text style={{ fontSize: getFontSize(20), textAlign: 'center', color: (darkMode) ? "white" : "black" }}>Wish List</Text>
+                    </TouchableOpacity>
+                </View>
+
                 <TouchableOpacity style={{ ...Styles.touchable, marginBottom: "3%", padding: "6%", borderColor: "violet" }} onPress={() => logout(navigation)}>
                     <Text style={{ fontSize: getFontSize(20), textAlign: 'center', color: (darkMode) ? "white" : "black" }}>Logout</Text>
                 </TouchableOpacity>
