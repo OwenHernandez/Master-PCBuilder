@@ -18,13 +18,9 @@ import java.util.Optional;
 public class UserEntityService implements IUserRepository {
 
     @Autowired
-    IUserEntityRepository repo;
+    private IUserEntityRepository repo;
 
-    UserEntityMapper mapper;
-
-    public UserEntityService() {
-        mapper = new UserEntityMapper();
-    }
+    private final UserEntityMapper mapper = new UserEntityMapper();
 
     @Override
     public User findById(Long id) {

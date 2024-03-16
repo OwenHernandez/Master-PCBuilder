@@ -24,15 +24,16 @@ import java.util.Optional;
 public class BuildEntityService implements IBuildRepository {
 
     @Autowired
-    IBuildEntityRepository repo;
+    private IBuildEntityRepository repo;
 
     @Autowired
-    IBuildComponentEntityRepository bceRepo;
+    private IBuildComponentEntityRepository bceRepo;
 
-    BuildEntityMapper mapper = new BuildEntityMapper();
+    private final BuildEntityMapper mapper = new BuildEntityMapper();
 
-    ComponentEntityMapper compMapper = new ComponentEntityMapper();
-    UserEntityMapper userMapper = new UserEntityMapper();
+    private final ComponentEntityMapper compMapper = new ComponentEntityMapper();
+    private final UserEntityMapper userMapper = new UserEntityMapper();
+
     @Override
     public List<Build> findAll() {
         List<Build> res = new ArrayList<>();

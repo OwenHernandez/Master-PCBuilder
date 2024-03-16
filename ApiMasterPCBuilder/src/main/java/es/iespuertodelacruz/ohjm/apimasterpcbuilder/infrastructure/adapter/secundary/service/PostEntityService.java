@@ -17,9 +17,9 @@ import java.util.Optional;
 public class PostEntityService implements IPostRepository {
 
     @Autowired
-    IPostEntityRepository repo;
+    private IPostEntityRepository repo;
 
-    PostEntityMapper mapper = new PostEntityMapper();
+    private final PostEntityMapper mapper = new PostEntityMapper();
 
     @Override
     public List<Post> findAll() {

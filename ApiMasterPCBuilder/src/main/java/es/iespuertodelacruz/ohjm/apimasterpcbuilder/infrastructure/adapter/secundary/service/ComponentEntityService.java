@@ -26,14 +26,14 @@ import java.util.Optional;
 public class ComponentEntityService implements IComponentRepository {
 
     @Autowired
-    IComponentEntityRepository repo;
+    private IComponentEntityRepository repo;
 
     @Autowired
-    IBuildComponentEntityRepository bceRepo;
+    private IBuildComponentEntityRepository bceRepo;
 
-    private ComponentEntityMapper mapper = new ComponentEntityMapper();
+    private final ComponentEntityMapper mapper = new ComponentEntityMapper();
 
-    UserEntityMapper userMapper = new UserEntityMapper();
+    private final UserEntityMapper userMapper = new UserEntityMapper();
 
     @Override
     public List<Component> findAll() {

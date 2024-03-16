@@ -12,12 +12,11 @@ import java.util.ArrayList;
 import java.util.logging.Logger;
 
 public class BuildEntityMapper {
-    Logger log;
-    UserEntityMapper userMapper = new UserEntityMapper();
+    private final UserEntityMapper userMapper = new UserEntityMapper();
 
-    BuildComponentEntityMapper bcMapper = new BuildComponentEntityMapper();
+    private final BuildComponentEntityMapper bcMapper = new BuildComponentEntityMapper();
 
-    ComponentEntityMapper componentMapper = new ComponentEntityMapper();
+    private final ComponentEntityMapper componentMapper = new ComponentEntityMapper();
 
     public Build toDomain(BuildEntity buildEntity) {
 

@@ -10,9 +10,9 @@ import java.util.ArrayList;
 
 public class PostEntityMapper {
 
-    BuildEntityMapper buildMapper = new BuildEntityMapper();
+    private final BuildEntityMapper buildMapper = new BuildEntityMapper();
 
-    UserEntityMapper userMapper = new UserEntityMapper();
+    private final UserEntityMapper userMapper = new UserEntityMapper();
 
     public Post toDomain(PostEntity postEntity) {
         Post res = new Post();

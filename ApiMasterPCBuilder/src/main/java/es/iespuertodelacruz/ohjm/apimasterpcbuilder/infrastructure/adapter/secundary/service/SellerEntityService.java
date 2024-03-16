@@ -18,11 +18,9 @@ import java.util.Optional;
 public class SellerEntityService implements ISellerRepository {
 
     @Autowired
-    ISellerEntityRepository repo;
+    private ISellerEntityRepository repo;
 
-    SellerEntityMapper mapper;
-
-    public SellerEntityService() { mapper = new SellerEntityMapper();}
+    private final SellerEntityMapper mapper = new SellerEntityMapper();
 
     @Override
     public List<Seller> findAll() {
