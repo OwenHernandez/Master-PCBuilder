@@ -17,6 +17,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import IComponentType from "../interfaces/IComponentType";
 import ComponentScreen from "../screens/ComponentScreen";
 import EditComponent from "../screens/EditComponent";
+import AdminChat from "../screens/AdminChat";
 
 type Props = {}
 
@@ -39,6 +40,7 @@ export type RootStackParamList = {
     CreateComponent: undefined,
     "Components List": { components?: IComponentType[] },
     Chat: { friend: IUserType },
+    AdminChat: undefined,
     OtherUserProfile: { userSelected: IUserType },
     ComponentScreen: { comp: IComponentType },
     EditComponent: { comp: IComponentType }
@@ -83,6 +85,7 @@ const StackNavigator = (props: Props) => {
             <Stack.Screen name="WishList" component={WishList} />
             <Stack.Screen name="Friends" component={FriendsTabs} />
             <Stack.Screen name="Chat" component={Chat} />
+            <Stack.Screen name="AdminChat" component={AdminChat} />
             <Stack.Screen name="OtherUserProfile" component={OtherUserProfile} />
             <Stack.Screen name="ComponentScreen" component={ComponentScreen} />
             <Stack.Screen name="EditComponent" component={EditComponent} />

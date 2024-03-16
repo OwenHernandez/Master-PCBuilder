@@ -22,6 +22,7 @@ import axios from "axios";
 import {Globals} from "../components/Globals";
 import HeaderScreen from "../components/HeaderScreen";
 import LinearGradient from 'react-native-linear-gradient';
+import {FAB} from "react-native-elements";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Profile'>;
 
