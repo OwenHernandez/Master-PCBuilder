@@ -11,11 +11,11 @@ import java.util.ArrayList;
 
 public class ComponentEntityMapper {
 
-    SellerEntityMapper sellerMapper = new SellerEntityMapper();
+    private final SellerEntityMapper sellerMapper = new SellerEntityMapper();
 
     //UserEntityMapper userMapper = new UserEntityMapper();
 
-    BuildComponentEntityMapper bcMapper = new BuildComponentEntityMapper();
+    private final BuildComponentEntityMapper bcMapper = new BuildComponentEntityMapper();
 
     public Component toDomain(ComponentEntity componentEntity) {
 

@@ -11,7 +11,7 @@ import java.util.List;
 
 public class UserEntityMapper {
 
-    ComponentEntityMapper compMapper = new ComponentEntityMapper();
+    private final ComponentEntityMapper compMapper = new ComponentEntityMapper();
 
     public User toDomain(UserEntity userEntity) {
         User res = new User();

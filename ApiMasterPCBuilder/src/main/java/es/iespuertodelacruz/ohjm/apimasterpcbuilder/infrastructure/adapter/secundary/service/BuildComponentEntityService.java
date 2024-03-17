@@ -17,9 +17,9 @@ import java.util.Optional;
 public class BuildComponentEntityService implements IBuildComponentRepository {
 
     @Autowired
-    IBuildComponentEntityRepository repo;
+    private IBuildComponentEntityRepository repo;
 
-    BuildComponentEntityMapper mapper = new BuildComponentEntityMapper();
+    private final BuildComponentEntityMapper mapper = new BuildComponentEntityMapper();
 
     public List<BuildComponent> findAll() {
         List<BuildComponent> res = new ArrayList<>();
