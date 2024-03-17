@@ -3,6 +3,8 @@ package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secu
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Message;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.MessageDocument;
 
+import java.util.Date;
+
 public class MessageDocumentMapper {
 
     public Message toDomain(MessageDocument messageDocument) {
@@ -10,6 +12,7 @@ public class MessageDocumentMapper {
         message.setAuthor(messageDocument.getAuthor());
         message.setReceiver(messageDocument.getReceiver());
         message.setContent(messageDocument.getContent());
+        message.setDate(new Date(messageDocument.getDate()));
         return message;
     }
 
@@ -18,6 +21,7 @@ public class MessageDocumentMapper {
         messageDocument.setAuthor(message.getAuthor());
         messageDocument.setReceiver(message.getReceiver());
         messageDocument.setContent(message.getContent());
+        messageDocument.setDate(message.getDate().getTime());
         return messageDocument;
     }
 }

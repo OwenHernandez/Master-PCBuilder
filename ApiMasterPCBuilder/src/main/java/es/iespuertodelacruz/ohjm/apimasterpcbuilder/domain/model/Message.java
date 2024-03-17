@@ -7,11 +7,9 @@ public class Message {
     private String author;
     private String receiver;
     private String content;
-
     private Date date;
 
-    public Message() {
-    }
+    public Message() {}
 
     public static Message newPublic(String author, String topic, String content) {
         Message m = new Message();

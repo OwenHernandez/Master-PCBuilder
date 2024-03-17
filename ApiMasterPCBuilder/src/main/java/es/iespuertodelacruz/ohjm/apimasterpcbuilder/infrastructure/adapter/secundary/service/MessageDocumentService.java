@@ -107,4 +107,17 @@ public class MessageDocumentService implements IMessageRepository {
 
         return res;
     }
+
+    @Override
+    public List<Message> findByReceiverAndAuthor(String receiver, String author) {
+        List<MessageDocument> byReceiverAndAuthor = repo.findByReceiverAndAuthor(receiver, author);
+        List<Message> res = new ArrayList<>();
+
+        for (MessageDocument me : byReceiverAndAuthor) {
+            Message message = mapper.toDomain(me);
+            res.add(message);
+        }
+
+        return res;
+    }
 }

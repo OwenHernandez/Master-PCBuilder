@@ -19,4 +19,6 @@ public interface IMessageRepository {
     List<Message> findByAuthor(String author);
 
     List<Message> findByReceiver(String receiver);
+
+    List<Message> findByReceiverAndAuthor(String receiver, String author);
 }

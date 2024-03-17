@@ -2,12 +2,13 @@ package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secu
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "messages")
+@Document(collection = "MESSAGES")
 public class MessageDocument {
 
     private String author;
     private String receiver;
     private String content;
+    private long date;
 
     public MessageDocument() {
     }
@@ -34,5 +35,13 @@ public class MessageDocument {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public long getDate() {
+        return date;
+    }
+
+    public void setDate(long date) {
+        this.date = date;
     }
 }
