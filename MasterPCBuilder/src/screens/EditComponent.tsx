@@ -61,7 +61,7 @@ const EditComponent = (props: Props) => {
 
     async function getSellers() {
         try {
-            const response = await axios.get(Globals.IP + "/api/v2/sellers", {headers: {"Authorization": "Bearer " + token}});
+            const response = await axios.get(Globals.IP_HTTP + "/api/v2/sellers", {headers: {"Authorization": "Bearer " + token}});
             response.data.forEach((seller) => {
                 let item = {
                     label: seller.name,
@@ -99,7 +99,7 @@ const EditComponent = (props: Props) => {
     async function editComponent() {
         if (!isNaN(Number(price))) {
             try {
-                const updateResponse = await axios.put(Globals.IP + "/api/v2/components/" + comp?.id, {
+                const updateResponse = await axios.put(Globals.IP_HTTP + "/api/v2/components/" + comp?.id, {
                     name,
                     description,
                     price: Number(price),

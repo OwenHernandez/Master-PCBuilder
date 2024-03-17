@@ -1,5 +1,6 @@
 package es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Message {
@@ -7,7 +8,7 @@ public class Message {
     private String author;
     private String receiver;
     private String content;
-    private Date date;
+    private String date;
 
     public Message() {}
 
@@ -15,7 +16,8 @@ public class Message {
         Message m = new Message();
         m.setAuthor(author);
         m.setContent(content);
-        m.setDate(new Date());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        m.setDate(sdf.format(new Date()));
         return m;
     }
 
@@ -24,7 +26,8 @@ public class Message {
         m.setAuthor(author);
         m.setReceiver(receiver);
         m.setContent(content);
-        m.setDate(new Date());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        m.setDate(sdf.format(new Date()));
         return m;
     }
 
@@ -52,11 +55,11 @@ public class Message {
         this.content = content;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 }

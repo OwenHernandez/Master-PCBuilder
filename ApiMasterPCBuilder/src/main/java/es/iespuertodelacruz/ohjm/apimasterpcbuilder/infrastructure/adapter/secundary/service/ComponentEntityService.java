@@ -14,6 +14,7 @@ import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secun
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.repository.IBuildComponentEntityRepository;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.repository.IBuildEntityRepository;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.repository.IComponentEntityRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +37,7 @@ public class ComponentEntityService implements IComponentRepository {
     private final UserEntityMapper userMapper = new UserEntityMapper();
 
     @Override
+    @Transactional
     public List<Component> findAll() {
         List<Component> res = new ArrayList<>();
         List<ComponentEntity> all = repo.findAll();
@@ -50,6 +52,7 @@ public class ComponentEntityService implements IComponentRepository {
     }
 
     @Override
+    @Transactional
     public Component save(Component component) {
         try {
             Component res = null;
@@ -67,6 +70,7 @@ public class ComponentEntityService implements IComponentRepository {
     }
 
     @Override
+    @Transactional
     public Component findById(Long id) {
         Component component = null;
         if (id != null) {
@@ -81,6 +85,7 @@ public class ComponentEntityService implements IComponentRepository {
     }
 
     @Override
+    @Transactional
     public List<Component> findByUserId(Long userId) {
         List<Component> res = null;
         if (userId != null) {
@@ -98,6 +103,7 @@ public class ComponentEntityService implements IComponentRepository {
     }
 
     @Override
+    @Transactional
     public boolean deleteById(long id) {
         try {
             Optional<ComponentEntity> byId = repo.findById(id);
@@ -123,6 +129,7 @@ public class ComponentEntityService implements IComponentRepository {
     }
 
     @Override
+    @Transactional
     public boolean update(Component component) {
         try {
             Optional<ComponentEntity> byId = repo.findById(component.getId());
@@ -147,6 +154,7 @@ public class ComponentEntityService implements IComponentRepository {
     }
 
     @Override
+    @Transactional
     public List<Component> findByName(String name) {
         List<Component> res = null;
         if (name != null) {
@@ -163,6 +171,7 @@ public class ComponentEntityService implements IComponentRepository {
     }
 
     @Override
+    @Transactional
     public List<Component> findByPrice(double price) {
         List<Component> res = null;
         if (price != 0) {
@@ -178,6 +187,7 @@ public class ComponentEntityService implements IComponentRepository {
     }
 
     @Override
+    @Transactional
     public List<Component> findBySellerId(Long sellerId) {
         List<Component> res = null;
         if (sellerId != 0) {

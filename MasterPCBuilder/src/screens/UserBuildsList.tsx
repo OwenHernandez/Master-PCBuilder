@@ -31,7 +31,7 @@ const UserBuildsList = (props: Props) => {
 
     async function getUserBuilds() {
         try {
-            const response = await axios.get(Globals.IP + "/api/v2/builds", {headers: {"Authorization": "Bearer " + token}});
+            const response = await axios.get(Globals.IP_HTTP + "/api/v2/builds", {headers: {"Authorization": "Bearer " + token}});
             setBuildsList(response.data);
         } catch (err) {
             console.log(err);

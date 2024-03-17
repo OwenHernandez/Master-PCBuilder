@@ -139,7 +139,7 @@ const Builder = (props: Props) => {
     }
 
     async function getComponents() {
-        const response = await axios.get(Globals.IP + "/api/v2/components", {headers: {"Authorization": "Bearer " + token}});
+        const response = await axios.get(Globals.IP_HTTP + "/api/v2/components", {headers: {"Authorization": "Bearer " + token}});
         setComponents(response.data);
     }
 
@@ -160,7 +160,7 @@ const Builder = (props: Props) => {
         }
         try {
             const response = await axios.post(
-                Globals.IP + "/api/v2/builds",
+                Globals.IP_HTTP + "/api/v2/builds",
                 {
                     name: buildTemp.name,
                     notes: buildTemp.notes ?? null,
@@ -188,7 +188,7 @@ const Builder = (props: Props) => {
             compIdArray.push(buildComp.component.id);
         })
         const response = await axios.put(
-            Globals.IP + "/api/v2/builds/" + buildTemp.id,
+            Globals.IP_HTTP + "/api/v2/builds/" + buildTemp.id,
             {name: buildTemp.name, notes: buildTemp.notes ?? null, componentsIds: compIdArray},
             {headers: {"Authorization": "Bearer " + token}}
         );
