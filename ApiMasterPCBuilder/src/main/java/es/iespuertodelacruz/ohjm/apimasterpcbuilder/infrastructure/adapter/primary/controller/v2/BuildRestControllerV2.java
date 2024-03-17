@@ -45,7 +45,7 @@ public class BuildRestControllerV2 {
     BuildOutputDTOMapper outputDTOMapper = new BuildOutputDTOMapper();
 
     BuildInputDTOMapper inputDTOMapper = new BuildInputDTOMapper();
-    Logger log;
+
     @Transactional
     @GetMapping
     public ResponseEntity<?> getByUserId() {
@@ -55,11 +55,8 @@ public class BuildRestControllerV2 {
 
         if (byNick != null) {
             List<Build> byUserId = buildService.findByUserId(byNick.getId());
-
             if (byUserId != null) {
                 List<BuildOutputDTO> res = new ArrayList<>();
-                log = Logger.getLogger(BuildRestControllerV2.class.getName());
-                log.info(byUserId.toString());
                 for (Build b : byUserId) {
                     BuildOutputDTO bdto = outputDTOMapper.toDTO(b);
                     res.add(bdto);

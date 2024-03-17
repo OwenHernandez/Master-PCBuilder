@@ -195,28 +195,9 @@ public class BuildEntityService implements IBuildRepository {
         if (userId != null) {
             res = new ArrayList<>();
             List<BuildEntity> list = repo.findByUserId(userId);
-            ArrayList<BuildComponent> bceList = new ArrayList<>();
             if (list != null) {
                 for (BuildEntity be : list) {
                     Build b = mapper.toDomain(be);
-                    for (int i = 0; i < b.getBuildsComponents().size(); i++) {
-                        BuildComponent bc = b.getBuildsComponents().get(i);
-                        BuildComponentEntity bce = be.getBuildsComponents().get(i);
-                        bc.setComponent(compMapper.toDomain(bce.getComponent()));
-                        Component component = bc.getComponent();
-                        component.setUserWhoCreated(userMapper.toDomain(bce.getComponent().getUser()));
-
-                        if (bce.getComponent().getUsersWhoWants() != null) {
-                            if (component.getUsersWhoWants() == null) {
-                                component.setUsersWhoWants(new ArrayList<>());
-                            }
-                            for (UserEntity ue : bce.getComponent().getUsersWhoWants()) {
-                                component.getUsersWhoWants().add(userMapper.toDomain(ue));
-                            }
-                        }
-                        bceList.add(bc);
-                    }
-                    b.setBuildsComponents(bceList);
                     res.add(b);
                 }
             }

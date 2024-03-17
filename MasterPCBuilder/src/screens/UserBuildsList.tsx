@@ -24,21 +24,7 @@ const UserBuildsList = (props: Props) => {
     const fullScreen = Dimensions.get("window").scale;
     const getIconSize = (size: number) => size / fullScreen;
     const [buildsList, setBuildsList] = useState([{}] as IBuildType[]);
-    /*
-    const tempBuilds: IBuildType[] = [
-        {
-            name: "BuildCoso",
-            price: "1000€",
-            notes: "jkfdjsgvfjdnjghsridhgjf",
-            components: [
-                { name: "CPU", compImage: "https://i.ebayimg.com/images/g/-1sAAOSwtQNlLpw6/s-l1600.jpg", description: "CPU super potente perfecta...", price: "100€", site: "PCComponentes", type: "CPU" },
-                { name: "Motherboard", compImage: "https://www.mouser.es/images/marketingid/2020/img/110657914.png?v=101223.0140", description: "CPU super potente perfecta...", price: "100€", site: "PCComponentes", type: "Motherboard" },
-                { name: "RAM", compImage: "https://m.media-amazon.com/images/I/61XmhmEup8L._AC_UF1000,1000_QL80_.jpg", description: "CPU super potente perfecta...", price: "100€", site: "PCComponentes", type: "RAM" },
-                { name: "RAM2", compImage: "https://m.media-amazon.com/images/I/61XmhmEup8L._AC_UF1000,1000_QL80_.jpg", description: "CPU super potente perfecta...", price: "100€", site: "PCComponentes", type: "RAM" }
-            ]
-        }
-    ];
-    */
+
     useEffect(() => {
         getUserBuilds();
     }, []);
@@ -60,10 +46,15 @@ const UserBuildsList = (props: Props) => {
                     data={buildsList}
                     renderItem={(build) => {
                         return (
-                            <TouchableOpacity style={Styles.touchable} onPress={() => navigation.navigate("Builder", {
-                                build: build.item,
-                                builds: buildsList
-                            })}>
+                            <TouchableOpacity style={Styles.touchable} onPress={() => {
+                                console.log(buildsList);
+                                console.log(build.item);
+                                navigation.navigate("Builder", {
+                                        build: build.item,
+                                        builds: buildsList
+                                    }
+                                )
+                            }}>
                                 <View>
                                     <View style={{alignItems: "flex-start"}}>
                                         <Text style={{
