@@ -56,7 +56,7 @@ public class BuildComponent {
                 "id=" + id +
                 ", dateCreated='" + dateCreated + '\'' +
                 ", priceAtTheTime=" + priceAtTheTime +
-                ", build=" + build +
+                //", build=" + build +
                 ", component=" + component +
                 '}';
     }

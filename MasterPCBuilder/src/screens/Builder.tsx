@@ -56,9 +56,9 @@ const Builder = (props: Props) => {
     useEffect(() => {
         if (build !== null) {
             setBuildTemp(build);
-            setTotalPrice(0);
             if (build !== undefined && build.buildsComponents !== null) {
                 setBuildUpt(build);
+                //setTotalPrice(build.totalPrice);
                 build.buildsComponents.forEach(buildComp => {
                     setTotalPrice(prevPrice => prevPrice + buildComp.component.price);
                 });
