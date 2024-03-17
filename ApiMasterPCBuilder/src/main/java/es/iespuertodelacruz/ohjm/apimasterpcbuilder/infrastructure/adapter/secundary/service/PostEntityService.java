@@ -5,6 +5,7 @@ import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.secundary.IPostR
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.mapper.PostEntityMapper;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.PostEntity;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.repository.IPostEntityRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,7 @@ public class PostEntityService implements IPostRepository {
     private final PostEntityMapper mapper = new PostEntityMapper();
 
     @Override
+    @Transactional
     public List<Post> findAll() {
         List<Post> res = new ArrayList<>();
         repo.findAll().forEach(postEntity -> res.add(mapper.toDomain(postEntity)));
@@ -29,6 +31,7 @@ public class PostEntityService implements IPostRepository {
     }
 
     @Override
+    @Transactional
     public Post save(Post post) {
         try {
             return mapper.toDomain(repo.save(mapper.toPersistence(post)));
@@ -38,6 +41,7 @@ public class PostEntityService implements IPostRepository {
     }
 
     @Override
+    @Transactional
     public Post findById(Long id) {
         Optional<PostEntity> byId = repo.findById(id);
         if (byId.isPresent()) {
@@ -48,6 +52,7 @@ public class PostEntityService implements IPostRepository {
     }
 
     @Override
+    @Transactional
     public boolean deleteById(long id) {
         try {
             if (!repo.existsById(id)) {
@@ -61,6 +66,7 @@ public class PostEntityService implements IPostRepository {
     }
 
     @Override
+    @Transactional
     public boolean update(Post post) {
         try {
             if (!repo.existsById(post.getId())) {
@@ -74,6 +80,7 @@ public class PostEntityService implements IPostRepository {
     }
 
     @Override
+    @Transactional
     public List<Post> findByTitle(String title) {
         if (title == null) {
             return null;
@@ -89,6 +96,7 @@ public class PostEntityService implements IPostRepository {
     }
 
     @Override
+    @Transactional
     public List<Post> findByBuildId(Long buildId) {
         if (buildId == null) {
             return null;
@@ -104,6 +112,7 @@ public class PostEntityService implements IPostRepository {
     }
 
     @Override
+    @Transactional
     public List<Post> findByUserId(Long userId) {
         if (userId == null) {
             return null;

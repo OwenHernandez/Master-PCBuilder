@@ -36,11 +36,11 @@ const Social = (props: Props) => {
 
     async function getPosts() {
         try {
-            const response = await axios.get(Globals.IP + "/api/v2/posts", {headers: {"Authorization": "Bearer " + token}});
+            const response = await axios.get(Globals.IP_HTTP + "/api/v2/posts", {headers: {"Authorization": "Bearer " + token}});
             for (const post of response.data) {
                 const getPostFile = await RNFetchBlob.fetch(
                     'GET',
-                    Globals.IP + '/api/v2/posts/img/' + post.id + '/' + post.image,
+                    Globals.IP_HTTP + '/api/v2/posts/img/' + post.id + '/' + post.image,
                     {Authorization: `Bearer ${token}`}
                 );
                 if (getPostFile.data !== Globals.IMG_NOT_FOUND) {
@@ -50,7 +50,7 @@ const Social = (props: Props) => {
                 }
                 const getUserFile = await RNFetchBlob.fetch(
                     'GET',
-                    Globals.IP + '/api/v2/users/img/' + post.user.id + '/' + post.user.picture,
+                    Globals.IP_HTTP + '/api/v2/users/img/' + post.user.id + '/' + post.user.picture,
                     {Authorization: `Bearer ${token}`}
                 );
                 if (getUserFile.data !== Globals.IMG_NOT_FOUND) {
@@ -74,7 +74,7 @@ const Social = (props: Props) => {
     async function addRemoveLike(post: IPostType) {
         try {
             const response = await axios.put(
-                Globals.IP + "/api/v2/posts/" + post.id + "/like" + user?.id,
+                Globals.IP_HTTP + "/api/v2/posts/" + post.id + "/like" + user?.id,
                 null,
                 {headers: {Authorization: "Bearer " + token}}
             );

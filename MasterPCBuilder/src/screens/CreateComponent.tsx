@@ -52,7 +52,7 @@ const CreateComponent = (props: Props) => {
 
     async function getSellers() {
         try {
-            const response = await axios.get(Globals.IP + "/api/v2/sellers", {headers: {"Authorization": "Bearer " + token}});
+            const response = await axios.get(Globals.IP_HTTP + "/api/v2/sellers", {headers: {"Authorization": "Bearer " + token}});
             response.data.forEach((seller) => {
                 let item = {
                     label: seller.name,
@@ -88,7 +88,7 @@ const CreateComponent = (props: Props) => {
     async function createComponent() {
         if (!isNaN(Number(price))) {
             try {
-                const response = await axios.post(Globals.IP + "/api/v2/components", {
+                const response = await axios.post(Globals.IP_HTTP + "/api/v2/components", {
                     name,
                     description,
                     price: Number(price),

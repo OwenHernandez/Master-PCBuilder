@@ -5,6 +5,7 @@ import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.secundary.IBuild
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.mapper.BuildComponentEntityMapper;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.BuildComponentEntity;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.repository.IBuildComponentEntityRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,7 @@ public class BuildComponentEntityService implements IBuildComponentRepository {
 
     private final BuildComponentEntityMapper mapper = new BuildComponentEntityMapper();
 
+    @Transactional
     public List<BuildComponent> findAll() {
         List<BuildComponent> res = new ArrayList<>();
         List<BuildComponentEntity> all = repo.findAll();
@@ -33,6 +35,7 @@ public class BuildComponentEntityService implements IBuildComponentRepository {
         return res;
     }
 
+    @Transactional
     public BuildComponent save(BuildComponent bc) {
         try {
             BuildComponentEntity bce = mapper.toPersistance(bc);
@@ -43,11 +46,13 @@ public class BuildComponentEntityService implements IBuildComponentRepository {
         }
     }
 
+    @Transactional
     public BuildComponent findById(Long id) {
         Optional<BuildComponentEntity> byId = repo.findById(id);
         return byId.map(buildComponentEntity -> mapper.toDomain(buildComponentEntity)).orElse(null);
     }
 
+    @Transactional
     public boolean update(BuildComponent bc) {
         try {
             BuildComponentEntity bce = mapper.toPersistance(bc);
@@ -58,6 +63,7 @@ public class BuildComponentEntityService implements IBuildComponentRepository {
         }
     }
 
+    @Transactional
     public boolean delete(Long id) {
         try {
             repo.deleteById(id);
@@ -67,6 +73,7 @@ public class BuildComponentEntityService implements IBuildComponentRepository {
         }
     }
 
+    @Transactional
     public List<BuildComponent> findByBuildId(Long buildId) {
         List<BuildComponent> res = new ArrayList<>();
         List<BuildComponentEntity> byBuildId = repo.findByBuildId(buildId);
@@ -79,6 +86,7 @@ public class BuildComponentEntityService implements IBuildComponentRepository {
         return res;
     }
 
+    @Transactional
     public List<BuildComponent> findByComponentId(Long componentId) {
         List<BuildComponent> res = new ArrayList<>();
         List<BuildComponentEntity> byComponentId = repo.findByComponentId(componentId);
