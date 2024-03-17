@@ -1,6 +1,7 @@
 package es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Component {
 
@@ -22,7 +23,17 @@ public class Component {
 
     private User userWhoCreated;
 
+    private List<User> usersWhoWants;
+
     public Component() {}
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Component component = (Component) o;
+        return id == component.id;
+    }
 
     public long getId() {
         return id;
@@ -95,4 +106,26 @@ public class Component {
     public void setUserWhoCreated(User userWhoCreated) {
         this.userWhoCreated = userWhoCreated;
     }
+
+    public List<User> getUsersWhoWants() {
+        return usersWhoWants;
+    }
+
+    public void setUsersWhoWants(List<User> usersWhoWants) {
+        this.usersWhoWants = usersWhoWants;
+    }
+
+    @Override
+    public String toString() {
+        return "ComponentEntity{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", type='" + type + '\'' +
+                ", price=" + price +
+                ", sellerId=" + (seller != null ? seller.getId() : "null") +
+                ", userWhoCreatedId=" + (userWhoCreated != null ? userWhoCreated.getId() : "null") +
+
+                '}';
+    }
+
 }

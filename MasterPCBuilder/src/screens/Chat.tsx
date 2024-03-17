@@ -14,7 +14,7 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Chat'>;
 const Chat = (props: Props) => {
     const { user, darkMode } = usePrimaryContext();
     const { navigation, route } = props;
-    const friend = route.params.friend;
+    const userSelected = route.params.friend;
     const fontScale = PixelRatio.getFontScale();
     const getFontSize = (size: number) => size / fontScale;
     const fullScreen = Dimensions.get("window").scale;
@@ -24,101 +24,101 @@ const Chat = (props: Props) => {
         {
             msg: "coso",
             userSend: user,
-            userReceive: friend
+            userReceive: userSelected
         },
         {
             msg: "cosocoso",
-            userSend: friend,
+            userSend: userSelected,
             userReceive: user
         },
         {
             msg: "coso",
             userSend: user,
-            userReceive: friend
+            userReceive: userSelected
         },
         {
             msg: "cosocoso",
-            userSend: friend,
+            userSend: userSelected,
             userReceive: user
         },
         {
             msg: "coso",
             userSend: user,
-            userReceive: friend
+            userReceive: userSelected
         },
         {
             msg: "cosocoso",
-            userSend: friend,
+            userSend: userSelected,
             userReceive: user
         },
         {
             msg: "coso",
             userSend: user,
-            userReceive: friend
+            userReceive: userSelected
         },
         {
             msg: "cosocoso",
-            userSend: friend,
+            userSend: userSelected,
             userReceive: user
         },
         {
             msg: "coso",
             userSend: user,
-            userReceive: friend
+            userReceive: userSelected
         },
         {
             msg: "cosocoso",
-            userSend: friend,
+            userSend: userSelected,
             userReceive: user
         },
         {
             msg: "coso",
             userSend: user,
-            userReceive: friend
+            userReceive: userSelected
         },
         {
             msg: "cosocoso",
-            userSend: friend,
+            userSend: userSelected,
             userReceive: user
         },
         {
             msg: "coso",
             userSend: user,
-            userReceive: friend
+            userReceive: userSelected
         },
         {
             msg: "cosocoso",
-            userSend: friend,
+            userSend: userSelected,
             userReceive: user
         },
         {
             msg: "coso",
             userSend: user,
-            userReceive: friend
+            userReceive: userSelected
         },
         {
             msg: "cosocoso",
-            userSend: friend,
+            userSend: userSelected,
             userReceive: user
         },
         {
             msg: "coso",
             userSend: user,
-            userReceive: friend
+            userReceive: userSelected
         },
         {
             msg: "cosocoso",
-            userSend: friend,
+            userSend: userSelected,
             userReceive: user
         },
         {
             msg: "cosokljfdsghfjdghdskgjhfdjsghjfdsgksdfghrohgfjsdjgkdhjkfdkghfjds",
             userSend: user,
-            userReceive: friend
+            userReceive: userSelected
         },
         {
             msg: "cosocosokjdhsfhsdhjfhdsjfhdjshjfhsdjfhdsjkfhhjfdshkjfhsjkdhfjdsjhfjdsfsdhfdshkj",
-            userSend: friend,
+            userSend: userSelected,
             userReceive: user
         }
     ];
@@ -126,15 +126,15 @@ const Chat = (props: Props) => {
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <View style={Styles.headerView}>
-                <TouchableOpacity onPress={() => navigation.navigate("FriendsProfile", { friend: friend })}>
+                <TouchableOpacity onPress={() => navigation.navigate("OtherUserProfile", { userSelected })}>
                     <Image
                         source={{
-                            uri: friend.picture
+                            uri: (userSelected?.picture !== "") ? "data:image/jpeg;base64," + userSelected?.picture : "https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png?x=480&quality=40"
                         }}
                         style={{ ...Styles.imageStyle, borderColor: (darkMode) ? "white" : "black", borderWidth: 1, width: getIconSize(110), height: getIconSize(110) }}
                     />
                 </TouchableOpacity>
-                <Text style={{ ...Styles.headerText, color: (darkMode) ? "white" : "black", fontSize: getFontSize(20) }}>{friend.nick}</Text>
+                <Text style={{ ...Styles.headerText, color: (darkMode) ? "white" : "black", fontSize: getFontSize(20) }}>{userSelected?.nick}</Text>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Material name='keyboard-backspace' size={getIconSize(100)} color={(darkMode) ? "white" : "black"}></Material>
                 </TouchableOpacity>
@@ -151,7 +151,7 @@ const Chat = (props: Props) => {
                                     </View>
                                 </View>
                             );
-                        } else if (msg.item.userSend === friend) {
+                        } else if (msg.item.userSend === userSelected) {
                             return (
                                 <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
                                     <View style={{ backgroundColor: "#575050", borderRadius: 20, padding: "1%", paddingHorizontal: "3%", margin: "2%", maxWidth: "90%" }}>
@@ -166,8 +166,8 @@ const Chat = (props: Props) => {
             </View>
             <View style={{ flexDirection: "row", justifyContent: "space-around", alignItems: "center", marginBottom: "3%" }}>
                 <TextInput placeholder='Say something to your friend' placeholderTextColor={(darkMode) ? "white" : "black"} style={{ borderWidth: 2, borderColor: "#ca2613", borderRadius: 20, paddingHorizontal: "5%", width: "80%", fontSize: getFontSize(15), color: (darkMode) ? "white" : "black" }}></TextInput>
-                <TouchableOpacity onPress={() => Alert.alert("buscaria en la api")}>
-                    <Material name="send" size={getIconSize(80)}></Material>
+                <TouchableOpacity onPress={() => Alert.alert("enviaria el mensaje")}>
+                    <Material name="send" size={getIconSize(80)} color={(!darkMode) ? "black" : "white"}></Material>
                 </TouchableOpacity>
             </View>
         </SafeAreaView>

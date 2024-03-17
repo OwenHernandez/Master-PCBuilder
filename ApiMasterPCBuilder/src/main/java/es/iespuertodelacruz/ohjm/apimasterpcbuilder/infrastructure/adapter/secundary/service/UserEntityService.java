@@ -9,6 +9,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -17,13 +18,9 @@ import java.util.Optional;
 public class UserEntityService implements IUserRepository {
 
     @Autowired
-    IUserEntityRepository repo;
+    private IUserEntityRepository repo;
 
-    UserEntityMapper mapper;
-
-    public UserEntityService() {
-        mapper = new UserEntityMapper();
-    }
+    private final UserEntityMapper mapper = new UserEntityMapper();
 
     @Override
     public User findById(Long id) {
@@ -78,9 +75,30 @@ public class UserEntityService implements IUserRepository {
     public User save(User user) {
         User res = null;
         if (user != null) {
-            UserEntity ue = mapper.toPersistance(user);
-            UserEntity save = repo.save(ue);
-            res = mapper.toDomain(save);
+            try {
+                UserEntity ue = mapper.toPersistance(user);
+                if (user.getFriends() != null && !user.getFriends().isEmpty()) {
+                    List<UserEntity> friends = new ArrayList<>();
+                    for (User u : user.getFriends()) {
+                        UserEntity ueFriend = mapper.toPersistance(u);
+                        friends.add(ueFriend);
+                    }
+                    ue.setFriends(friends);
+                }
+                UserEntity save = repo.save(ue);
+
+                res = mapper.toDomain(save);
+                if (user.getFriends() != null && !user.getFriends().isEmpty()) {
+                    List<User> friends = new ArrayList<>();
+                    for (UserEntity ueFriend : save.getFriends()) {
+                        User u = mapper.toDomain(ueFriend);
+                        friends.add(u);
+                    }
+                    res.setFriends(friends);
+                }
+            } catch (RuntimeException | ParseException e) {
+                return null;
+            }
         }
         return res;
     }

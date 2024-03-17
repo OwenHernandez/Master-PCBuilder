@@ -3,12 +3,12 @@ package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.prim
 import java.util.List;
 
 public class UserDTO {
-
     private long id;
     private String nick;
     private String email;
     private String picture;
     private List<UserDTO> friends;
+    private List<ComponentOutputDTO> componentsWanted;
 
     public UserDTO() {
     }
@@ -51,5 +51,13 @@ public class UserDTO {
 
     public void setFriends(List<UserDTO> friends) {
         this.friends = friends;
+    }
+
+    public List<ComponentOutputDTO> getComponentsWanted() {
+        return componentsWanted;
+    }
+
+    public void setComponentsWanted(List<ComponentOutputDTO> componentsWanted) {
+        this.componentsWanted = componentsWanted;
     }
 }

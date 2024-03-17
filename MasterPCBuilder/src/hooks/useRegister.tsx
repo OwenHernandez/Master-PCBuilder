@@ -38,28 +38,61 @@ const useRegister = () => {
         if (nick !== "" && email !== "" && password !== "" && confPassword !== "") {
             if (password === confPassword) {
                 if ((/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/).test(email)) {
-                    const response = await axios.post(Globals.IP + "/api/v1/register", { nick, email, password });
+                    sendRegister();
                     Toast.show({
                         position: 'bottom',
-                        type: 'info',
-                        text1: "Please, verify your email",
+                        type: 'error',
+                        text1: "Please, check your email to confirm your account",
                         text1Style: { fontSize: getFontSize(15) },
                         visibilityTime: 3000
                     });
                 } else {
-                    setErrorMsg("You must provide a valid email");
+                    Toast.show({
+                        position: 'bottom',
+                        type: 'error',
+                        text1: "You must provide a valid email",
+                        text1Style: { fontSize: getFontSize(15) },
+                        visibilityTime: 3000
+                    });
                     setPassword("");
                     setConfPassword("");
                 }
             } else {
-                setErrorMsg("The passwords must be the same");
+                Toast.show({
+                    position: 'bottom',
+                    type: 'error',
+                    text1: "The passwords must match",
+                    text1Style: { fontSize: getFontSize(15) },
+                    visibilityTime: 3000
+                });
                 setPassword("");
                 setConfPassword("");
             }
         } else {
-            setErrorMsg("The inputs can't be empty");
+            Toast.show({
+                position: 'bottom',
+                type: 'error',
+                text1: "The inputs can't be empty",
+                text1Style: { fontSize: getFontSize(15) },
+                visibilityTime: 3000
+            });
             setPassword("");
             setConfPassword("");
+        }
+    }
+
+    async function sendRegister() {
+        try {
+            const response = await axios.post(Globals.IP + "/api/v1/register", { nick, email, password });
+        } catch (err) {
+            console.log(err);
+            Toast.show({
+                position: 'bottom',
+                type: 'error',
+                text1: "Something went wrong, please try again later",
+                text1Style: { fontSize: getFontSize(15) },
+                visibilityTime: 3000
+            });
         }
     }
 
@@ -69,7 +102,11 @@ const useRegister = () => {
         changePassword,
         changeConfPass,
         checkRegister,
-        errorMsg
+        errorMsg,
+        nick,
+        email,
+        password,
+        confPassword
     }
 }
 

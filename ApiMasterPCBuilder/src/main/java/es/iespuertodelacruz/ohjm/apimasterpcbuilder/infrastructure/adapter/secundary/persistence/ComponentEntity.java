@@ -33,6 +33,7 @@ public class ComponentEntity implements Serializable {
 	private double price;
 
 	//bi-directional many-to-one association to UserEntity
+	@JsonIgnore
 	@ManyToOne
 	private UserEntity user;
 
@@ -44,6 +45,10 @@ public class ComponentEntity implements Serializable {
 	//bi-directional many-to-one association to SellerEntity
 	@ManyToOne
 	private SellerEntity seller;
+
+	@JsonIgnore
+	@ManyToMany(mappedBy="componentsWanted")
+	private List<UserEntity> usersWhoWants;
 
 	public ComponentEntity() {
 	}
@@ -132,5 +137,13 @@ public class ComponentEntity implements Serializable {
 
 	public void setUser(UserEntity user) {
 		this.user = user;
+	}
+
+	public List<UserEntity> getUsersWhoWants() {
+		return this.usersWhoWants;
+	}
+
+	public void setUsersWhoWants(List<UserEntity> usersWhoWants) {
+		this.usersWhoWants = usersWhoWants;
 	}
 }

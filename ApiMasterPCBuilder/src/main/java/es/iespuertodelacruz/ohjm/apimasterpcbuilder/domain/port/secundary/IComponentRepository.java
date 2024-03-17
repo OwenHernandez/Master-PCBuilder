@@ -22,4 +22,6 @@ public interface IComponentRepository {
     List<Component> findByPrice(double price);
 
     List<Component> findBySellerId(Long sellerId);
+
+    List<Component> findByUserId(Long userId);
 }

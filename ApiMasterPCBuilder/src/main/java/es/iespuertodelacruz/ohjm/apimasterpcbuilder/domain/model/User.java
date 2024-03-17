@@ -1,6 +1,7 @@
 package es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model;
 
 import java.util.List;
+import java.util.Objects;
 
 public class User {
     private long id;
@@ -21,7 +22,23 @@ public class User {
 
     private List<User> friends;
 
+    private List<Component> componentsCreated;
+
+    private List<Post> postsMade;
+
+    private List<Post> likedPosts;
+
+    private List<Component> componentsWanted;
+
     public User() {}
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id == user.id;
+    }
 
     public long getId() {
         return id;
@@ -94,4 +111,50 @@ public class User {
     public void setFriends(List<User> friends) {
         this.friends = friends;
     }
+
+    public List<Component> getComponentsCreated() {
+        return componentsCreated;
+    }
+
+    public void setComponentsCreated(List<Component> componentsCreated) {
+        this.componentsCreated = componentsCreated;
+    }
+
+    public List<Post> getPostsMade() {
+        return postsMade;
+    }
+
+    public void setPostsMade(List<Post> postsMade) {
+        this.postsMade = postsMade;
+    }
+
+    public List<Post> getLikedPosts() {
+        return likedPosts;
+    }
+
+    public void setLikedPosts(List<Post> likedPosts) {
+        this.likedPosts = likedPosts;
+    }
+
+    public List<Component> getComponentsWanted() {
+        return componentsWanted;
+    }
+
+    public void setComponentsWanted(List<Component> componentsWanted) {
+        this.componentsWanted = componentsWanted;
+    }
+
+    @Override
+    public String toString() {
+        return "UserEntity{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", nick='" + nick + '\'' +
+                ", role='" + role + '\'' +
+                // possibly include counts instead of full details
+                ", numberOfFriends=" + (friends != null ? friends.size() : "0") +
+                ", numberOfComponentsWanted=" + (componentsWanted != null ? componentsWanted.size() : "0") +
+                '}';
+    }
+
 }

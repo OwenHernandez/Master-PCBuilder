@@ -3,7 +3,6 @@ package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secu
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Build;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.BuildComponent;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Component;
-import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.User;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.secundary.IBuildRepository;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.mapper.BuildEntityMapper;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.mapper.ComponentEntityMapper;
@@ -20,20 +19,20 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Logger;
 
 @Service
 public class BuildEntityService implements IBuildRepository {
 
     @Autowired
-    IBuildEntityRepository repo;
+    private IBuildEntityRepository repo;
 
     @Autowired
-    IBuildComponentEntityRepository bceRepo;
+    private IBuildComponentEntityRepository bceRepo;
 
-    BuildEntityMapper mapper = new BuildEntityMapper();
+    private final BuildEntityMapper mapper = new BuildEntityMapper();
 
-    ComponentEntityMapper compMapper = new ComponentEntityMapper();
+    private final ComponentEntityMapper compMapper = new ComponentEntityMapper();
+    private final UserEntityMapper userMapper = new UserEntityMapper();
 
     @Override
     public List<Build> findAll() {
@@ -51,17 +50,9 @@ public class BuildEntityService implements IBuildRepository {
     @Override
     public Build save(Build build) {
         try {
-            BuildEntity be = mapper.toPersistance(build);
+            BuildEntity be = mapper.toPersistence(build);
             Optional<BuildEntity> findOpt = repo.findById(build.getId());
             if (!findOpt.isPresent()) {
-                /*
-                if (build.getAlumno() != null) {
-                    Optional<Alumno> findOptAl = alumnoRepository.findById(element.getAlumno().getDni());
-                    if (!findOptAl.isPresent()) {
-                        throw new RuntimeException("No se permite el guardado en cascada");
-                    }
-                }
-                */
                 BuildEntity save = repo.save(be);
                 if (be.getBuildsComponents() != null) {
                     for (int i = 0; i < build.getBuildsComponents().size(); i++) {
@@ -82,6 +73,7 @@ public class BuildEntityService implements IBuildRepository {
                 throw new RuntimeException("The build must not exist");
             }
         } catch (RuntimeException | ParseException e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -132,7 +124,7 @@ public class BuildEntityService implements IBuildRepository {
                         bceRepo.delete(bce);
                     }
                 }
-                BuildEntity be = mapper.toPersistance(build);
+                BuildEntity be = mapper.toPersistence(build);
                 BuildEntity save = repo.save(be);
 
                 if (be.getBuildsComponents() != null) {
@@ -203,6 +195,7 @@ public class BuildEntityService implements IBuildRepository {
         if (userId != null) {
             res = new ArrayList<>();
             List<BuildEntity> list = repo.findByUserId(userId);
+            ArrayList<BuildComponent> bceList = new ArrayList<>();
             if (list != null) {
                 for (BuildEntity be : list) {
                     Build b = mapper.toDomain(be);
@@ -210,7 +203,20 @@ public class BuildEntityService implements IBuildRepository {
                         BuildComponent bc = b.getBuildsComponents().get(i);
                         BuildComponentEntity bce = be.getBuildsComponents().get(i);
                         bc.setComponent(compMapper.toDomain(bce.getComponent()));
+                        Component component = bc.getComponent();
+                        component.setUserWhoCreated(userMapper.toDomain(bce.getComponent().getUser()));
+
+                        if (bce.getComponent().getUsersWhoWants() != null) {
+                            if (component.getUsersWhoWants() == null) {
+                                component.setUsersWhoWants(new ArrayList<>());
+                            }
+                            for (UserEntity ue : bce.getComponent().getUsersWhoWants()) {
+                                component.getUsersWhoWants().add(userMapper.toDomain(ue));
+                            }
+                        }
+                        bceList.add(bc);
                     }
+                    b.setBuildsComponents(bceList);
                     res.add(b);
                 }
             }

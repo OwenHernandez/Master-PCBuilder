@@ -1,175 +1,102 @@
-import { Alert, Dimensions, FlatList, Image, PixelRatio, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useEffect } from 'react'
-import { Styles } from '../themes/Styles';
-import Component from '../components/Component';
-import { usePrimaryContext } from '../contexts/PrimaryContext';
-import { RootStackParamList } from '../navigations/StackNavigator';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import Icon from 'react-native-vector-icons/Octicons';
+import {
+    Dimensions,
+    FlatList,
+    Image,
+    PixelRatio,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View
+} from 'react-native'
+import React, {useEffect, useState} from 'react'
+import {Styles} from '../themes/Styles';
+import {usePrimaryContext} from '../contexts/PrimaryContext';
+import {RootStackParamList} from '../navigations/StackNavigator';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import IUserType from '../interfaces/IUserType';
-import Material from 'react-native-vector-icons/MaterialCommunityIcons';
-import Octicon from 'react-native-vector-icons/Octicons';
-import { DrawerActions } from '@react-navigation/native';
+import HeaderScreen from "../components/HeaderScreen";
+import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 
-type Props = NativeStackScreenProps<RootStackParamList, 'FriendsList'>;
+type Props = NativeStackScreenProps<RootStackParamList, 'Friends List'>;
 
 const FriendsList = (props: Props) => {
-    const { navigation, route } = props;
-    const { user, darkMode } = usePrimaryContext();
+    const {navigation} = props;
+    const {user, darkMode} = usePrimaryContext();
     const fontScale = PixelRatio.getFontScale();
     const getFontSize = (size: number) => size / fontScale;
     const fullScreen = Dimensions.get("window").scale;
     const getIconSize = (size: number) => size / fullScreen;
-    const tempFriendsList: IUserType[] = [
-        {
-            nick: "Amigo1jkjjjjjjjjjjjj",
-            email: "amigo1@gmail.com",
-            password: "amigo1",
-            picture: "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0=",
-            friends: [
-                {
-                    nick: "Coso"
-                },
-                {
-                    nick: "Amigo2"
-                }
-            ]
-        },
-        {
-            nick: "Amigo2",
-            email: "amigo2@gmail.com",
-            password: "amigo2",
-            picture: "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0=",
-            friends: [
-                {
-                    nick: "Coso"
-                },
-                {
-                    nick: "Amigo1jkjjjjjjjjjjjj"
-                }
-            ]
-        },
-        {
-            nick: "Amigo2",
-            email: "amigo2@gmail.com",
-            password: "amigo2",
-            picture: "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0=",
-            friends: [
-                {
-                    nick: "Coso"
-                },
-                {
-                    nick: "Amigo1jkjjjjjjjjjjjj"
-                }
-            ]
-        },
-        {
-            nick: "Amigo2",
-            email: "amigo2@gmail.com",
-            password: "amigo2",
-            picture: "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0=",
-            friends: [
-                {
-                    nick: "Coso"
-                },
-                {
-                    nick: "Amigo1jkjjjjjjjjjjjj"
-                }
-            ]
-        },
-        {
-            nick: "Amigo2",
-            email: "amigo2@gmail.com",
-            password: "amigo2",
-            picture: "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0=",
-            friends: [
-                {
-                    nick: "Coso"
-                },
-                {
-                    nick: "Amigo1jkjjjjjjjjjjjj"
-                }
-            ]
-        },
-        {
-            nick: "Amigo2",
-            email: "amigo2@gmail.com",
-            password: "amigo2",
-            picture: "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0=",
-            friends: [
-                {
-                    nick: "Coso"
-                },
-                {
-                    nick: "Amigo1jkjjjjjjjjjjjj"
-                }
-            ]
-        },
-        {
-            nick: "Amigo2",
-            email: "amigo2@gmail.com",
-            password: "amigo2",
-            picture: "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0=",
-            friends: [
-                {
-                    nick: "Coso"
-                },
-                {
-                    nick: "Amigo1jkjjjjjjjjjjjj"
-                }
-            ]
-        },
-        {
-            nick: "Amigo2",
-            email: "amigo2@gmail.com",
-            password: "amigo2",
-            picture: "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0=",
-            friends: [
-                {
-                    nick: "Coso"
-                },
-                {
-                    nick: "Amigo1jkjjjjjjjjjjjj"
-                }
-            ]
-        },
-    ];
+    const [friendsList, setFriendsList] = useState([{}] as IUserType[]);
+    const [friendsByName, setFriendsByName] = useState([{}] as IUserType[]);
+
     useEffect(() => {
-        //Buscaria en la base de datos los que tenga en la wishlist
-    }, []);
+        setFriendsList(user.friends);
+        setFriendsByName(user.friends);
+    }, [user]);
 
     return (
-        <View style={{ backgroundColor: (darkMode) ? "#242121" : "#F5F5F5" }}>
-            <View style={Styles.headerView}>
-                <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
-                    <Image
-                        source={{
-                            uri: user.picture
+        <View style={{backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"}}>
+            <HeaderScreen name={"Friends"} navigation={navigation} profile={false} drawer={true}/>
+            <View style={{height: "90%"}}>
+                <View style={{
+                    flexDirection: "row",
+                    justifyContent: "space-around",
+                    margin: "10%",
+                    alignItems: "center"
+                }}>
+                    <TextInput
+                        placeholder='Search a friend by name'
+                        placeholderTextColor={"#a3a3a3"}
+                        style={{
+                            borderWidth: 2,
+                            borderColor: "#ca2613",
+                            borderRadius: 20,
+                            paddingHorizontal: "5%",
+                            width: "80%",
+                            fontSize: getFontSize(15),
+                            color: (darkMode) ? "white" : "black"
                         }}
-                        style={{ ...Styles.imageStyle, borderColor: (darkMode) ? "white" : "black", borderWidth: 1, width: getIconSize(110), height: getIconSize(110) }}
-                    />
-                </TouchableOpacity>
-                <Text style={{ ...Styles.headerText, color: (darkMode) ? "white" : "black", fontSize: getFontSize(20) }}>{route.name}</Text>
-                <TouchableOpacity onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}>
-                    <Octicon name='three-bars' size={30} color={(darkMode) ? "white" : "black"}></Octicon>
-                </TouchableOpacity>
-            </View>
-            <View style={{ height: "90%" }}>
+                        onChangeText={(text) => {
+                            if (text === "")
+                                setFriendsByName(friendsList);
+                            else
+                                setFriendsByName(friendsList.filter((friend) => friend.nick.toLowerCase().includes(text)))
+                        }}
+                    ></TextInput>
+                    <FontAwesome5Icon name="search" size={getIconSize(80)}
+                                      color={(darkMode) ? "white" : "black"}/>
+                </View>
                 <FlatList
-                    data={tempFriendsList}
+                    data={friendsByName}
                     renderItem={(friend) => {
                         return (
-
-                            <TouchableOpacity onPress={() => navigation.navigate("Chat", { friend: friend.item })} style={{ ...Styles.touchable, flexDirection: "row", alignItems: "center", margin: "3%" }}>
-                                <TouchableOpacity onPress={() => Alert.alert("Abriria el perfil del amigo")}>
+                            <TouchableOpacity onPress={() => navigation.navigate("Chat", {userSelected: friend.item})}
+                                              style={{
+                                                  ...Styles.touchable,
+                                                  flexDirection: "row",
+                                                  alignItems: "center",
+                                                  margin: "3%"
+                                              }}>
+                                <TouchableOpacity onPress={() => navigation.navigate("OtherUserProfile", {userSelected: friend.item})}>
                                     <Image
                                         source={{
-                                            uri: friend.item.profilePic
+                                            uri: (friend.item.picture !== "") ? "data:image/jpeg;base64," + friend.item.picture : "https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png?x=480&quality=40",
                                         }}
-                                        style={{ ...Styles.imageStyle, borderColor: (darkMode) ? "white" : "black", borderWidth: 1, width: getIconSize(110), height: getIconSize(110) }}
+                                        style={{
+                                            ...Styles.imageStyle,
+                                            borderColor: (darkMode) ? "white" : "black",
+                                            borderWidth: 1,
+                                            width: getIconSize(110),
+                                            height: getIconSize(110)
+                                        }}
                                     />
                                 </TouchableOpacity>
-                                <Text style={{ color: (darkMode) ? "white" : "black", marginLeft: "5%", marginRight: "13%" }}>{friend.item.nick}</Text>
+                                <Text style={{
+                                    color: (darkMode) ? "white" : "black",
+                                    marginLeft: "5%",
+                                    marginRight: "13%"
+                                }}>{friend.item.nick}</Text>
                             </TouchableOpacity>
 
                         )

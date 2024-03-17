@@ -1,6 +1,8 @@
 package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.controller.v2;
 
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Component;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.User;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.IComponentService;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.IUserService;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.service.FileStorageService;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.UserDTO;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.Base64;
 
 @RestController
@@ -28,18 +31,25 @@ public class UserRestControllerV2 {
     IUserService userService;
 
     @Autowired
+    IComponentService componentService;
+
+    @Autowired
     FileStorageService storageService;
 
     UserDTOMapper mapper = new UserDTOMapper();
 
     @GetMapping
-    public ResponseEntity<?> getByNick(@RequestParam("nick") String nick) {
-        if (nick == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The nick parameter is required");
-        } else {
+    public ResponseEntity<?> getAllOrByNickOrByBuild(@RequestParam(value = "nick", required = false) String nick) {
+        if (nick != null) {
             User byNick = userService.findByNick(nick);
             UserDTO userDTO = mapper.toDTO(byNick);
             return ResponseEntity.ok(userDTO);
+        } else {
+            ArrayList<UserDTO> res = new ArrayList<>();
+            for (User u : userService.findAll()) {
+                res.add(mapper.toDTO(u));
+            }
+            return ResponseEntity.ok(res);
         }
     }
 
@@ -70,8 +80,8 @@ public class UserRestControllerV2 {
                     byId.setPassword(userDTO.getPassword());
                 }
 
-                userService.save(byId);
-                return ResponseEntity.ok().build();
+                User save = userService.save(byId);
+                return ResponseEntity.ok(mapper.toDTO(save));
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You should not be here");
             }
@@ -90,11 +100,12 @@ public class UserRestControllerV2 {
         User userByNick = userService.findByNick(username);
 
         if (userByNick != null) {
-            if (byId.getId() != userByNick.getId()) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not that user");
+            Resource resource = null;
+            try {
+                resource = storageService.get(filename);
+            } catch (RuntimeException e) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The file does not exist");
             }
-            Resource resource = storageService.get(byId.getNick() + "_" + filename);
-
             String contentType = null;
             try {
                 contentType = URLConnection.guessContentTypeFromStream(resource.getInputStream());
@@ -117,4 +128,80 @@ public class UserRestControllerV2 {
         }
     }
 
+    @PutMapping("/friends/{id}/{friendId}")
+    public ResponseEntity<?> addRemoveFriend(@PathVariable("id") long id, @PathVariable("friendId") long friendId) {
+        User byId = userService.findById(id);
+        User friend = userService.findById(friendId);
+        if (byId == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The user does not exist");
+        } else if (friend == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The friend does not exist");
+        }
+        Object principal =
+                SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = ((UserDetails) principal).getUsername();
+        User userByNick = userService.findByNick(username);
+
+        if (userByNick == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You should not be here");
+        }
+        if (byId.getId() != userByNick.getId()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not that user");
+        }
+        if (friend.getId() == byId.getId()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You can't add yourself as a friend");
+        }
+        if (byId.getFriends() == null) {
+            byId.setFriends(new ArrayList<>());
+        }
+        if (byId.getFriends().contains(friend)) {
+            byId.getFriends().remove(friend);
+        } else {
+            byId.getFriends().add(friend);
+        }
+        User save = userService.save(byId);
+        if (save != null) {
+            return ResponseEntity.ok(mapper.toDTO(save));
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
+        }
+    }
+
+    @PutMapping("/{id}/wishlist/{componentId}")
+    public ResponseEntity<?> addRemoveFromWishlist(@PathVariable("id") long id, @PathVariable("componentId") long componentId) {
+        User byId = userService.findById(id);
+        if (byId == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The user does not exist");
+        }
+        Object principal =
+                SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = ((UserDetails) principal).getUsername();
+
+        User userByNick = userService.findByNick(username);
+
+        if (userByNick == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You should not be here");
+        }
+        if (byId.getId() != userByNick.getId()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not that user");
+        }
+        Component compById = componentService.findById(componentId);
+        if (compById == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The component does not exist");
+        }
+        if (byId.getComponentsWanted() == null) {
+            byId.setComponentsWanted(new ArrayList<>());
+        }
+        if (byId.getComponentsWanted().contains(compById)) {
+            byId.getComponentsWanted().remove(compById);
+        } else {
+            byId.getComponentsWanted().add(compById);
+        }
+        User save = userService.save(byId);
+        if (save != null) {
+            return ResponseEntity.ok(mapper.toDTO(save));
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
+        }
+    }
 }

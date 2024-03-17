@@ -4,8 +4,10 @@ import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Component;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.ComponentInputDTO;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.ComponentOutputDTO;
 
-public class ComponentOutputDTOMapper {
+import java.util.logging.Logger;
 
+public class ComponentOutputDTOMapper {
+    Logger log;
     public Component toDomain(ComponentOutputDTO componentOutputDTO) {
         Component component = new Component();
         component.setId(componentOutputDTO.getId());

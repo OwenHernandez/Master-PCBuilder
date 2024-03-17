@@ -5,7 +5,7 @@ public class BuildComponentDTO {
 
     private double priceAtTheTime;
 
-    private ComponentInputDTO component;
+    private ComponentOutputDTO component;
 
     public BuildComponentDTO() {
     }
@@ -26,11 +26,11 @@ public class BuildComponentDTO {
         this.priceAtTheTime = priceAtTheTime;
     }
 
-    public ComponentInputDTO getComponent() {
+    public ComponentOutputDTO getComponent() {
         return component;
     }
 
-    public void setComponent(ComponentInputDTO component) {
+    public void setComponent(ComponentOutputDTO component) {
         this.component = component;
     }
 }

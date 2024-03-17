@@ -26,6 +26,8 @@ public class BuildEntity implements Serializable {
 
 	private String notes;
 
+	private String category;
+
 	@Column(name="TOTAL_PRICE")
 	private double totalPrice;
 
@@ -59,6 +61,14 @@ public class BuildEntity implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
 	}
 
 	public String getNotes() {

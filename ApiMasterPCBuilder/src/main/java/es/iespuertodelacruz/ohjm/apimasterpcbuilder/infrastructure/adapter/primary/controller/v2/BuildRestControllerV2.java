@@ -7,10 +7,13 @@ import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.User;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.IBuildService;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.IComponentService;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.IUserService;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.BuildComponentDTO;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.BuildInputDTO;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.BuildOutputDTO;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.mapper.BuildInputDTOMapper;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.mapper.BuildOutputDTOMapper;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.mapper.BuildComponentEntityMapper;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +25,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
+import java.util.logging.Logger;
 
 @RestController
 @CrossOrigin
@@ -40,11 +45,11 @@ public class BuildRestControllerV2 {
     BuildOutputDTOMapper outputDTOMapper = new BuildOutputDTOMapper();
 
     BuildInputDTOMapper inputDTOMapper = new BuildInputDTOMapper();
-
+    Logger log;
+    @Transactional
     @GetMapping
     public ResponseEntity<?> getByUserId() {
-        Object principal =
-                SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = ((UserDetails) principal).getUsername();
         User byNick = userService.findByNick(username);
 
@@ -53,7 +58,8 @@ public class BuildRestControllerV2 {
 
             if (byUserId != null) {
                 List<BuildOutputDTO> res = new ArrayList<>();
-
+                log = Logger.getLogger(BuildRestControllerV2.class.getName());
+                log.info(byUserId.toString());
                 for (Build b : byUserId) {
                     BuildOutputDTO bdto = outputDTOMapper.toDTO(b);
                     res.add(bdto);
@@ -76,6 +82,9 @@ public class BuildRestControllerV2 {
             User byNick = userService.findByNick(username);
 
             if (byNick != null) {
+                if (!buildInputDTO.getCategory().equals("Gaming") && !buildInputDTO.getCategory().equals("Work") && !buildInputDTO.getCategory().equals("Budget")) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The category must be Gaming, Work or Budget");
+                }
                 Build build = inputDTOMapper.toDomain(buildInputDTO);
                 build.setBuildsComponents(new ArrayList<>());
                 double totalPrice = 0;
