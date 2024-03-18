@@ -40,7 +40,7 @@ export type RootStackParamList = {
     "Components List": { components?: IComponentType[] },
     Chat: { friend: IUserType },
     OtherUserProfile: { userSelected: IUserType },
-    ComponentScreen: { comp: IComponentType },
+    ComponentScreen: { comp: IComponentType,wished:boolean },
     EditComponent: { comp: IComponentType }
 };
 
