@@ -321,8 +321,6 @@ public class ComponentRestControllerV2 {
                     .uri("/" + search)
                     .retrieve()
                     .bodyToMono(new ParameterizedTypeReference<List<ProductAmazonDTO>>() {});
-            log=Logger.getLogger("searchAmazon");
-            log.info(responseMono.toString());
             List<ProductAmazonDTO> response = responseMono.block();
             if (response!=null && !response.isEmpty()) {
                 return ResponseEntity.ok(response);
