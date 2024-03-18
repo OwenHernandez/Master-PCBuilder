@@ -13,12 +13,22 @@ import RNFetchBlob from "rn-fetch-blob";
 import axios from "axios";
 import {Globals} from "../components/Globals";
 import HeaderScreen from "../components/HeaderScreen";
+import {FAB} from "react-native-elements";
+import IUserType from "../interfaces/IUserType";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Settings'>;
 
 const Settings = (props: Props) => {
     const { user, setUser, darkMode, setDarkMode, token } = usePrimaryContext();
     const { navigation, route } = props;
+    const admin: IUserType = {
+        id: 26,
+        nick: "Admin",
+        email: "",
+        picture: "",
+        friends: [],
+        componentsWanted: []
+    };
     const fontScale = PixelRatio.getFontScale();
     const getFontSize = (size: number) => size / fontScale;
     const fullScreen = Dimensions.get("window").scale;
@@ -77,9 +87,14 @@ const Settings = (props: Props) => {
             <TouchableOpacity style={{ ...Styles.touchable }} onPress={openGallery}>
                 <Text style={{ fontSize: getFontSize(20), textAlign: 'center', color: (darkMode) ? "white" : "black" }}>Change Profile Picture</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={{ ...Styles.touchable }} onPress={openGallery}>
-                <Text style={{ fontSize: getFontSize(20), textAlign: 'center', color: (darkMode) ? "white" : "black" }}>Support</Text>
-            </TouchableOpacity>
+            <FAB
+                title="?"
+                placement="right"
+                titleStyle={{ fontSize: 20, color: (darkMode) ? "white" : "black" }}
+                color={(darkMode) ? "#242121" : "#F5F5F5"}
+                style={{ borderColor: "#ca2613", borderWidth: 2 }}
+                onPress={() => navigation.navigate("AdminChat")}
+            />
         </View >
     )
 }
