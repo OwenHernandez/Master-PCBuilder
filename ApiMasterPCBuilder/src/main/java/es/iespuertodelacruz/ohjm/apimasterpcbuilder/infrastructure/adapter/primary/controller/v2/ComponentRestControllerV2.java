@@ -10,9 +10,12 @@ import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.IUserSer
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.service.FileStorageService;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.ComponentInputDTO;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.ComponentOutputDTO;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.ProductAmazonDTO;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.ProductEbayDTO;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.mapper.ComponentInputDTOMapper;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.mapper.ComponentOutputDTOMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,17 +23,33 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-
 import java.io.IOException;
+import java.lang.annotation.Documented;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Collections;
 import java.util.List;
+import java.util.logging.Logger;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 @RestController
 @CrossOrigin
 @RequestMapping("/api/v2/components")
 public class ComponentRestControllerV2 {
+    private final WebClient webClient;
+    Logger log;
+    @Autowired
+    public ComponentRestControllerV2(WebClient.Builder webClientBuilder) {
+        this.webClient = webClientBuilder.baseUrl("http://127.0.0.1:8000").build();
+    }
+
 
     @Autowired
     IComponentService componentService;
@@ -255,5 +274,62 @@ public class ComponentRestControllerV2 {
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The id must not be null");
         }
+    }
+    @GetMapping("/searchEbay/{search}")
+    public ResponseEntity<?> searchEbay(@PathVariable("search") String search) {
+        if (search != null) {
+            search = search.replace(" ", "+");
+            String url = "https://www.ebay.com/sch/i.html?_nkw="+search;
+            String userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36";
+
+            Document doc = null;
+            try {
+                doc = Jsoup.connect(url)
+                        .userAgent(userAgent)
+                        .get();
+            } catch (IOException e) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("There Was a Problem with the Request");
+            }
+            Elements listings = doc.select("div.s-item__info");
+            List<ProductEbayDTO> productEbayDTOS= new ArrayList<>();
+            for (Element listing : listings) {
+                String title = listing.select("div.s-item__title").text();
+                String urla = listing.select("a.s-item__link").attr("href");
+                String price = listing.select("span.s-item__price").text();
+
+                String details = listing.select("div.s-item__subtitle").text();
+                String sellerInfo = listing.select("span.s-item__seller-info-text").text();
+                String shippingCost = listing.select("span.s-item__shipping").text();
+                String location = listing.select("span.s-item__location").text();
+                String sold = listing.select("span.s-item__quantity-sold").text();
+                ProductEbayDTO productEbayDTO = new ProductEbayDTO(title, urla, price, details, sellerInfo, shippingCost, location, sold);
+                productEbayDTOS.add(productEbayDTO);
+            }
+                if (!listings.isEmpty()) {
+                    return ResponseEntity.ok(productEbayDTOS);
+                }
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The requested components were not found");
+            }
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The requested components were not found");
+    }
+    @GetMapping("/searchAmazon/{search}")
+    public ResponseEntity<?> searchAmazon(@PathVariable("search") String search) {
+        if (search != null) {
+            search = search.replace(" ", "+");
+            Mono<List<ProductAmazonDTO>> responseMono = this.webClient.get()
+                    .uri("/" + search)
+                    .retrieve()
+                    .bodyToMono(new ParameterizedTypeReference<List<ProductAmazonDTO>>() {});
+            log=Logger.getLogger("searchAmazon");
+            log.info(responseMono.toString());
+            List<ProductAmazonDTO> response = responseMono.block();
+            if (response!=null && !response.isEmpty()) {
+                return ResponseEntity.ok(response);
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The requested components were not found");
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The requested components were not found");
     }
 }
