@@ -19,7 +19,7 @@ public class DatabaseConfig {
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/MASTER?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC");
+        dataSource.setUrl("jdbc:mysql://mysqlcontainer:3306/MASTER?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC");
         dataSource.setUsername("root");
         dataSource.setPassword("1q2w3e4r");
         return dataSource;
