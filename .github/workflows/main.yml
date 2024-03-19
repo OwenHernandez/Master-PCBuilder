@@ -36,9 +36,9 @@ jobs:
         path: distfiles
 
 
-    - name: Build Docker image
-      run: |
-        docker build -t helloapp .
+    #- name: Build Docker image
+    #  run: |
+    #    docker build -t helloapp .
    
     - name: Upload to remote with SCP
       uses: appleboy/scp-action@v0.1.7
