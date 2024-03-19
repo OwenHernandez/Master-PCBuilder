@@ -64,4 +64,5 @@ jobs:
             docker stop root_MasterPcBuildercontainer_1 ; 
             docker rm root_MasterPcBuildercontainer_1 -f ; 
             docker rmi masterpcbuilder -f ; 
+            docker build -t masterpcbuilder .
             docker-compose up -d
