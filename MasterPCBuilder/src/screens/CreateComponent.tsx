@@ -15,7 +15,6 @@ import {Styles} from '../themes/Styles';
 import {RootStackParamList} from '../navigations/StackNavigator';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import HeaderScreen from "../components/HeaderScreen";
-import DropdownComponent from "react-native-element-dropdown/lib/typescript/components/Dropdown";
 import {Dropdown} from "react-native-element-dropdown";
 import {Globals} from "../components/Globals";
 import axios from "axios";
