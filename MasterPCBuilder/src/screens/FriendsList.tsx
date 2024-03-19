@@ -71,7 +71,7 @@ const FriendsList = (props: Props) => {
                     data={friendsByName}
                     renderItem={(friend) => {
                         return (
-                            <TouchableOpacity onPress={() => navigation.navigate("Chat", {userSelected: friend.item})}
+                            <TouchableOpacity onPress={() => navigation.navigate("Chat", {friend: friend.item})}
                                               style={{
                                                   ...Styles.touchable,
                                                   flexDirection: "row",

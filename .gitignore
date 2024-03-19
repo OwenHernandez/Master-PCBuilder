@@ -159,3 +159,6 @@ vendor/
 # CircleCI
 .circleci/generated_config.yml
 .circleci/storage
+
+/img/
+/img/*
