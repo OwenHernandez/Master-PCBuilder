@@ -57,9 +57,9 @@ jobs:
     - name: Deploy to digitalocean
       uses: appleboy/ssh-action@master
       with:
-        username: carlos
-        host: "appsiespuerto.myvnc.com"
-        key: ${{ secrets.SSH_KEY }}
+        username: root
+        host: "146.190.12.221"
+        password: "ji8VqvweXT0rwLEBDZ$Q"
         script: |
             docker stop carlos-web-1 ; 
             docker rm carlos-web-1 -f ; 
