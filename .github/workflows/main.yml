@@ -61,8 +61,8 @@ jobs:
         host: "146.190.12.221"
         password: "ji8VqvweXT0rwLEBDZ$Q"
         script: |
-            docker stop carlos-web-1 ; 
-            docker rm carlos-web-1 -f ; 
-            docker rmi carlos-web -f ; 
+            docker stop root_MasterPcBuildercontainer_1 ; 
+            docker rm root_MasterPcBuildercontainer_1 -f ; 
+            docker rmi masterpcbuilder -f ; 
             docker compose up -d
 
