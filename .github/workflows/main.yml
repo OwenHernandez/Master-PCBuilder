@@ -44,7 +44,7 @@ jobs:
       uses: appleboy/scp-action@v0.1.7
       with:
         username: root
-        host: ""
+        host: "146.190.12.221"
         key: ${{ secrets.SSH_KEY }}
         source: "ApiMasterPCBuilder/target/*.jar"
         target: "~/"
