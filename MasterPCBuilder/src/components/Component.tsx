@@ -36,6 +36,7 @@ const Component = (props: Props) => {
                 null,
                 {headers: {Authorization: "Bearer " + token}}
             );
+            comp.wished = !comp.wished;
             setUser({...response.data, picture: user.picture, friends: [...user.friends]});
         } catch (err) {
             console.log(err);

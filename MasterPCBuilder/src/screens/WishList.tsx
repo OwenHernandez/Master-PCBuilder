@@ -9,44 +9,75 @@ import Icon from 'react-native-vector-icons/Octicons';
 import Component from '../components/Component';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import HeaderScreen from '../components/HeaderScreen';
+import RNFetchBlob from "rn-fetch-blob";
+import {Globals} from "../components/Globals";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'WishList'>;
 
 const WishList = (props: Props) => {
     const {navigation, route} = props;
-    const {user, darkMode} = usePrimaryContext();
+    const {user, darkMode, token} = usePrimaryContext();
     const fontScale = PixelRatio.getFontScale();
     const getFontSize = (size: number) => size / fontScale;
     const fullScreen = Dimensions.get("window").scale;
     const getIconSize = (size: number) => size / fullScreen;
     const [wishList, setWishList] = useState([{}] as IComponentType[]);
-    const [wished, setWished] = useState(false);
 
     useEffect(() => {
-        setWishList(user.componentsWanted);
+        getImgComponents();
     }, [user]);
+
+    async function getImgComponents() {
+        try {
+            setWishList([]);
+            for (const comp of user.componentsWanted) {
+                const compImgResponse = await RNFetchBlob.fetch(
+                    'GET',
+                    Globals.IP_HTTP + '/api/v2/components/img/' + comp.id + '/' + comp.image,
+                    {Authorization: `Bearer ${token}`}
+                );
+                let picture = ""
+                if (compImgResponse.data !== Globals.IMG_NOT_FOUND) {
+                    picture = await compImgResponse.base64();
+                }
+                comp.image = picture;
+                comp.wished = false;
+                user.componentsWanted?.forEach((compWished) => {
+                    if (comp.id === compWished.id) {
+                        comp.wished = true;
+                    }
+                });
+                setWishList(prevWishList => [...prevWishList, comp]);
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    }
 
     return (
         <View>
             <HeaderScreen name={"Wish List"} navigation={navigation} profile={false} drawer={false}/>
             <View style={{height: "90%"}}>
-                <FlatList
-                    data={wishList}
-                    renderItem={(comp) => {
-                        setWished(false);
-                        user.componentsWanted?.forEach((compWished) => {
-                            if (comp.item.id === compWished.id) {
-                                setWished(true);
+                {
+                    wishList !== undefined &&
+                    <FlatList
+                        data={wishList}
+                        numColumns={2}
+                        renderItem={(comp) => {
+                            if (comp.item.id !== undefined) {
+                                return (
+                                    <TouchableOpacity
+                                        style={{...Styles.touchable, width: "40%"}}
+                                        onPress={() => navigation.navigate("ComponentScreen", {comp: comp.item})}>
+                                        <Component comp={comp.item}/>
+                                    </TouchableOpacity>
+                                )
                             }
-                        });
-                        return (
-                            <View>
-                                <Component comp={comp.item} wished={wished}/>
-                            </View>
-                        )
-                    }}
-                    keyExtractor={(comp, index) => index + ""}
-                />
+                        }}
+                        keyExtractor={(comp, index) => index + ""}
+                    />
+                }
+
             </View>
         </View>
     )

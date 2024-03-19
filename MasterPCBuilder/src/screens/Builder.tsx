@@ -153,6 +153,12 @@ const Builder = (props: Props) => {
                 picture = await compImgResponse.base64();
             }
             comp.image = picture;
+            comp.wished = false;
+            user.componentsWanted.forEach((compWished) => {
+                if (compWished.id === comp.id) {
+                    comp.wished = true;
+                }
+            });
             setComponents(prevComps => [...prevComps, comp]);
         }
     }
