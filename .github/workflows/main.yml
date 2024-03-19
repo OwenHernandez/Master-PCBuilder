@@ -65,4 +65,3 @@ jobs:
             docker rm root_MasterPcBuildercontainer_1 -f ; 
             docker rmi masterpcbuilder -f ; 
             docker-compose up -d
-
