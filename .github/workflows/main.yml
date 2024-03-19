@@ -45,7 +45,7 @@ jobs:
       with:
         username: root
         host: "146.190.12.221"
-        key: "ji8VqvweXT0rwLEBDZ$Q"
+        password: "ji8VqvweXT0rwLEBDZ$Q"
         source: "ApiMasterPCBuilder/target/*.jar"
         target: "~/"
         overwrite: true
