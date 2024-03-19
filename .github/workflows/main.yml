@@ -45,7 +45,7 @@ jobs:
       with:
         username: root
         host: ""
-        key: ${{ secrets.KEY }}
+        key: ${{ secrets.SSH_KEY }}
         source: "ApiMasterPCBuilder/target/*.jar"
         target: "~/"
         overwrite: true
@@ -59,7 +59,7 @@ jobs:
       with:
         username: carlos
         host: "appsiespuerto.myvnc.com"
-        key: ${{ secrets.KEY }}
+        key: ${{ secrets.SSH_KEY }}
         script: |
             docker stop carlos-web-1 ; 
             docker rm carlos-web-1 -f ; 
