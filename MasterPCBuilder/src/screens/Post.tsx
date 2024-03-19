@@ -34,7 +34,7 @@ const Post = (props: Props) => {
     const getIconSize = (size: number) => size / fullScreen;
     return (
         <SafeAreaView style={{flex: 1}}>
-            <HeaderScreen name={route.name} navigation={navigation} profile={true} drawer={false}/>
+            <HeaderScreen name={route.name} navigation={navigation} profile={false} drawer={false}/>
             <View style={{maxHeight: "90%"}}>
                 <View style={{flexDirection: "row"}}>
                     <Image

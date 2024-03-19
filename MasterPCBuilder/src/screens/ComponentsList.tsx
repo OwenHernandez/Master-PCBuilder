@@ -109,7 +109,7 @@ const ComponentsList = (props: Props) => {
                             }
                         });
                         return (
-                            <TouchableOpacity style={{...Styles.touchable, width: getIconSize(435)}} onPress={() => navigation.navigate("ComponentScreen", { comp: comp.item, wished})}>
+                            <TouchableOpacity style={{...Styles.touchable, width: getIconSize(435)}} onPress={() => navigation.navigate("ComponentScreen", { comp: comp.item})}>
                                 <Component comp={comp.item} />
                             </TouchableOpacity>
                         )
