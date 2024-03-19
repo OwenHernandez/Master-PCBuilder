@@ -35,7 +35,7 @@ const ComponentScreen = (props: Props) => {
     async function addRemoveWishList() {
         try {
             const response = await axios.put(
-                Globals.IP + "/api/v2/users/" + user.id + "/wishlist/" + comp?.id,
+                Globals.IP_HTTP + "/api/v2/users/" + user.id + "/wishlist/" + comp?.id,
                 null,
                 {headers: {Authorization: "Bearer " + token}}
             );
@@ -48,7 +48,7 @@ const ComponentScreen = (props: Props) => {
     async function deleteComponent() {
         try {
             const response = await axios.delete(
-                Globals.IP + "/api/v2/components/" + comp?.id,
+                Globals.IP_HTTP + "/api/v2/components/" + comp?.id,
                 {headers: {Authorization: "Bearer " + token}}
             );
             navigation.navigate("Components List");

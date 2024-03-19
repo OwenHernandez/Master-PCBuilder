@@ -83,7 +83,7 @@ const useRegister = () => {
 
     async function sendRegister() {
         try {
-            const response = await axios.post(Globals.IP + "/api/v1/register", { nick, email, password });
+            const response = await axios.post(Globals.IP_HTTP + "/api/v1/register", { nick, email, password });
         } catch (err) {
             console.log(err);
             Toast.show({

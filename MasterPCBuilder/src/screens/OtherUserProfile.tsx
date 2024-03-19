@@ -52,7 +52,7 @@ const OtherUserProfile = (props: Props) => {
 
     async function addRemoveFriend() {
         try {
-            const response = await axios.put(Globals.IP + "/api/v2/users/friends/" + user.id + "/" + userSelected.id, null, {headers: {"Authorization": "Bearer " + token}});
+            const response = await axios.put(Globals.IP_HTTP + "/api/v2/users/friends/" + user.id + "/" + userSelected.id, null, {headers: {"Authorization": "Bearer " + token}});
 
             let newUser = {
                 ...user,
@@ -61,7 +61,7 @@ const OtherUserProfile = (props: Props) => {
             for (const friend of newUser.friends) {
                 const friendPicResponse = await RNFetchBlob.fetch(
                     'GET',
-                    Globals.IP + '/api/v2/users/img/' + friend.id + '/' + friend.picture,
+                    Globals.IP_HTTP + '/api/v2/users/img/' + friend.id + '/' + friend.picture,
                     {Authorization: `Bearer ${token}`}
                 );
                 let picture = ""

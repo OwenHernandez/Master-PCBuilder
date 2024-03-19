@@ -40,13 +40,13 @@ const SearchUsers = (props: Props) => {
         try {
             setUserList([]);
             setUsersByNick([]);
-            const response = await axios.get(Globals.IP + "/api/v2/users", {headers: {"Authorization": "Bearer " + token}});
+            const response = await axios.get(Globals.IP_HTTP + "/api/v2/users", {headers: {"Authorization": "Bearer " + token}});
             for (const userNotFriend of response.data) {
                 if (user.nick !== userNotFriend.nick) {
                     if (user.friends.filter((friend) => friend.id === userNotFriend.id).length === 0) {
                         const userPicResponse = await RNFetchBlob.fetch(
                             'GET',
-                            Globals.IP + '/api/v2/users/img/' + userNotFriend.id + '/' + userNotFriend.picture,
+                            Globals.IP_HTTP + '/api/v2/users/img/' + userNotFriend.id + '/' + userNotFriend.picture,
                             {Authorization: `Bearer ${token}`}
                         );
                         let picture = ""
