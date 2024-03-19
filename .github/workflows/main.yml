@@ -29,39 +29,39 @@ jobs:
         name: allartifacts
         path: ApiMasterPCBuilder/target/*
 
-  #  - name: Download artifact
-  #    uses: actions/download-artifact@v4
-  #    with:
-  #      name: allartifacts
-  #      path: distfiles
+    - name: Download artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: allartifacts
+        path: distfiles
 
 
-  #  - name: Build Docker image
-  #    run: |
-  #      docker build -t helloapp .
+    - name: Build Docker image
+      run: |
+        docker build -t helloapp .
    
-#    - name: Upload to remote with SCP
-#      uses: appleboy/scp-action@v0.1.7
-#      with:
-#        username: root
-#        host: ""
-#        key: ${{ secrets.KEY }}
-#        source: "ApiMasterPCBuilder/target/*.jar"
-#        target: "~/"
-#        overwrite: true
+    - name: Upload to remote with SCP
+      uses: appleboy/scp-action@v0.1.7
+      with:
+        username: root
+        host: ""
+        key: ${{ secrets.KEY }}
+        source: "ApiMasterPCBuilder/target/*.jar"
+        target: "~/"
+        overwrite: true
 
-#  deploy:
-#    runs-on: ubuntu-latest
-#    needs: build
-#    steps:
-#   - name: Deploy to digitalocean
-#      uses: appleboy/ssh-action@master
-#      with:
-#        username: carlos
-#        host: "appsiespuerto.myvnc.com"
-#        key: ${{ secrets.KEY }}
-#        script: |
-#            docker stop carlos-web-1 ; 
-#            docker rm carlos-web-1 -f ; 
-#            docker rmi carlos-web -f ; 
-#            docker compose up -d
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+    - name: Deploy to digitalocean
+      uses: appleboy/ssh-action@master
+      with:
+        username: carlos
+        host: "appsiespuerto.myvnc.com"
+        key: ${{ secrets.KEY }}
+        script: |
+            docker stop carlos-web-1 ; 
+            docker rm carlos-web-1 -f ; 
+            docker rmi carlos-web -f ; 
+            docker compose up -d
