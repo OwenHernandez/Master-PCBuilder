@@ -24,34 +24,11 @@ type Props = {
 const Component = (props: Props) => {
     const {comp} = props;
     const {darkMode, user, token, setUser} = usePrimaryContext();
-    const [amazonPrice, setAmazonPrice] = useState<number>(0);
-    const [ebayPrice, setEbayPrice] = useState<number>(0);
     const fontScale = PixelRatio.getFontScale();
     const getFontSize = (size: number) => size / fontScale;
     const fullScreen = Dimensions.get("window").scale;
     const getIconSize = (size: number) => size / fullScreen;
-    useEffect(() => {
-        async function getAmazonPrice(){
-            try {
-                const response = await axios.get(Globals.IP + "/api/v2/components/searchAmazon/" + comp?.name);
-                const amazonPrice:number= response.data[0].price;
-                setAmazonPrice(amazonPrice);
-            } catch (err) {
-                console.log(err);
-            }
-        }
-        async function getEbayPrice(){
-            try {
-                const response = await axios.get(Globals.IP + "/api/v2/components/searchEbay/" + comp?.name);
-                const ebayPrice:number= response.data[1].price;
-                setEbayPrice(ebayPrice);
-            } catch (err) {
-                console.log(err);
-            }
-        }
-        getAmazonPrice();
-        getEbayPrice();
-    }, [comp]);
+
     async function addRemoveWishList() {
         try {
             const response = await axios.put(
@@ -100,11 +77,11 @@ const Component = (props: Props) => {
                             fontSize: getFontSize(20),
                             color: (darkMode) ? "white" : "black",
                             marginRight: "10%"
-                        }}>Amazon:{amazonPrice}</Text>
+                        }}>Amazon:{comp.amazon_price}</Text>
                         <Text style={{
                             fontSize: getFontSize(20),
                             color: (darkMode) ? "white" : "black",
-                        }}>Ebay:{ebayPrice}</Text>
+                        }}>Ebay:{comp.ebay_price}</Text>
                     </View>
                 </View>
             </View>
