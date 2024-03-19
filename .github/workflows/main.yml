@@ -45,6 +45,7 @@ jobs:
       with:
         username: root
         host: "146.190.12.221"
+        passphrase: "Coso"
         key: ${{ secrets.SSH_KEY }}
         source: "ApiMasterPCBuilder/target/*.jar"
         target: "~/"
