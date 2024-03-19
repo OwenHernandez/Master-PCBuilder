@@ -68,7 +68,7 @@ const Post = (props: Props) => {
                     renderItem={(buildComponent) => {
                         return (
                             <TouchableOpacity style={{...Styles.touchable}}
-                                onPress={() => navigation.navigate("ComponentScreen", {comp: buildComponent.item.component})}>
+                                onPress={() => navigation.navigate("ComponentScreen", {comp: buildComponent.item.component,wished:false})}>
                                 <Component comp={buildComponent.item.component}/>
                             </TouchableOpacity>
                         );

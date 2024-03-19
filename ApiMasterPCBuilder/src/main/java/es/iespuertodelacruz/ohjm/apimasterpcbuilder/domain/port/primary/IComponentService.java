@@ -24,4 +24,5 @@ public interface IComponentService {
     List<Component> findBySellerId(Long sellerId);
 
     List<Component> findByUserId(Long userId);
+    
 }

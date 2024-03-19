@@ -8,10 +8,7 @@ import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.ICompone
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.ISellerService;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.IUserService;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.service.FileStorageService;
-import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.ComponentInputDTO;
-import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.ComponentOutputDTO;
-import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.ProductAmazonDTO;
-import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.ProductEbayDTO;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.*;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.mapper.ComponentInputDTOMapper;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.mapper.ComponentOutputDTOMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -123,6 +120,8 @@ public class ComponentRestControllerV2 {
                     Component component = inputDTOMapper.toDomain(componentInputDTO);
                     component.setSeller(sellerByName);
                     component.setUserWhoCreated(userByNick);
+                    component.setAmazon_price(componentInputDTO.getAmazon_price());
+                    component.setEbay_price(componentInputDTO.getEbay_price());
                     Component save = componentService.save(component);
 
                     if (save != null) {
@@ -251,6 +250,8 @@ public class ComponentRestControllerV2 {
                             Component component = inputDTOMapper.toDomain(componentInputDTO);
                             component.setId(id);
                             component.setSeller(sellerByName);
+                            component.setEbay_price(componentInputDTO.getEbay_price());
+                            component.setAmazon_price(componentInputDTO.getAmazon_price());
                             component.setUserWhoCreated(userByNick);
                             component.setUsersWhoWants(byId.getUsersWhoWants());
                             boolean ok = componentService.update(component);
@@ -330,4 +331,40 @@ public class ComponentRestControllerV2 {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The requested components were not found");
     }
+
+    @PutMapping("/updatePrice/{id}")
+    public ResponseEntity<?> updatePrice(@RequestBody ComponentPriceInputDTO componentInputDTO, @PathVariable("id") Long id) {
+        log= Logger.getLogger("ComponentController");
+        log.info(componentInputDTO.toString());
+        if (componentInputDTO != null && id != null) {
+                Component byId = componentService.findById(id);
+                if (byId != null) {
+                        Component component = new Component();
+                        component.setName(componentInputDTO.getName());
+                        component.setImage(byId.getImage());
+                        component.setDescription(componentInputDTO.getDescription());
+                        component.setType(byId.getType());
+                        component.setPrice(byId.getPrice());
+                        component.setEbay_price(componentInputDTO.getEbay_price());
+                        component.setAmazon_price(componentInputDTO.getAmazon_price());
+                        component.setId(byId.getId());
+                        component.setSeller(byId.getSeller());
+                        component.setUsersWhoWants(byId.getUsersWhoWants());
+                        boolean ok = componentService.update(component);
+                        if (ok) {
+                            return ResponseEntity.ok("Component successfully updated");
+                        } else {
+                            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong");
+                        }
+
+                } else {
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The component does not exist");
+                }
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The id must not be null");
+        }
+    }
+
+
+
 }

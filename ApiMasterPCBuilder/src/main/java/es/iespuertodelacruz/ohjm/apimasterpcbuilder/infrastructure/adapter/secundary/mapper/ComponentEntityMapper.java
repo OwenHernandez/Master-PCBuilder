@@ -13,7 +13,6 @@ public class ComponentEntityMapper {
 
     SellerEntityMapper sellerMapper = new SellerEntityMapper();
 
-    //UserEntityMapper userMapper = new UserEntityMapper();
 
     BuildComponentEntityMapper bcMapper = new BuildComponentEntityMapper();
 
@@ -24,19 +23,11 @@ public class ComponentEntityMapper {
         res.setName(componentEntity.getName());
         res.setDescription(componentEntity.getDescription());
         res.setPrice(componentEntity.getPrice());
+        res.setAmazon_price(componentEntity.getAmazon_price());
+        res.setEbay_price(componentEntity.getEbay_price());
         res.setType(componentEntity.getType());
         res.setImage(componentEntity.getImage());
         res.setSeller(sellerMapper.toDomain(componentEntity.getSeller()));
-        /*res.setUserWhoCreated(userMapper.toDomain(componentEntity.getUser()));
-
-        if (componentEntity.getUsersWhoWants() != null) {
-            if (res.getUsersWhoWants() == null) {
-                res.setUsersWhoWants(new ArrayList<>());
-            }
-            for (UserEntity ue : componentEntity.getUsersWhoWants()) {
-                res.getUsersWhoWants().add(userMapper.toDomain(ue));
-            }
-        }*/
 
 
         if (componentEntity.getBuildsComponents() != null) {
@@ -58,6 +49,8 @@ public class ComponentEntityMapper {
         res.setDescription(component.getDescription());
         res.setType(component.getType());
         res.setPrice(component.getPrice());
+        res.setAmazon_price(component.getAmazon_price());
+        res.setEbay_price(component.getEbay_price());
         res.setImage(component.getImage());
         res.setSeller(sellerMapper.toPersistance(component.getSeller()));
         ///res.setUser(userMapper.toPersistance(component.getUserWhoCreated()));

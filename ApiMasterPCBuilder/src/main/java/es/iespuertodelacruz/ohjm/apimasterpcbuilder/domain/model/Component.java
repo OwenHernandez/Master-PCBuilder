@@ -16,6 +16,8 @@ public class Component {
     private String type;
 
     private double price;
+    private double amazon_price;
+    private double ebay_price;
 
     private List<BuildComponent> buildsComponents;
 
@@ -33,6 +35,22 @@ public class Component {
         if (o == null || getClass() != o.getClass()) return false;
         Component component = (Component) o;
         return id == component.id;
+    }
+
+    public double getAmazon_price() {
+        return amazon_price;
+    }
+
+    public void setAmazon_price(double amazon_price) {
+        this.amazon_price = amazon_price;
+    }
+
+    public double getEbay_price() {
+        return ebay_price;
+    }
+
+    public void setEbay_price(double ebay_price) {
+        this.ebay_price = ebay_price;
     }
 
     public long getId() {
