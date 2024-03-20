@@ -74,6 +74,12 @@ const DrawerNavigator = (props: Props) => {
                             />
                             <DrawerItem
                                 labelStyle={{color: (darkMode) ? "white" : "black"}}
+                                icon={() => <Icon name="gear" color={darkMode ? 'white' : 'black'} />}
+                                label="Components"
+                                onPress={() => navigation.navigate("Components")}
+                            />
+                            <DrawerItem
+                                labelStyle={{color: (darkMode) ? "white" : "black"}}
                                 icon={() => <Icon name="person" color={darkMode ? 'white' : 'black'} />}
                                 label="Friends"
                                 onPress={() => navigation.navigate("Friends")}

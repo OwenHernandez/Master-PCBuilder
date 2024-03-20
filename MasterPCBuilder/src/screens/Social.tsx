@@ -83,7 +83,7 @@ const Social = (props: Props) => {
             console.log(err);
         }
     }
-
+    const arrayCategoriaBuilder : Array<string> = ["Todos","Gaming","Budget","Work"];
     return (
         <View style={{flex: 1, backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"}}>
             <HeaderScreen name={route.name} navigation={navigation} profile={false} drawer={true}/>
@@ -117,6 +117,46 @@ const Social = (props: Props) => {
                         name="search"
                         size={getIconSize(80)}
                         color={(darkMode) ? "white" : "black"}
+                    />
+                </View>
+                <View style={{}}>
+
+                    <FlatList
+                        style={{marginHorizontal:10}}
+                        data={arrayCategoriaBuilder}
+                        horizontal={true}
+                        renderItem={(categoria) => {
+                                return (
+                                    <TouchableOpacity
+                                        style={{
+                                            margin: 10,
+                                            borderRadius: 20,
+                                            borderWidth: 2,
+                                            borderColor: "#ca2613",
+                                            padding: 10,
+                                            width:100
+                                    }}
+                                        onPress={() => {
+                                            if (categoria.item === "Todos"){
+                                                setPostsByTitle(postsList);
+
+                                            }else {
+                                                setPostsByTitle(postsList);
+                                                setPostsByTitle(postsList.filter((post) => post.build?.category === categoria.item))
+                                            }
+
+                                        }}
+                                    >
+                                        <View style={{alignItems: "center"}}>
+                                            <Text style={{
+                                                fontSize: getFontSize(20),
+                                                color: (darkMode) ? "white" : "black"
+                                            }}>{categoria.item}</Text>
+                                        </View>
+                                    </TouchableOpacity>
+                                )
+                            }
+                        }
                     />
                 </View>
                 <FlatList

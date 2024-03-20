@@ -32,6 +32,11 @@ public class ComponentEntity implements Serializable {
 
 	private double price;
 
+	private double amazon_price;
+
+	private double ebay_price;
+
+
 	//bi-directional many-to-one association to UserEntity
 	@JsonIgnore
 	@ManyToOne
@@ -51,6 +56,22 @@ public class ComponentEntity implements Serializable {
 	private List<UserEntity> usersWhoWants;
 
 	public ComponentEntity() {
+	}
+
+	public double getAmazon_price() {
+		return amazon_price;
+	}
+
+	public void setAmazon_price(double amazon_price) {
+		this.amazon_price = amazon_price;
+	}
+
+	public double getEbay_price() {
+		return ebay_price;
+	}
+
+	public void setEbay_price(double ebay_price) {
+		this.ebay_price = ebay_price;
 	}
 
 	public long getId() {
