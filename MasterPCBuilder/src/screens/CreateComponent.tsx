@@ -7,7 +7,7 @@ import {
     Dimensions,
     TextInput,
     Alert,
-    ScrollView
+    ScrollView, KeyboardAvoidingView
 } from 'react-native'
 import React, {useEffect, useState} from 'react'
 import {usePrimaryContext} from '../contexts/PrimaryContext';
@@ -159,160 +159,172 @@ const CreateComponent = (props: Props) => {
             }
         });
     }
-
+/*
+ */
     return (
         <SafeAreaView style={{flex: 1, backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"}}>
             <HeaderScreen name={route.name} navigation={navigation} profile={false} drawer={true}/>
-            <ScrollView>
-                <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-                    <View style={{
-                        padding: "5%",
-                        borderRadius: 20,
-                        alignItems: "center",
-                        marginHorizontal: "10%",
-                        marginBottom: "2%"
-                    }}>
-                        <TextInput
-                            placeholder='Name'
-                            value={name}
-                            style={{
-                                borderWidth: 2,
-                                borderColor: "#ca2613",
-                                borderRadius: 20,
-                                paddingHorizontal: "5%",
-                                marginBottom: "10%",
-                                width: getIconSize(800),
-                                fontSize: getFontSize(20),
-                                color: (darkMode) ? "white" : "black",
-                                textAlign: 'center'
-                            }}
-                            placeholderTextColor={"#a3a3a3"}
-                            onChangeText={(text) => setName(text)}
-                        ></TextInput>
-                        <TextInput
-                            placeholder='Description'
-                            value={description}
-                            style={{
-                                borderWidth: 2,
-                                borderColor: "#ca2613",
-                                borderRadius: 20,
-                                paddingHorizontal: "5%",
-                                marginBottom: "10%",
-                                width: getIconSize(800),
-                                fontSize: getFontSize(15),
-                                color: (darkMode) ? "white" : "black",
-                                textAlign: 'center'
-                            }}
-                            placeholderTextColor={"#a3a3a3"}
-                            numberOfLines={3}
-                            multiline={true}
-                            onChangeText={(text) => setDescription(text)}
-                        ></TextInput>
-                        <TextInput
-                            placeholder='Price'
-                            value={price}
-                            style={{
-                                borderWidth: 2,
-                                borderColor: "#ca2613",
-                                borderRadius: 20,
-                                paddingHorizontal: "5%",
-                                width: getIconSize(800),
-                                fontSize: getFontSize(20),
-                                color: (darkMode) ? "white" : "black",
-                                textAlign: 'center'
-                            }}
-                            keyboardType={"numeric"}
-                            placeholderTextColor={"#a3a3a3"}
-                            onChangeText={(text) => setPrice(text)}
-                        ></TextInput>
+            <KeyboardAvoidingView style={{flex:1,}}>
+                <View style={{flex:1,flexDirection:"row"}}>
+                    <View style={{flex: 1,flexDirection:"column"}}>
+                        <View style={{
+                            flex:1, marginLeft:4,paddingRight:4
+                        }}>
+                            <TextInput
+                                placeholder='Name'
+                                value={name}
+                                style={{
+                                    flex:1,
+                                    borderWidth: 2,
+                                    borderColor: "#ca2613",
+                                    borderRadius: 20,
+                                    paddingHorizontal: 5,
+                                    width: getIconSize(700),
+                                    fontSize: getFontSize(20),
+                                    color: (darkMode) ? "white" : "black",
+                                    textAlign: 'center',
+                                    marginBottom: 8,
+                                    marginTop:8
+                                }}
+                                placeholderTextColor={"#a3a3a3"}
+                                onChangeText={(text) => setName(text)}
+                            ></TextInput>
+                            <TextInput
+                                placeholder='Description'
+                                value={description}
+                                style={{
+                                    flex:4,
+                                    borderWidth: 2,
+                                    borderColor: "#ca2613",
+                                    borderRadius: 20,
+                                    paddingHorizontal: 5,
+                                    width: getIconSize(700),
+                                    fontSize: getFontSize(15),
+                                    color: (darkMode) ? "white" : "black",
+                                    textAlign: 'center',
+                                    marginBottom: 8
+                                }}
+                                placeholderTextColor={"#a3a3a3"}
+                                numberOfLines={3}
+                                multiline={true}
+                                onChangeText={(text) => setDescription(text)}
+                            ></TextInput>
+                            <TextInput
+                                placeholder='Price'
+                                value={price}
+                                style={{
+                                    flex:1,
+                                    borderWidth: 2,
+                                    borderColor: "#ca2613",
+                                    borderRadius: 20,
+                                    paddingHorizontal: 5,
+                                    width: getIconSize(700),
+                                    fontSize: getFontSize(20),
+                                    color: (darkMode) ? "white" : "black",
+                                    textAlign: 'center',
+                                    marginBottom: 8
+                                }}
+                                keyboardType={"numeric"}
+                                placeholderTextColor={"#a3a3a3"}
+                                onChangeText={(text) => setPrice(text)}
+                            ></TextInput>
+                        </View>
                     </View>
-                    <Dropdown
-                        data={sellers}
-                        labelField={"label"}
-                        valueField={"value"}
-                        value={selectedSeller}
-                        placeholder={"Select a seller"}
-                        onChange={(newValue) => setSelectedSeller(newValue.value)}
-                        style={{
-                            height: getIconSize(130),
-                            backgroundColor: (darkMode) ? "#242121" : "#F5F5F5",
-                            borderColor: "#ca2613",
-                            //borderRadius: 20,
-                            width: getIconSize(800),
-                            borderWidth: 2,
-                            marginBottom: "8%",
-                        }}
-                        placeholderStyle={{
-                            fontSize: getFontSize(20),
-                            color: (darkMode) ? "white" : "black",
-                            textAlign: 'center'
-                        }}
-                        iconStyle={{
-                            tintColor: '#ca2613',
-                            width: getIconSize(100),
-                            height: getIconSize(100)
-                        }}
-                        containerStyle={{
-                            backgroundColor: (darkMode) ? "#242121" : "#F5F5F5",
-                            borderColor: "#ca2613",
-                            borderWidth: 2/*, borderRadius: 20*/
-                        }}
-                        itemTextStyle={{
-                            fontSize: getFontSize(20),
-                            color: (darkMode) ? "white" : "black",
-                            textAlign: 'center'
-                        }}
-                        activeColor={"#ca2613"}
-                        selectedTextStyle={{
-                            fontSize: getFontSize(20),
-                            color: (darkMode) ? "white" : "black",
-                            textAlign: 'center'
-                        }}
-                    />
+                    <View style={{flex:1,margin:10}}>
+                        <Dropdown
+                            data={sellers}
+                            labelField={"label"}
+                            valueField={"value"}
+                            value={selectedSeller}
+                            placeholder={"Select a seller"}
+                            onChange={(newValue) => setSelectedSeller(newValue.value)}
+                            style={{
+                                height: getIconSize(130),
+                                backgroundColor: (darkMode) ? "#242121" : "#F5F5F5",
+                                borderColor: "#ca2613",
+                                //borderRadius: 20,
+                                width: getIconSize(700),
+                                borderWidth: 2,
+                                marginBottom: 8,
+                                flex:1
+                            }}
+                            placeholderStyle={{
+                                fontSize: getFontSize(20),
+                                color: (darkMode) ? "white" : "black",
+                                textAlign: 'center'
+                            }}
+                            iconStyle={{
+                                tintColor: '#ca2613',
+                                width: getIconSize(100),
+                                height: getIconSize(100)
+                            }}
+                            containerStyle={{
+                                backgroundColor: (darkMode) ? "#242121" : "#F5F5F5",
+                                borderColor: "#ca2613",
+                                borderWidth: 2/*, borderRadius: 20*/
+                            }}
+                            itemTextStyle={{
+                                fontSize: getFontSize(20),
+                                color: (darkMode) ? "white" : "black",
+                                textAlign: 'center'
+                            }}
+                            activeColor={"#ca2613"}
+                            selectedTextStyle={{
+                                fontSize: getFontSize(20),
+                                color: (darkMode) ? "white" : "black",
+                                textAlign: 'center'
+                            }}
+                        />
 
-                    <Dropdown
-                        data={types}
-                        labelField={"label"}
-                        valueField={"value"}
-                        value={selectedType}
-                        placeholder={"Select a type"}
-                        onChange={(newValue) => setSelectedType(newValue.value)}
-                        style={{
-                            height: getIconSize(130),
-                            backgroundColor: (darkMode) ? "#242121" : "#F5F5F5",
-                            borderColor: "#ca2613",
-                            //borderRadius: 20,
-                            width: getIconSize(800),
-                            borderWidth: 2,
-                            marginBottom: "8%",
-                        }}
-                        placeholderStyle={{
-                            fontSize: getFontSize(20),
-                            color: (darkMode) ? "white" : "black",
-                            textAlign: 'center'
-                        }}
-                        iconStyle={{
-                            tintColor: '#ca2613',
-                            width: getIconSize(100),
-                            height: getIconSize(100)
-                        }}
-                        containerStyle={{
-                            backgroundColor: (darkMode) ? "#242121" : "#F5F5F5",
-                            borderColor: "#ca2613",
-                            borderWidth: 2/*, borderRadius: 20*/
-                        }}
-                        itemTextStyle={{
-                            fontSize: getFontSize(20),
-                            color: (darkMode) ? "white" : "black",
-                            textAlign: 'center'
-                        }}
-                        activeColor={"#ca2613"}
-                        selectedTextStyle={{
-                            fontSize: getFontSize(20),
-                            color: (darkMode) ? "white" : "black",
-                            textAlign: 'center'
-                        }}
-                    />
+                        <Dropdown
+                            data={types}
+                            labelField={"label"}
+                            valueField={"value"}
+                            value={selectedType}
+                            placeholder={"Select a type"}
+                            onChange={(newValue) => setSelectedType(newValue.value)}
+                            style={{
+                                height: getIconSize(130),
+                                backgroundColor: (darkMode) ? "#242121" : "#F5F5F5",
+                                borderColor: "#ca2613",
+                                //borderRadius: 20,
+                                width: getIconSize(700),
+                                borderWidth: 2,
+                                marginBottom: 8,
+                                flex:1
+                            }}
+                            placeholderStyle={{
+                                fontSize: getFontSize(20),
+                                color: (darkMode) ? "white" : "black",
+                                textAlign: 'center'
+                            }}
+                            iconStyle={{
+                                tintColor: '#ca2613',
+                                width: getIconSize(100),
+                                height: getIconSize(100)
+                            }}
+                            containerStyle={{
+                                backgroundColor: (darkMode) ? "#242121" : "#F5F5F5",
+                                borderColor: "#ca2613",
+                                borderWidth: 2/*, borderRadius: 20*/
+                            }}
+                            itemTextStyle={{
+                                fontSize: getFontSize(20),
+                                color: (darkMode) ? "white" : "black",
+                                textAlign: 'center'
+                            }}
+                            activeColor={"#ca2613"}
+                            selectedTextStyle={{
+                                fontSize: getFontSize(20),
+                                color: (darkMode) ? "white" : "black",
+                                textAlign: 'center'
+                            }}
+                        />
+                    </View>
+                </View>
+                <View style={{}}>
+
+
                     <TouchableOpacity style={{...Styles.touchable}} onPress={openGallery}>
                         <Text style={{
                             fontSize: getFontSize(20),
@@ -330,10 +342,13 @@ const CreateComponent = (props: Props) => {
                             Component</Text>
                     </TouchableOpacity>
                 </View>
-            </ScrollView>
+
+
+            </KeyboardAvoidingView>
             <Toast />
         </SafeAreaView>
     )
 }
+
 
 export default CreateComponent

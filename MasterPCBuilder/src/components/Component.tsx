@@ -42,10 +42,23 @@ const Component = (props: Props) => {
             console.log(err);
         }
     }
+/*
 
+                    <View style={{justifyContent: "flex-end",paddingHorizontal:"5%"}}>
+                        <Text style={{
+                            fontSize: getFontSize(20),
+                            color: (darkMode) ? "white" : "black",
+                            marginRight: "10%"
+                        }}>Amazon:{comp.amazon_price}</Text>
+                        <Text style={{
+                            fontSize: getFontSize(20),
+                            color: (darkMode) ? "white" : "black",
+                        }}>Ebay:{comp.ebay_price}</Text>
+                    </View>
+ */
     return (
         <SafeAreaView style={{flex: 1}}>
-            <View style={{flex: 1, justifyContent: "center"}}>
+            <View style={{flex: 1, justifyContent: "center",}}>
                 <View style={{alignItems: "center"}}>
                     <Image
                         source={{
@@ -71,17 +84,6 @@ const Component = (props: Props) => {
                             fontSize: getFontSize(20),
                             color: (darkMode) ? "white" : "black",
                         }}>{comp?.price}€</Text>
-                    </View>
-                    <View style={{justifyContent: "flex-end",paddingHorizontal:"5%"}}>
-                        <Text style={{
-                            fontSize: getFontSize(20),
-                            color: (darkMode) ? "white" : "black",
-                            marginRight: "10%"
-                        }}>Amazon:{comp.amazon_price}</Text>
-                        <Text style={{
-                            fontSize: getFontSize(20),
-                            color: (darkMode) ? "white" : "black",
-                        }}>Ebay:{comp.ebay_price}</Text>
                     </View>
                 </View>
             </View>
