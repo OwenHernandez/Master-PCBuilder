@@ -90,7 +90,7 @@ const CreateComponent = (props: Props) => {
             let ebayPrice = 0;
             async function getAmazonPrice(){
                 try {
-                    const response = await axios.get(Globals.IP + "/api/v2/components/searchAmazon/" + name);
+                    const response = await axios.get(Globals.IP_HTTP + "/api/v2/components/searchAmazon/" + name);
                     let stringAmazon:string= response.data[0].price;
 
                     stringAmazon=stringAmazon.replace("$","");
@@ -101,7 +101,7 @@ const CreateComponent = (props: Props) => {
             }
             async function getEbayPrice(){
                 try {
-                    const response = await axios.get(Globals.IP + "/api/v2/components/searchEbay/" + name);
+                    const response = await axios.get(Globals.IP_HTTP + "/api/v2/components/searchEbay/" + name);
                     let stringEbay:string= response.data[1].price;
                     stringEbay=stringEbay.replace("$","");
                     ebayPrice = parseFloat(stringEbay);
@@ -164,7 +164,8 @@ const CreateComponent = (props: Props) => {
     return (
         <SafeAreaView style={{flex: 1, backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"}}>
             <HeaderScreen name={route.name} navigation={navigation} profile={false} drawer={true}/>
-            <KeyboardAvoidingView style={{flex:1,}}>
+            <ScrollView style={{height:"90%"}}>
+                <View style={{flex:1}}>
                 <View style={{flex:1,flexDirection:"row"}}>
                     <View style={{flex: 1,flexDirection:"column"}}>
                         <View style={{
@@ -342,9 +343,9 @@ const CreateComponent = (props: Props) => {
                             Component</Text>
                     </TouchableOpacity>
                 </View>
+                </View>
 
-
-            </KeyboardAvoidingView>
+            </ScrollView>
             <Toast />
         </SafeAreaView>
     )

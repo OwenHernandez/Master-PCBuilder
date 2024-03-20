@@ -1,7 +1,7 @@
 import {
     Alert,
     Dimensions,
-    Image,
+    Image, ImageBackground,
     PixelRatio,
     SafeAreaView,
     StyleSheet,
@@ -60,7 +60,7 @@ const Component = (props: Props) => {
         <SafeAreaView style={{flex: 1}}>
             <View style={{flex: 1, justifyContent: "center",}}>
                 <View style={{alignItems: "center"}}>
-                    <Image
+                    <ImageBackground
                         source={{
                             uri: "data:image/jpeg;base64," + comp?.image
                         }}
@@ -71,7 +71,9 @@ const Component = (props: Props) => {
                             alignItems: "center",
                             borderRadius: 10
                         }}
-                    />
+                    >
+
+                    </ImageBackground>
                 </View>
                 <View style={{flex:1,flexDirection:"row"}}>
                     <View style={{justifyContent: "center",paddingHorizontal:"5%"}}>
