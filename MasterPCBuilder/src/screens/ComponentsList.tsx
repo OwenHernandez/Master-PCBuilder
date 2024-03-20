@@ -102,24 +102,26 @@ const ComponentsList = (props: Props) => {
                     <FontAwesome5Icon name="search" size={getIconSize(80)}
                                       color={(darkMode) ? "white" : "black"}/>
                 </View>
-                <FlatList
-                    data={componentsByName}
-                    numColumns={2}
-                    renderItem={(comp) => {
-                        comp.item.wished = false;
-                        user.componentsWanted.forEach((compWished) => {
-                            if (comp.item.id === compWished.id) {
-                                comp.item.wished = true;
-                            }
-                        });
-                        return (
-                            <TouchableOpacity style={{...Styles.touchable, width: getIconSize(500)}} onPress={() => navigation.navigate("ComponentScreen", { comp: comp.item, wished})}>
-                                <Component comp={comp.item} />
-                            </TouchableOpacity>
-                        )
-                    }}
-                    keyExtractor={(comp, index) => index + ""}
-                />
+                <View style={{justifyContent:"center",alignItems:"center"}}>
+                    <FlatList
+                        data={componentsByName}
+                        numColumns={2}
+                        renderItem={(comp) => {
+                            comp.item.wished = false;
+                            user.componentsWanted?.forEach((compWished) => {
+                                if (comp.item.id === compWished.id) {
+                                    comp.item.wished = true;
+                                }
+                            });
+                            return (
+                                <TouchableOpacity style={{...Styles.touchable, width: getIconSize(500)}} onPress={() => navigation.navigate("ComponentScreen", { comp: comp.item, wished})}>
+                                    <Component comp={comp.item} />
+                                </TouchableOpacity>
+                            )
+                        }}
+                        keyExtractor={(comp, index) => index + ""}
+                    />
+                </View>
             </View>
         </View>
     )
