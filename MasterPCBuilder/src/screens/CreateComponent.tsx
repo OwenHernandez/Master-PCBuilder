@@ -164,8 +164,8 @@ const CreateComponent = (props: Props) => {
     return (
         <SafeAreaView style={{flex: 1, backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"}}>
             <HeaderScreen name={route.name} navigation={navigation} profile={false} drawer={true}/>
-            <ScrollView style={{height:"90%"}}>
-                <View style={{flex:1}}>
+            <ScrollView style={{}}>
+                <View style={{flex:1,height:"90%"}}>
                 <View style={{flex:1,flexDirection:"row"}}>
                     <View style={{flex: 1,flexDirection:"column"}}>
                         <View style={{
