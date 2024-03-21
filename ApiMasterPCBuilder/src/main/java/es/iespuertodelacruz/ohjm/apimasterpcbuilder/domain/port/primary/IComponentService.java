@@ -24,5 +24,7 @@ public interface IComponentService {
     List<Component> findBySellerId(Long sellerId);
 
     List<Component> findByUserId(Long userId);
+    List<Component> searchAmazon(String name);
+    List<Component> searchEbay(String name);
     
 }
