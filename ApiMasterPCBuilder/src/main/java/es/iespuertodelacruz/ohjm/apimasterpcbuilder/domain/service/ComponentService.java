@@ -81,4 +81,21 @@ public class ComponentService implements IComponentService {
         }
         return repo.findByUserId(userId);
     }
+
+    @Override
+    public List<Component> searchAmazon(String name) {
+        if (name == null || name.isBlank()) {
+            return null;
+        }
+        return repo.searchAmazon(name);
+    }
+
+    @Override
+    public List<Component> searchEbay(String name) {
+        if (name == null || name.isBlank()) {
+            return null;
+        }
+        return repo.searchEbay(name);
+    }
+
 }

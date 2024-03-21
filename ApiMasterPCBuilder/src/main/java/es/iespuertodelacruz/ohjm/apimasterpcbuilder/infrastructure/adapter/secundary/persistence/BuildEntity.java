@@ -5,6 +5,7 @@ import java.io.Serializable;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
+import java.math.BigInteger;
 import java.util.List;
 
 
@@ -30,7 +31,8 @@ public class BuildEntity implements Serializable {
 
 	@Column(name="TOTAL_PRICE")
 	private double totalPrice;
-
+	@Column(name="DATE_OF_CREATION")
+	private BigInteger dateOfCreation;
 	//bi-directional many-to-one association to BuildComponentEntity
 	@OneToMany(mappedBy="build")
 	private List<BuildComponentEntity> buildsComponents;
@@ -45,6 +47,14 @@ public class BuildEntity implements Serializable {
 	private List<PostEntity> posts;
 
 	public BuildEntity() {
+	}
+
+	public BigInteger getDateOfCreation() {
+		return dateOfCreation;
+	}
+
+	public void setDateOfCreation(BigInteger dateOfCreation) {
+		this.dateOfCreation = dateOfCreation;
 	}
 
 	public long getId() {

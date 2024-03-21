@@ -40,12 +40,7 @@ import reactor.core.publisher.Mono;
 @CrossOrigin
 @RequestMapping("/api/v2/components")
 public class ComponentRestControllerV2 {
-    private final WebClient webClient;
     Logger log;
-    @Autowired
-    public ComponentRestControllerV2(WebClient.Builder webClientBuilder) {
-        this.webClient = webClientBuilder.baseUrl("http://127.0.0.1:8000").build();
-    }
 
 
     @Autowired
@@ -279,36 +274,10 @@ public class ComponentRestControllerV2 {
     @GetMapping("/searchEbay/{search}")
     public ResponseEntity<?> searchEbay(@PathVariable("search") String search) {
         if (search != null) {
-            search = search.replace(" ", "+");
-            String url = "https://www.ebay.com/sch/i.html?_nkw="+search;
-            String userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36";
-
-            Document doc = null;
-            try {
-                doc = Jsoup.connect(url)
-                        .userAgent(userAgent)
-                        .get();
-            } catch (IOException e) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("There Was a Problem with the Request");
+            List<Component> components = componentService.searchEbay(search);
+            if (!components.isEmpty()) {
+                    return ResponseEntity.ok(components);
             }
-            Elements listings = doc.select("div.s-item__info");
-            List<ProductEbayDTO> productEbayDTOS= new ArrayList<>();
-            for (Element listing : listings) {
-                String title = listing.select("div.s-item__title").text();
-                String urla = listing.select("a.s-item__link").attr("href");
-                String price = listing.select("span.s-item__price").text();
-
-                String details = listing.select("div.s-item__subtitle").text();
-                String sellerInfo = listing.select("span.s-item__seller-info-text").text();
-                String shippingCost = listing.select("span.s-item__shipping").text();
-                String location = listing.select("span.s-item__location").text();
-                String sold = listing.select("span.s-item__quantity-sold").text();
-                ProductEbayDTO productEbayDTO = new ProductEbayDTO(title, urla, price, details, sellerInfo, shippingCost, location, sold);
-                productEbayDTOS.add(productEbayDTO);
-            }
-                if (!listings.isEmpty()) {
-                    return ResponseEntity.ok(productEbayDTOS);
-                }
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The requested components were not found");
             }
@@ -317,14 +286,9 @@ public class ComponentRestControllerV2 {
     @GetMapping("/searchAmazon/{search}")
     public ResponseEntity<?> searchAmazon(@PathVariable("search") String search) {
         if (search != null) {
-            search = search.replace(" ", "+");
-            Mono<List<ProductAmazonDTO>> responseMono = this.webClient.get()
-                    .uri("/" + search)
-                    .retrieve()
-                    .bodyToMono(new ParameterizedTypeReference<List<ProductAmazonDTO>>() {});
-            List<ProductAmazonDTO> response = responseMono.block();
-            if (response!=null && !response.isEmpty()) {
-                return ResponseEntity.ok(response);
+            List<Component> components = componentService.searchAmazon(search);
+            if (components!=null && !components.isEmpty()) {
+                return ResponseEntity.ok(components);
             }
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The requested components were not found");

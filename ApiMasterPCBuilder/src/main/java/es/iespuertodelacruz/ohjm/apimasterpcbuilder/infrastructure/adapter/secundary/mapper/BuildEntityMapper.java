@@ -26,6 +26,7 @@ public class BuildEntityMapper {
         res.setName(buildEntity.getName());
         res.setNotes(buildEntity.getNotes());
         res.setTotalPrice(buildEntity.getTotalPrice());
+        res.setDateOfCreation(buildEntity.getDateOfCreation());
         res.setCategory(buildEntity.getCategory());
         res.setUser(userMapper.toDomain(buildEntity.getUser()));
         if (res.getBuildsComponents() == null) {
@@ -60,6 +61,7 @@ public class BuildEntityMapper {
         res.setName(build.getName());
         res.setNotes(build.getNotes());
         res.setTotalPrice(build.getTotalPrice());
+        res.setDateOfCreation(build.getDateOfCreation());
         res.setCategory(build.getCategory());
         res.setUser(userMapper.toPersistance(build.getUser()));
         if (res.getBuildsComponents() == null) {
