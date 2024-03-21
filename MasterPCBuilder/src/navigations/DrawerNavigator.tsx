@@ -42,9 +42,9 @@ const DrawerNavigator = (props: Props) => {
             }}
             drawerContent={(props) => DrawerPersonalizado(props)}
         >
+            <Drawer.Screen name="Social" component={SocialTabs}/>
             <Drawer.Screen name="Builder" component={Builder}/>
             <Drawer.Screen name="Profile" component={Profile}/>
-            <Drawer.Screen name="Social" component={SocialTabs}/>
             <Drawer.Screen name="Friends" component={FriendsTabs}/>
             <Drawer.Screen name="Settings" component={Settings}/>
             <Drawer.Screen name="Components" component={ComponentsTabs} />
