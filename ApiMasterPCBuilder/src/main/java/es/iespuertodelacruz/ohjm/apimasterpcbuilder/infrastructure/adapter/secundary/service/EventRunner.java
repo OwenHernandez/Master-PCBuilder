@@ -23,23 +23,28 @@ public class EventRunner {
     private void checkAmazonEbay()  {
         List<Component> all = componentService.findAll();
         for (Component comp : all) {
+            log= Logger.getLogger("Check");
+            log.info(comp.getName());
             List<Component> amazonSearch  = componentService.searchAmazon(comp.getName());
             List<Component> ebaySearch = componentService.searchEbay(comp.getName());
+            log.info("Amazon: "+amazonSearch.get(0).getAmazon_price());
+            log.info("Ebay: "+ebaySearch.get(1).getEbay_price());
             if (amazonSearch.size() > 0 ) {
                 if (amazonSearch.get(0).getAmazon_price() != comp.getAmazon_price()) {
-                    log= Logger.getLogger("Amazon");
-                    log.info("DISTINTO");
-                    comp.setAmazon_price(amazonSearch.get(0).getPrice());
-                    componentService.update(comp);
+                    comp.setAmazon_price(amazonSearch.get(0).getAmazon_price());
                 }
             }
             if (ebaySearch.size() > 0 ) {
                 if (ebaySearch.get(1).getEbay_price() != comp.getEbay_price()) {
-                    log= Logger.getLogger("Amazon");
-                    log.info("DISTINTO");
-                    comp.setEbay_price(ebaySearch.get(1).getPrice());
-                    componentService.update(comp);
+                    comp.setEbay_price(ebaySearch.get(1).getEbay_price());
                 }
+            }
+            log.info("Componente precios: "+comp.toString());
+            try{
+                componentService.updatePrices(comp.getId(),comp.getAmazon_price(),comp.getEbay_price());
+            }catch (Exception e){
+                log= Logger.getLogger("Error");
+                log.info(e.getMessage());
             }
         }
     }

@@ -162,7 +162,6 @@ public class ComponentEntityService implements IComponentRepository {
                     }
                 }
                 repo.save(ce);
-
                 return true;
             } else {
                 return false;
@@ -246,16 +245,24 @@ public class ComponentEntityService implements IComponentRepository {
             String shippingCost = listing.select("span.s-item__shipping").text();
             String location = listing.select("span.s-item__location").text();
             String sold = listing.select("span.s-item__quantity-sold").text();
-            Component component=new Component();
-            component.setName(title);
-            price=price.replace("$","");
-            price=price.replace(",","");
-            price=price.replaceAll("\s*to.*","");
-            component.setEbay_price(Double.parseDouble(price));
-            productEbayDTOS.add(component);
+            if (price!=null){
+                Component component=new Component();
+                component.setName(title);
+                price=price.replace("$","");
+                price=price.replace(",","");
+                price=price.replaceAll("\s*to.*","");
+                String[] parts = price.split(" ");
+                log=Logger.getLogger("ebay");
+                log.info("PRECIO: "+parts[0]);
+                component.setEbay_price(Double.parseDouble(parts[0]));
+                log.info("COMPONENTE: "+component.getAmazon_price());
+                productEbayDTOS.add(component);
+            }
         }
         return productEbayDTOS;
     }
+
+
     public List<Component> searchAmazon(String name){
         name = name.replace(" ", "+");
         Mono<List<ProductAmazonDTO>> responseMono = this.webClient.get()
@@ -265,15 +272,32 @@ public class ComponentEntityService implements IComponentRepository {
         List<ProductAmazonDTO> block = responseMono.block();
         List<Component> components= new ArrayList<>();
         for (ProductAmazonDTO productAmazonDTO : block) {
-            Component component=new Component();
-            component.setName(productAmazonDTO.getTile());
-            String price = productAmazonDTO.getPrice();
+            if (productAmazonDTO.getPrice()!=null){
+                Component component=new Component();
+                component.setName(productAmazonDTO.getTile());
+                String price = productAmazonDTO.getPrice();
 
-            price=price.replace("$","");
-            price=price.replace(",","");
-            component.setAmazon_price(Double.parseDouble(price));
-            components.add(component);
+                price=price.replace("$","");
+                price=price.replace(",","");
+                log=Logger.getLogger("amazon");
+                component.setAmazon_price(Double.parseDouble(price));
+                components.add(component);
+            }
         }
         return components;
+    }
+    @Override
+    @Transactional
+    public void updatePrices(Long id, double amazonPrice, double ebayPrice) {
+        try {
+            Optional<ComponentEntity> byId = repo.findById(id);
+            if (byId.isPresent()) {
+                repo.updatePrices(id, amazonPrice, ebayPrice);
+            } else {
+                throw new RuntimeException("Component Not Found");
+            }
+        } catch (RuntimeException e) {
+            log.info(e.getMessage());
+        }
     }
 }

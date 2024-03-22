@@ -135,15 +135,19 @@ public class Component {
 
     @Override
     public String toString() {
-        return "ComponentEntity{" +
+        return "Component{" +
                 "id=" + id +
+                ", description='" + description + '\'' +
+                ", image='" + image + '\'' +
                 ", name='" + name + '\'' +
                 ", type='" + type + '\'' +
                 ", price=" + price +
-                ", sellerId=" + (seller != null ? seller.getId() : "null") +
-                ", userWhoCreatedId=" + (userWhoCreated != null ? userWhoCreated.getId() : "null") +
-
+                ", amazon_price=" + amazon_price +
+                ", ebay_price=" + ebay_price +
+                ", buildsComponents=" + buildsComponents +
+                ", seller=" + seller +
+                ", userWhoCreated=" + userWhoCreated +
+                ", usersWhoWants=" + usersWhoWants +
                 '}';
     }
-
 }
