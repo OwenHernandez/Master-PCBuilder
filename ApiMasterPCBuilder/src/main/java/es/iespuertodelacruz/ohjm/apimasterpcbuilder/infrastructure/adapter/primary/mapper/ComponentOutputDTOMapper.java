@@ -16,6 +16,8 @@ public class ComponentOutputDTOMapper {
         component.setType(componentOutputDTO.getType());
         component.setDescription(componentOutputDTO.getDescription());
         component.setPrice(componentOutputDTO.getPrice());
+        component.setAmazon_price(componentOutputDTO.getAmazon_price());
+        component.setEbay_price(componentOutputDTO.getEbay_price());
 
         return component;
     }
@@ -30,7 +32,8 @@ public class ComponentOutputDTOMapper {
         componentOutputDTO.setPrice(component.getPrice());
         componentOutputDTO.setSellerName(component.getSeller().getName());
         componentOutputDTO.setUserNick(component.getUserWhoCreated().getNick());
-
+        componentOutputDTO.setAmazon_price(component.getAmazon_price());
+        componentOutputDTO.setEbay_price(component.getEbay_price());
         return componentOutputDTO;
     }
 }

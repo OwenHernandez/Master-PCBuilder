@@ -41,14 +41,12 @@ const ComponentsList = (props: Props) => {
         setComponentsList([]);
         setComponentsByName([]);
         getUserComponents();
-        console.log(componentsList)
     }, [components]);
 
     async function getUserComponents() {
-        let auxComps=[];
+        let auxComps:Array<IComponentType>=[];
         try {
             const getCompsResponse = await axios.get(Globals.IP_HTTP + "/api/v2/components", {headers: {"Authorization": "Bearer " + token}});
-            console.log(getCompsResponse.data);
             for (let comp of getCompsResponse.data) {
                 const getImgResponse = await RNFetchBlob.fetch(
                     'GET',
