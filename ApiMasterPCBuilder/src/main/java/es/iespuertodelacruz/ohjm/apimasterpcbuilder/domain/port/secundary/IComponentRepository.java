@@ -26,4 +26,6 @@ public interface IComponentRepository {
     List<Component> findByUserId(Long userId);
     List<Component> searchAmazon(String name);
     List<Component> searchEbay(String name);
+    void updatePrices(Long id, double amazonPrice, double ebayPrice);
+
 }

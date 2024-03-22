@@ -98,4 +98,12 @@ public class ComponentService implements IComponentService {
         return repo.searchEbay(name);
     }
 
+    @Override
+    public void updatePrices(Long id, double amazonPrice, double ebayPrice) {
+        if (id == 0 && amazonPrice <= 0 && ebayPrice <= 0) {
+            return;
+        }
+        repo.updatePrices(id, amazonPrice, ebayPrice);
+    }
+
 }
