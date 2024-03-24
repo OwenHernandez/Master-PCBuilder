@@ -24,7 +24,7 @@ public class BuildComponentEntityMapper {
         return res;
     }
 
-    public BuildComponentEntity toPersistance(BuildComponent bc) throws ParseException {
+    public BuildComponentEntity toPersistence(BuildComponent bc) throws ParseException {
 
         BuildComponentEntity res = new BuildComponentEntity();
         res.setId(bc.getId());

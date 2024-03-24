@@ -1,10 +1,8 @@
 package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.service;
 
-import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Build;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Seller;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.secundary.ISellerRepository;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.mapper.SellerEntityMapper;
-import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.BuildEntity;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.SellerEntity;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.repository.ISellerEntityRepository;
 import jakarta.transaction.Transactional;
@@ -42,7 +40,7 @@ public class SellerEntityService implements ISellerRepository {
     public Seller save(Seller seller) {
         try {
             if (seller != null) {
-                SellerEntity sellerEntity = mapper.toPersistance(seller);
+                SellerEntity sellerEntity = mapper.toPersistence(seller);
                 SellerEntity save = repo.save(sellerEntity);
                 return mapper.toDomain(save);
             }
@@ -81,7 +79,7 @@ public class SellerEntityService implements ISellerRepository {
     @Transactional
     public boolean update(Seller seller) {
         try {
-            SellerEntity sellerEntity = mapper.toPersistance(seller);
+            SellerEntity sellerEntity = mapper.toPersistence(seller);
             SellerEntity save = repo.save(sellerEntity);
 
             if (save != null)

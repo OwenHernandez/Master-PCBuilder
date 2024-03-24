@@ -207,7 +207,7 @@ const Builder = (props: Props) => {
         })
         const response = await axios.put(
             Globals.IP_HTTP + "/api/v2/builds/" + buildTemp.id,
-            {name: buildTemp.name, notes: buildTemp.notes ?? null, componentsIds: compIdArray},
+            {name: buildTemp.name, notes: buildTemp.notes, category: buildTemp.category, componentsIds: compIdArray},
             {headers: {"Authorization": "Bearer " + token}}
         );
         if (response.status === 200) {

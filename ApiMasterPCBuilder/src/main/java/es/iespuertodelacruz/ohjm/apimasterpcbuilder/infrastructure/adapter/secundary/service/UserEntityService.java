@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,7 +31,7 @@ public class UserEntityService implements IUserRepository {
             Optional<UserEntity> opt = repo.findById(id);
             if (opt.isPresent()) {
                 UserEntity userEntity = opt.get();
-                user = mapper.toDomain(userEntity);
+                user = mapper.toDomain(userEntity, new HashSet<Long>(), new HashSet<Long>(), "findById");
             }
         }
         return user;
@@ -45,7 +46,7 @@ public class UserEntityService implements IUserRepository {
             if (ue == null) {
                 return null;
             }
-            user = mapper.toDomain(ue);
+            user = mapper.toDomain(ue, new HashSet<Long>(), new HashSet<Long>(), "findByNick");
         }
         return user;
     }
@@ -56,7 +57,7 @@ public class UserEntityService implements IUserRepository {
         User user = null;
         if (email != null) {
             UserEntity ue = repo.findByEmail(email);
-            user = mapper.toDomain(ue);
+            user = mapper.toDomain(ue, new HashSet<Long>(), new HashSet<Long>(), "findByEmail");
         }
         return user;
     }
@@ -67,7 +68,7 @@ public class UserEntityService implements IUserRepository {
         List<User> users = new ArrayList<>();
         Iterable<UserEntity> repoAll = repo.findAll();
         for (UserEntity ue : repoAll) {
-            User domain = mapper.toDomain(ue);
+            User domain = mapper.toDomain(ue, new HashSet<Long>(), new HashSet<Long>(), "findAll");
             users.add(domain);
         }
 
@@ -80,26 +81,10 @@ public class UserEntityService implements IUserRepository {
         User res = null;
         if (user != null) {
             try {
-                UserEntity ue = mapper.toPersistance(user);
-                if (user.getFriends() != null && !user.getFriends().isEmpty()) {
-                    List<UserEntity> friends = new ArrayList<>();
-                    for (User u : user.getFriends()) {
-                        UserEntity ueFriend = mapper.toPersistance(u);
-                        friends.add(ueFriend);
-                    }
-                    ue.setFriends(friends);
-                }
+                UserEntity ue = mapper.toPersistence(user, new HashSet<>(), new HashSet<>(), "save");
                 UserEntity save = repo.save(ue);
 
-                res = mapper.toDomain(save);
-                if (user.getFriends() != null && !user.getFriends().isEmpty()) {
-                    List<User> friends = new ArrayList<>();
-                    for (UserEntity ueFriend : save.getFriends()) {
-                        User u = mapper.toDomain(ueFriend);
-                        friends.add(u);
-                    }
-                    res.setFriends(friends);
-                }
+                res = mapper.toDomain(save, new HashSet<Long>(), new HashSet<Long>(), "save");
             } catch (RuntimeException | ParseException e) {
                 return null;
             }

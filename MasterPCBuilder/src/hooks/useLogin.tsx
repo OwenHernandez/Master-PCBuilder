@@ -89,7 +89,7 @@ const useLogin = () => {
             Toast.show({
                 position: 'bottom',
                 type: 'error',
-                text1: "The user or password is incorrect",
+                text1: "The user or password are incorrect",
                 text1Style: {fontSize: getFontSize(15)},
                 visibilityTime: 3000
             });

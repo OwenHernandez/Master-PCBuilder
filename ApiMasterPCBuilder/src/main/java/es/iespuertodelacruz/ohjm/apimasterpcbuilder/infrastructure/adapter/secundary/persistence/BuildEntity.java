@@ -32,7 +32,7 @@ public class BuildEntity implements Serializable {
 	@Column(name="TOTAL_PRICE")
 	private double totalPrice;
 	@Column(name="DATE_OF_CREATION")
-	private BigInteger dateOfCreation;
+	private Long dateOfCreation;
 	//bi-directional many-to-one association to BuildComponentEntity
 	@OneToMany(mappedBy="build")
 	private List<BuildComponentEntity> buildsComponents;
@@ -49,11 +49,11 @@ public class BuildEntity implements Serializable {
 	public BuildEntity() {
 	}
 
-	public BigInteger getDateOfCreation() {
+	public Long getDateOfCreation() {
 		return dateOfCreation;
 	}
 
-	public void setDateOfCreation(BigInteger dateOfCreation) {
+	public void setDateOfCreation(Long dateOfCreation) {
 		this.dateOfCreation = dateOfCreation;
 	}
 

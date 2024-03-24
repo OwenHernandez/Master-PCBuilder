@@ -84,7 +84,10 @@ public class BuildRestControllerV2 {
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The category must be Gaming, Work or Budget");
                 }
                 Build build = inputDTOMapper.toDomain(buildInputDTO);
-                build.setDateOfCreation(new BigInteger(String.valueOf(System.currentTimeMillis())));
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                Date date = new Date();
+                String dateStr = sdf.format(date);
+                build.setDateOfCreation(dateStr);
                 build.setBuildsComponents(new ArrayList<>());
                 double totalPrice = 0;
                 for (Long compId : buildInputDTO.getComponentsIds()) {
@@ -96,9 +99,6 @@ public class BuildRestControllerV2 {
                     BuildComponent bc = new BuildComponent();
                     bc.setPriceAtTheTime(compById.getPrice());
 
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                    Date date = new Date();
-                    String dateStr = sdf.format(date);
                     bc.setDateCreated(dateStr);
 
                     bc.setComponent(compById);
@@ -165,8 +165,15 @@ public class BuildRestControllerV2 {
             if (userByNick != null) {
                 Build buildById = buildService.findById(id);
                 if (buildById != null) {
+                    if (!buildInputDTO.getCategory().equals("Gaming") && !buildInputDTO.getCategory().equals("Work") && !buildInputDTO.getCategory().equals("Budget")) {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The category must be Gaming, Work or Budget");
+                    }
                     if (buildById.getUser().getId() == userByNick.getId()) {
                         Build build = inputDTOMapper.toDomain(buildInputDTO);
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                        Date date = new Date();
+                        String dateStr = sdf.format(date);
+                        build.setDateOfCreation(dateStr);
                         double totalPrice = 0;
                         if (build.getBuildsComponents() == null) {
                             build.setBuildsComponents(new ArrayList<>());
@@ -180,9 +187,6 @@ public class BuildRestControllerV2 {
                             BuildComponent bc = new BuildComponent();
                             bc.setPriceAtTheTime(compById.getPrice());
 
-                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                            Date date = new Date();
-                            String dateStr = sdf.format(date);
                             bc.setDateCreated(dateStr);
 
                             bc.setComponent(compById);
