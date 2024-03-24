@@ -1,7 +1,7 @@
 import {
     Alert,
     Dimensions,
-    Image,
+    Image, ImageBackground,
     PixelRatio,
     SafeAreaView,
     StyleSheet,
@@ -9,7 +9,7 @@ import {
     TouchableOpacity,
     View
 } from 'react-native'
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import IComponentType from '../interfaces/IComponentType'
 import {usePrimaryContext} from '../contexts/PrimaryContext';
 import {Styles} from '../themes/Styles';
@@ -36,17 +36,31 @@ const Component = (props: Props) => {
                 null,
                 {headers: {Authorization: "Bearer " + token}}
             );
+            comp.wished = !comp.wished;
             setUser({...response.data, picture: user.picture, friends: [...user.friends]});
         } catch (err) {
             console.log(err);
         }
     }
+/*
 
+                    <View style={{justifyContent: "flex-end",paddingHorizontal:"5%"}}>
+                        <Text style={{
+                            fontSize: getFontSize(20),
+                            color: (darkMode) ? "white" : "black",
+                            marginRight: "10%"
+                        }}>Amazon:{comp.amazon_price}</Text>
+                        <Text style={{
+                            fontSize: getFontSize(20),
+                            color: (darkMode) ? "white" : "black",
+                        }}>Ebay:{comp.ebay_price}</Text>
+                    </View>
+ */
     return (
         <SafeAreaView style={{flex: 1}}>
-            <View style={{flex: 1, justifyContent: "center"}}>
+            <View style={{flex: 1, justifyContent: "center",}}>
                 <View style={{alignItems: "center"}}>
-                    <Image
+                    <ImageBackground
                         source={{
                             uri: "data:image/jpeg;base64," + comp?.image
                         }}
@@ -57,18 +71,22 @@ const Component = (props: Props) => {
                             alignItems: "center",
                             borderRadius: 10
                         }}
-                    />
+                    >
+
+                    </ImageBackground>
                 </View>
-                <View style={{justifyContent: "center",paddingHorizontal:"5%"}}>
-                    <Text style={{
-                        fontSize: getFontSize(20),
-                        color: (darkMode) ? "white" : "black",
-                        marginRight: "10%"
-                    }}>{comp?.name}</Text>
-                    <Text style={{
-                        fontSize: getFontSize(20),
-                        color: (darkMode) ? "white" : "black",
-                    }}>{comp?.price}€</Text>
+                <View style={{flex:1,flexDirection:"row"}}>
+                    <View style={{justifyContent: "center",paddingHorizontal:"5%"}}>
+                        <Text style={{
+                            fontSize: getFontSize(20),
+                            color: (darkMode) ? "white" : "black",
+                            marginRight: "10%"
+                        }}>{comp?.name}</Text>
+                        <Text style={{
+                            fontSize: getFontSize(20),
+                            color: (darkMode) ? "white" : "black",
+                        }}>{comp?.price}€</Text>
+                    </View>
                 </View>
             </View>
             <View style={{justifyContent: "flex-end", marginTop: "5%"}}>

@@ -1,5 +1,6 @@
 package es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model;
 
+import java.math.BigInteger;
 import java.util.List;
 
 public class Build {
@@ -11,6 +12,7 @@ public class Build {
     private String notes;
 
     private String category;
+    private BigInteger dateOfCreation;
 
     private double totalPrice;
 
@@ -21,6 +23,14 @@ public class Build {
     //private List<Post> post;
 
     public Build() {}
+
+    public BigInteger getDateOfCreation() {
+        return dateOfCreation;
+    }
+
+    public void setDateOfCreation(BigInteger dateOfCreation) {
+        this.dateOfCreation = dateOfCreation;
+    }
 
     public long getId() {
         return id;

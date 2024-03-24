@@ -42,9 +42,9 @@ const DrawerNavigator = (props: Props) => {
             }}
             drawerContent={(props) => DrawerPersonalizado(props)}
         >
+            <Drawer.Screen name="Social" component={SocialTabs}/>
             <Drawer.Screen name="Builder" component={Builder}/>
             <Drawer.Screen name="Profile" component={Profile}/>
-            <Drawer.Screen name="Social" component={SocialTabs}/>
             <Drawer.Screen name="Friends" component={FriendsTabs}/>
             <Drawer.Screen name="Settings" component={Settings}/>
             <Drawer.Screen name="Components" component={ComponentsTabs} />
@@ -71,6 +71,12 @@ const DrawerNavigator = (props: Props) => {
                                 icon={() => <Icon name="device-desktop" color={darkMode ? 'white' : 'black'} />}
                                 label="Social"
                                 onPress={() => navigation.navigate("Social")}
+                            />
+                            <DrawerItem
+                                labelStyle={{color: (darkMode) ? "white" : "black"}}
+                                icon={() => <Icon name="gear" color={darkMode ? 'white' : 'black'} />}
+                                label="Components"
+                                onPress={() => navigation.navigate("Components")}
                             />
                             <DrawerItem
                                 labelStyle={{color: (darkMode) ? "white" : "black"}}

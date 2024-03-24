@@ -1,4 +1,4 @@
-import {View, Text, TouchableOpacity, FlatList, Image, Alert, PixelRatio, TextInput} from 'react-native'
+import {View, Text, TouchableOpacity, FlatList, Image, Alert, PixelRatio, TextInput, Modal} from 'react-native'
 import React, {useEffect, useState} from 'react'
 import {Styles} from '../themes/Styles';
 import {DrawerActions} from '@react-navigation/native';
@@ -14,6 +14,7 @@ import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import axios from "axios";
 import {Globals} from "../components/Globals";
 import RNFetchBlob from "rn-fetch-blob";
+import Material from "react-native-vector-icons/MaterialCommunityIcons";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Posts'>;
 
@@ -27,13 +28,16 @@ const Social = (props: Props) => {
     const getIconSize = (size: number) => size / fullScreen;
     const [postsList, setPostsList] = useState([{}] as IPostType[]);
     const [postsByTitle, setPostsByTitle] = useState([{}] as IPostType[]);
-
+    const [modalvisible, setModalvisible] = useState<boolean>(false);
+    const [byPrice, setByPrice] = useState<boolean>(false);
     useEffect(() => {
         setPostsList([]);
         setPostsByTitle([]);
         getPosts();
     }, [posts]);
-
+    const toggleModal = () => {
+        setModalvisible(!modalvisible);
+    }
     async function getPosts() {
         try {
             const response = await axios.get(Globals.IP_HTTP + "/api/v2/posts", {headers: {"Authorization": "Bearer " + token}});
@@ -83,7 +87,7 @@ const Social = (props: Props) => {
             console.log(err);
         }
     }
-
+    const arrayCategoriaBuilder : Array<string> = ["Todos","Gaming","Budget","Work"];
     return (
         <View style={{flex: 1, backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"}}>
             <HeaderScreen name={route.name} navigation={navigation} profile={false} drawer={true}/>
@@ -117,6 +121,137 @@ const Social = (props: Props) => {
                         name="search"
                         size={getIconSize(80)}
                         color={(darkMode) ? "white" : "black"}
+                    />
+                </View>
+                <View style={{flexDirection:"row"}}>
+                    <View style={{marginLeft:"2%"}}>
+                        <TouchableOpacity
+                            style={{
+                                margin: 10,
+                                borderRadius: 20,
+                                borderWidth: 2,
+                                borderColor: "#ca2613",
+                                padding: 10
+                            }}
+                            onPress={() => {
+                                toggleModal();
+                            }}
+                        >
+                            <View style={{alignItems: "center"}}>
+                                <Text style={{
+                                    fontSize: getFontSize(20),
+                                    color: (darkMode) ? "white" : "black"
+                                }}>Filters</Text>
+                            </View>
+                        </TouchableOpacity>
+                        <Modal
+                            style={{height:"70%"}}
+                            animationType="slide"
+                            transparent={true}
+
+                            visible={modalvisible}
+                            onRequestClose={() => setModalvisible(!modalvisible)}
+                        >
+                            <View style={{...Styles.modalContainer,flex:1,backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"}}>
+                                <View style={{
+                                    flexDirection: "row",
+                                    justifyContent: "flex-end",
+                                    backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"
+                                }}>
+                                    <TouchableOpacity
+
+                                        onPress={() => setModalvisible(!modalvisible)}>
+                                        <Material style={{marginTop: "5%", margin: "2%"}} name='close-box'
+                                                  size={getIconSize(100)}
+                                                  color={(darkMode) ? "white" : "black"}></Material>
+                                    </TouchableOpacity>
+                                </View>
+                                <View style={{
+                                    justifyContent: "center",
+                                    backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"
+                                }}>
+                                    <TouchableOpacity
+                                        style={Styles.touchable}
+                                        onPress={() => {
+                                            setModalvisible(!modalvisible)
+                                            setPostsByTitle(postsList);
+                                            setPostsByTitle(postsList.sort((a, b) => {
+                                                switch (byPrice) {
+                                                    case true:
+                                                        if (a.build.totalPrice < b.build.totalPrice) {
+                                                            return 1;
+                                                        }
+
+                                                        if (a.build.totalPrice > b.build.totalPrice) {
+                                                            return -1;
+                                                        }
+
+                                                        return 0;
+                                                    case false:
+                                                        if (a.build.totalPrice > b.build.totalPrice) {
+                                                            return 1;
+                                                        }
+
+                                                        if (a.build.totalPrice < b.build.totalPrice) {
+                                                            return -1;
+                                                        }
+                                                        return 0;
+                                                }
+                                            }))
+                                            setByPrice(!byPrice);
+                                    }}>
+                                        <View style={{flexDirection:"row"}}>
+                                            <FontAwesome
+                                                name={(byPrice) ? 'long-arrow-down' : "long-arrow-up"}
+                                                size={getIconSize(80)}
+                                                color={(darkMode) ? "white" : "black"}></FontAwesome>
+                                            <Text style={{
+                                                marginLeft:"5%",
+                                                fontSize: getFontSize(20),
+                                                color: (darkMode) ? "white" : "black"
+                                            }}>By Price</Text>
+                                        </View>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        </Modal>
+                    </View>
+                    <FlatList
+                        style={{marginHorizontal:10}}
+                        data={arrayCategoriaBuilder}
+                        horizontal={true}
+                        renderItem={(categoria) => {
+                                return (
+                                    <TouchableOpacity
+                                        style={{
+                                            margin: 10,
+                                            borderRadius: 20,
+                                            borderWidth: 2,
+                                            borderColor: "#ca2613",
+                                            padding: 10,
+                                            width:100
+                                    }}
+                                        onPress={() => {
+                                            if (categoria.item === "Todos"){
+                                                setPostsByTitle(postsList);
+
+                                            }else {
+                                                setPostsByTitle(postsList);
+                                                setPostsByTitle(postsList.filter((post) => post.build?.category === categoria.item))
+                                            }
+
+                                        }}
+                                    >
+                                        <View style={{alignItems: "center"}}>
+                                            <Text style={{
+                                                fontSize: getFontSize(20),
+                                                color: (darkMode) ? "white" : "black"
+                                            }}>{categoria.item}</Text>
+                                        </View>
+                                    </TouchableOpacity>
+                                )
+                            }
+                        }
                     />
                 </View>
                 <FlatList
