@@ -41,7 +41,7 @@ public class MessageDocumentService implements IMessageRepository {
     public Message save(Message message) {
         try {
             if (message != null) {
-                MessageDocument messageDocument = mapper.toPersistance(message);
+                MessageDocument messageDocument = mapper.toPersistence(message);
                 MessageDocument save = repo.save(messageDocument);
                 return mapper.toDomain(save);
             }
@@ -80,7 +80,7 @@ public class MessageDocumentService implements IMessageRepository {
     @Transactional
     public boolean update(Message message) {
         try {
-            MessageDocument messageDocument = mapper.toPersistance(message);
+            MessageDocument messageDocument = mapper.toPersistence(message);
             repo.save(messageDocument);
 
             return true;

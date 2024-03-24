@@ -38,7 +38,7 @@ public class BuildComponentEntityService implements IBuildComponentRepository {
     @Transactional
     public BuildComponent save(BuildComponent bc) {
         try {
-            BuildComponentEntity bce = mapper.toPersistance(bc);
+            BuildComponentEntity bce = mapper.toPersistence(bc);
             BuildComponentEntity save = repo.save(bce);
             return mapper.toDomain(save);
         } catch (RuntimeException | ParseException e) {
@@ -55,7 +55,7 @@ public class BuildComponentEntityService implements IBuildComponentRepository {
     @Transactional
     public boolean update(BuildComponent bc) {
         try {
-            BuildComponentEntity bce = mapper.toPersistance(bc);
+            BuildComponentEntity bce = mapper.toPersistence(bc);
             repo.save(bce);
             return true;
         } catch (RuntimeException | ParseException e) {

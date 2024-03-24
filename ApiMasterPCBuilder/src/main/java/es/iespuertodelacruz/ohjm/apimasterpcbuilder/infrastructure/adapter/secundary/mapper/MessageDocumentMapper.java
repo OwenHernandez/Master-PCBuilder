@@ -19,7 +19,7 @@ public class MessageDocumentMapper {
         return message;
     }
 
-    public MessageDocument toPersistance(Message message) throws ParseException {
+    public MessageDocument toPersistence(Message message) throws ParseException {
         MessageDocument messageDocument = new MessageDocument();
         messageDocument.setAuthor(message.getAuthor());
         messageDocument.setReceiver(message.getReceiver());

@@ -54,6 +54,15 @@ public class UserEntity implements Serializable {
 	)
 	private List<UserEntity> friends;
 
+	@JsonIgnore
+	@ManyToMany
+	@JoinTable(
+			name = "BLOCKED",
+			joinColumns = @JoinColumn(name = "USER_WHO_BLOCKED_ID"),
+			inverseJoinColumns = @JoinColumn(name = "USER_BLOCKED_ID")
+	)
+	private List<UserEntity> blockedUsers;
+
 	//bi-directional many-to-one association to BuildEntity
 	@JsonIgnore
 	@OneToMany(mappedBy="user")
@@ -154,6 +163,14 @@ public class UserEntity implements Serializable {
 
 	public void setFriends(List<UserEntity> friends) {
 		this.friends = friends;
+	}
+
+	public List<UserEntity> getBlockedUsers() {
+		return blockedUsers;
+	}
+
+	public void setBlockedUsers(List<UserEntity> blockedUsers) {
+		this.blockedUsers = blockedUsers;
 	}
 
 	public List<BuildEntity> getBuilds() {
