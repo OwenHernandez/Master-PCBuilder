@@ -41,15 +41,18 @@ const ComponentsList = (props: Props) => {
         setComponentsList([]);
         setComponentsByName([]);
         getUserComponents();
+        console.log(componentsList)
     }, [components]);
 
     async function getUserComponents() {
+        let auxComps=[];
         try {
-            const getCompsResponse = await axios.get(Globals.IP + "/api/v2/components?userId=" + user.id, {headers: {"Authorization": "Bearer " + token}});
+            const getCompsResponse = await axios.get(Globals.IP_HTTP + "/api/v2/components", {headers: {"Authorization": "Bearer " + token}});
+            console.log(getCompsResponse.data);
             for (let comp of getCompsResponse.data) {
                 const getImgResponse = await RNFetchBlob.fetch(
                     'GET',
-                    Globals.IP + '/api/v2/components/img/' + comp.id + '/' + comp.image,
+                    Globals.IP_HTTP + '/api/v2/components/img/' + comp.id + '/' + comp.image,
                     {Authorization: `Bearer ${token}`}
                 );
                 let picture = ""
@@ -57,9 +60,10 @@ const ComponentsList = (props: Props) => {
                     picture = getImgResponse.base64();
                 }
                 comp.image = picture;
-                setComponentsList(prevComps => [...prevComps, comp]);
-                setComponentsByName(prevComps => [...prevComps, comp]);
+                auxComps.push(comp);
             }
+            setComponentsByName(auxComps);
+            setComponentsList(auxComps);
 
         } catch (e) {
             console.log(e);
@@ -98,24 +102,26 @@ const ComponentsList = (props: Props) => {
                     <FontAwesome5Icon name="search" size={getIconSize(80)}
                                       color={(darkMode) ? "white" : "black"}/>
                 </View>
-                <FlatList
-                    data={componentsByName}
-                    numColumns={2}
-                    renderItem={(comp) => {
-                        comp.item.wished = false;
-                        user.componentsWanted.forEach((compWished) => {
-                            if (comp.item.id === compWished.id) {
-                                comp.item.wished = true;
-                            }
-                        });
-                        return (
-                            <TouchableOpacity style={{...Styles.touchable, width: getIconSize(435)}} onPress={() => navigation.navigate("ComponentScreen", { comp: comp.item, wished})}>
-                                <Component comp={comp.item} />
-                            </TouchableOpacity>
-                        )
-                    }}
-                    keyExtractor={(comp, index) => index + ""}
-                />
+                <View style={{justifyContent:"center",alignItems:"center"}}>
+                    <FlatList
+                        data={componentsByName}
+                        numColumns={2}
+                        renderItem={(comp) => {
+                            comp.item.wished = false;
+                            user.componentsWanted?.forEach((compWished) => {
+                                if (comp.item.id === compWished.id) {
+                                    comp.item.wished = true;
+                                }
+                            });
+                            return (
+                                <TouchableOpacity style={{...Styles.touchable, width: getIconSize(500)}} onPress={() => navigation.navigate("ComponentScreen", { comp: comp.item, wished})}>
+                                    <Component comp={comp.item} />
+                                </TouchableOpacity>
+                            )
+                        }}
+                        keyExtractor={(comp, index) => index + ""}
+                    />
+                </View>
             </View>
         </View>
     )

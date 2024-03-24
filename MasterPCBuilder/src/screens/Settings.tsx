@@ -42,7 +42,7 @@ const Settings = (props: Props) => {
             } else {
                 const imageFile = await RNFetchBlob.fs.readFile(response.assets[0].uri, 'base64');
                 try {
-                    const responseAxios = await axios.put(Globals.IP + "/api/v2/users/" + user.id,
+                    const responseAxios = await axios.put(Globals.IP_HTTP + "/api/v2/users/" + user.id,
                         {picture: response.assets[0].fileName, pictureBase64: imageFile, password: ""},
                         {headers: {'Authorization': "Bearer " + token}}
                     );

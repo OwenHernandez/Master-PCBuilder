@@ -26,6 +26,7 @@ import axios from 'axios';
 import {Globals} from '../components/Globals';
 import IBuildComponentType from "../interfaces/IBuildComponentType";
 import HeaderScreen from "../components/HeaderScreen";
+import RNFetchBlob from "rn-fetch-blob";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Builder'>;
 
@@ -47,6 +48,7 @@ const Builder = (props: Props) => {
     const [mainVisible, setMainVisible] = useState(false);
     const [periVisible, setPeriVisible] = useState(false);
     const [componentsSelected, setComponentsSelected] = useState([] as IBuildComponentType[]);
+    const [compByType, setCompByType] = useState([{}] as IComponentType[]);
 
     const fontScale = PixelRatio.getFontScale();
     const getFontSize = (size: number) => size / fontScale;
@@ -56,12 +58,10 @@ const Builder = (props: Props) => {
     useEffect(() => {
         if (build !== null) {
             setBuildTemp(build);
-            setTotalPrice(0);
             if (build !== undefined && build.buildsComponents !== null) {
                 setBuildUpt(build);
-                build.buildsComponents.forEach(buildComp => {
-                    setTotalPrice(prevPrice => prevPrice + buildComp.component.price);
-                });
+
+                setTotalPrice(build.totalPrice);
             } else {
                 setBuildUpt(undefined);
             }
@@ -82,6 +82,7 @@ const Builder = (props: Props) => {
 
     const toggleModal = (modalType: string) => {
         setModalCompType(modalType);
+        setCompByType(components.filter(comp => comp.type === modalType));
         setModalVisible(!modalVisible);
     };
     const toggleModalMainCategories = () => {
@@ -139,13 +140,31 @@ const Builder = (props: Props) => {
     }
 
     async function getComponents() {
-        const response = await axios.get(Globals.IP + "/api/v2/components", {headers: {"Authorization": "Bearer " + token}});
-        setComponents(response.data);
+        setComponents([]);
+        const getComp = await axios.get(Globals.IP_HTTP + "/api/v2/components", {headers: {"Authorization": "Bearer " + token}});
+        for (const comp of getComp.data) {
+            const compImgResponse = await RNFetchBlob.fetch(
+                'GET',
+                Globals.IP_HTTP + '/api/v2/components/img/' + comp.id + '/' + comp.image,
+                {Authorization: `Bearer ${token}`}
+            );
+            let picture = ""
+            if (compImgResponse.data !== Globals.IMG_NOT_FOUND) {
+                picture = await compImgResponse.base64();
+            }
+            comp.image = picture;
+            comp.wished = false;
+            user.componentsWanted.forEach((compWished) => {
+                if (compWished.id === comp.id) {
+                    comp.wished = true;
+                }
+            });
+            setComponents(prevComps => [...prevComps, comp]);
+        }
     }
 
     async function saveBuild() {
         let compIdArray: number[] = [];
-        console.log(buildTemp)
         componentsSelected.forEach((buildComp) => {
             compIdArray.push(buildComp.component.id);
         })
@@ -160,7 +179,7 @@ const Builder = (props: Props) => {
         }
         try {
             const response = await axios.post(
-                Globals.IP + "/api/v2/builds",
+                Globals.IP_HTTP + "/api/v2/builds",
                 {
                     name: buildTemp.name,
                     notes: buildTemp.notes ?? null,
@@ -169,7 +188,6 @@ const Builder = (props: Props) => {
                 },
                 {headers: {"Authorization": "Bearer " + token}}
             );
-            console.log("pasa")
             if (response.status === 200) {
                 setBuildsTemp(undefined);
                 navigation.navigate("UserBuildsList");
@@ -188,7 +206,7 @@ const Builder = (props: Props) => {
             compIdArray.push(buildComp.component.id);
         })
         const response = await axios.put(
-            Globals.IP + "/api/v2/builds/" + buildTemp.id,
+            Globals.IP_HTTP + "/api/v2/builds/" + buildTemp.id,
             {name: buildTemp.name, notes: buildTemp.notes ?? null, componentsIds: compIdArray},
             {headers: {"Authorization": "Bearer " + token}}
         );
@@ -726,13 +744,13 @@ const Builder = (props: Props) => {
                                               style={{...Styles.touchable, width: getIconSize(400)}}>
                                               {
                                                   buildComp.item !== null &&
-                                                      <TouchableOpacity
-                                                          style={{alignItems: "flex-end"}}
-                                                          onPress={() => removeFromBuild(buildComp.item.component)}>
-                                                          <Material name='close-box' size={getIconSize(100)}
-                                                                    color={(darkMode) ? "white" : "black"}></Material>
-                                                          <Component comp={buildComp.item.component}/>
-                                                      </TouchableOpacity>
+                                                  <TouchableOpacity
+                                                      style={{alignItems: "flex-end"}}
+                                                      onPress={() => removeFromBuild(buildComp.item.component)}>
+                                                      <Material name='close-box' size={getIconSize(100)}
+                                                                color={(darkMode) ? "white" : "black"}></Material>
+                                                      <Component comp={buildComp.item.component}/>
+                                                  </TouchableOpacity>
                                               }
                                           </TouchableOpacity>
                                       }}
@@ -762,11 +780,13 @@ const Builder = (props: Props) => {
                                     </TouchableOpacity>
                                 </View>
                                 <FlatList
-                                    data={components}
+                                    data={compByType}
+                                    numColumns={2}
+                                    contentContainerStyle={{marginHorizontal: "2%"}}
                                     renderItem={(comp) => {
                                         if (comp.item.type === modalCompType) {
                                             return (
-                                                <TouchableOpacity onPress={() => {
+                                                <TouchableOpacity style={{...Styles.touchable, width: getIconSize(450)}} onPress={() => {
                                                     let newBuildComp: IBuildComponentType = {
                                                         dateCreated: new Date().toISOString().slice(0, 10),
                                                         priceAtTheTime: comp.item.price,

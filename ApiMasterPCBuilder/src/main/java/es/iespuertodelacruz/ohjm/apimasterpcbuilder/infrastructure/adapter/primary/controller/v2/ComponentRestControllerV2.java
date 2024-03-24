@@ -8,11 +8,11 @@ import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.ICompone
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.ISellerService;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.IUserService;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.service.FileStorageService;
-import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.ComponentInputDTO;
-import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.ComponentOutputDTO;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.*;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.mapper.ComponentInputDTOMapper;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.mapper.ComponentOutputDTOMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,17 +20,28 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-
 import java.io.IOException;
+import java.lang.annotation.Documented;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Collections;
 import java.util.List;
+import java.util.logging.Logger;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 @RestController
 @CrossOrigin
 @RequestMapping("/api/v2/components")
 public class ComponentRestControllerV2 {
+    Logger log;
+
 
     @Autowired
     IComponentService componentService;
@@ -104,6 +115,8 @@ public class ComponentRestControllerV2 {
                     Component component = inputDTOMapper.toDomain(componentInputDTO);
                     component.setSeller(sellerByName);
                     component.setUserWhoCreated(userByNick);
+                    component.setAmazon_price(componentInputDTO.getAmazon_price());
+                    component.setEbay_price(componentInputDTO.getEbay_price());
                     Component save = componentService.save(component);
 
                     if (save != null) {
@@ -232,6 +245,8 @@ public class ComponentRestControllerV2 {
                             Component component = inputDTOMapper.toDomain(componentInputDTO);
                             component.setId(id);
                             component.setSeller(sellerByName);
+                            component.setEbay_price(componentInputDTO.getEbay_price());
+                            component.setAmazon_price(componentInputDTO.getAmazon_price());
                             component.setUserWhoCreated(userByNick);
                             component.setUsersWhoWants(byId.getUsersWhoWants());
                             boolean ok = componentService.update(component);
@@ -256,4 +271,64 @@ public class ComponentRestControllerV2 {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The id must not be null");
         }
     }
+    @GetMapping("/searchEbay/{search}")
+    public ResponseEntity<?> searchEbay(@PathVariable("search") String search) {
+        if (search != null) {
+            List<Component> components = componentService.searchEbay(search);
+            if (!components.isEmpty()) {
+                    return ResponseEntity.ok(components);
+            }
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The requested components were not found");
+            }
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The requested components were not found");
+    }
+    @GetMapping("/searchAmazon/{search}")
+    public ResponseEntity<?> searchAmazon(@PathVariable("search") String search) {
+        if (search != null) {
+            List<Component> components = componentService.searchAmazon(search);
+            if (components!=null && !components.isEmpty()) {
+                return ResponseEntity.ok(components);
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The requested components were not found");
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The requested components were not found");
+    }
+
+    @PutMapping("/updatePrice/{id}")
+    public ResponseEntity<?> updatePrice(@RequestBody ComponentPriceInputDTO componentInputDTO, @PathVariable("id") Long id) {
+        log= Logger.getLogger("ComponentController");
+        log.info(componentInputDTO.toString());
+        if (componentInputDTO != null && id != null) {
+                Component byId = componentService.findById(id);
+                if (byId != null) {
+                        Component component = new Component();
+                        component.setName(componentInputDTO.getName());
+                        component.setImage(byId.getImage());
+                        component.setDescription(componentInputDTO.getDescription());
+                        component.setType(byId.getType());
+                        component.setPrice(byId.getPrice());
+                        component.setEbay_price(componentInputDTO.getEbay_price());
+                        component.setAmazon_price(componentInputDTO.getAmazon_price());
+                        component.setId(byId.getId());
+                        component.setSeller(byId.getSeller());
+                        component.setUsersWhoWants(byId.getUsersWhoWants());
+                        boolean ok = componentService.update(component);
+                        if (ok) {
+                            return ResponseEntity.ok("Component successfully updated");
+                        } else {
+                            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong");
+                        }
+
+                } else {
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The component does not exist");
+                }
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The id must not be null");
+        }
+    }
+
+
+
 }

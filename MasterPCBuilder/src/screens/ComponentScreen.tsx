@@ -35,7 +35,7 @@ const ComponentScreen = (props: Props) => {
     async function addRemoveWishList() {
         try {
             const response = await axios.put(
-                Globals.IP + "/api/v2/users/" + user.id + "/wishlist/" + comp?.id,
+                Globals.IP_HTTP + "/api/v2/users/" + user.id + "/wishlist/" + comp?.id,
                 null,
                 {headers: {Authorization: "Bearer " + token}}
             );
@@ -48,7 +48,7 @@ const ComponentScreen = (props: Props) => {
     async function deleteComponent() {
         try {
             const response = await axios.delete(
-                Globals.IP + "/api/v2/components/" + comp?.id,
+                Globals.IP_HTTP + "/api/v2/components/" + comp?.id,
                 {headers: {Authorization: "Bearer " + token}}
             );
             navigation.navigate("Components List");
@@ -65,8 +65,8 @@ const ComponentScreen = (props: Props) => {
         <SafeAreaView style={{flex: 1}}>
             <HeaderScreen name={"Component"} navigation={navigation} profile={false}
                           drawer={false}/>
-            <ScrollView style={{flex: 1}}>
-                <View style={{flex: 1, margin: "5%"}}>
+            <ScrollView style={{flex: 1,}}>
+                <View style={{flex: 1, margin: "5%",justifyContent:"center",alignItems:"center"}}>
                     <Image
                         source={{
                             uri: "data:image/jpeg;base64," + comp?.image
@@ -80,6 +80,26 @@ const ComponentScreen = (props: Props) => {
                     }}>{comp?.name}</Text>
 
                     <View style={{flex: 1, width: getIconSize(1000), justifyContent: "flex-end"}}>
+                        <View style={{flexDirection: "row", justifyContent: "space-between"}}>
+                            <Text style={{
+                                fontSize: getFontSize(20),
+                                color: (darkMode) ? "white" : "black"
+                            }}><Material name={"keyboard-arrow-right"} size={getIconSize(40)}/>Amazon Price:</Text>
+                            <Text style={{
+                                fontSize: getFontSize(20),
+                                color: (darkMode) ? "white" : "black"
+                            }}>{comp?.amazon_price>0?comp?.amazon_price+"€":"Not Available"}</Text>
+                        </View>
+                        <View style={{flexDirection: "row", justifyContent: "space-between"}}>
+                            <Text style={{
+                                fontSize: getFontSize(20),
+                                color: (darkMode) ? "white" : "black"
+                            }}><Material name={"keyboard-arrow-right"} size={getIconSize(40)}/>Ebay Price:</Text>
+                            <Text style={{
+                                fontSize: getFontSize(20),
+                                color: (darkMode) ? "white" : "black"
+                            }}>{comp?.ebay_price>0?comp?.ebay_price+"€":"Not Available"}</Text>
+                        </View>
                         <View style={{flexDirection: "row", justifyContent: "space-between"}}>
                             <Text style={{
                                 fontSize: getFontSize(20),

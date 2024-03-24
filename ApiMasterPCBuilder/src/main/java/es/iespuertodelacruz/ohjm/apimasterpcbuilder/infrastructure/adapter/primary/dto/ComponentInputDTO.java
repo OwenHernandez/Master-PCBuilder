@@ -12,10 +12,28 @@ public class ComponentInputDTO {
     private String type;
 
     private double price;
+    private double amazon_price;
+    private double ebay_price;
 
     private String sellerName;
 
     public ComponentInputDTO() {
+    }
+
+    public double getAmazon_price() {
+        return amazon_price;
+    }
+
+    public void setAmazon_price(double amazon_price) {
+        this.amazon_price = amazon_price;
+    }
+
+    public double getEbay_price() {
+        return ebay_price;
+    }
+
+    public void setEbay_price(double ebay_price) {
+        this.ebay_price = ebay_price;
     }
 
     public String getDescription() {

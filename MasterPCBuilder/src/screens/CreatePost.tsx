@@ -51,7 +51,7 @@ const CreatePost = (props: Props) => {
 
     async function getBuilds() {
         try {
-            const response = await axios.get(Globals.IP + "/api/v2/builds", {headers: {"Authorization": "Bearer " + token}});
+            const response = await axios.get(Globals.IP_HTTP + "/api/v2/builds", {headers: {"Authorization": "Bearer " + token}});
             response.data.forEach((build) => {
                 let item = {
                     label: build.name,
@@ -66,7 +66,7 @@ const CreatePost = (props: Props) => {
 
     async function createPost() {
         try {
-            const response = await axios.post(Globals.IP + "/api/v2/posts", {
+            const response = await axios.post(Globals.IP_HTTP + "/api/v2/posts", {
                 title,
                 description,
                 buildId: Number(selectedValue),

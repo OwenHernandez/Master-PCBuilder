@@ -6,6 +6,7 @@ import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Component;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.BuildComponentEntity;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.BuildEntity;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.ComponentEntity;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.UserEntity;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ public class BuildEntityMapper {
         res.setName(buildEntity.getName());
         res.setNotes(buildEntity.getNotes());
         res.setTotalPrice(buildEntity.getTotalPrice());
+        res.setDateOfCreation(buildEntity.getDateOfCreation());
         res.setCategory(buildEntity.getCategory());
         res.setUser(userMapper.toDomain(buildEntity.getUser()));
         if (res.getBuildsComponents() == null) {
@@ -35,6 +37,14 @@ public class BuildEntityMapper {
             Component comp = componentMapper.toDomain(bce.getComponent());
             if (bce.getComponent().getUser() != null) {
                 comp.setUserWhoCreated(userMapper.toDomain(bce.getComponent().getUser()));
+            }
+            if (bce.getComponent().getUsersWhoWants() != null) {
+                if (comp.getUsersWhoWants() == null) {
+                    comp.setUsersWhoWants(new ArrayList<>());
+                }
+                for (UserEntity ue : bce.getComponent().getUsersWhoWants()) {
+                    comp.getUsersWhoWants().add(userMapper.toDomain(ue));
+                }
             }
             bc.setComponent(comp);
             res.getBuildsComponents().add(bc);
@@ -51,6 +61,7 @@ public class BuildEntityMapper {
         res.setName(build.getName());
         res.setNotes(build.getNotes());
         res.setTotalPrice(build.getTotalPrice());
+        res.setDateOfCreation(build.getDateOfCreation());
         res.setCategory(build.getCategory());
         res.setUser(userMapper.toPersistance(build.getUser()));
         if (res.getBuildsComponents() == null) {

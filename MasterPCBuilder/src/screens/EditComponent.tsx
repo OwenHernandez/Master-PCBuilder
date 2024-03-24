@@ -15,7 +15,6 @@ import {Styles} from '../themes/Styles';
 import {RootStackParamList} from '../navigations/StackNavigator';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import HeaderScreen from "../components/HeaderScreen";
-import DropdownComponent from "react-native-element-dropdown/lib/typescript/components/Dropdown";
 import {Dropdown} from "react-native-element-dropdown";
 import {Globals} from "../components/Globals";
 import axios from "axios";
@@ -61,7 +60,7 @@ const EditComponent = (props: Props) => {
 
     async function getSellers() {
         try {
-            const response = await axios.get(Globals.IP + "/api/v2/sellers", {headers: {"Authorization": "Bearer " + token}});
+            const response = await axios.get(Globals.IP_HTTP + "/api/v2/sellers", {headers: {"Authorization": "Bearer " + token}});
             response.data.forEach((seller) => {
                 let item = {
                     label: seller.name,
@@ -99,7 +98,9 @@ const EditComponent = (props: Props) => {
     async function editComponent() {
         if (!isNaN(Number(price))) {
             try {
-                const updateResponse = await axios.put(Globals.IP + "/api/v2/components/" + comp?.id, {
+                console.log("seller" + selectedSeller.value)
+                console.log("type" + selectedType.value)
+                const updateResponse = await axios.put(Globals.IP_HTTP + "/api/v2/components/" + comp?.id, {
                     name,
                     description,
                     price: Number(price),
@@ -108,7 +109,7 @@ const EditComponent = (props: Props) => {
                     image,
                     image64
                 }, {headers: {"Authorization": "Bearer " + token}});
-                navigation.navigate("Components List", {components: []});
+                navigation.goBack();
             } catch (e) {
                 console.log(e);
             }

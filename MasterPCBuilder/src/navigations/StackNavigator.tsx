@@ -42,7 +42,7 @@ export type RootStackParamList = {
     Chat: { friend: IUserType },
     AdminChat: undefined,
     OtherUserProfile: { userSelected: IUserType },
-    ComponentScreen: { comp: IComponentType },
+    ComponentScreen: { comp: IComponentType,wished:boolean },
     EditComponent: { comp: IComponentType }
 };
 

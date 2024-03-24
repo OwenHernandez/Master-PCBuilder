@@ -26,103 +26,103 @@ const AdminChat = (props: Props) => {
     let tempMsg: IMsgType[] = [
         {
             msg: "coso",
-            userSend: user,
-            userReceive: admin
+            author: user,
+            receiver: admin
         },
         {
             msg: "cosocoso",
-            userSend: admin,
-            userReceive: user
+            author: admin,
+            receiver: user
         },
         {
             msg: "coso",
-            userSend: user,
-            userReceive: admin
+            author: user,
+            receiver: admin
         },
         {
             msg: "cosocoso",
-            userSend: admin,
-            userReceive: user
+            author: admin,
+            receiver: user
         },
         {
             msg: "coso",
-            userSend: user,
-            userReceive: admin
+            author: user,
+            receiver: admin
         },
         {
             msg: "cosocoso",
-            userSend: admin,
-            userReceive: user
+            author: admin,
+            receiver: user
         },
         {
             msg: "coso",
-            userSend: user,
-            userReceive: admin
+            author: user,
+            receiver: admin
         },
         {
             msg: "cosocoso",
-            userSend: admin,
-            userReceive: user
+            author: admin,
+            receiver: user
         },
         {
             msg: "coso",
-            userSend: user,
-            userReceive: admin
+            author: user,
+            receiver: admin
         },
         {
             msg: "cosocoso",
-            userSend: admin,
-            userReceive: user
+            author: admin,
+            receiver: user
         },
         {
             msg: "coso",
-            userSend: user,
-            userReceive: admin
+            author: user,
+            receiver: admin
         },
         {
             msg: "cosocoso",
-            userSend: admin,
-            userReceive: user
+            author: admin,
+            receiver: user
         },
         {
             msg: "coso",
-            userSend: user,
-            userReceive: admin
+            author: user,
+            receiver: admin
         },
         {
             msg: "cosocoso",
-            userSend: admin,
-            userReceive: user
+            author: admin,
+            receiver: user
         },
         {
             msg: "coso",
-            userSend: user,
-            userReceive: admin
+            author: user,
+            receiver: admin
         },
         {
             msg: "cosocoso",
-            userSend: admin,
-            userReceive: user
+            author: admin,
+            receiver: user
         },
         {
             msg: "coso",
-            userSend: user,
-            userReceive: admin
+            author: user,
+            receiver: admin
         },
         {
             msg: "cosocoso",
-            userSend: admin,
-            userReceive: user
+            author: admin,
+            receiver: user
         },
         {
             msg: "cosokljfdsghfjdghdskgjhfdjsghjfdsgksdfghrohgfjsdjgkdhjkfdkghfjds",
-            userSend: user,
-            userReceive: admin
+            author: user,
+            receiver: admin
         },
         {
             msg: "cosocosokjdhsfhsdhjfhdsjfhdjshjfhsdjfhdsjkfhhjfdshkjfhsjkdhfjdsjhfjdsfsdhfdshkj",
-            userSend: admin,
-            userReceive: user
+            author: admin,
+            receiver: user
         }
     ];
 

@@ -21,6 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -45,7 +46,7 @@ public class BuildRestControllerV2 {
     BuildOutputDTOMapper outputDTOMapper = new BuildOutputDTOMapper();
 
     BuildInputDTOMapper inputDTOMapper = new BuildInputDTOMapper();
-    Logger log;
+
     @Transactional
     @GetMapping
     public ResponseEntity<?> getByUserId() {
@@ -55,11 +56,8 @@ public class BuildRestControllerV2 {
 
         if (byNick != null) {
             List<Build> byUserId = buildService.findByUserId(byNick.getId());
-
             if (byUserId != null) {
                 List<BuildOutputDTO> res = new ArrayList<>();
-                log = Logger.getLogger(BuildRestControllerV2.class.getName());
-                log.info(byUserId.toString());
                 for (Build b : byUserId) {
                     BuildOutputDTO bdto = outputDTOMapper.toDTO(b);
                     res.add(bdto);
@@ -86,6 +84,7 @@ public class BuildRestControllerV2 {
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The category must be Gaming, Work or Budget");
                 }
                 Build build = inputDTOMapper.toDomain(buildInputDTO);
+                build.setDateOfCreation(new BigInteger(String.valueOf(System.currentTimeMillis())));
                 build.setBuildsComponents(new ArrayList<>());
                 double totalPrice = 0;
                 for (Long compId : buildInputDTO.getComponentsIds()) {

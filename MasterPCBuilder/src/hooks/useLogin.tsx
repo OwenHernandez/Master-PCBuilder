@@ -44,14 +44,14 @@ const useLogin = () => {
 
     async function login(navigation: NativeStackNavigationProp<RootStackParamList, "Login", undefined>) {
         try {
-            const loginResponse = await axios.post(Globals.IP + "/api/v1/login", {nick, password});
+            const loginResponse = await axios.post(Globals.IP_HTTP + "/api/v1/login", {nick, password});
 
             await EncryptedStorage.setItem("token", loginResponse.data);
             setToken(loginResponse.data);
-            const byNickResponse = await axios.get(Globals.IP + "/api/v2/users?nick=" + nick, {headers: {'Authorization': "Bearer " + loginResponse.data}});
+            const byNickResponse = await axios.get(Globals.IP_HTTP + "/api/v2/users?nick=" + nick, {headers: {'Authorization': "Bearer " + loginResponse.data}});
             const userPicResponse = await RNFetchBlob.fetch(
                 'GET',
-                Globals.IP + '/api/v2/users/img/' + byNickResponse.data.id + '/' + byNickResponse.data.picture,
+                Globals.IP_HTTP + '/api/v2/users/img/' + byNickResponse.data.id + '/' + byNickResponse.data.picture,
                 {Authorization: `Bearer ${loginResponse.data}`}
             );
             let picture = ""
@@ -67,12 +67,11 @@ const useLogin = () => {
                 friends: byNickResponse.data.friends,
                 componentsWanted: byNickResponse.data.componentsWanted
             }
-            console.log(newUser);
             if (newUser.friends !== null) {
                 for (const friend of newUser.friends) {
                     const friendPicResponse = await RNFetchBlob.fetch(
                         'GET',
-                        Globals.IP + '/api/v2/users/img/' + friend.id + '/' + friend.picture,
+                        Globals.IP_HTTP + '/api/v2/users/img/' + friend.id + '/' + friend.picture,
                         {Authorization: `Bearer ${loginResponse.data}`}
                     );
                     picture = ""
@@ -82,7 +81,6 @@ const useLogin = () => {
                     friend.picture = picture;
                 }
             }
-            console.log("pasa de aqui");
             setUser(newUser);
             navigation.navigate("DrawerNavigator");
         } catch (err) {

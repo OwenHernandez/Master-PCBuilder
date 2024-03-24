@@ -22,6 +22,7 @@ public class UserEntityService implements IUserRepository {
 
     private final UserEntityMapper mapper = new UserEntityMapper();
 
+    @Transactional
     @Override
     public User findById(Long id) {
         User user = null;
@@ -35,6 +36,7 @@ public class UserEntityService implements IUserRepository {
         return user;
     }
 
+    @Transactional
     @Override
     public User findByNick(String nick) {
         User user = null;
@@ -48,6 +50,7 @@ public class UserEntityService implements IUserRepository {
         return user;
     }
 
+    @Transactional
     @Override
     public User findByEmail(String email) {
         User user = null;
@@ -58,6 +61,7 @@ public class UserEntityService implements IUserRepository {
         return user;
     }
 
+    @Transactional
     @Override
     public List<User> findAll() {
         List<User> users = new ArrayList<>();

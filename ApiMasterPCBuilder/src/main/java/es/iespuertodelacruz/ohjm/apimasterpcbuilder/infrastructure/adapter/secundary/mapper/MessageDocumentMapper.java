@@ -3,6 +3,8 @@ package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secu
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Message;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.MessageDocument;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class MessageDocumentMapper {
@@ -12,16 +14,19 @@ public class MessageDocumentMapper {
         message.setAuthor(messageDocument.getAuthor());
         message.setReceiver(messageDocument.getReceiver());
         message.setContent(messageDocument.getContent());
-        message.setDate(new Date(messageDocument.getDate()));
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        message.setDate(sdf.format(new Date(messageDocument.getDate())));
         return message;
     }
 
-    public MessageDocument toPersistance(Message message) {
+    public MessageDocument toPersistance(Message message) throws ParseException {
         MessageDocument messageDocument = new MessageDocument();
         messageDocument.setAuthor(message.getAuthor());
         messageDocument.setReceiver(message.getReceiver());
         messageDocument.setContent(message.getContent());
-        messageDocument.setDate(message.getDate().getTime());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date parse = sdf.parse(message.getDate());
+        messageDocument.setDate(parse.getTime());
         return messageDocument;
     }
 }

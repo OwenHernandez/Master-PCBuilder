@@ -12,6 +12,7 @@ import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secun
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.UserEntity;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.repository.IBuildComponentEntityRepository;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.repository.IBuildEntityRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +36,7 @@ public class BuildEntityService implements IBuildRepository {
     private final UserEntityMapper userMapper = new UserEntityMapper();
 
     @Override
+    @Transactional
     public List<Build> findAll() {
         List<Build> res = new ArrayList<>();
         List<BuildEntity> all = repo.findAll();
@@ -48,6 +50,7 @@ public class BuildEntityService implements IBuildRepository {
     }
 
     @Override
+    @Transactional
     public Build save(Build build) {
         try {
             BuildEntity be = mapper.toPersistence(build);
@@ -79,6 +82,7 @@ public class BuildEntityService implements IBuildRepository {
     }
 
     @Override
+    @Transactional
     public Build findById(Long id) {
         Build build = null;
         if (id != null) {
@@ -92,6 +96,7 @@ public class BuildEntityService implements IBuildRepository {
     }
 
     @Override
+    @Transactional
     public boolean deleteById(long id) {
         try {//We will need to change it when I do Posts
             Optional<BuildEntity> byId = repo.findById(id);
@@ -114,6 +119,7 @@ public class BuildEntityService implements IBuildRepository {
     }
 
     @Override
+    @Transactional
     public boolean update(Build build) {
         try {//We will need to change it when I do Posts
             Optional<BuildEntity> opt = repo.findById(build.getId());
@@ -149,6 +155,7 @@ public class BuildEntityService implements IBuildRepository {
     }
 
     @Override
+    @Transactional
     public List<Build> findByName(String name) {
         List<Build> res = null;
         if (name != null) {
@@ -170,6 +177,7 @@ public class BuildEntityService implements IBuildRepository {
     }
 
     @Override
+    @Transactional
     public List<Build> findByTotalPrice(double totalPrice) {
         List<Build> res = null;
         if (totalPrice != 0) {
@@ -190,33 +198,15 @@ public class BuildEntityService implements IBuildRepository {
     }
 
     @Override
+    @Transactional
     public List<Build> findByUserId(Long userId) {
         List<Build> res = null;
         if (userId != null) {
             res = new ArrayList<>();
             List<BuildEntity> list = repo.findByUserId(userId);
-            ArrayList<BuildComponent> bceList = new ArrayList<>();
             if (list != null) {
                 for (BuildEntity be : list) {
                     Build b = mapper.toDomain(be);
-                    for (int i = 0; i < b.getBuildsComponents().size(); i++) {
-                        BuildComponent bc = b.getBuildsComponents().get(i);
-                        BuildComponentEntity bce = be.getBuildsComponents().get(i);
-                        bc.setComponent(compMapper.toDomain(bce.getComponent()));
-                        Component component = bc.getComponent();
-                        component.setUserWhoCreated(userMapper.toDomain(bce.getComponent().getUser()));
-
-                        if (bce.getComponent().getUsersWhoWants() != null) {
-                            if (component.getUsersWhoWants() == null) {
-                                component.setUsersWhoWants(new ArrayList<>());
-                            }
-                            for (UserEntity ue : bce.getComponent().getUsersWhoWants()) {
-                                component.getUsersWhoWants().add(userMapper.toDomain(ue));
-                            }
-                        }
-                        bceList.add(bc);
-                    }
-                    b.setBuildsComponents(bceList);
                     res.add(b);
                 }
             }

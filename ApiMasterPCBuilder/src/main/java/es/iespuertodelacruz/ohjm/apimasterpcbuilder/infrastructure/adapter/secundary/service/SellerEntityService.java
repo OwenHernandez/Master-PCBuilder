@@ -7,6 +7,7 @@ import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secun
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.BuildEntity;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.SellerEntity;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.repository.ISellerEntityRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,7 @@ public class SellerEntityService implements ISellerRepository {
     private final SellerEntityMapper mapper = new SellerEntityMapper();
 
     @Override
+    @Transactional
     public List<Seller> findAll() {
         List<SellerEntity> all = repo.findAll();
         List<Seller> res = new ArrayList<>();
@@ -36,6 +38,7 @@ public class SellerEntityService implements ISellerRepository {
     }
 
     @Override
+    @Transactional
     public Seller save(Seller seller) {
         try {
             if (seller != null) {
@@ -50,6 +53,7 @@ public class SellerEntityService implements ISellerRepository {
     }
 
     @Override
+    @Transactional
     public Seller findById(Long id) {
         Seller res = null;
         if (id != null) {
@@ -63,6 +67,7 @@ public class SellerEntityService implements ISellerRepository {
     }
 
     @Override
+    @Transactional
     public boolean deleteById(long id) {
         try {//I will need to change this once the Component class is done
             repo.deleteById(id);
@@ -73,6 +78,7 @@ public class SellerEntityService implements ISellerRepository {
     }
 
     @Override
+    @Transactional
     public boolean update(Seller seller) {
         try {
             SellerEntity sellerEntity = mapper.toPersistance(seller);

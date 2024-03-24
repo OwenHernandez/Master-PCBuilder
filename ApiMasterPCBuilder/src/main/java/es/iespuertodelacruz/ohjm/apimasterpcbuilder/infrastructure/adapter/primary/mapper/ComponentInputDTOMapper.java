@@ -2,6 +2,7 @@ package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.prim
 
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Component;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.ComponentInputDTO;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.ComponentPriceInputDTO;
 
 public class ComponentInputDTOMapper {
     public Component toDomain(ComponentInputDTO componentInputDTO) {

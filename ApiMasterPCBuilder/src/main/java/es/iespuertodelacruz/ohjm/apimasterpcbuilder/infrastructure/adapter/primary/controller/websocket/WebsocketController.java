@@ -89,11 +89,9 @@ public class WebsocketController {
     public void sendSpecific(@Payload MessageTo msg, Principal user, @Header("simpSessionId") String sessionId) throws Exception {
         User author = userService.findByNick(msg.getAuthor());
         if (author != null) {
-            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            String username = ((UserDetails) principal).getUsername();
-            User byNickPrincipal = userService.findByNick(username);
-            if (byNickPrincipal != null) {
-                if (byNickPrincipal.equals(author)) {
+            //User byNickPrincipal = userService.findByNick(username);
+            //if (byNickPrincipal != null) {
+                //if (byNickPrincipal.equals(author)) {
                     User receiver = userService.findByNick(msg.getReceiver());
                     if (receiver != null) {
                         Message m = Message.newPrivate(msg.getAuthor(), msg.getReceiver(), msg.getContent());
@@ -101,8 +99,8 @@ public class WebsocketController {
 
                         simpMessagingTemplate.convertAndSendToUser(msg.getReceiver(), "/queue/messages", msg);
                     }
-                }
-            }
+                //}
+            //}
         }
     }
 }

@@ -5,6 +5,8 @@ import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Component;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.User;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.secundary.IBuildRepository;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.secundary.IComponentRepository;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.ProductAmazonDTO;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.ProductEbayDTO;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.mapper.BuildEntityMapper;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.mapper.ComponentEntityMapper;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.mapper.UserEntityMapper;
@@ -14,16 +16,34 @@ import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secun
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.repository.IBuildComponentEntityRepository;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.repository.IBuildEntityRepository;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.repository.IComponentEntityRepository;
+import jakarta.transaction.Transactional;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 @Service
 public class ComponentEntityService implements IComponentRepository {
+    private final WebClient webClient;
+    Logger log;
+    @Autowired
+    public ComponentEntityService(WebClient.Builder webClientBuilder) {
+        this.webClient = webClientBuilder.baseUrl("http://127.0.0.1:8000").build();
+    }
 
     @Autowired
     private IComponentEntityRepository repo;
@@ -36,6 +56,7 @@ public class ComponentEntityService implements IComponentRepository {
     private final UserEntityMapper userMapper = new UserEntityMapper();
 
     @Override
+    @Transactional
     public List<Component> findAll() {
         List<Component> res = new ArrayList<>();
         List<ComponentEntity> all = repo.findAll();
@@ -50,6 +71,7 @@ public class ComponentEntityService implements IComponentRepository {
     }
 
     @Override
+    @Transactional
     public Component save(Component component) {
         try {
             Component res = null;
@@ -67,6 +89,7 @@ public class ComponentEntityService implements IComponentRepository {
     }
 
     @Override
+    @Transactional
     public Component findById(Long id) {
         Component component = null;
         if (id != null) {
@@ -81,6 +104,7 @@ public class ComponentEntityService implements IComponentRepository {
     }
 
     @Override
+    @Transactional
     public List<Component> findByUserId(Long userId) {
         List<Component> res = null;
         if (userId != null) {
@@ -98,6 +122,7 @@ public class ComponentEntityService implements IComponentRepository {
     }
 
     @Override
+    @Transactional
     public boolean deleteById(long id) {
         try {
             Optional<ComponentEntity> byId = repo.findById(id);
@@ -123,6 +148,7 @@ public class ComponentEntityService implements IComponentRepository {
     }
 
     @Override
+    @Transactional
     public boolean update(Component component) {
         try {
             Optional<ComponentEntity> byId = repo.findById(component.getId());
@@ -136,7 +162,6 @@ public class ComponentEntityService implements IComponentRepository {
                     }
                 }
                 repo.save(ce);
-
                 return true;
             } else {
                 return false;
@@ -147,6 +172,7 @@ public class ComponentEntityService implements IComponentRepository {
     }
 
     @Override
+    @Transactional
     public List<Component> findByName(String name) {
         List<Component> res = null;
         if (name != null) {
@@ -163,6 +189,7 @@ public class ComponentEntityService implements IComponentRepository {
     }
 
     @Override
+    @Transactional
     public List<Component> findByPrice(double price) {
         List<Component> res = null;
         if (price != 0) {
@@ -178,6 +205,7 @@ public class ComponentEntityService implements IComponentRepository {
     }
 
     @Override
+    @Transactional
     public List<Component> findBySellerId(Long sellerId) {
         List<Component> res = null;
         if (sellerId != 0) {
@@ -191,5 +219,85 @@ public class ComponentEntityService implements IComponentRepository {
             }
         }
         return res;
+    }
+    public List<Component> searchEbay(String name) {
+        name = name.replace(" ", "+");
+        String url = "https://www.ebay.com/sch/i.html?_nkw="+name;
+        String userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36";
+
+        Document doc = null;
+        try {
+            doc = Jsoup.connect(url)
+                    .userAgent(userAgent)
+                    .get();
+        } catch (IOException e) {
+            throw new RuntimeException("There Was a Problem with the Request");
+        }
+        Elements listings = doc.select("div.s-item__info");
+        List<Component> productEbayDTOS= new ArrayList<>();
+        for (Element listing : listings) {
+            String title = listing.select("div.s-item__title").text();
+            String urla = listing.select("a.s-item__link").attr("href");
+            String price = listing.select("span.s-item__price").text();
+
+            String details = listing.select("div.s-item__subtitle").text();
+            String sellerInfo = listing.select("span.s-item__seller-info-text").text();
+            String shippingCost = listing.select("span.s-item__shipping").text();
+            String location = listing.select("span.s-item__location").text();
+            String sold = listing.select("span.s-item__quantity-sold").text();
+            if (price!=null){
+                Component component=new Component();
+                component.setName(title);
+                price=price.replace("$","");
+                price=price.replace(",","");
+                price=price.replaceAll("\s*to.*","");
+                String[] parts = price.split(" ");
+                log=Logger.getLogger("ebay");
+                log.info("PRECIO: "+parts[0]);
+                component.setEbay_price(Double.parseDouble(parts[0]));
+                log.info("COMPONENTE: "+component.getAmazon_price());
+                productEbayDTOS.add(component);
+            }
+        }
+        return productEbayDTOS;
+    }
+
+
+    public List<Component> searchAmazon(String name){
+        name = name.replace(" ", "+");
+        Mono<List<ProductAmazonDTO>> responseMono = this.webClient.get()
+                .uri("/" + name)
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<List<ProductAmazonDTO>>() {});
+        List<ProductAmazonDTO> block = responseMono.block();
+        List<Component> components= new ArrayList<>();
+        for (ProductAmazonDTO productAmazonDTO : block) {
+            if (productAmazonDTO.getPrice()!=null){
+                Component component=new Component();
+                component.setName(productAmazonDTO.getTile());
+                String price = productAmazonDTO.getPrice();
+
+                price=price.replace("$","");
+                price=price.replace(",","");
+                log=Logger.getLogger("amazon");
+                component.setAmazon_price(Double.parseDouble(price));
+                components.add(component);
+            }
+        }
+        return components;
+    }
+    @Override
+    @Transactional
+    public void updatePrices(Long id, double amazonPrice, double ebayPrice) {
+        try {
+            Optional<ComponentEntity> byId = repo.findById(id);
+            if (byId.isPresent()) {
+                repo.updatePrices(id, amazonPrice, ebayPrice);
+            } else {
+                throw new RuntimeException("Component Not Found");
+            }
+        } catch (RuntimeException e) {
+            log.info(e.getMessage());
+        }
     }
 }
