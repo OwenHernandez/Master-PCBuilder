@@ -237,6 +237,12 @@ public class UserRestControllerV2 {
         if (byId.getBlockedUsers() == null) {
             byId.setBlockedUsers(new ArrayList<>());
         }
+        if (byId.getFriends() != null) {
+            byId.getFriends().remove(userBlocked);
+        }
+        if (userBlocked.getFriends() != null) {
+            userBlocked.getFriends().remove(byId);
+        }
         if (byId.getBlockedUsers().contains(userBlocked)) {
             byId.getBlockedUsers().remove(userBlocked);
         } else {

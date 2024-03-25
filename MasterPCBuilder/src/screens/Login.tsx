@@ -1,4 +1,5 @@
 import {
+    ActivityIndicator,
     Alert,
     Dimensions,
     Image,
@@ -10,7 +11,7 @@ import {
     TouchableOpacity,
     View
 } from 'react-native'
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import {RootStackParamList} from '../navigations/StackNavigator';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import useLogin from '../hooks/useLogin';
@@ -27,7 +28,8 @@ const Login = (props: Props) => {
     const getFontSize = (size: number) => size / fontScale;
     const fullScreen = Dimensions.get("window").scale;
     const getIconSize = (size: number) => size / fullScreen;
-    const {changeNick, changePassword, checkLogin, errorMsg, nick, password} = useLogin();
+    const {changeNick, changePassword, checkLogin, errorMsg, nick, password, loading} = useLogin();
+
     return (
         <View style={{flex: 1}}>
             <View style={{...Styles.headerView, flexDirection: "column"}}>
@@ -92,6 +94,13 @@ const Login = (props: Props) => {
                 </View>
             </ScrollView>
             <Toast/>
+            {
+                loading && (
+                    <View style={Styles.loadingContainer}>
+                        <ActivityIndicator size="large" color="#ca2613" />
+                    </View>
+                )
+            }
         </View>
     )
 }
