@@ -59,7 +59,7 @@ jobs:
       with:
         username: root
         host: "146.190.12.221"
-        password: "ji8VqvweXT0rwLEBDZ"
+        password: "ji8VqvweXT0rwLEBDZ$Q"
         script: |
           docker stop root_MasterPcBuildercontainer_1 || true; 
           docker rm root_MasterPcBuildercontainer_1 -f || true; 
