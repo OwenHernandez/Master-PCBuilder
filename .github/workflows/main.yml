@@ -64,5 +64,5 @@ jobs:
           docker stop root_MasterPcBuildercontainer_1 || true; 
           docker rm root_MasterPcBuildercontainer_1 -f || true; 
           docker rmi masterpcbuilder -f || true; 
-          DOCKER_BUILDKIT=1 docker build -t masterpcbuilder .
+          docker build -t masterpcbuilder .;
           docker-compose up -d
