@@ -64,11 +64,8 @@ const Social = (props: Props) => {
                 } else {
                     post.user.picture = "";
                 }
-                if (post.usersWhoLiked.includes(user?.id)) {
-                    post.liked = true;
-                } else {
-                    post.liked = false;
-                }
+                post.liked = isLiked(post);
+                post.amountOfLikes = post.usersWhoLiked.length;
                 setPostsList(prevPosts => [...prevPosts, post]);
                 setPostsFiltered(prevPosts => [...prevPosts, post]);
             }
@@ -80,11 +77,18 @@ const Social = (props: Props) => {
     async function addRemoveLike(post: IPostType) {
         try {
             const response = await axios.put(
-                Globals.IP_HTTP + "/api/v2/posts/" + post.id + "/like" + user?.id,
+                Globals.IP_HTTP + "/api/v2/posts/" + post.id + "/like/" + user?.id,
                 null,
                 {headers: {Authorization: "Bearer " + token}}
             );
             post.liked = !post.liked;
+            if (post.liked) {
+                post.amountOfLikes++;
+            } else {
+                post.amountOfLikes--;
+            }
+
+            setPostsFiltered(postsFiltered.map((postFiltered) => (postFiltered.id === post.id ? post : postFiltered)));
         } catch (err) {
             console.log(err);
         }
@@ -100,6 +104,16 @@ const Social = (props: Props) => {
         }
         return false;
     }
+
+    function isLiked(postSelected: IPostType): boolean {
+        for (const userSelected of postSelected.usersWhoLiked) {
+            if (userSelected.id === user.id) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     return (
         <View style={{flex: 1, backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"}}>
@@ -308,12 +322,16 @@ const Social = (props: Props) => {
                                                         marginHorizontal: "10%"
                                                     }}>{post.item.user?.nick}</Text>
                                                 </TouchableOpacity>
-                                                <TouchableOpacity style={{justifyContent: "center"}}
-                                                                  onPress={() => Alert.alert("Daria o quitaria like")}>
+                                                <TouchableOpacity style={{justifyContent: "space-between", flexDirection: "row", alignItems: "center"}}
+                                                                  onPress={() => addRemoveLike(post.item)}>
                                                     <FontAwesome
-                                                        name={(post.item.liked) ? 'thumbs-o-up' : "thumbs-up"}
+                                                        name={!(post.item.liked) ? 'thumbs-o-up' : 'thumbs-up'}
                                                         size={getIconSize(80)}
                                                         color={(darkMode) ? "white" : "black"}></FontAwesome>
+                                                    <Text style={{
+                                                        fontSize: getFontSize(18),
+                                                        color: (darkMode) ? "white" : "black"
+                                                    }}>{" "}{post.item.amountOfLikes}</Text>
                                                 </TouchableOpacity>
                                             </View>
                                             <View style={{margin: "5%"}}>

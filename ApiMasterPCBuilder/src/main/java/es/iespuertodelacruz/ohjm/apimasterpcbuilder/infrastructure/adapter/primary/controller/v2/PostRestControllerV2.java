@@ -244,7 +244,7 @@ public class PostRestControllerV2 {
     }
 
     @PutMapping("/{id}/like/{userId}")
-    public ResponseEntity<?> like(@PathVariable("id") Long id, @PathVariable("userId") Long userId) {
+    public ResponseEntity<?> addRemoveLike(@PathVariable("id") Long id, @PathVariable("userId") Long userId) {
         if (id != null && userId != null) {
             Object principal =
                     SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -254,7 +254,7 @@ public class PostRestControllerV2 {
             if (userByNick != null) {
                 Post postById = service.findById(id);
                 if (postById != null) {
-                    if (id != userByNick.getId()) {
+                    if (userId != userByNick.getId()) {
                         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You cannot like with another user id");
                     }
                     User userById = userService.findById(userId);
