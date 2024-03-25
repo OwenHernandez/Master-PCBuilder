@@ -15,4 +15,6 @@ public interface IUserRepository {
     User findByNick(String nick);
 
     User findByEmail(String email);
+
+    List<User> findByRole(String role);
 }
