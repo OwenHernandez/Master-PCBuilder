@@ -36,18 +36,32 @@ const OtherUserProfile = (props: Props) => {
     const fullScreen = Dimensions.get("window").scale;
     const getIconSize = (size: number) => size / fullScreen;
     const [friendWithUser, setFriendWithUser] = useState(false);
+    const [blockedUser, setBlockedUser] = useState(false);
 
     useEffect(() => {
         setFriendWithUser(false);
         isFriend();
+        isBlocked();
     }, [user]);
 
     function isFriend() {
         for (const friend of user.friends) {
             if (friend.id === userSelected.id) {
                 setFriendWithUser(true);
+                return;
             }
         }
+        setFriendWithUser(false);
+    }
+
+    function isBlocked() {
+        for (const blockedUser of user.blockedUsers) {
+            if (blockedUser.id === userSelected.id) {
+                setBlockedUser(true);
+                return;
+            }
+        }
+        setBlockedUser(false);
     }
 
     async function addRemoveFriend() {
@@ -70,7 +84,37 @@ const OtherUserProfile = (props: Props) => {
                 }
                 friend.picture = picture;
             }
+            isFriend();
+            isBlocked();
+            setUser(newUser);
+        } catch (e) {
+            console.log(e);
+        }
+    }
 
+    async function addRemoveBlock() {
+        try {
+            const response = await axios.put(Globals.IP_HTTP + "/api/v2/users/block/" + user.id + "/" + userSelected.id, null, {headers: {"Authorization": "Bearer " + token}});
+
+            let newUser = {
+                ...user,
+                friends: response.data.friends,
+                blockedUsers: response.data.blockedUsers
+            }
+            for (const friend of newUser.friends) {
+                const friendPicResponse = await RNFetchBlob.fetch(
+                    'GET',
+                    Globals.IP_HTTP + '/api/v2/users/img/' + friend.id + '/' + friend.picture,
+                    {Authorization: `Bearer ${token}`}
+                );
+                let picture = ""
+                if (friendPicResponse.data !== Globals.IMG_NOT_FOUND) {
+                    picture = friendPicResponse.base64();
+                }
+                friend.picture = picture;
+            }
+            isFriend();
+            isBlocked();
             setUser(newUser);
         } catch (e) {
             console.log(e);
@@ -97,8 +141,8 @@ const OtherUserProfile = (props: Props) => {
                 <Text style={{fontSize: 40, color: (darkMode) ? "white" : "black"}}>{userSelected.nick}</Text>
                 <Text style={{fontSize: 20, color: (darkMode) ? "white" : "black"}}>{userSelected.email}</Text>
             </View>
-            <TouchableOpacity style={{...Styles.touchable, marginBottom: "3%", padding: "6%"}}
-                              onPress={addRemoveFriend}>
+            <TouchableOpacity style={{...Styles.touchable, marginBottom: "3%", padding: "6%", opacity: (!blockedUser) ? 1 : 0.5}}
+                              onPress={addRemoveFriend} disabled={(blockedUser)}>
                 <Text
                     style={{
                         fontSize: getFontSize(20),
@@ -108,12 +152,12 @@ const OtherUserProfile = (props: Props) => {
                     Friend</Text>
             </TouchableOpacity>
             <TouchableOpacity style={{...Styles.touchable, marginBottom: "3%", padding: "6%"}}
-                              onPress={() => Alert.alert("No esta implementado")}>
+                              onPress={addRemoveBlock}>
                 <Text style={{
                     fontSize: getFontSize(20),
                     textAlign: 'center',
                     color: (darkMode) ? "white" : "black"
-                }}>Block user</Text>
+                }}>{(!blockedUser ? "Block " : "UnBlock ")}user</Text>
             </TouchableOpacity>
             <TouchableOpacity style={{...Styles.touchable, marginBottom: "3%", padding: "6%"}}
                               onPress={() => Alert.alert("No esta implementado")}>
