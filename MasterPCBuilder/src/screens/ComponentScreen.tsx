@@ -9,7 +9,7 @@ import {
     TouchableOpacity,
     View
 } from 'react-native'
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import IComponentType from '../interfaces/IComponentType'
 import {usePrimaryContext} from '../contexts/PrimaryContext';
 import {Styles} from '../themes/Styles';
@@ -20,6 +20,7 @@ import {NativeStackScreenProps} from "@react-navigation/native-stack";
 import {RootStackParamList} from "../navigations/StackNavigator";
 import HeaderScreen from "../components/HeaderScreen";
 import Material from "react-native-vector-icons/MaterialIcons";
+import {LineChart} from "react-native-chart-kit";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ComponentScreen'>;
 
@@ -31,6 +32,7 @@ const ComponentScreen = (props: Props) => {
     const getFontSize = (size: number) => size / fontScale;
     const fullScreen = Dimensions.get("window").scale;
     const getIconSize = (size: number) => size / fullScreen;
+    const [viewGraphic, setViewGraphic] = useState<boolean>(false)
 
     async function addRemoveWishList() {
         try {
@@ -56,11 +58,22 @@ const ComponentScreen = (props: Props) => {
             console.log(err);
         }
     }
+    async function getDataComponent() {
 
+    }
     async function editComponent() {
         navigation.navigate("EditComponent", {comp: comp});
     }
-
+    const data = {
+        labels: ["January", "February", "March", "April", "May", "June"],
+        datasets: [
+            {
+                data: [20, 45, 28, 80, 99, 43],
+                color: (opacity = 1) => `rgba(255,255,255, ${opacity})`, // optional
+                strokeWidth: 2 // optional
+            }
+        ]
+    };
     return (
         <SafeAreaView style={{flex: 1}}>
             <HeaderScreen name={"Component"} navigation={navigation} profile={false}
@@ -73,12 +86,34 @@ const ComponentScreen = (props: Props) => {
                         }}
                         style={{margin: "2%", width: getIconSize(500), height: getIconSize(500), borderRadius: 10, alignSelf: "center"}}
                     />
-                    <Text style={{
-                        fontSize: getFontSize(30),
-                        color: (darkMode) ? "white" : "black",
-                        textAlign: "center"
-                    }}>{comp?.name}</Text>
-
+                    <View style={{flexDirection:"row",}}>
+                        <Text style={{
+                            fontSize: getFontSize(30),
+                            color: (darkMode) ? "white" : "black",
+                            textAlign: "center"
+                        }}>{comp?.name}</Text>
+                        <View style={{justifyContent:"center",alignItems:"center",marginHorizontal:20 }}>
+                            <TouchableOpacity onPress={()=>{
+                                setViewGraphic(!viewGraphic)
+                            }}>
+                                <Material name={"trending-up"} color={"white"} size={getIconSize(70)}/>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                    {
+                        viewGraphic?<LineChart
+                            data={data}
+                            width={Dimensions.get('window').width / 1.1}
+                            height={220}
+                            chartConfig={{
+                                backgroundGradientFrom: "#242121",
+                                color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
+                                strokeWidth: 2, // optional, default 3
+                                barPercentage: 0.5,
+                                useShadowColorFromDataset: false // optional
+                            }}
+                        />:<></>
+                    }
                     <View style={{flex: 1, width: getIconSize(1000), justifyContent: "flex-end"}}>
                         <View style={{flexDirection: "row", justifyContent: "space-between"}}>
                             <Text style={{
