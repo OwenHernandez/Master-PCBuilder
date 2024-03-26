@@ -41,7 +41,8 @@ const CreateComponent = (props: Props) => {
     const [sellers, setSellers] = useState([]);
     const [types, setTypes] = useState([]);
     const [selectedType, setSelectedType] = useState({});
-
+    const [amazonPrice, setAmazonPrice] = useState<number>(0)
+    const [ebayPrice, setEbayPrice] = useState<number>(0)
     useEffect(() => {
         setSellers([]);
         setTypes([]);
@@ -84,32 +85,33 @@ const CreateComponent = (props: Props) => {
         ]);
     }
 
+    async function getEbayPrice(){
+        try {
+            const response = await axios.get(Globals.IP_HTTP + "/api/v2/components/searchEbay/" + name);
+            let stringEbay:string= response.data[1].price;
+            stringEbay=stringEbay.replace("$","");
+            setEbayPrice(parseFloat(stringEbay));
+        } catch (err) {
+            console.log(err);
+        }
+    }
+    async function getAmazonPrice(){
+        try {
+            const response = await axios.get(Globals.IP_HTTP + "/api/v2/components/searchAmazon/" + name);
+            let stringAmazon:string= response.data[0].price;
+
+            stringAmazon=stringAmazon.replace("$","");
+            setAmazonPrice( parseFloat(stringAmazon));
+        } catch (err) {
+            console.log(err);
+        }
+    }
     async function createComponent() {
         if (!isNaN(Number(price))) {
-            let amazonPrice = 0;
-            let ebayPrice = 0;
-            async function getAmazonPrice(){
-                try {
-                    const response = await axios.get(Globals.IP_HTTP + "/api/v2/components/searchAmazon/" + name);
-                    let stringAmazon:string= response.data[0].price;
-
-                    stringAmazon=stringAmazon.replace("$","");
-                    amazonPrice = parseFloat(stringAmazon);
-                } catch (err) {
-                    console.log(err);
-                }
-            }
-            async function getEbayPrice(){
-                try {
-                    const response = await axios.get(Globals.IP_HTTP + "/api/v2/components/searchEbay/" + name);
-                    let stringEbay:string= response.data[1].price;
-                    stringEbay=stringEbay.replace("$","");
-                    ebayPrice = parseFloat(stringEbay);
-                } catch (err) {
-                    console.log(err);
-                }
-            }
+            getAmazonPrice();
+            getEbayPrice();
             try {
+                console.log()
                 const response = await axios.post(Globals.IP_HTTP + "/api/v2/components", {
                     name,
                     description,
