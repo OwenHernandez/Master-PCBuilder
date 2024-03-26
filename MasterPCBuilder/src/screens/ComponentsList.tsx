@@ -47,12 +47,12 @@ const ComponentsList = (props: Props) => {
     async function getUserComponents() {
         let auxComps=[];
         try {
-            const getCompsResponse = await axios.get(Globals.IP + "/api/v2/components" , {headers: {"Authorization": "Bearer " + token}});
+            const getCompsResponse = await axios.get(Globals.IP_HTTP + "/api/v2/components", {headers: {"Authorization": "Bearer " + token}});
             console.log(getCompsResponse.data);
             for (let comp of getCompsResponse.data) {
                 const getImgResponse = await RNFetchBlob.fetch(
                     'GET',
-                    Globals.IP + '/api/v2/components/img/' + comp.id + '/' + comp.image,
+                    Globals.IP_HTTP + '/api/v2/components/img/' + comp.id + '/' + comp.image,
                     {Authorization: `Bearer ${token}`}
                 );
                 let picture = ""
