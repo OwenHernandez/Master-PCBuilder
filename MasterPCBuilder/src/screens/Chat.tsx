@@ -22,6 +22,7 @@ import axios from "axios";
 import {Globals} from "../components/Globals";
 import Animated from "react-native-reanimated";
 import scrollTo = module
+import RNFetchBlob from "rn-fetch-blob";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Chat'>;
 
@@ -31,7 +32,7 @@ const Chat = (props: Props) => {
         TextDecoder: encoding.TextDecoder,
     });
 
-    const {user, darkMode, token} = usePrimaryContext();
+    const {user, darkMode, token, setUser} = usePrimaryContext();
     const {navigation, route} = props;
     const userSelected = route.params.friend;
     const fontScale = PixelRatio.getFontScale();
@@ -43,10 +44,12 @@ const Chat = (props: Props) => {
 
     const [message, setMessage] = useState("");
     const flatListRef = useRef();
+    const [blockedUser, setBlockedUser] = useState(false);
 
     useEffect(() => {
         connect();
-    }, []);
+        isBlocked();
+    }, [user]);
 
     /*
     function enviar() {
@@ -117,8 +120,14 @@ const Chat = (props: Props) => {
 
     function connect() {
 
-        async function getPrivateMessages() {
-            let response = await axios.get(
+        function getPrivateMessages() {
+            setMsgs([]);
+            getUserAuthorMsgs();
+            getUserReceiverMsgs();
+            setMsgs(msgs.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()));
+        }
+        async function getUserAuthorMsgs() {
+            let userAuthor = await axios.get(
                 Globals.IP_HTTP + "/api/v2/messages?receiver=" + userSelected.nick + "&author=" + user.nick,
                 {
                     headers: {
@@ -127,8 +136,30 @@ const Chat = (props: Props) => {
                     }
                 }
             );
-            setMsgs([]);
-            response.data.map((msg: any) => {
+
+            userAuthor.data.map((msg: any) => {
+                let newMsg: IMsgType = {
+                    author: msg.author,
+                    receiver: msg.receiver,
+                    msg: msg.content,
+                    date: msg.date
+                }
+                setMsgs((msgs) => [newMsg, ...msgs]);
+            });
+
+        }
+
+        async function getUserReceiverMsgs() {
+            let userReceiver = await axios.get(
+                Globals.IP_HTTP + "/api/v2/messages?receiver=" + user.nick + "&author=" + userSelected.nick,
+                {
+                    headers: {
+                        "Access-Control-Allow-Origin": "*",
+                        "Authorization": "Bearer " + token
+                    }
+                }
+            );
+            userReceiver.data.map((msg: any) => {
                 let newMsg: IMsgType = {
                     author: msg.author,
                     receiver: msg.receiver,
@@ -170,6 +201,44 @@ const Chat = (props: Props) => {
         stompRef.current.activate();
     }
 
+    function isBlocked() {
+        for (const blockedUser of user.blockedUsers) {
+            if (blockedUser.id === userSelected.id) {
+                setBlockedUser(true);
+                return;
+            }
+        }
+        setBlockedUser(false);
+    }
+
+    async function addRemoveBlock() {
+        try {
+            const response = await axios.put(Globals.IP_HTTP + "/api/v2/users/block/" + user.id + "/" + userSelected.id, null, {headers: {"Authorization": "Bearer " + token}});
+
+            let newUser = {
+                ...user,
+                friends: response.data.friends,
+                blockedUsers: response.data.blockedUsers
+            }
+            for (const friend of newUser.friends) {
+                const friendPicResponse = await RNFetchBlob.fetch(
+                    'GET',
+                    Globals.IP_HTTP + '/api/v2/users/img/' + friend.id + '/' + friend.picture,
+                    {Authorization: `Bearer ${token}`}
+                );
+                let picture = ""
+                if (friendPicResponse.data !== Globals.IMG_NOT_FOUND) {
+                    picture = friendPicResponse.base64();
+                }
+                friend.picture = picture;
+            }
+            isBlocked();
+            setUser(newUser);
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
     return (
         <SafeAreaView style={{flex: 1}}>
             <View style={Styles.headerView}>
@@ -198,6 +267,7 @@ const Chat = (props: Props) => {
                 </TouchableOpacity>
             </View>
             <View style={{flex: 1, marginVertical: "2%"}}>
+                { (!blockedUser) ?
                 <FlatList
                     inverted={true}
                     ref={flatListRef}
@@ -247,6 +317,14 @@ const Chat = (props: Props) => {
 
                     }}
                 />
+                    :
+                    <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
+                        <Text style={{fontSize: getFontSize(20), color: (!darkMode) ? "black" : "white"}}>You have blocked this user</Text>
+                        <TouchableOpacity onPress={addRemoveBlock}>
+                            <Text style={{fontSize: getFontSize(20), color: "#ca2613", textDecorationLine: "underline"}}>Unblock them?</Text>
+                        </TouchableOpacity>
+                    </View>
+                }
             </View>
             <View style={{
                 flexDirection: "row",

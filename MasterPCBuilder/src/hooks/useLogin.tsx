@@ -19,6 +19,8 @@ const useLogin = () => {
     const [errorMsg, setErrorMsg] = useState("");
     const fontScale = PixelRatio.getFontScale();
     const getFontSize = (size: number) => size / fontScale;
+    // En useLogin hook
+    const [loading, setLoading] = useState(false);
 
     function changeNick(newNick: string) {
         setNick(newNick);
@@ -43,6 +45,7 @@ const useLogin = () => {
     }
 
     async function login(navigation: NativeStackNavigationProp<RootStackParamList, "Login", undefined>) {
+        setLoading(true); // Activar el indicador de carga
         try {
             const loginResponse = await axios.post(Globals.IP_HTTP + "/api/v1/login", {nick, password});
 
@@ -65,6 +68,7 @@ const useLogin = () => {
                 email: byNickResponse.data.email,
                 picture: picture,
                 friends: byNickResponse.data.friends,
+                blockedUsers: byNickResponse.data.blockedUsers,
                 componentsWanted: byNickResponse.data.componentsWanted
             }
             if (newUser.friends !== null) {
@@ -95,6 +99,8 @@ const useLogin = () => {
             });
             setPassword("");
             setNick("");
+        } finally {
+            setLoading(false); // Desactivar el indicador de carga independientemente del resultado
         }
     }
 
@@ -104,7 +110,8 @@ const useLogin = () => {
         checkLogin,
         errorMsg,
         nick,
-        password
+        password,
+        loading
     }
 }
 

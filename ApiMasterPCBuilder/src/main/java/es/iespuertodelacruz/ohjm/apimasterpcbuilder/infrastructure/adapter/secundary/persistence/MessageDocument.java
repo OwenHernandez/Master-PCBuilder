@@ -8,6 +8,7 @@ public class MessageDocument {
     private String author;
     private String receiver;
     private String content;
+    private String topic;
     private long date;
 
     public MessageDocument() {
@@ -35,6 +36,14 @@ public class MessageDocument {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getTopic() {
+        return topic;
+    }
+
+    public void setTopic(String topic) {
+        this.topic = topic;
     }
 
     public long getDate() {

@@ -53,4 +53,9 @@ public class MessageService implements IMessageService {
     public List<Message> findByReceiverAndAuthor(String receiver, String author) {
         return repo.findByReceiverAndAuthor(receiver, author);
     }
+
+    @Override
+    public List<Message> findByTopic(String topic) {
+        return repo.findByTopic(topic);
+    }
 }

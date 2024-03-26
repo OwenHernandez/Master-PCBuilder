@@ -14,6 +14,7 @@ public class MessageDocumentMapper {
         message.setAuthor(messageDocument.getAuthor());
         message.setReceiver(messageDocument.getReceiver());
         message.setContent(messageDocument.getContent());
+        message.setTopic(messageDocument.getTopic());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         message.setDate(sdf.format(new Date(messageDocument.getDate())));
         return message;
@@ -24,6 +25,7 @@ public class MessageDocumentMapper {
         messageDocument.setAuthor(message.getAuthor());
         messageDocument.setReceiver(message.getReceiver());
         messageDocument.setContent(message.getContent());
+        messageDocument.setTopic(message.getTopic());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date parse = sdf.parse(message.getDate());
         messageDocument.setDate(parse.getTime());

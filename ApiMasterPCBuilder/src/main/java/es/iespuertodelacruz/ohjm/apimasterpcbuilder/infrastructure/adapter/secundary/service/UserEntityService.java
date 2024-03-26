@@ -91,4 +91,16 @@ public class UserEntityService implements IUserRepository {
         }
         return res;
     }
+
+    @Override
+    public List<User> findByRole(String role) {
+        List<User> users = new ArrayList<>();
+        List<UserEntity> repoByRole = this.repo.findByRole(role);
+        for (UserEntity ue : repoByRole) {
+            User domain = mapper.toDomain(ue, new HashSet<Long>(), new HashSet<Long>(), "findByRole");
+            users.add(domain);
+        }
+
+        return users;
+    }
 }

@@ -8,6 +8,7 @@ public class UserDTO {
     private String email;
     private String picture;
     private List<UserDTO> friends;
+    private List<UserDTO> blockedUsers;
     private List<ComponentOutputDTO> componentsWanted;
 
     public UserDTO() {
@@ -51,6 +52,14 @@ public class UserDTO {
 
     public void setFriends(List<UserDTO> friends) {
         this.friends = friends;
+    }
+
+    public List<UserDTO> getBlockedUsers() {
+        return blockedUsers;
+    }
+
+    public void setBlockedUsers(List<UserDTO> blockedUsers) {
+        this.blockedUsers = blockedUsers;
     }
 
     public List<ComponentOutputDTO> getComponentsWanted() {
