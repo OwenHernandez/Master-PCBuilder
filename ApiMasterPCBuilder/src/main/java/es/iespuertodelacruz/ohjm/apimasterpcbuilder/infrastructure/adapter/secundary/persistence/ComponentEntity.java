@@ -3,6 +3,7 @@ package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secu
 import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.PriceHistory;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -35,8 +36,6 @@ public class ComponentEntity implements Serializable {
 	private double amazon_price;
 
 	private double ebay_price;
-
-
 	//bi-directional many-to-one association to UserEntity
 	@JsonIgnore
 	@ManyToOne
@@ -55,7 +54,18 @@ public class ComponentEntity implements Serializable {
 	@ManyToMany(mappedBy="componentsWanted")
 	private List<UserEntity> usersWhoWants;
 
+	@OneToMany(mappedBy="componentEntity")
+	private List<PriceHistoryEntity> priceHistories;
+
 	public ComponentEntity() {
+	}
+
+	public List<PriceHistoryEntity> getPriceHistories() {
+		return priceHistories;
+	}
+
+	public void setPriceHistories(List<PriceHistoryEntity> priceHistories) {
+		this.priceHistories = priceHistories;
 	}
 
 	public double getAmazon_price() {

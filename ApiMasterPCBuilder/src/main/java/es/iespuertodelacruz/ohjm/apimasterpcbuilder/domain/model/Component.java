@@ -20,6 +20,7 @@ public class Component {
     private double ebay_price;
 
     private List<BuildComponent> buildsComponents;
+    private List<PriceHistory> priceHistories;
 
     private Seller seller;
 
@@ -35,6 +36,14 @@ public class Component {
         if (o == null || getClass() != o.getClass()) return false;
         Component component = (Component) o;
         return id == component.id;
+    }
+
+    public List<PriceHistory> getPriceHistories() {
+        return priceHistories;
+    }
+
+    public void setPriceHistories(List<PriceHistory> priceHistories) {
+        this.priceHistories = priceHistories;
     }
 
     public double getAmazon_price() {

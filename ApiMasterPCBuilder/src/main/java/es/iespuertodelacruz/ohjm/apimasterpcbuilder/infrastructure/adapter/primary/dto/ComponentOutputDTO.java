@@ -1,5 +1,9 @@
 package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto;
 
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.PriceHistory;
+
+import java.util.List;
+
 public class ComponentOutputDTO {
 
     private long id;
@@ -19,8 +23,17 @@ public class ComponentOutputDTO {
     private String sellerName;
 
     private String userNick;
+    private List<PriceHistory> priceHistory;
 
     public ComponentOutputDTO() {}
+
+    public List<PriceHistory> getPriceHistory() {
+        return priceHistory;
+    }
+
+    public void setPriceHistory(List<PriceHistory> priceHistory) {
+        this.priceHistory = priceHistory;
+    }
 
     public long getId() {
         return id;

@@ -1,6 +1,7 @@
 package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.mapper;
 
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Component;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.PriceHistory;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.ComponentInputDTO;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.ComponentOutputDTO;
 
@@ -18,6 +19,9 @@ public class ComponentOutputDTOMapper {
         component.setPrice(componentOutputDTO.getPrice());
         component.setAmazon_price(componentOutputDTO.getAmazon_price());
         component.setEbay_price(componentOutputDTO.getEbay_price());
+        for(PriceHistory ph: componentOutputDTO.getPriceHistory()){
+            component.getPriceHistories().add(ph);
+        }
 
         return component;
     }
@@ -34,6 +38,10 @@ public class ComponentOutputDTOMapper {
         componentOutputDTO.setUserNick(component.getUserWhoCreated().getNick());
         componentOutputDTO.setAmazon_price(component.getAmazon_price());
         componentOutputDTO.setEbay_price(component.getEbay_price());
+        for(PriceHistory ph: component.getPriceHistories()){
+            componentOutputDTO.getPriceHistory().add(ph);
+        }
+
         return componentOutputDTO;
     }
 }
