@@ -90,6 +90,14 @@ public class UserEntity implements Serializable {
 	)
 	private List<ComponentEntity> componentsWanted;
 
+	@JsonIgnore
+	@OneToMany(mappedBy = "groupAdmin")
+	private List<GroupChatEntity> groupChatsAdmin;
+
+	@JsonIgnore
+	@ManyToMany(mappedBy = "users")
+	private List<GroupChatEntity> groupChats;
+
 	public UserEntity() {
 	}
 
