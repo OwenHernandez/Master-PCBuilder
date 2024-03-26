@@ -21,7 +21,6 @@ import {Client} from "@stomp/stompjs";
 import axios from "axios";
 import {Globals} from "../components/Globals";
 import Animated from "react-native-reanimated";
-import scrollTo = module
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Chat'>;
 
