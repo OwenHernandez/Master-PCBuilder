@@ -65,4 +65,5 @@ jobs:
           docker rm root_MasterPcBuildercontainer_1 -f || true; 
           docker rmi masterpcbuilder -f || true; 
           docker build -t masterpcbuilder .;
+          docker-compose build;
           docker-compose up -d
