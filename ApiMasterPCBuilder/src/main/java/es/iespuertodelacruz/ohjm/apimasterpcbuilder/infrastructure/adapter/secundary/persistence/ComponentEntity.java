@@ -54,8 +54,9 @@ public class ComponentEntity implements Serializable {
 	@ManyToMany(mappedBy="componentsWanted")
 	private List<UserEntity> usersWhoWants;
 
-	@OneToMany(mappedBy="componentEntity")
+	@OneToMany(mappedBy = "component")
 	private List<PriceHistoryEntity> priceHistories;
+
 
 	public ComponentEntity() {
 	}

@@ -5,6 +5,7 @@ import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.PriceHistory;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.ComponentInputDTO;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.ComponentOutputDTO;
 
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
 public class ComponentOutputDTOMapper {
@@ -19,8 +20,13 @@ public class ComponentOutputDTOMapper {
         component.setPrice(componentOutputDTO.getPrice());
         component.setAmazon_price(componentOutputDTO.getAmazon_price());
         component.setEbay_price(componentOutputDTO.getEbay_price());
-        for(PriceHistory ph: componentOutputDTO.getPriceHistory()){
-            component.getPriceHistories().add(ph);
+        if (componentOutputDTO.getPriceHistory() != null) {
+            if (component.getPriceHistories() == null) {
+                component.setPriceHistories(new ArrayList<>());
+            }
+            for (PriceHistory bce : componentOutputDTO.getPriceHistory()) {
+                component.getPriceHistories().add(bce);
+            }
         }
 
         return component;
@@ -38,9 +44,15 @@ public class ComponentOutputDTOMapper {
         componentOutputDTO.setUserNick(component.getUserWhoCreated().getNick());
         componentOutputDTO.setAmazon_price(component.getAmazon_price());
         componentOutputDTO.setEbay_price(component.getEbay_price());
-        for(PriceHistory ph: component.getPriceHistories()){
-            componentOutputDTO.getPriceHistory().add(ph);
+        if (component.getPriceHistories() != null) {
+            if (componentOutputDTO.getPriceHistory() == null) {
+                componentOutputDTO.setPriceHistory(new ArrayList<>());
+            }
+            for (PriceHistory bce : component.getPriceHistories()) {
+                componentOutputDTO.getPriceHistory().add(bce);
+            }
         }
+
 
         return componentOutputDTO;
     }

@@ -9,6 +9,7 @@ public interface IPriceHistoryRepository {
     List<PriceHistory> findAll();
 
     PriceHistory save(PriceHistory bc);
+    void saveManual(double amazonPrice, Long componentId , long date, double ebayPrice, double price );
 
     PriceHistory findById(Long id);
     boolean delete(Long id);

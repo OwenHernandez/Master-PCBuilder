@@ -27,7 +27,8 @@ public class PriceHistoryEntity implements Serializable {
     private BigInteger date;
     @JsonIgnore
     @ManyToOne
-    private ComponentEntity componentEntity;
+    @JoinColumn(name = "COMPONENT_ID", nullable = false)
+    private ComponentEntity component;
 
     public PriceHistoryEntity() {
     }
@@ -73,10 +74,10 @@ public class PriceHistoryEntity implements Serializable {
     }
 
     public ComponentEntity getComponentEntity() {
-        return componentEntity;
+        return component;
     }
 
     public void setComponentEntity(ComponentEntity componentEntity) {
-        this.componentEntity = componentEntity;
+        this.component = componentEntity;
     }
 }

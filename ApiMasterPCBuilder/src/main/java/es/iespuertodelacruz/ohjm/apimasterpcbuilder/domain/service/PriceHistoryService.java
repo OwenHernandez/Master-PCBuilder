@@ -24,6 +24,14 @@ public class PriceHistoryService implements IPriceHistoryService {
     }
 
     @Override
+    public void saveManual(double amazonPrice, Long componentId, long date, double ebayPrice, double price) {
+        if (amazonPrice < 0 || ebayPrice < 0 || price < 0 || componentId < 0 || date < 0) {
+            throw new IllegalArgumentException("Los precios no pueden ser negativos");
+        }
+        repo.saveManual(amazonPrice, componentId, date, ebayPrice, price);
+    }
+
+    @Override
     public PriceHistory findById(Long id) {
         return repo.findById(id);
     }

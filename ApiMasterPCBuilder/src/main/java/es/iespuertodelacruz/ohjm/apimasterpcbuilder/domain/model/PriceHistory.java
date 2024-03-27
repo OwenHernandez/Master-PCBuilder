@@ -12,18 +12,18 @@ public class PriceHistory {
     private double amazonPrice;
     private double price;
     private BigInteger date;
-    private ComponentEntity componentEntity;
+    private Component component;
 
     public PriceHistory() {
     }
 
-    public PriceHistory(long id, double ebayPrice, double amazonPrice, double price, BigInteger date, ComponentEntity componentEntity) {
+    public PriceHistory(long id, double ebayPrice, double amazonPrice, double price, BigInteger date, Component componentEntity) {
         this.id = id;
         this.ebayPrice = ebayPrice;
         this.amazonPrice = amazonPrice;
         this.price = price;
         this.date = date;
-        this.componentEntity = componentEntity;
+        this.component = componentEntity;
     }
 
     public long getId() {
@@ -66,11 +66,11 @@ public class PriceHistory {
         this.date = date;
     }
 
-    public ComponentEntity getComponentEntity() {
-        return componentEntity;
+    public Component getComponent() {
+        return component;
     }
 
-    public void setComponentEntity(ComponentEntity componentEntity) {
-        this.componentEntity = componentEntity;
+    public void setComponent(Component component) {
+        this.component = component;
     }
 }
