@@ -19,7 +19,7 @@ const AdminChat = (props: Props) => {
     const { user, darkMode, token } = usePrimaryContext();
     const { navigation, route } = props;
     const admin: IAdminType = {
-        nick: "Admin"
+        nick: "admins"
     }
     const fontScale = PixelRatio.getFontScale();
     const getFontSize = (size: number) => size / fontScale;
@@ -35,23 +35,6 @@ const AdminChat = (props: Props) => {
         connect();
     }, [user]);
 
-    /*
-    function enviar() {
-        let stompClient = stompRef.current;
-        let messageTo = {
-            author: autor,
-            receiver: "no hay receptor específico",
-            content: mensaje
-        };
-
-        stompClient.publish({ destination: "/app/mensajegeneral", body: JSON.stringify(messageTo) });
-        console.log("enviado público");
-        /*
-        let arr = historico;
-        arr.push("le dices a  todos: "  + messageTo.content);
-        setHistorico([...arr]);
-    }
-     */
     function sendPrivate() {
         let stompClient = stompRef.current;
         let messageTo = {
@@ -64,6 +47,7 @@ const AdminChat = (props: Props) => {
 
         setAdminMsgs( prevMsgs => [{msg: messageTo.content, author: messageTo.author, receiver: messageTo.receiver, date: getFormattedDate()}, ...prevMsgs]);
         setMessage("");
+        // @ts-ignore
         flatListRef.current.scrollToOffset({ animated: true });
     }
 

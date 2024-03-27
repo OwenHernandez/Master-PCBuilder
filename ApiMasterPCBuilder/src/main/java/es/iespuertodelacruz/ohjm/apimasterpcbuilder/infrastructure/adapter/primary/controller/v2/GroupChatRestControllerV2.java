@@ -30,16 +30,20 @@ public class GroupChatRestControllerV2 {
     private final GroupChatDTOMapper mapper = new GroupChatDTOMapper();
 
     @GetMapping
-    public ResponseEntity<?> getAll() {
+    public ResponseEntity<?> getAll(@RequestParam(value = "userId") Long userId) {
+        User byId = userService.findById(userId);
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = ((UserDetails) principal).getUsername();
         User byNick = userService.findByNick(username);
 
-        if (byNick != null) {
-            List<GroupChat> all = groupChatService.findAll();
-            if (all != null) {
+        if (byId != null && byNick != null) {
+            if (!byId.getNick().equals(byNick.getNick())) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not allowed to see this user's group chats");
+            }
+            List<GroupChat> byUserId = groupChatService.findByUserId(userId);
+            if (byUserId != null) {
                 List<GroupChatOutputDTO> res = new ArrayList<>();
-                for (GroupChat groupChat : all) {
+                for (GroupChat groupChat : byUserId) {
                     res.add(mapper.toDTO(groupChat));
                 }
                 return ResponseEntity.ok(res);
@@ -110,7 +114,7 @@ public class GroupChatRestControllerV2 {
             byId.setName(inputDTO.getName());
             boolean update = groupChatService.update(byId);
             if (update) {
-                return ResponseEntity.ok("Group chat updated");
+                return ResponseEntity.ok(mapper.toDTO(byId));
             } else {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Something went wrong");
             }
@@ -154,7 +158,7 @@ public class GroupChatRestControllerV2 {
             }
             boolean update = groupChatService.update(byId);
             if (update) {
-                return ResponseEntity.ok("User added/removed from group chat");
+                return ResponseEntity.ok(mapper.toDTO(byId));
             } else {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Something went wrong");
             }
@@ -188,7 +192,7 @@ public class GroupChatRestControllerV2 {
                 byId.setAdmin(user);
                 boolean update = groupChatService.update(byId);
                 if (update) {
-                    return ResponseEntity.ok("User added as admin");
+                    return ResponseEntity.ok(mapper.toDTO(byId));
                 } else {
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Something went wrong");
                 }

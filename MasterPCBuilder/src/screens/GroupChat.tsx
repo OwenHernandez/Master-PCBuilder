@@ -25,9 +25,9 @@ import scrollTo = module
 import RNFetchBlob from "rn-fetch-blob";
 import * as module from "module";
 
-type Props = NativeStackScreenProps<RootStackParamList, 'Chat'>;
+type Props = NativeStackScreenProps<RootStackParamList, 'GroupChat'>;
 
-const Chat = (props: Props) => {
+const GroupChat = (props: Props) => {
     Object.assign(global, {
         TextEncoder: encoding.TextEncoder,
         TextDecoder: encoding.TextDecoder,
@@ -35,7 +35,7 @@ const Chat = (props: Props) => {
 
     const {user, darkMode, token, setUser} = usePrimaryContext();
     const {navigation, route} = props;
-    const userSelected = route.params.friend;
+    const groupSelected = route.params.group;
     const fontScale = PixelRatio.getFontScale();
     const getFontSize = (size: number) => size / fontScale;
     const fullScreen = Dimensions.get("window").scale;
@@ -49,24 +49,39 @@ const Chat = (props: Props) => {
 
     useEffect(() => {
         connect();
-        isBlocked();
     }, [user]);
-
-    function sendPrivate() {
+    function sendMsg() {
         let stompClient = stompRef.current;
         let messageTo = {
             author: user.nick,
-            receiver: userSelected.nick,
+            topic: groupSelected.name + groupSelected.id,
             content: message
         };
-        stompClient.publish({destination: "/app/private", body: JSON.stringify(messageTo)});
-        console.log("enviado privado");
 
-        setMsgs( prevMsgs => [{msg: messageTo.content, author: messageTo.author, receiver: messageTo.receiver, date: getFormattedDate()}, ...prevMsgs]);
+        stompClient.publish({destination: "/app/public/" + messageTo.topic, body: JSON.stringify(messageTo)});
+        console.log("enviado mensaje al topic: " + messageTo.topic);
+
+        setMsgs( prevMsgs => [{msg: messageTo.content, author: messageTo.author, topic: messageTo.topic, date: getFormattedDate()}, ...prevMsgs]);
         setMessage("");
         // @ts-ignore
         flatListRef.current.scrollToOffset({ animated: true });
     }
+    /*
+    function sendPrivate() {
+        let stompClient = stompRef.current;
+        let messageTo = {
+            author: user.nick,
+            topic: groupSelected.name + groupSelected.id,
+            content: message
+        };
+        stompClient.publish({destination: "/app/public/" + messageTo.topic, body: JSON.stringify(messageTo)});
+        console.log("enviado privado");
+
+        setMsgs( prevMsgs => [{msg: messageTo.content, author: messageTo.author, topic: messageTo.topic, date: getFormattedDate()}, ...prevMsgs]);
+        setMessage("");
+        flatListRef.current.scrollToOffset({ animated: true });
+    }
+    */
 
     function getFormattedDate() {
         const date = new Date();
@@ -88,10 +103,10 @@ const Chat = (props: Props) => {
         let nuevoMensaje = JSON.parse(datos.body);
         console.log(nuevoMensaje);
         let arr = msgs;
-        arr.push({msg: nuevoMensaje.content, author: nuevoMensaje.author, receiver: nuevoMensaje.receiver, date: nuevoMensaje.date});
+        arr.push({msg: nuevoMensaje.content, author: nuevoMensaje.author, topic: nuevoMensaje.topic, date: nuevoMensaje.date});
         setMsgs([...arr]);
     }
-
+/*
     function onPrivateMessageReceived(datos: any) {
         console.log("datos: " + datos);
         //setRecibido(datos.body);
@@ -101,19 +116,18 @@ const Chat = (props: Props) => {
         arr.push({msg: nuevoMensaje.content, author: nuevoMensaje.author, receiver: nuevoMensaje.receiver, date: nuevoMensaje.date});
         setMsgs([...arr]);
     }
-
+*/
 
     function connect() {
 
-        function getPrivateMessages() {
+        function getPublicMessages() {
             setMsgs([]);
-            getUserAuthorMsgs();
-            getUserReceiverMsgs();
+            getTopicMsgs();
             setMsgs(msgs.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()));
         }
-        async function getUserAuthorMsgs() {
-            let userAuthor = await axios.get(
-                Globals.IP_HTTP + "/api/v2/messages?receiver=" + userSelected.nick + "&author=" + user.nick,
+        async function getTopicMsgs() {
+            let topicMsgs = await axios.get(
+                Globals.IP_HTTP + "/api/v2/messages?topic=" + groupSelected.name + groupSelected.id,
                 {
                     headers: {
                         "Access-Control-Allow-Origin": "*",
@@ -122,10 +136,10 @@ const Chat = (props: Props) => {
                 }
             );
 
-            userAuthor.data.map((msg: any) => {
+            topicMsgs.data.map((msg: any) => {
                 let newMsg: IMsgType = {
                     author: msg.author,
-                    receiver: msg.receiver,
+                    topic: msg.topic,
                     msg: msg.content,
                     date: msg.date
                 }
@@ -134,29 +148,7 @@ const Chat = (props: Props) => {
 
         }
 
-        async function getUserReceiverMsgs() {
-            let userReceiver = await axios.get(
-                Globals.IP_HTTP + "/api/v2/messages?receiver=" + user.nick + "&author=" + userSelected.nick,
-                {
-                    headers: {
-                        "Access-Control-Allow-Origin": "*",
-                        "Authorization": "Bearer " + token
-                    }
-                }
-            );
-            userReceiver.data.map((msg: any) => {
-                let newMsg: IMsgType = {
-                    author: msg.author,
-                    receiver: msg.receiver,
-                    msg: msg.content,
-                    date: msg.date
-                }
-                setMsgs((msgs) => [newMsg, ...msgs]);
-            });
-        }
-
-
-        getPrivateMessages();
+        getPublicMessages();
 
         stompRef.current = new Client({
             brokerURL: Globals.IP_WEBSOCKET + '/websocket',
@@ -179,58 +171,28 @@ const Chat = (props: Props) => {
         function connectOK() {
             console.log("entra en conectarOK");
             let stompClient = stompRef.current;
-            //stompClient.subscribe('/topic/general', onPublicMessageReceived);
-            stompClient.subscribe('/users/queue/messages', onPrivateMessageReceived);
+            stompClient.subscribe('/topic/' + groupSelected.name + groupSelected.id, onPublicMessageReceived);
         }
 
         stompRef.current.activate();
     }
 
-    function isBlocked() {
+    function isBlocked(userSelected: string) {
         for (const blockedUser of user.blockedUsers) {
-            if (blockedUser.id === userSelected.id) {
-                setBlockedUser(true);
-                return;
+            if (blockedUser.nick === userSelected) {
+                return true;
             }
         }
-        setBlockedUser(false);
-    }
-
-    async function addRemoveBlock() {
-        try {
-            const response = await axios.put(Globals.IP_HTTP + "/api/v2/users/block/" + user.id + "/" + userSelected.id, null, {headers: {"Authorization": "Bearer " + token}});
-
-            let newUser = {
-                ...user,
-                friends: response.data.friends,
-                blockedUsers: response.data.blockedUsers
-            }
-            for (const friend of newUser.friends) {
-                const friendPicResponse = await RNFetchBlob.fetch(
-                    'GET',
-                    Globals.IP_HTTP + '/api/v2/users/img/' + friend.id + '/' + friend.picture,
-                    {Authorization: `Bearer ${token}`}
-                );
-                let picture = ""
-                if (friendPicResponse.data !== Globals.IMG_NOT_FOUND) {
-                    picture = friendPicResponse.base64();
-                }
-                friend.picture = picture;
-            }
-            isBlocked();
-            setUser(newUser);
-        } catch (e) {
-            console.log(e);
-        }
+        return false;
     }
 
     return (
         <SafeAreaView style={{flex: 1}}>
             <View style={Styles.headerView}>
-                <TouchableOpacity onPress={() => navigation.navigate("OtherUserProfile", {userSelected})}>
+                <TouchableOpacity onPress={() => navigation.navigate("GroupChatDetails", {groupSelected: groupSelected})}>
                     <Image
                         source={{
-                            uri: (userSelected?.picture !== "") ? "data:image/jpeg;base64," + userSelected?.picture : "https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png?x=480&quality=40"
+                            uri: (groupSelected?.picture !== "") ? "data:image/jpeg;base64," + groupSelected?.picture : "https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png?x=480&quality=40"
                         }}
                         style={{
                             ...Styles.imageStyle,
@@ -245,14 +207,13 @@ const Chat = (props: Props) => {
                     ...Styles.headerText,
                     color: (darkMode) ? "white" : "black",
                     fontSize: getFontSize(20)
-                }}>{userSelected?.nick}</Text>
+                }}>{groupSelected?.name}</Text>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Material name='keyboard-backspace' size={getIconSize(100)}
                               color={(darkMode) ? "white" : "black"}></Material>
                 </TouchableOpacity>
             </View>
             <View style={{flex: 1, marginVertical: "2%"}}>
-                { (!blockedUser) ?
                 <FlatList
                     inverted={true}
                     ref={flatListRef}
@@ -262,7 +223,7 @@ const Chat = (props: Props) => {
                             return (
                                 <View>
                                     <View style={{flexDirection: "row", justifyContent: "flex-end"}}>
-                                        <Text style={{fontSize: getFontSize(15), color: "#a3a3a3", fontStyle: "italic"}}>{msg.item.date}</Text>
+                                        <Text>You,{" "}</Text><Text style={{fontSize: getFontSize(15), color: "#a3a3a3", fontStyle: "italic"}}>{msg.item.date}</Text>
                                     </View>
                                     <View style={{flexDirection: "row", justifyContent: "flex-end"}}>
                                         <View style={{
@@ -278,38 +239,40 @@ const Chat = (props: Props) => {
                                     </View>
                                 </View>
                             );
-                        } else if (msg.item?.author === userSelected.nick) {
-                            return (
-                                <View>
-                                    <View style={{flexDirection: "row", justifyContent: "flex-end"}}>
-                                        <Text style={{fontSize: getFontSize(15), color: "#a3a3a3", fontStyle: "italic"}}>{msg.item.date}</Text>
-                                    </View>
-                                    <View style={{flexDirection: "row", justifyContent: "flex-end"}}>
-                                        <View style={{
-                                            backgroundColor: "#ca2613",
-                                            borderRadius: 20,
-                                            padding: "1%",
-                                            paddingHorizontal: "3%",
-                                            margin: "2%",
-                                            maxWidth: "90%"
-                                        }}>
-                                            <Text style={{fontSize: getFontSize(15), color: "white"}}>{msg.item.msg}</Text>
+                        } else {
+                            if (!isBlocked(msg.item.author)) {
+                                return (
+                                    <View>
+                                        <View style={{flexDirection: "row", justifyContent: "flex-end"}}>
+                                            <Text
+                                                style={{fontSize: getFontSize(15)}}>{msg.item.author},{" "}</Text><Text
+                                            style={{
+                                                fontSize: getFontSize(15),
+                                                color: "#a3a3a3",
+                                                fontStyle: "italic"
+                                            }}>{msg.item.date}</Text>
+                                        </View>
+                                        <View style={{flexDirection: "row", justifyContent: "flex-end"}}>
+                                            <View style={{
+                                                backgroundColor: "#ca2613",
+                                                borderRadius: 20,
+                                                padding: "1%",
+                                                paddingHorizontal: "3%",
+                                                margin: "2%",
+                                                maxWidth: "90%"
+                                            }}>
+                                                <Text style={{
+                                                    fontSize: getFontSize(15),
+                                                    color: "white"
+                                                }}>{msg.item.msg}</Text>
+                                            </View>
                                         </View>
                                     </View>
-                                </View>
-                            );
+                                );
+                            }
                         }
-
                     }}
                 />
-                    :
-                    <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
-                        <Text style={{fontSize: getFontSize(20), color: (!darkMode) ? "black" : "white"}}>You have blocked this user</Text>
-                        <TouchableOpacity onPress={addRemoveBlock}>
-                            <Text style={{fontSize: getFontSize(20), color: "#ca2613", textDecorationLine: "underline"}}>Unblock them?</Text>
-                        </TouchableOpacity>
-                    </View>
-                }
             </View>
             <View style={{
                 flexDirection: "row",
@@ -318,7 +281,7 @@ const Chat = (props: Props) => {
                 marginBottom: "3%"
             }}>
                 <TextInput
-                    placeholder='Say something to your friend'
+                    placeholder='Say something to your friends'
                     defaultValue={message}
                     placeholderTextColor="#a3a3a3"
                     style={{
@@ -332,7 +295,7 @@ const Chat = (props: Props) => {
                     }}
                     onChangeText={(text) => setMessage(text)}
                 ></TextInput>
-                <TouchableOpacity onPress={sendPrivate}>
+                <TouchableOpacity onPress={sendMsg}>
                     <Material name="send" size={getIconSize(80)} color={(!darkMode) ? "black" : "white"}></Material>
                 </TouchableOpacity>
             </View>
@@ -340,4 +303,4 @@ const Chat = (props: Props) => {
     )
 }
 
-export default Chat
+export default GroupChat

@@ -6,12 +6,14 @@ import { usePrimaryContext } from '../contexts/PrimaryContext';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import FriendsList from '../screens/FriendsList';
 import SearchUsers from '../screens/SearchUsers';
+import GroupList from "../screens/GroupList";
 
 type Props = {}
 
 export type FriendsTabsParamList = {
     "Friends List": undefined;
     "Search Users": undefined;
+    "Group List": undefined;
 }
 
 const Tab = createBottomTabNavigator<FriendsTabsParamList>();
@@ -44,6 +46,16 @@ const FriendsTabs = (props: Props) => {
                     tabBarStyle: { borderTopColor: "#ca2613", borderTopWidth: 2 }
                 }}
                 component={FriendsList}
+            />
+            <Tab.Screen name="Group List"
+                        options={{
+                            tabBarIcon: ({ focused }) => <Ionicon name={(focused) ? 'people-sharp' : 'people-outline'} size={getIconSize(80)} color={(darkMode) ? "white" : "black"} />,
+                            tabBarInactiveBackgroundColor: (darkMode) ? "#242121" : "#F5F5F5", tabBarActiveBackgroundColor: (darkMode) ? "#242121" : "#F5F5F5",
+                            //tabBarItemStyle: { borderTopColor: "red", borderTopWidth: 2 },
+                            tabBarLabelStyle: { fontSize: getFontSize(13) },
+                            tabBarStyle: { borderTopColor: "#ca2613", borderTopWidth: 2 }
+                        }}
+                        component={GroupList}
             />
         </Tab.Navigator>
     )
