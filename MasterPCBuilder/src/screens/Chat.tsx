@@ -20,10 +20,7 @@ import {IMsgType} from '../interfaces/IMsgType';
 import {Client} from "@stomp/stompjs";
 import axios from "axios";
 import {Globals} from "../components/Globals";
-import Animated from "react-native-reanimated";
-import scrollTo = module
 import RNFetchBlob from "rn-fetch-blob";
-import * as module from "module";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Chat'>;
 
@@ -62,7 +59,7 @@ const Chat = (props: Props) => {
         stompClient.publish({destination: "/app/private", body: JSON.stringify(messageTo)});
         console.log("enviado privado");
 
-        setMsgs( prevMsgs => [{msg: messageTo.content, author: messageTo.author, receiver: messageTo.receiver, date: getFormattedDate()}, ...prevMsgs]);
+        setMsgs( prevMsgs => [{content: messageTo.content, author: messageTo.author, receiver: messageTo.receiver, date: getFormattedDate()}, ...prevMsgs]);
         setMessage("");
         // @ts-ignore
         flatListRef.current.scrollToOffset({ animated: true });
@@ -88,7 +85,7 @@ const Chat = (props: Props) => {
         let nuevoMensaje = JSON.parse(datos.body);
         console.log(nuevoMensaje);
         let arr = msgs;
-        arr.push({msg: nuevoMensaje.content, author: nuevoMensaje.author, receiver: nuevoMensaje.receiver, date: nuevoMensaje.date});
+        arr.push({content: nuevoMensaje.content, author: nuevoMensaje.author, receiver: nuevoMensaje.receiver, date: nuevoMensaje.date});
         setMsgs([...arr]);
     }
 
@@ -98,7 +95,7 @@ const Chat = (props: Props) => {
         let nuevoMensaje = JSON.parse(datos.body);
         console.log(nuevoMensaje);
         let arr = msgs;
-        arr.push({msg: nuevoMensaje.content, author: nuevoMensaje.author, receiver: nuevoMensaje.receiver, date: nuevoMensaje.date});
+        arr.push({content: nuevoMensaje.content, author: nuevoMensaje.author, receiver: nuevoMensaje.receiver, date: nuevoMensaje.date});
         setMsgs([...arr]);
     }
 
@@ -126,7 +123,7 @@ const Chat = (props: Props) => {
                 let newMsg: IMsgType = {
                     author: msg.author,
                     receiver: msg.receiver,
-                    msg: msg.content,
+                    content: msg.content,
                     date: msg.date
                 }
                 setMsgs((msgs) => [newMsg, ...msgs]);
@@ -148,7 +145,7 @@ const Chat = (props: Props) => {
                 let newMsg: IMsgType = {
                     author: msg.author,
                     receiver: msg.receiver,
-                    msg: msg.content,
+                    content: msg.content,
                     date: msg.date
                 }
                 setMsgs((msgs) => [newMsg, ...msgs]);

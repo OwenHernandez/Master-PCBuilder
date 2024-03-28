@@ -2,6 +2,8 @@ package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.prim
 
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Message;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.User;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.IUserService;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.secundary.IMessageService;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.service.MessageService;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ class MessageTo {
     private String receiver;
     private String content;
     private String topic;
+    private String date;
 
     public MessageTo() {
     }
@@ -55,6 +58,14 @@ class MessageTo {
     public void setTopic(String topic) {
         this.topic = topic;
     }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
 }
 
 @Controller
@@ -65,19 +76,18 @@ public class WebsocketController {
     private SimpMessagingTemplate simpMessagingTemplate;
 
     @Autowired
-    private UserService userService;
+    private IUserService userService;
 
     @Autowired
-    private MessageService messageService;
+    private IMessageService messageService;
 
     @MessageMapping("/public/{topic}")
-    public void sendMessage(@DestinationVariable String topic, @Payload MessageTo chatMessage) {
+    public void sendMessage(@DestinationVariable String topic, @Payload MessageTo chatMessage, Principal user) {
         User byNick = userService.findByNick(chatMessage.getAuthor());
         if (byNick == null) {
             return;
         }
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username = ((UserDetails) principal).getUsername();
+        String username =  user.getName();
         User byNickPrincipal = userService.findByNick(username);
         if (byNickPrincipal == null) {
             return;
@@ -85,7 +95,6 @@ public class WebsocketController {
         if (!byNickPrincipal.equals(byNick)) {
             return;
         }
-
         // Crear y guardar el mensaje, asegurándote de usar el tópico especificado
         Message m = Message.newPublic(chatMessage.getAuthor(), topic, chatMessage.getContent());
         messageService.save(m);
@@ -96,10 +105,18 @@ public class WebsocketController {
 
     //Este metodo sera para enviar mensajes a los usuarios de los administradores se tiene que usar en la app admin
     @MessageMapping("/admin/message/{userId}")
-    public void sendResponseToUserFromAdmin(@DestinationVariable String userNick, MessageTo response) {
+    public void sendResponseToUserFromAdmin(@DestinationVariable String userNick, MessageTo response, Principal user) {
         // Aquí puedes incluir la lógica para procesar el mensaje y posiblemente reenviarlo al usuario
         User byNick = userService.findByNick(userNick);
         if (byNick == null) {
+            return;
+        }
+        String username = user.getName();
+        User byNickPrincipal = userService.findByNick(username);
+        if (byNickPrincipal == null) {
+            return;
+        }
+        if (!byNickPrincipal.equals(byNick)) {
             return;
         }
         Message message = Message.newPrivate("admins", userNick, response.getContent());
@@ -110,19 +127,18 @@ public class WebsocketController {
 
     //Este metodo sera para enviar mensajes a los administradores se tiene que usar en la app rn
     @MessageMapping("/message/admins")
-    public void sendResponseToAdmin(@Payload MessageTo chatMessage) {
+    public void sendResponseToAdmin(@Payload MessageTo chatMessage, Principal user) {
         // Aquí puedes incluir la lógica para procesar el mensaje y posiblemente reenviarlo a los administradores
         User byNick = userService.findByNick(chatMessage.getAuthor());
         if (byNick == null) {
             return;
         }
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username = ((UserDetails) principal).getUsername();
-        User userByNick = userService.findByNick(username);
-        if (userByNick == null) {
+        String username = user.getName();
+        User byNickPrincipal = userService.findByNick(username);
+        if (byNickPrincipal == null) {
             return;
         }
-        if (!userByNick.equals(byNick)) {
+        if (!byNickPrincipal.equals(byNick)) {
             return;
         }
         Message message = Message.newPrivate(chatMessage.getAuthor(), "admins", chatMessage.getContent());
@@ -135,7 +151,7 @@ public class WebsocketController {
     public void sendSpecific(@Payload MessageTo msg, Principal user, @Header("simpSessionId") String sessionId) throws Exception {
         User author = userService.findByNick(msg.getAuthor());
         if (author != null) {
-            String username = ((UserDetails) user).getUsername();
+            String username = user.getName();
             User byNickPrincipal = userService.findByNick(username);
             if (byNickPrincipal != null) {
                 if (byNickPrincipal.equals(author)) {

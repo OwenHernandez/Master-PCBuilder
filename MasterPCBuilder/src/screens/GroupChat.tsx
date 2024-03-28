@@ -20,10 +20,6 @@ import {IMsgType} from '../interfaces/IMsgType';
 import {Client} from "@stomp/stompjs";
 import axios from "axios";
 import {Globals} from "../components/Globals";
-import Animated from "react-native-reanimated";
-import scrollTo = module
-import RNFetchBlob from "rn-fetch-blob";
-import * as module from "module";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'GroupChat'>;
 
@@ -41,15 +37,16 @@ const GroupChat = (props: Props) => {
     const fullScreen = Dimensions.get("window").scale;
     const getIconSize = (size: number) => size / fullScreen;
     const [msgs, setMsgs] = useState([{}] as IMsgType[]);
+    const msgsRef = useRef([{}] as IMsgType[]);
     const stompRef = useRef({} as Client);
 
     const [message, setMessage] = useState("");
     const flatListRef = useRef();
-    const [blockedUser, setBlockedUser] = useState(false);
 
     useEffect(() => {
         connect();
     }, [user]);
+
     function sendMsg() {
         let stompClient = stompRef.current;
         let messageTo = {
@@ -61,27 +58,12 @@ const GroupChat = (props: Props) => {
         stompClient.publish({destination: "/app/public/" + messageTo.topic, body: JSON.stringify(messageTo)});
         console.log("enviado mensaje al topic: " + messageTo.topic);
 
-        setMsgs( prevMsgs => [{msg: messageTo.content, author: messageTo.author, topic: messageTo.topic, date: getFormattedDate()}, ...prevMsgs]);
+        //setMsgs( prevMsgs => [{msg: messageTo.content, author: messageTo.author, date: getFormattedDate()}, ...prevMsgs]);
+        //setMsgs(msgs.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
         setMessage("");
         // @ts-ignore
         flatListRef.current.scrollToOffset({ animated: true });
     }
-    /*
-    function sendPrivate() {
-        let stompClient = stompRef.current;
-        let messageTo = {
-            author: user.nick,
-            topic: groupSelected.name + groupSelected.id,
-            content: message
-        };
-        stompClient.publish({destination: "/app/public/" + messageTo.topic, body: JSON.stringify(messageTo)});
-        console.log("enviado privado");
-
-        setMsgs( prevMsgs => [{msg: messageTo.content, author: messageTo.author, topic: messageTo.topic, date: getFormattedDate()}, ...prevMsgs]);
-        setMessage("");
-        flatListRef.current.scrollToOffset({ animated: true });
-    }
-    */
 
     function getFormattedDate() {
         const date = new Date();
@@ -100,30 +82,20 @@ const GroupChat = (props: Props) => {
     function onPublicMessageReceived(datos: any) {
         console.log("datos: " + datos);
         //setRecibido(datos.body);
-        let nuevoMensaje = JSON.parse(datos.body);
-        console.log(nuevoMensaje);
-        let arr = msgs;
-        arr.push({msg: nuevoMensaje.content, author: nuevoMensaje.author, topic: nuevoMensaje.topic, date: nuevoMensaje.date});
-        setMsgs([...arr]);
+        let msg = JSON.parse(datos.body);
+        console.log(msg);
+        console.log("msgs: " + msgs.length);
+        msgsRef.current.push({content: msg.content, author: msg.author, date: getFormattedDate()});
+        setMsgs(msgsRef.current.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
+        //setMsgs( prevMsgs => [{content: msg.content, author: msg.author, date: getFormattedDate()}, ...prevMsgs]);
+        //setMsgs(msgs.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
     }
-/*
-    function onPrivateMessageReceived(datos: any) {
-        console.log("datos: " + datos);
-        //setRecibido(datos.body);
-        let nuevoMensaje = JSON.parse(datos.body);
-        console.log(nuevoMensaje);
-        let arr = msgs;
-        arr.push({msg: nuevoMensaje.content, author: nuevoMensaje.author, receiver: nuevoMensaje.receiver, date: nuevoMensaje.date});
-        setMsgs([...arr]);
-    }
-*/
 
     function connect() {
 
         function getPublicMessages() {
-            setMsgs([]);
             getTopicMsgs();
-            setMsgs(msgs.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()));
+            setMsgs(msgs.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
         }
         async function getTopicMsgs() {
             let topicMsgs = await axios.get(
@@ -139,11 +111,13 @@ const GroupChat = (props: Props) => {
             topicMsgs.data.map((msg: any) => {
                 let newMsg: IMsgType = {
                     author: msg.author,
+                    receiver: msg.receiver,
                     topic: msg.topic,
-                    msg: msg.content,
+                    content: msg.content,
                     date: msg.date
                 }
                 setMsgs((msgs) => [newMsg, ...msgs]);
+                msgsRef.current.push(newMsg);
             });
 
         }
@@ -192,7 +166,7 @@ const GroupChat = (props: Props) => {
                 <TouchableOpacity onPress={() => navigation.navigate("GroupChatDetails", {groupSelected: groupSelected})}>
                     <Image
                         source={{
-                            uri: (groupSelected?.picture !== "") ? "data:image/jpeg;base64," + groupSelected?.picture : "https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png?x=480&quality=40"
+                            uri: (groupSelected?.picture !== "") ? "data:image/jpeg;base64," + groupSelected?.picture : "https://www.tenniscall.com/images/chat.jpg"
                         }}
                         style={{
                             ...Styles.imageStyle,
@@ -219,38 +193,19 @@ const GroupChat = (props: Props) => {
                     ref={flatListRef}
                     data={msgs}
                     renderItem={(msg) => {
-                        if (msg.item?.author === user.nick) {
-                            return (
-                                <View>
-                                    <View style={{flexDirection: "row", justifyContent: "flex-end"}}>
-                                        <Text>You,{" "}</Text><Text style={{fontSize: getFontSize(15), color: "#a3a3a3", fontStyle: "italic"}}>{msg.item.date}</Text>
-                                    </View>
-                                    <View style={{flexDirection: "row", justifyContent: "flex-end"}}>
-                                        <View style={{
-                                            backgroundColor: "#ca2613",
-                                            borderRadius: 20,
-                                            padding: "1%",
-                                            paddingHorizontal: "3%",
-                                            margin: "2%",
-                                            maxWidth: "90%"
-                                        }}>
-                                            <Text style={{fontSize: getFontSize(15), color: "white"}}>{msg.item.msg}</Text>
-                                        </View>
-                                    </View>
-                                </View>
-                            );
-                        } else {
-                            if (!isBlocked(msg.item.author)) {
+                        if (msg.item?.content !== undefined) {
+                            if (msg.item?.author === user.nick) {
                                 return (
                                     <View>
                                         <View style={{flexDirection: "row", justifyContent: "flex-end"}}>
-                                            <Text
-                                                style={{fontSize: getFontSize(15)}}>{msg.item.author},{" "}</Text><Text
-                                            style={{
+                                            <Text style={{
                                                 fontSize: getFontSize(15),
-                                                color: "#a3a3a3",
-                                                fontStyle: "italic"
-                                            }}>{msg.item.date}</Text>
+                                                color: (darkMode) ? "white" : "black"
+                                            }}>You,{"  "}</Text><Text style={{
+                                            fontSize: getFontSize(15),
+                                            color: "#a3a3a3",
+                                            fontStyle: "italic"
+                                        }}>{msg.item.date}</Text>
                                         </View>
                                         <View style={{flexDirection: "row", justifyContent: "flex-end"}}>
                                             <View style={{
@@ -264,11 +219,45 @@ const GroupChat = (props: Props) => {
                                                 <Text style={{
                                                     fontSize: getFontSize(15),
                                                     color: "white"
-                                                }}>{msg.item.msg}</Text>
+                                                }}>{msg.item.content}</Text>
                                             </View>
                                         </View>
                                     </View>
                                 );
+                            } else {
+                                if (!isBlocked(msg.item.author)) {
+                                    return (
+                                        <View>
+                                            <View style={{flexDirection: "row", justifyContent: "flex-end"}}>
+                                                <Text
+                                                    style={{
+                                                        fontSize: getFontSize(15),
+                                                        color: (darkMode) ? "white" : "black"
+                                                    }}>{msg.item.author},{"  "}</Text><Text
+                                                style={{
+                                                    fontSize: getFontSize(15),
+                                                    color: "#a3a3a3",
+                                                    fontStyle: "italic"
+                                                }}>{msg.item.date}</Text>
+                                            </View>
+                                            <View style={{flexDirection: "row", justifyContent: "flex-end"}}>
+                                                <View style={{
+                                                    backgroundColor: "#ca2613",
+                                                    borderRadius: 20,
+                                                    padding: "1%",
+                                                    paddingHorizontal: "3%",
+                                                    margin: "2%",
+                                                    maxWidth: "90%"
+                                                }}>
+                                                    <Text style={{
+                                                        fontSize: getFontSize(15),
+                                                        color: "white"
+                                                    }}>{msg.item.content}</Text>
+                                                </View>
+                                            </View>
+                                        </View>
+                                    );
+                                }
                             }
                         }
                     }}

@@ -4,21 +4,27 @@ import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.GroupChat;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.User;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.IGroupChatService;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.IUserService;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.service.FileStorageService;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.GroupChatInputDTO;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.GroupChatOutputDTO;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.mapper.GroupChatDTOMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v2/groupchats")
+@RequestMapping("/api/v2/groups")
 public class GroupChatRestControllerV2 {
 
     @Autowired
@@ -26,6 +32,9 @@ public class GroupChatRestControllerV2 {
 
     @Autowired
     private IUserService userService;
+
+    @Autowired
+    FileStorageService storageService;
 
     private final GroupChatDTOMapper mapper = new GroupChatDTOMapper();
 
@@ -81,7 +90,11 @@ public class GroupChatRestControllerV2 {
 
         if (byNick != null) {
             GroupChat groupChat = mapper.toDomain(inputDTO);
+            String codedPicture = inputDTO.getPictureBase64();
+            byte[] photoBytes = Base64.getDecoder().decode(codedPicture);
+            String newFileName = storageService.save(groupChat.getName() + "_" + inputDTO.getPicture(), photoBytes);
             groupChat.setAdmin(byNick);
+            groupChat.setPicture(newFileName);
             groupChat.setUsers(new ArrayList<>());
             groupChat.getUsers().add(byNick);
             GroupChat save = groupChatService.save(groupChat);
@@ -90,6 +103,46 @@ public class GroupChatRestControllerV2 {
             } else {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Something went wrong");
             }
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You should not be here");
+        }
+    }
+
+    @GetMapping("/img/{id}/{filename}")
+    public ResponseEntity<?> getFiles(@PathVariable("id") long groupId, @PathVariable("filename") String filename) {
+        GroupChat byId = groupChatService.findById(groupId);
+        if (byId == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The group does not exist");
+        }
+        Object principal =
+                SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = ((UserDetails) principal).getUsername();
+        User userByNick = userService.findByNick(username);
+
+        if (userByNick != null) {
+            Resource resource = null;
+            try {
+                resource = storageService.get(filename);
+            } catch (RuntimeException e) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The file does not exist");
+            }
+            String contentType = null;
+            try {
+                contentType = URLConnection.guessContentTypeFromStream(resource.getInputStream());
+            } catch (IOException ex) {
+                System.out.println("Could not determine file type.");
+            }
+            if (contentType == null) {
+                contentType = "application/octet-stream";
+            }
+
+            String headerValue = "attachment; filename=\"" + resource.getFilename() + "\"";
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(contentType))
+                    .header(
+                            org.springframework.http.HttpHeaders.CONTENT_DISPOSITION,
+                            headerValue
+                    ).body(resource);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You should not be here");
         }
@@ -109,9 +162,11 @@ public class GroupChatRestControllerV2 {
             if (!byId.getAdmin().getNick().equals(byNick.getNick())) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not the admin of this group chat");
             }
-            byId.setPicture(inputDTO.getPicture());
+            String codedPicture = inputDTO.getPictureBase64();
+            byte[] photoBytes = Base64.getDecoder().decode(codedPicture);
+            String newFileName = storageService.save(byId.getName() + "_" + inputDTO.getPicture(), photoBytes);
+            byId.setPicture(newFileName);
             byId.setDescription(inputDTO.getDescription());
-            byId.setName(inputDTO.getName());
             boolean update = groupChatService.update(byId);
             if (update) {
                 return ResponseEntity.ok(mapper.toDTO(byId));

@@ -45,7 +45,7 @@ const AdminChat = (props: Props) => {
         stompClient.publish({destination: "/app/private", body: JSON.stringify(messageTo)});
         console.log("enviado privado");
 
-        setAdminMsgs( prevMsgs => [{msg: messageTo.content, author: messageTo.author, receiver: messageTo.receiver, date: getFormattedDate()}, ...prevMsgs]);
+        setAdminMsgs( prevMsgs => [{content: messageTo.content, author: messageTo.author, receiver: messageTo.receiver, date: getFormattedDate()}, ...prevMsgs]);
         setMessage("");
         // @ts-ignore
         flatListRef.current.scrollToOffset({ animated: true });
@@ -71,7 +71,7 @@ const AdminChat = (props: Props) => {
         let nuevoMensaje = JSON.parse(datos.body);
         console.log(nuevoMensaje);
         let arr = adminMsgs;
-        arr.push({msg: nuevoMensaje.content, author: nuevoMensaje.author, receiver: nuevoMensaje.receiver, date: nuevoMensaje.date});
+        arr.push({content: nuevoMensaje.content, author: nuevoMensaje.author, receiver: nuevoMensaje.receiver, date: nuevoMensaje.date});
         setAdminMsgs([...arr]);
     }
 
@@ -81,7 +81,7 @@ const AdminChat = (props: Props) => {
         let nuevoMensaje = JSON.parse(datos.body);
         console.log(nuevoMensaje);
         let arr = adminMsgs;
-        arr.push({msg: nuevoMensaje.content, author: nuevoMensaje.author, receiver: nuevoMensaje.receiver, date: nuevoMensaje.date});
+        arr.push({content: nuevoMensaje.content, author: nuevoMensaje.author, receiver: nuevoMensaje.receiver, date: nuevoMensaje.date});
         setAdminMsgs([...arr]);
     }
 
@@ -109,7 +109,7 @@ const AdminChat = (props: Props) => {
                 let newMsg: IMsgType = {
                     author: msg.author,
                     receiver: msg.receiver,
-                    msg: msg.content,
+                    content: msg.content,
                     date: msg.date
                 }
                 setAdminMsgs((msgs) => [newMsg, ...msgs]);
@@ -131,7 +131,7 @@ const AdminChat = (props: Props) => {
                 let newMsg: IMsgType = {
                     author: msg.author,
                     receiver: msg.receiver,
-                    msg: msg.content,
+                    content: msg.content,
                     date: msg.date
                 }
                 setAdminMsgs((msgs) => [newMsg, ...msgs]);

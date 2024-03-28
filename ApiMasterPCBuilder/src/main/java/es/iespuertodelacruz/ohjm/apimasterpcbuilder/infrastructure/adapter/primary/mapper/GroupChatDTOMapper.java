@@ -17,7 +17,6 @@ public class GroupChatDTOMapper {
         GroupChat groupChat = new GroupChat();
         groupChat.setName(groupChatInputDTO.getName());
         groupChat.setDescription(groupChatInputDTO.getDescription());
-        groupChat.setPicture(groupChatInputDTO.getPicture());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date();
         String dateStr = sdf.format(date);

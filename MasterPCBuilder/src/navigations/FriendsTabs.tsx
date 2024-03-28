@@ -49,7 +49,7 @@ const FriendsTabs = (props: Props) => {
             />
             <Tab.Screen name="Group List"
                         options={{
-                            tabBarIcon: ({ focused }) => <Ionicon name={(focused) ? 'people-sharp' : 'people-outline'} size={getIconSize(80)} color={(darkMode) ? "white" : "black"} />,
+                            tabBarIcon: ({ focused }) => <Material name={(focused) ? 'account-group' : 'account-group-outline'} size={getIconSize(80)} color={(darkMode) ? "white" : "black"} />,
                             tabBarInactiveBackgroundColor: (darkMode) ? "#242121" : "#F5F5F5", tabBarActiveBackgroundColor: (darkMode) ? "#242121" : "#F5F5F5",
                             //tabBarItemStyle: { borderTopColor: "red", borderTopWidth: 2 },
                             tabBarLabelStyle: { fontSize: getFontSize(13) },

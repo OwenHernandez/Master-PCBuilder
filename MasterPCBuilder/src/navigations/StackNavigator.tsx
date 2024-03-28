@@ -21,6 +21,7 @@ import AdminChat from "../screens/AdminChat";
 import IGroupChatType from '../interfaces/IGroupChatType';
 import GroupChat from "../screens/GroupChat";
 import GroupChatDetails from "../screens/GroupChatDetails";
+import CreateGroup from "../screens/CreateGroup";
 
 type Props = {}
 
@@ -47,9 +48,10 @@ export type RootStackParamList = {
     OtherUserProfile: { userSelected: IUserType },
     ComponentScreen: { comp: IComponentType,wished:boolean },
     EditComponent: { comp: IComponentType },
-    "Group List": undefined,
+    "Group List": { groups?: IGroupChatType[] },
     GroupChat: { group: IGroupChatType },
-    GroupChatDetails: { groupSelected: IGroupChatType }
+    GroupChatDetails: { groupSelected: IGroupChatType },
+    CreateGroup: undefined
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -97,6 +99,7 @@ const StackNavigator = (props: Props) => {
             <Stack.Screen name="GroupChatDetails" component={GroupChatDetails} />
             <Stack.Screen name="ComponentScreen" component={ComponentScreen} />
             <Stack.Screen name="EditComponent" component={EditComponent} />
+            <Stack.Screen name="CreateGroup" component={CreateGroup} />
         </Stack.Navigator>
     )
 }

@@ -49,8 +49,8 @@ const GroupChatDetails = (props: Props) => {
 
     useEffect(() => {
         setGroupTemp(groupSelected);
-        setSize(groupTemp.users.length);
-        setGroupAdmin(groupTemp.admin.id === user.id);
+        setSize(groupSelected.users.length);
+        setGroupAdmin(groupSelected.admin.id === user.id);
         setFriendsList(user.friends);
         setFriendsByName(user.friends);
     }, [groupSelected, user]);
@@ -66,7 +66,55 @@ const GroupChatDetails = (props: Props) => {
 
     async function addRemoveMember(userSelected: IUserType) {
         try {
-            const response = await axios.put(Globals.IP_HTTP + "/api/v2/groupchats/" + groupSelected.id + "/users/" + userSelected.id, null, {headers: {Authorization: "Bearer " + token}});
+            const response = await axios.put(
+                Globals.IP_HTTP + "/api/v2/groups/" + groupSelected.id + "/users/" + userSelected.id,
+                null,
+                {headers: {Authorization: "Bearer " + token}}
+            );
+            setNewGroup(response.data);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async function setNewGroup(newGroup: IGroupChatType) {
+        try {
+            let picture = "";
+            const groupPicResponse = await RNFetchBlob.fetch(
+                'GET',
+                Globals.IP_HTTP + '/api/v2/groups/img/' + newGroup.id + '/' + newGroup.picture,
+                {Authorization: `Bearer ${token}`}
+            );
+            if (groupPicResponse.data !== Globals.IMG_NOT_FOUND) {
+                picture = groupPicResponse.base64();
+            }
+            newGroup.picture = picture;
+            for (const member of newGroup.users) {
+                const userPicResponse = await RNFetchBlob.fetch(
+                    'GET',
+                    Globals.IP_HTTP + '/api/v2/users/img/' + member.id + '/' + member.picture,
+                    {Authorization: `Bearer ${token}`}
+                );
+                picture = ""
+                if (userPicResponse.data !== Globals.IMG_NOT_FOUND) {
+                    console.log("coso4");
+                    picture = userPicResponse.base64();
+                }
+                member.picture = picture;
+            }
+            const adminPicResponse = await RNFetchBlob.fetch(
+                'GET',
+                Globals.IP_HTTP + '/api/v2/users/img/' + newGroup.admin.id + '/' + newGroup.admin.picture,
+                {Authorization: `Bearer ${token}`}
+            );
+            picture = ""
+            if (adminPicResponse.data !== Globals.IMG_NOT_FOUND) {
+                picture = adminPicResponse.base64();
+            }
+            newGroup.admin.picture = picture;
+            setGroupTemp(newGroup);
+            setSize(groupSelected.users.length);
+            setGroupAdmin(groupSelected.admin.id === user.id);
         } catch (error) {
             console.error(error);
         }
@@ -74,110 +122,183 @@ const GroupChatDetails = (props: Props) => {
 
     return (
         <SafeAreaView style={{flex: 1, backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"}}>
-            <HeaderScreen name={groupTemp.name + "'s Details"} navigation={navigation} profile={false}
+            <HeaderScreen name={groupTemp?.name + "'s Details"} navigation={navigation} profile={false}
                           drawer={false}/>
-            <View style={{alignItems: 'center', margin: "5%"}}>
-                <Image
-                    source={{
-                        uri: (groupTemp.picture !== "") ? "data:image/jpeg;base64," + groupTemp.picture : "https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png?x=480&quality=40"
-                    }}
-                    style={{
-                        ...Styles.imageStyle,
-                        borderColor: (darkMode) ? "white" : "black",
-                        borderWidth: 1,
-                        width: getIconSize(300),
-                        height: getIconSize(300)
-                    }}
-                />
-                <Text style={{
-                    fontSize: getFontSize(40),
-                    color: (darkMode) ? "white" : "black"
-                }}>{groupTemp.name}</Text>
-                <Text style={{
-                    fontSize: getFontSize(20),
-                    color: (darkMode) ? "white" : "black"
-                }}>{groupTemp.description}</Text>
-                <Text style={{fontSize: getFontSize(20), color: (darkMode) ? "white" : "black"}}>{size} members</Text>
-                <Material name="crown" size={getIconSize(80)} color="#cfa717"/>
-                <TouchableOpacity onPress={() => navigation.navigate("Chat", {friend: groupTemp.admin})}
-                                  style={{
-                                      ...Styles.touchable,
-                                      flexDirection: "row",
-                                      alignItems: "center",
-                                      margin: "3%"
-                                  }}>
-                    <TouchableOpacity
-                        onPress={() => navigation.navigate("OtherUserProfile", {userSelected: groupTemp.admin})}>
-                        <Image
-                            source={{
-                                uri: (groupTemp.admin.picture !== "") ? "data:image/jpeg;base64," + groupTemp.admin.picture : "https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png?x=480&quality=40",
-                            }}
-                            style={{
-                                ...Styles.imageStyle,
-                                borderColor: (darkMode) ? "white" : "black",
-                                borderWidth: 1,
-                                width: getIconSize(110),
-                                height: getIconSize(110)
-                            }}
-                        />
-                        <Text style={{
-                            fontSize: getFontSize(20),
-                            color: (darkMode) ? "white" : "black",
-                            margin: "3%"
-                        }}>{groupTemp.admin.nick}</Text>
-                    </TouchableOpacity>
-                </TouchableOpacity>
-            </View>
-            <FlatList
-                data={groupTemp.users}
-                renderItem={(user) => {
-                    return (
-                        <TouchableOpacity onPress={() => navigation.navigate("Chat", {friend: user.item})}
-                                          style={{
-                                              ...Styles.touchable,
-                                              flexDirection: "row",
-                                              alignItems: "center",
-                                              margin: "3%",
-                                              opacity: (!isBlocked(user.item)) ? 1 : 0.5
-                                          }}>
-                            <TouchableOpacity
-                                onPress={() => navigation.navigate("OtherUserProfile", {userSelected: user.item})}>
-                                <Image
-                                    source={{
-                                        uri: (user.item.picture !== "") ? "data:image/jpeg;base64," + user.item.picture : "https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png?x=480&quality=40",
-                                    }}
-                                    style={{
-                                        ...Styles.imageStyle,
-                                        borderColor: (darkMode) ? "white" : "black",
-                                        borderWidth: 1,
-                                        width: getIconSize(110),
-                                        height: getIconSize(110)
-                                    }}
-                                />
-                                <Text style={{
-                                    fontSize: getFontSize(20),
-                                    color: (darkMode) ? "white" : "black",
-                                    margin: "3%"
-                                }}>{user.item.nick}</Text>
-                            </TouchableOpacity>
-                            {groupAdmin &&
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        addRemoveMember(user.item)
-                                    }}>
-                                    <Material name="account-off" size={getIconSize(80)}
-                                              color={(darkMode) ? "white" : "black"}/>
-                                </TouchableOpacity>
-                            }
+            <ScrollView>
+                <View style={{alignItems: 'center', margin: "5%"}}>
+                    <Image
+                        source={{
+                            uri: (groupTemp?.picture !== "") ? "data:image/jpeg;base64," + groupTemp?.picture : "https://www.tenniscall.com/images/chat.jpg"
+                        }}
+                        style={{
+                            ...Styles.imageStyle,
+                            borderColor: (darkMode) ? "white" : "black",
+                            borderWidth: 1,
+                            width: getIconSize(300),
+                            height: getIconSize(300)
+                        }}
+                    />
+                    <Text style={{
+                        fontSize: getFontSize(40),
+                        color: (darkMode) ? "white" : "black"
+                    }}>{groupTemp.name}</Text>
+                    <Text
+                        style={{fontSize: getFontSize(20), color: (darkMode) ? "white" : "black"}}>{size} members{"\n"}</Text>
+                    <Text style={{
+                        fontSize: getFontSize(20),
+                        color: (darkMode) ? "white" : "black"
+                    }}>{groupTemp.description}{"\n"}</Text>
+                    <Text style={{
+                        fontSize: getFontSize(25),
+                        color: (darkMode) ? "white" : "black"
+                    }}>Admin</Text>
+                    <TouchableOpacity onPress={() => navigation.navigate("Chat", {friend: groupTemp.admin})}
+                                      style={{
+                                          ...Styles.touchable,
+                                          flexDirection: "row",
+                                          alignItems: "center",
+                                          margin: "3%"
+                                      }}>
+                        <TouchableOpacity
+                            onPress={() => navigation.navigate("OtherUserProfile", {userSelected: groupTemp.admin})}>
+                            <Image
+                                source={{
+                                    uri: (groupTemp.admin?.picture !== "") ? "data:image/jpeg;base64," + groupTemp.admin?.picture : "https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png?x=480&quality=40",
+                                }}
+                                style={{
+                                    ...Styles.imageStyle,
+                                    borderColor: (darkMode) ? "white" : "black",
+                                    borderWidth: 1,
+                                    width: getIconSize(110),
+                                    height: getIconSize(110)
+                                }}
+                            />
                         </TouchableOpacity>
-                    );
-                }}
-            />
-
-            <View>
-                {groupAdmin &&
+                        <Text style={{
+                            color: (darkMode) ? "white" : "black",
+                            marginLeft: "5%"
+                        }}>{groupTemp.admin?.nick}</Text>
+                    </TouchableOpacity>
+                </View>
+                <Text style={{
+                    fontSize: getFontSize(25),
+                    color: (darkMode) ? "white" : "black",
+                    textAlign: "center"
+                }}>Members</Text>
+                {
+                    groupTemp?.users?.map((member) => {
+                        if (member.id !== groupTemp.admin.id) {
+                            if (member.id === user.id) {
+                                return (
+                                    <TouchableOpacity
+                                        onPress={() => navigation.navigate("Profile")}
+                                        style={{
+                                            ...Styles.touchable,
+                                            flexDirection: "row",
+                                            alignItems: "center",
+                                            margin: "3%",
+                                            opacity: (!isBlocked(member)) ? 1 : 0.5
+                                        }}>
+                                        <Image
+                                            source={{
+                                                uri: (member?.picture !== "") ? "data:image/jpeg;base64," + member?.picture : "https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png?x=480&quality=40",
+                                            }}
+                                            style={{
+                                                ...Styles.imageStyle,
+                                                borderColor: (darkMode) ? "white" : "black",
+                                                borderWidth: 1,
+                                                width: getIconSize(110),
+                                                height: getIconSize(110)
+                                            }}
+                                        />
+                                        <Text style={{
+                                            color: (darkMode) ? "white" : "black",
+                                            marginLeft: "5%",
+                                            marginRight: "13%"
+                                        }}>{member?.nick}</Text>
+                                        {
+                                            groupAdmin &&
+                                            <TouchableOpacity
+                                                onPress={() => {
+                                                    addRemoveMember(member)
+                                                }}>
+                                                <Material name="account-off" size={getIconSize(80)}
+                                                          color={(darkMode) ? "white" : "black"}/>
+                                            </TouchableOpacity>
+                                        }
+                                    </TouchableOpacity>
+                                );
+                            } else {
+                                return (
+                                    <TouchableOpacity
+                                        onPress={() => navigation.navigate("Chat", {friend: member})}
+                                        style={{
+                                            ...Styles.touchable,
+                                            flexDirection: "row",
+                                            alignItems: "center",
+                                            margin: "3%",
+                                            opacity: (!isBlocked(member)) ? 1 : 0.5
+                                        }}>
+                                        <TouchableOpacity
+                                            onPress={() => navigation.navigate("OtherUserProfile", {userSelected: member})}>
+                                            <Image
+                                                source={{
+                                                    uri: (member?.picture !== "") ? "data:image/jpeg;base64," + member?.picture : "https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png?x=480&quality=40",
+                                                }}
+                                                style={{
+                                                    ...Styles.imageStyle,
+                                                    borderColor: (darkMode) ? "white" : "black",
+                                                    borderWidth: 1,
+                                                    width: getIconSize(110),
+                                                    height: getIconSize(110)
+                                                }}
+                                            />
+                                        </TouchableOpacity>
+                                        <Text style={{
+                                            color: (darkMode) ? "white" : "black",
+                                            marginLeft: "5%",
+                                            marginRight: "13%"
+                                        }}>{member?.nick}</Text>
+                                        {groupAdmin &&
+                                            <TouchableOpacity
+                                                onPress={() => {
+                                                    addRemoveMember(member)
+                                                }}>
+                                                <Material name="account-off" size={getIconSize(80)}
+                                                          color={(darkMode) ? "white" : "black"}/>
+                                            </TouchableOpacity>
+                                        }
+                                    </TouchableOpacity>
+                                );
+                            }
+                        }
+                    })
+                }
+                <View>
+                    {groupAdmin &&
+                        <TouchableOpacity
+                            onPress={() => setModalAddMemberVisible(!modalAddMemberVisible)}
+                            style={{
+                                ...Styles.touchable,
+                                flexDirection: "row",
+                                alignItems: "center",
+                                margin: "3%"
+                            }}
+                        >
+                            <Material name="account-plus" size={getIconSize(80)}
+                                      color={(darkMode) ? "white" : "black"}/>
+                            <Text style={{
+                                fontSize: getFontSize(20),
+                                color: (darkMode) ? "white" : "black",
+                                margin: "3%"
+                            }}>Add member</Text>
+                        </TouchableOpacity>
+                    }
                     <TouchableOpacity
-                        onPress={() => setModalAddMemberVisible(!modalAddMemberVisible)}
+                        onPress={() => {
+                            addRemoveMember(user)
+                            navigation.navigate("Group List");
+                        }}
                         style={{
                             ...Styles.touchable,
                             flexDirection: "row",
@@ -185,34 +306,15 @@ const GroupChatDetails = (props: Props) => {
                             margin: "3%"
                         }}
                     >
-                        <Material name="account-plus" size={getIconSize(80)} color={(darkMode) ? "white" : "black"}/>
+                        <Material name="exit-run" size={getIconSize(80)} color="#ca2613"/>
                         <Text style={{
                             fontSize: getFontSize(20),
-                            color: (darkMode) ? "white" : "black",
+                            color: "#ca2613",
                             margin: "3%"
-                        }}>Add member</Text>
+                        }}>Leave Group</Text>
                     </TouchableOpacity>
-                }
-                <TouchableOpacity
-                    onPress={() => {
-                        addRemoveMember(user)
-                        navigation.navigate("Group List");
-                    }}
-                    style={{
-                        ...Styles.touchable,
-                        flexDirection: "row",
-                        alignItems: "center",
-                        margin: "3%"
-                    }}
-                >
-                    <Material name="exit-run" size={getIconSize(80)} color="#ca2613"/>
-                    <Text style={{
-                        fontSize: getFontSize(20),
-                        color: "#ca2613",
-                        margin: "3%"
-                    }}>Leave Group</Text>
-                </TouchableOpacity>
-            </View>
+                </View>
+            </ScrollView>
             <Modal
                 animationType="slide"
                 transparent={true}

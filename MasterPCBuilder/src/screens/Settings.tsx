@@ -21,14 +21,6 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Settings'>;
 const Settings = (props: Props) => {
     const { user, setUser, darkMode, setDarkMode, token } = usePrimaryContext();
     const { navigation, route } = props;
-    const admin: IUserType = {
-        id: 26,
-        nick: "Admin",
-        email: "",
-        picture: "",
-        friends: [],
-        componentsWanted: []
-    };
     const fontScale = PixelRatio.getFontScale();
     const getFontSize = (size: number) => size / fontScale;
     const fullScreen = Dimensions.get("window").scale;
@@ -76,11 +68,6 @@ const Settings = (props: Props) => {
                     value={darkMode}
                 />
             </View>
-            {/*
-            <TouchableOpacity style={{ ...Styles.touchable }} onPress={() => Alert.alert("Cambiaria el modo")}>
-                <Text style={{ fontSize: 20, textAlign: 'center', color: (darkMode) ? "white" : "black" }}>Change Mode to Dark/Light</Text>
-            </TouchableOpacity>
-            */}
             <TouchableOpacity style={{ ...Styles.touchable }} onPress={() => Alert.alert("Te enviaria un email para cambiar la password")}>
                 <Text style={{ fontSize: getFontSize(20), textAlign: 'center', color: (darkMode) ? "white" : "black" }}>Change Password</Text>
             </TouchableOpacity>
@@ -90,9 +77,9 @@ const Settings = (props: Props) => {
             <FAB
                 title="?"
                 placement="right"
-                titleStyle={{ fontSize: 20, color: (darkMode) ? "white" : "black" }}
+                titleStyle={{ fontSize: getFontSize(20), color: (darkMode) ? "white" : "black" }}
                 color={(darkMode) ? "#242121" : "#F5F5F5"}
-                style={{ borderColor: "#ca2613", borderWidth: 2 }}
+                style={{ borderColor: "#ca2613", borderWidth: 2, height: getIconSize(170), width: getIconSize(170) }}
                 onPress={() => navigation.navigate("AdminChat")}
             />
         </View >
