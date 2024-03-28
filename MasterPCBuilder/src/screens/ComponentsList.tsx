@@ -33,8 +33,8 @@ const ComponentsList = (props: Props) => {
     const getFontSize = (size: number) => size / fontScale;
     const fullScreen = Dimensions.get("window").scale;
     const getIconSize = (size: number) => size / fullScreen;
-    const [componentsList, setComponentsList] = useState([{}] as IComponentType[]);
-    const [componentsByName, setComponentsByName] = useState([{}] as IComponentType[]);
+    const [componentsList, setComponentsList] = useState<Array<IComponentType>>([]);
+    const [componentsByName, setComponentsByName] = useState<Array<IComponentType>>([]);
     const [wished, setWished] = useState(false);
 
     useEffect(() => {
@@ -112,7 +112,13 @@ const ComponentsList = (props: Props) => {
                                 }
                             });
                             return (
-                                <TouchableOpacity style={{...Styles.touchable, width: getIconSize(500)}} onPress={() => navigation.navigate("ComponentScreen", { comp: comp.item, wished})}>
+                                <TouchableOpacity style={{...Styles.touchable, width: getIconSize(500)}}
+                                                  onPress={() => {
+                                                      console.log(componentsList);
+                                                      console.log("ComponentScreen", { comp: comp.item, wished})
+                                                      navigation.navigate("ComponentScreen", { comp: comp.item, wished})}
+
+                                }>
                                     <Component comp={comp.item} />
                                 </TouchableOpacity>
                             )

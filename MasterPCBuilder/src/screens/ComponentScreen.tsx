@@ -33,7 +33,10 @@ const ComponentScreen = (props: Props) => {
     const fullScreen = Dimensions.get("window").scale;
     const getIconSize = (size: number) => size / fullScreen;
     const [viewGraphic, setViewGraphic] = useState<boolean>(false)
-
+    const [meses, setMeses] = useState<Array<string>>([]);
+    const [precios, setPrecios] = useState<Array<number>>([]);
+    const [preciosAmazon, setPreciosAmazon] = useState<Array<number>>([]);
+    const [preciosEbay, setPreciosEbay] = useState<Array<number>>([]);
     async function addRemoveWishList() {
         try {
             const response = await axios.put(
@@ -64,12 +67,45 @@ const ComponentScreen = (props: Props) => {
     async function editComponent() {
         navigation.navigate("EditComponent", {comp: comp});
     }
+
+    useEffect(() => {
+        let auxMeses = [];
+        let auxPrecios = [];
+        let auxPreciosAmazon = [];
+        let auxPreciosEbay = [];
+        let i = 0;
+        comp.priceHistory.map((comp) => {
+            let date = new Date(comp.date);
+            let month = date.toLocaleString('default', {day:"numeric",month: 'long'});
+            console.log(month)
+            auxMeses.push(month);
+            auxPrecios.push(comp.price);
+            auxPreciosAmazon.push(comp.amazonPrice);
+            auxPreciosEbay.push(comp.ebayPrice);
+            i++;
+        });
+        setMeses(auxMeses);
+        setPrecios(auxPrecios);
+        setPreciosAmazon(auxPreciosAmazon);
+        setPreciosEbay(auxPreciosEbay);
+    }, []);
+
     const data = {
-        labels: ["January", "February", "March", "April", "May", "June"],
+        labels: meses,
         datasets: [
             {
-                data: [20, 45, 28, 80, 99, 43],
-                color: (opacity = 1) => `rgba(255,255,255, ${opacity})`, // optional
+                data: precios,
+                color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
+                strokeWidth: 2 // optional
+            },
+            {
+                data: preciosAmazon,
+                color: (opacity = 1) => `rgba(0, 255, 0, ${opacity})`, // optional
+                strokeWidth: 2 // optional
+            },
+            {
+                data: preciosEbay,
+                color: (opacity = 1) => `rgba(255, 0, 0, ${opacity})`, // optional
                 strokeWidth: 2 // optional
             }
         ]
@@ -106,12 +142,14 @@ const ComponentScreen = (props: Props) => {
                             width={Dimensions.get('window').width / 1.1}
                             height={220}
                             chartConfig={{
-                                backgroundGradientFrom: "#242121",
+                                backgroundGradientFrom: "#1E2923",
+                                backgroundGradientTo: "#08130D",
                                 color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
                                 strokeWidth: 2, // optional, default 3
                                 barPercentage: 0.5,
                                 useShadowColorFromDataset: false // optional
                             }}
+                            bezier
                         />:<></>
                     }
                     <View style={{flex: 1, width: getIconSize(1000), justifyContent: "flex-end"}}>

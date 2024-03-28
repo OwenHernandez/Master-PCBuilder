@@ -7,7 +7,7 @@ import {
     Dimensions,
     TextInput,
     Alert,
-    ScrollView, KeyboardAvoidingView
+    ScrollView, KeyboardAvoidingView, Platform
 } from 'react-native'
 import React, {useEffect, useState} from 'react'
 import {usePrimaryContext} from '../contexts/PrimaryContext';
@@ -164,8 +164,8 @@ const CreateComponent = (props: Props) => {
     return (
         <SafeAreaView style={{flex: 1, backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"}}>
             <HeaderScreen name={route.name} navigation={navigation} profile={false} drawer={true}/>
-            <ScrollView style={{}}>
-                <View style={{flex:1,height:"90%"}}>
+            <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{flex: 1}}>
+                <View style={{flex:1}}>
                 <View style={{flex:1,flexDirection:"row"}}>
                     <View style={{flex: 1,flexDirection:"column"}}>
                         <View style={{
@@ -344,8 +344,7 @@ const CreateComponent = (props: Props) => {
                     </TouchableOpacity>
                 </View>
                 </View>
-
-            </ScrollView>
+            </KeyboardAvoidingView>
             <Toast />
         </SafeAreaView>
     )
