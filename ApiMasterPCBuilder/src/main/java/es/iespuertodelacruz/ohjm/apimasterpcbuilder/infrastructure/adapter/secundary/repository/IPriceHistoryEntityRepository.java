@@ -10,6 +10,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface IPriceHistoryEntityRepository extends JpaRepository<PriceHistoryEntity, Long> {
     @Modifying
-    @Query(value = "insert into PRICE_HISTORY (AMAZON_PRICE,COMPONENT_ID,DATE,EBAY_PRICE,PRICE) values ( :amazon , :componentId , :date , :ebay , :price )",nativeQuery = true)
+    @Query(value = "insert into PRICE_HISTORY (AMAZON_PRICE,COMPONENT_ID,DATE,EBAY_PRICE,PRICE) values ( :amazon , :componentId , :date , :ebay , :price )", nativeQuery = true)
     void saveManual(@Param("amazon") double amazon, @Param("componentId") long componentId, @Param("date") long date, @Param("ebay") double ebay, @Param("price") double price);
 }

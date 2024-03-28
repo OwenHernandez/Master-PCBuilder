@@ -52,11 +52,10 @@ public class PriceHistoryEntityService implements IPriceHistoryRepository {
     @Override
     public void saveManual(double amazonPrice, Long componentId, long date, double ebayPrice, double price) {
         if (amazonPrice != 0 && componentId != null && date != 0 && ebayPrice != 0 && price != 0) {
-            repo.saveManual(amazonPrice, componentId, date, ebayPrice, price);
-            List<PriceHistory> all = findAll();
-            PriceHistory priceHistory = all.get(all.size() - 1);
-            if (priceHistory == null) {
-                return;
+            try {
+                repo.saveManual(amazonPrice, componentId, date, ebayPrice, price);
+            }catch (RuntimeException e) {
+                throw new RuntimeException("The price cannot be negative");
             }
         }
     }

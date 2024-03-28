@@ -26,7 +26,7 @@ public class PriceHistoryService implements IPriceHistoryService {
     @Override
     public void saveManual(double amazonPrice, Long componentId, long date, double ebayPrice, double price) {
         if (amazonPrice < 0 || ebayPrice < 0 || price < 0 || componentId < 0 || date < 0) {
-            throw new IllegalArgumentException("Los precios no pueden ser negativos");
+            throw new RuntimeException("The price cannot be negative");
         }
         repo.saveManual(amazonPrice, componentId, date, ebayPrice, price);
     }

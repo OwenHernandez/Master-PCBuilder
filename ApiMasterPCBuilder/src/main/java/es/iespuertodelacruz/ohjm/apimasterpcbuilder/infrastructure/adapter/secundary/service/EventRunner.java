@@ -27,7 +27,7 @@ public class EventRunner {
     IComponentService componentService;
     @Autowired
     IPriceHistoryService priceHistoryService;
-    @Scheduled(cron = "0 */2 * * * *")
+    @Scheduled(cron = "0 0 * * * *")
     @Transactional
     void checkAmazonEbay()  {
         List<Component> all = componentService.findAll();
