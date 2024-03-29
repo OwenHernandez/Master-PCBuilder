@@ -141,26 +141,31 @@ const Builder = (props: Props) => {
 
     async function getComponents() {
         setComponents([]);
-        const getComp = await axios.get(Globals.IP_HTTP + "/api/v2/components", {headers: {"Authorization": "Bearer " + token}});
-        for (const comp of getComp.data) {
-            const compImgResponse = await RNFetchBlob.fetch(
-                'GET',
-                Globals.IP_HTTP + '/api/v2/components/img/' + comp.id + '/' + comp.image,
-                {Authorization: `Bearer ${token}`}
-            );
-            let picture = ""
-            if (compImgResponse.data !== Globals.IMG_NOT_FOUND) {
-                picture = await compImgResponse.base64();
-            }
-            comp.image = picture;
-            comp.wished = false;
-            user.componentsWanted.forEach((compWished) => {
-                if (compWished.id === comp.id) {
-                    comp.wished = true;
+        try {
+            const getComp = await axios.get(Globals.IP_HTTP + "/api/v2/components", {headers: {"Authorization": "Bearer " + token}});
+            for (const comp of getComp.data) {
+                const compImgResponse = await RNFetchBlob.fetch(
+                    'GET',
+                    Globals.IP_HTTP + '/api/v2/components/img/' + comp.id + '/' + comp.image,
+                    {Authorization: `Bearer ${token}`}
+                );
+                let picture = ""
+                if (compImgResponse.data !== Globals.IMG_NOT_FOUND) {
+                    picture = await compImgResponse.base64();
                 }
-            });
-            setComponents(prevComps => [...prevComps, comp]);
+                comp.image = picture;
+                comp.wished = false;
+                user.componentsWanted.forEach((compWished) => {
+                    if (compWished.id === comp.id) {
+                        comp.wished = true;
+                    }
+                });
+                setComponents(prevComps => [...prevComps, comp]);
+            }
+        }catch (error){
+            console.log(error);
         }
+
     }
 
     async function saveBuild() {

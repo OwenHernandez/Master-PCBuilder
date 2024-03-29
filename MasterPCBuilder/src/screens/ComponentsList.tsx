@@ -69,7 +69,7 @@ const ComponentsList = (props: Props) => {
     }
 
     return (
-        <View style={{backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"}}>
+        <View style={{flex:1,backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"}}>
             <HeaderScreen name={"Components List"} navigation={navigation} profile={false} drawer={true}/>
             <View style={{height: "89%"}}>
                 <View style={{
@@ -100,7 +100,7 @@ const ComponentsList = (props: Props) => {
                     <FontAwesome5Icon name="search" size={getIconSize(80)}
                                       color={(darkMode) ? "white" : "black"}/>
                 </View>
-                <View style={{justifyContent:"center",alignItems:"center"}}>
+                <View style={{justifyContent:"center",alignItems:"center",marginBottom:"35%"}}>
                     <FlatList
                         data={componentsByName}
                         numColumns={2}
@@ -112,11 +112,14 @@ const ComponentsList = (props: Props) => {
                                 }
                             });
                             return (
-                                <TouchableOpacity style={{...Styles.touchable, width: getIconSize(500)}}
-                                                  onPress={() => {
-                                                      console.log(componentsList);
-                                                      console.log("ComponentScreen", { comp: comp.item, wished})
-                                                      navigation.navigate("ComponentScreen", { comp: comp.item, wished})}
+                                <TouchableOpacity
+                                    style={{...Styles.touchable,
+                                        padding:"0%",
+                                        margin:"2%",
+                                        height:getIconSize(800),
+                                        width: getIconSize(450)}}
+                                    onPress={() => {
+                                        navigation.navigate("ComponentScreen", { comp: comp.item, wished})}
 
                                 }>
                                     <Component comp={comp.item} />

@@ -1,7 +1,7 @@
 import {
     Alert,
     Dimensions,
-    Image,
+    Image, ImageBackground, Modal,
     PixelRatio,
     SafeAreaView, ScrollView,
     StyleSheet,
@@ -21,6 +21,9 @@ import {RootStackParamList} from "../navigations/StackNavigator";
 import HeaderScreen from "../components/HeaderScreen";
 import Material from "react-native-vector-icons/MaterialIcons";
 import {LineChart} from "react-native-chart-kit";
+import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
+import {BlurView} from "@react-native-community/blur";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ComponentScreen'>;
 
@@ -37,6 +40,14 @@ const ComponentScreen = (props: Props) => {
     const [precios, setPrecios] = useState<Array<number>>([]);
     const [preciosAmazon, setPreciosAmazon] = useState<Array<number>>([]);
     const [preciosEbay, setPreciosEbay] = useState<Array<number>>([]);
+    const [isOpen, setIsOpen] = useState(false);
+    const [modalVisible, setModalVisible] = useState(false)
+    const toggleOpen = () => {
+        setIsOpen(!isOpen);
+    };
+    const toggleModal = () => {
+        setModalVisible(!modalVisible);
+    }
     async function addRemoveWishList() {
         try {
             const response = await axios.put(
@@ -114,130 +125,206 @@ const ComponentScreen = (props: Props) => {
         <SafeAreaView style={{flex: 1}}>
             <HeaderScreen name={"Component"} navigation={navigation} profile={false}
                           drawer={false}/>
-            <ScrollView style={{flex: 1,}}>
-                <View style={{flex: 1, margin: "5%",justifyContent:"center",alignItems:"center"}}>
-                    <Image
-                        source={{
-                            uri: "data:image/jpeg;base64," + comp?.image
-                        }}
-                        style={{margin: "2%", width: getIconSize(500), height: getIconSize(500), borderRadius: 10, alignSelf: "center"}}
-                    />
-                    <View style={{flexDirection:"row",}}>
-                        <Text style={{
-                            fontSize: getFontSize(30),
-                            color: (darkMode) ? "white" : "black",
-                            textAlign: "center"
-                        }}>{comp?.name}</Text>
-                        <View style={{justifyContent:"center",alignItems:"center",marginHorizontal:20 }}>
-                            <TouchableOpacity onPress={()=>{
-                                setViewGraphic(!viewGraphic)
+            <ScrollView style={{flex: 1,}} contentContainerStyle={{flexGrow:1}}>
+                <ImageBackground
+
+                    source={{
+                        uri: "data:image/jpeg;base64," + comp?.image
+                    }}
+                    style={{flex:1, width: "100%", height: "100%", borderRadius: 10, alignSelf: "center"}}
+                    imageStyle={{opacity: 0.3}}
+                >
+                   <View style={{flex:1,margin:"5%", justifyContent:"flex-start",alignItems:"flex-end"}}>
+                       <TouchableOpacity
+                           onPress={() => {
+                               console.log("wepa")
+                               toggleModal()
+                           }}
+                       >
+                            <FontAwesome5 name={"ellipsis-v"} size={getIconSize(50)}/>
+                       </TouchableOpacity>
+                   </View>
+                    <View style={{flex: 1, margin: "5%",justifyContent:"flex-start",alignItems:"flex-start"}}>
+                            {
+                                viewGraphic?<LineChart
+                                    data={data}
+                                    width={Dimensions.get('window').width / 1.1}
+                                    height={220}
+                                    chartConfig={{
+                                        backgroundGradientFrom: "#1E2923",
+                                        backgroundGradientTo: "#08130D",
+                                        color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
+                                        strokeWidth: 2, // optional, default 3
+                                        barPercentage: 0.5,
+                                        useShadowColorFromDataset: false // optional
+                                    }}
+                                    bezier
+                                />:<></>
+                            }
+                            <View style={{flex: 1, width: getIconSize(1000), justifyContent: "flex-end"}}>
+                                <View style={{flexDirection:"row",}}>
+
+                                        <Text style={{
+                                            fontSize: getFontSize(30),
+                                            color: (darkMode) ? "white" : "black",
+                                            textAlign: "center"
+                                        }}>{comp?.name}</Text>
+                                    <View style={{justifyContent:"center",alignItems:"center",marginHorizontal:20 }}>
+                                        <TouchableOpacity onPress={()=>{
+                                            setViewGraphic(!viewGraphic)
+                                        }}>
+                                            <Material name={"trending-up"} color={"white"} size={getIconSize(70)}/>
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
+                                <View style={{flexDirection: "row", justifyContent: "space-between"}}>
+                                    <TouchableOpacity onPress={toggleOpen}
+                                                      style={{
+                                                          alignItems: "center",
+                                                          justifyContent: "center",
+                                                          flexDirection: "row"
+                                                      }}
+                                    >
+                                        <Text style={{
+                                            fontSize: getFontSize(20),
+                                            color: (darkMode) ? "white" : "black"
+                                        }}>
+                                            {(isOpen) ?
+                                                <Material name={"keyboard-arrow-down"} size={getIconSize(40)} />
+                                                :
+                                                <Material name={"keyboard-arrow-right"} size={getIconSize(40)} />
+                                            }
+                                            {"Price"}
+                                        </Text>
+                                    </TouchableOpacity>
+                                    <Text style={{
+                                        fontSize: getFontSize(20),
+                                        color: (darkMode) ? "white" : "black"
+                                    }}>{comp?.price}€</Text>
+
+                                </View>
+                                {isOpen && (
+                                    <View style={{marginLeft:"5%"}}>
+                                        <View style={{flexDirection: "row", justifyContent: "space-between"}}>
+                                            <Text style={{
+                                                fontSize: getFontSize(15),
+                                                color: (darkMode) ? "white" : "black"
+                                            }}><Material name={"keyboard-arrow-right"} size={getIconSize(40)}/>Amazon Price:</Text>
+                                            <Text style={{
+                                                fontSize: getFontSize(15),
+                                                color: (darkMode) ? "white" : "black"
+                                            }}>{comp?.amazon_price>0?comp?.amazon_price+"€":"Not Available"}</Text>
+                                        </View>
+                                        <View style={{flexDirection: "row", justifyContent: "space-between"}}>
+                                            <Text style={{
+                                                fontSize: getFontSize(15),
+                                                color: (darkMode) ? "white" : "black"
+                                            }}><Material name={"keyboard-arrow-right"} size={getIconSize(40)}/>Ebay Price:</Text>
+                                            <Text style={{
+                                                fontSize: getFontSize(15),
+                                                color: (darkMode) ? "white" : "black"
+                                            }}>{comp?.ebay_price>0?comp?.ebay_price+"€":"Not Available"}</Text>
+                                        </View>
+                                    </View>
+                                )}
+                                <View style={{flexDirection: "row", justifyContent: "space-between",marginLeft:"3%"}}>
+                                    <Text style={{
+                                        fontSize: getFontSize(20),
+                                        color: (darkMode) ? "white" : "black"
+                                    }}>Sold by:</Text>
+                                    <Text style={{
+                                        fontSize: getFontSize(20),
+                                        color: (darkMode) ? "white" : "black"
+                                    }}>{comp?.sellerName}</Text>
+                                </View>
+                                <View style={{flexDirection: "row", justifyContent: "space-between",marginLeft:"3%"}}>
+                                    <Text style={{
+                                        fontSize: getFontSize(20),
+                                        color: (darkMode) ? "white" : "black"
+                                    }}>Created by:</Text>
+                                    <Text style={{
+                                        fontSize: getFontSize(20),
+                                        color: (darkMode) ? "white" : "black"
+                                    }}>{comp?.userNick}</Text>
+                                </View>
+                                <View style={{marginLeft:"3%"}}>
+                                    <Text style={{
+                                        fontSize: getFontSize(20),
+                                        color: (darkMode) ? "white" : "black"
+                                    }}>Description:</Text>
+                                    <Text style={{
+                                        fontSize: getFontSize(15),
+                                        color: (darkMode) ? "white" : "black",
+                                        margin: "2%"
+                                    }}>{comp?.description}</Text>
+                                </View>
+
+                            </View>
+                        </View>
+                    <Modal
+                        style={{height:"70%"}}
+                        animationType="slide"
+                        transparent={true}
+
+                        visible={modalVisible}
+                        onRequestClose={() => setModalVisible(!modalVisible)}
+                    >
+                        <View style={{...Styles.modalContainer,flex:1,backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"}}>
+                            <View style={{
+                                flexDirection: "row",
+                                justifyContent: "flex-end",
+                                backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"
                             }}>
-                                <Material name={"trending-up"} color={"white"} size={getIconSize(70)}/>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                    {
-                        viewGraphic?<LineChart
-                            data={data}
-                            width={Dimensions.get('window').width / 1.1}
-                            height={220}
-                            chartConfig={{
-                                backgroundGradientFrom: "#1E2923",
-                                backgroundGradientTo: "#08130D",
-                                color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
-                                strokeWidth: 2, // optional, default 3
-                                barPercentage: 0.5,
-                                useShadowColorFromDataset: false // optional
-                            }}
-                            bezier
-                        />:<></>
-                    }
-                    <View style={{flex: 1, width: getIconSize(1000), justifyContent: "flex-end"}}>
-                        <View style={{flexDirection: "row", justifyContent: "space-between"}}>
-                            <Text style={{
-                                fontSize: getFontSize(20),
-                                color: (darkMode) ? "white" : "black"
-                            }}><Material name={"keyboard-arrow-right"} size={getIconSize(40)}/>Amazon Price:</Text>
-                            <Text style={{
-                                fontSize: getFontSize(20),
-                                color: (darkMode) ? "white" : "black"
-                            }}>{comp?.amazon_price>0?comp?.amazon_price+"€":"Not Available"}</Text>
-                        </View>
-                        <View style={{flexDirection: "row", justifyContent: "space-between"}}>
-                            <Text style={{
-                                fontSize: getFontSize(20),
-                                color: (darkMode) ? "white" : "black"
-                            }}><Material name={"keyboard-arrow-right"} size={getIconSize(40)}/>Ebay Price:</Text>
-                            <Text style={{
-                                fontSize: getFontSize(20),
-                                color: (darkMode) ? "white" : "black"
-                            }}>{comp?.ebay_price>0?comp?.ebay_price+"€":"Not Available"}</Text>
-                        </View>
-                        <View style={{flexDirection: "row", justifyContent: "space-between"}}>
-                            <Text style={{
-                                fontSize: getFontSize(20),
-                                color: (darkMode) ? "white" : "black"
-                            }}><Material name={"keyboard-arrow-right"} size={getIconSize(40)}/>Price:</Text>
-                            <Text style={{
-                                fontSize: getFontSize(20),
-                                color: (darkMode) ? "white" : "black"
-                            }}>{comp?.price}€</Text>
-                        </View>
-                        <View style={{flexDirection: "row", justifyContent: "space-between"}}>
-                            <Text style={{
-                                fontSize: getFontSize(20),
-                                color: (darkMode) ? "white" : "black"
-                            }}><Material name={"keyboard-arrow-right"} size={getIconSize(40)}/>Sold by:</Text>
-                            <Text style={{
-                                fontSize: getFontSize(20),
-                                color: (darkMode) ? "white" : "black"
-                            }}>{comp?.sellerName}</Text>
-                        </View>
-                        <View style={{flexDirection: "row", justifyContent: "space-between"}}>
-                            <Text style={{
-                                fontSize: getFontSize(20),
-                                color: (darkMode) ? "white" : "black"
-                            }}><Material name={"keyboard-arrow-right"} size={getIconSize(40)}/>Created by:</Text>
-                            <Text style={{
-                                fontSize: getFontSize(20),
-                                color: (darkMode) ? "white" : "black"
-                            }}>{comp?.userNick}</Text>
-                        </View>
-                        <View style={{}}>
-                            <Text style={{
-                                fontSize: getFontSize(20),
-                                color: (darkMode) ? "white" : "black"
-                            }}><Material name={"keyboard-arrow-right"} size={getIconSize(40)}/>Description:</Text>
-                            <Text style={{
-                                fontSize: getFontSize(15),
-                                color: (darkMode) ? "white" : "black",
-                                margin: "2%"
-                            }}>{comp?.description}</Text>
-                        </View>
-                        {
-                            (comp?.wished) ?
                                 <TouchableOpacity
-                                    style={{...Styles.touchable, alignItems: 'center', marginBottom: "3%"}}
-                                    onPress={addRemoveWishList}>
-                                    <Text style={{color: (darkMode) ? "white" : "black"}}>Remove From Wish List</Text>
+
+                                    onPress={() => setModalVisible(!modalVisible)}>
+                                    <FontAwesome5 style={{marginTop: "10%", margin: "2%"}} name='times'
+                                              size={getIconSize(80)}
+                                              color={(darkMode) ? "white" : "black"}></FontAwesome5>
                                 </TouchableOpacity>
-                                :
-                                <TouchableOpacity
-                                    style={{...Styles.touchable, alignItems: 'center', marginBottom: "3%"}}
-                                    onPress={addRemoveWishList}>
-                                    <Text style={{color: (darkMode) ? "white" : "black"}}>Add to Wish List</Text>
-                                </TouchableOpacity>
-                        }
-                        <TouchableOpacity style={{...Styles.touchable, alignItems: 'center', marginVertical: "3%"}}
-                                          onPress={editComponent}>
-                            <Text style={{color: (darkMode) ? "white" : "black"}}>Edit Component</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={{...Styles.touchable, alignItems: 'center', marginVertical: "3%"}}
-                                          onPress={deleteComponent}>
-                            <Text style={{color: (darkMode) ? "white" : "black"}}>Delete Component</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
+                            </View>
+                            <View style={{
+                                justifyContent: "center",
+                                backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"
+                            }}>
+                                {
+                                    (comp?.wished) ?
+                                        <TouchableOpacity
+                                            style={{...Styles.touchable, alignItems: 'center', marginBottom: "3%"}}
+                                            onPress={()=>{
+                                            toggleModal()
+                                            addRemoveWishList}}>
+                                            <Text style={{color: (darkMode) ? "white" : "black"}}>Remove From Wish List</Text>
+                                        </TouchableOpacity>
+                                        :
+                                        <TouchableOpacity
+                                            style={{...Styles.touchable, alignItems: 'center', marginBottom: "3%"}}
+                                            onPress={()=>{
+                                                toggleModal()
+                                                addRemoveWishList}}>
+                                            <Text style={{color: (darkMode) ? "white" : "black"}}>Add to Wish List</Text>
+                                        </TouchableOpacity>
+                                }
+                                {(comp.userNick === user.nick)?<View>
+                                    <TouchableOpacity style={{...Styles.touchable, alignItems: 'center', marginVertical: "3%"}}
+                                                      onPress={()=>{
+                                                          toggleModal()
+                                                          editComponent}}>
+                                        <Text style={{color: (darkMode) ? "white" : "black"}}>Edit Component</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={{...Styles.touchable, alignItems: 'center', marginVertical: "3%"}}
+                                                      onPress={()=>{
+                                                          toggleModal()
+                                                          deleteComponent()}}>
+                                        <Text style={{color: (darkMode) ? "white" : "black"}}>Delete Component</Text>
+                                    </TouchableOpacity>
+                                    </View>:<></>}
+
+                            </View>
+                        </View>
+                    </Modal>
+                </ImageBackground>
+
             </ScrollView>
         </SafeAreaView>
     )

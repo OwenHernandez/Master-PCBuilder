@@ -58,7 +58,7 @@ const Profile = (props: Props) => {
                         <LinearGradient colors={['rgba(0, 0, 0, 0)','rgba(0, 0, 0, 0)' ,'#3e423f', (darkMode) ? "#242121" : "#F5F5F5"]}style={{flex:1,justifyContent:"flex-end",alignItems:"baseline"}} >
                             <View style={{  justifyContent: 'space-between', margin: "3%" }}>
                                 <Text style={{ fontSize: getFontSize(40), color: (darkMode) ? "white" : "black" }}>{user?.nick}</Text>
-                                <Text style={{ fontSize: getFontSize(20), color: (darkMode) ? "white" : "black" }}>{user?.email}</Text>
+                                <Text style={{ fontSize: getFontSize(18), color: (darkMode) ? "white" : "black" }}>{user?.email}</Text>
                             </View>
                             </LinearGradient>
                     </ImageBackground>
@@ -102,10 +102,10 @@ const Profile = (props: Props) => {
                     }
                 </View>
                 <View style={{flexDirection:"row",justifyContent:"space-around",marginHorizontal:"5%"}}>
-                    <TouchableOpacity style={{ ...Styles.touchable,width:170,margin:"2%", marginBottom: "3%", padding: "6%" }} onPress={() => navigation.navigate("UserBuildsList")}>
+                    <TouchableOpacity style={{ ...Styles.touchable,width:"45%",margin:"2%", marginBottom: "3%", padding: "6%" }} onPress={() => navigation.navigate("UserBuildsList")}>
                         <Text style={{ fontSize: getFontSize(20), textAlign: 'center', color: (darkMode) ? "white" : "black" }}>Your Builds</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={{ ...Styles.touchable,width:170,margin:"2%", marginBottom: "3%", padding: "6%" }} onPress={() => navigation.navigate("WishList")}>
+                    <TouchableOpacity style={{ ...Styles.touchable,width:"45%",margin:"2%", marginBottom: "3%", padding: "6%" }} onPress={() => navigation.navigate("WishList")}>
                         <Text style={{ fontSize: getFontSize(20), textAlign: 'center', color: (darkMode) ? "white" : "black" }}>Wish List</Text>
                     </TouchableOpacity>
                 </View>
@@ -113,6 +113,7 @@ const Profile = (props: Props) => {
                 <TouchableOpacity style={{ ...Styles.touchable, marginBottom: "3%", padding: "6%", borderColor: "violet" }} onPress={() => logout(navigation)}>
                     <Text style={{ fontSize: getFontSize(20), textAlign: 'center', color: (darkMode) ? "white" : "black" }}>Logout</Text>
                 </TouchableOpacity>
+
             </ScrollView>
         </SafeAreaView>
     )
