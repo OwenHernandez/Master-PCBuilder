@@ -22,6 +22,8 @@ public class User {
 
     private List<User> friends;
 
+    private List<User> blockedUsers;
+
     private List<Component> componentsCreated;
 
     private List<Post> postsMade;
@@ -110,6 +112,14 @@ public class User {
 
     public void setFriends(List<User> friends) {
         this.friends = friends;
+    }
+
+    public List<User> getBlockedUsers() {
+        return blockedUsers;
+    }
+
+    public void setBlockedUsers(List<User> blockedUsers) {
+        this.blockedUsers = blockedUsers;
     }
 
     public List<Component> getComponentsCreated() {

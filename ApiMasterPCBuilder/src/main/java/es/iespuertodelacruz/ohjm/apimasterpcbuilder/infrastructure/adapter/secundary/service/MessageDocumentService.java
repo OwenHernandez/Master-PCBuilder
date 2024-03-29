@@ -28,8 +28,8 @@ public class MessageDocumentService implements IMessageRepository {
         List<MessageDocument> all = repo.findAll();
         List<Message> res = new ArrayList<>();
 
-        for (MessageDocument me : all) {
-            Message message = mapper.toDomain(me);
+        for (MessageDocument md : all) {
+            Message message = mapper.toDomain(md);
             res.add(message);
         }
 
@@ -41,7 +41,7 @@ public class MessageDocumentService implements IMessageRepository {
     public Message save(Message message) {
         try {
             if (message != null) {
-                MessageDocument messageDocument = mapper.toPersistance(message);
+                MessageDocument messageDocument = mapper.toPersistence(message);
                 MessageDocument save = repo.save(messageDocument);
                 return mapper.toDomain(save);
             }
@@ -80,7 +80,7 @@ public class MessageDocumentService implements IMessageRepository {
     @Transactional
     public boolean update(Message message) {
         try {
-            MessageDocument messageDocument = mapper.toPersistance(message);
+            MessageDocument messageDocument = mapper.toPersistence(message);
             repo.save(messageDocument);
 
             return true;
@@ -95,8 +95,8 @@ public class MessageDocumentService implements IMessageRepository {
         List<MessageDocument> byAuthor = repo.findByAuthor(author);
         List<Message> res = new ArrayList<>();
 
-        for (MessageDocument me : byAuthor) {
-            Message message = mapper.toDomain(me);
+        for (MessageDocument md : byAuthor) {
+            Message message = mapper.toDomain(md);
             res.add(message);
         }
 
@@ -109,8 +109,8 @@ public class MessageDocumentService implements IMessageRepository {
         List<MessageDocument> byReceiver = repo.findByReceiver(receiver);
         List<Message> res = new ArrayList<>();
 
-        for (MessageDocument me : byReceiver) {
-            Message message = mapper.toDomain(me);
+        for (MessageDocument md : byReceiver) {
+            Message message = mapper.toDomain(md);
             res.add(message);
         }
 
@@ -123,8 +123,21 @@ public class MessageDocumentService implements IMessageRepository {
         List<MessageDocument> byReceiverAndAuthor = repo.findByReceiverAndAuthor(receiver, author);
         List<Message> res = new ArrayList<>();
 
-        for (MessageDocument me : byReceiverAndAuthor) {
-            Message message = mapper.toDomain(me);
+        for (MessageDocument md : byReceiverAndAuthor) {
+            Message message = mapper.toDomain(md);
+            res.add(message);
+        }
+
+        return res;
+    }
+
+    @Override
+    public List<Message> findByTopic(String topic) {
+        List<MessageDocument> byTopic = repo.findByTopic(topic);
+        List<Message> res = new ArrayList<>();
+
+        for (MessageDocument md : byTopic) {
+            Message message = mapper.toDomain(md);
             res.add(message);
         }
 

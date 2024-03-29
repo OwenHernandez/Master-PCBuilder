@@ -21,4 +21,6 @@ public interface IMessageRepository {
     List<Message> findByReceiver(String receiver);
 
     List<Message> findByReceiverAndAuthor(String receiver, String author);
+
+    List<Message> findByTopic(String topic);
 }

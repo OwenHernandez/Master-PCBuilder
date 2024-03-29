@@ -44,11 +44,7 @@ public class PostEntityService implements IPostRepository {
     @Transactional
     public Post findById(Long id) {
         Optional<PostEntity> byId = repo.findById(id);
-        if (byId.isPresent()) {
-            return mapper.toDomain(byId.get());
-        } else {
-            return null;
-        }
+        return byId.map(mapper::toDomain).orElse(null);
     }
 
     @Override

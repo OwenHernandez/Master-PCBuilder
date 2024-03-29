@@ -1,8 +1,6 @@
 package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.mapper;
 
-import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Build;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Seller;
-import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.BuildEntity;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.SellerEntity;
 
 public class SellerEntityMapper {
@@ -17,7 +15,7 @@ public class SellerEntityMapper {
         return res;
     }
 
-    public SellerEntity toPersistance(Seller seller) {
+    public SellerEntity toPersistence(Seller seller) {
 
         SellerEntity res = new SellerEntity();
         res.setId(seller.getId());

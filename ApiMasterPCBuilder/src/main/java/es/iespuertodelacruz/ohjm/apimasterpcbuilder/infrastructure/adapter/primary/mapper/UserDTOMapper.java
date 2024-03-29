@@ -44,16 +44,22 @@ public class UserDTOMapper {
             }
             userDTO.setComponentsWanted(componentsWanted);
         }
-        List<UserDTO> friends = null;
         if (user.getFriends() != null && !user.getFriends().isEmpty()) {
-            friends = new ArrayList<>();
+            userDTO.setFriends(new ArrayList<>());
             for (User u : user.getFriends()) {
                 u.setFriends(null);
                 UserDTO uDTO = toDTO(u);
-                friends.add(uDTO);
+                userDTO.getFriends().add(uDTO);
             }
         }
-        userDTO.setFriends(friends);
+        if (user.getBlockedUsers() != null && !user.getBlockedUsers().isEmpty()) {
+            userDTO.setBlockedUsers(new ArrayList<>());
+            for (User u : user.getBlockedUsers()) {
+                u.setBlockedUsers(null);
+                UserDTO uDTO = toDTO(u);
+                userDTO.getBlockedUsers().add(uDTO);
+            }
+        }
         return userDTO;
     }
 }

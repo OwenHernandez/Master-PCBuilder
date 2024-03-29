@@ -4,7 +4,6 @@ import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.BuildComponent;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Component;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.BuildComponentEntity;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.ComponentEntity;
-import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.UserEntity;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -41,7 +40,7 @@ public class ComponentEntityMapper {
         return res;
     }
 
-    public ComponentEntity toPersistance(Component component) throws ParseException {
+    public ComponentEntity toPersistence(Component component) throws ParseException {
 
         ComponentEntity res = new ComponentEntity();
         res.setId(component.getId());
@@ -52,7 +51,7 @@ public class ComponentEntityMapper {
         res.setAmazon_price(component.getAmazon_price());
         res.setEbay_price(component.getEbay_price());
         res.setImage(component.getImage());
-        res.setSeller(sellerMapper.toPersistance(component.getSeller()));
+        res.setSeller(sellerMapper.toPersistence(component.getSeller()));
         ///res.setUser(userMapper.toPersistance(component.getUserWhoCreated()));
         if (component.getBuildsComponents() != null) {
 
@@ -60,7 +59,7 @@ public class ComponentEntityMapper {
                 res.setBuildsComponents(new ArrayList<>());
             }
             for (BuildComponent bc : component.getBuildsComponents()) {
-                res.getBuildsComponents().add(bcMapper.toPersistance(bc));
+                res.getBuildsComponents().add(bcMapper.toPersistence(bc));
             }
         }
         return res;

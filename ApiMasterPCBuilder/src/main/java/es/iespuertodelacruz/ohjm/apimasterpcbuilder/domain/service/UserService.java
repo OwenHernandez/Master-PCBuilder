@@ -54,4 +54,12 @@ public class UserService implements IUserService {
         }
         return repo.findByEmail(email);
     }
+
+    @Override
+    public List<User> findByRole(String role) {
+        if (role == null || role.isBlank()) {
+            return null;
+        }
+        return repo.findByRole(role);
+    }
 }

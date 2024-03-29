@@ -10,5 +10,7 @@ export default interface IPostType {
     priceRange: string;
     description: string;
     build: IBuildType;
+    usersWhoLiked: IUserType[];
     liked: boolean;
+    amountOfLikes: number;
 }
