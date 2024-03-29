@@ -1,4 +1,4 @@
-package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.primary.controller;
+package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.primary.controller.v2;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.ArgumentMatchers.any;
