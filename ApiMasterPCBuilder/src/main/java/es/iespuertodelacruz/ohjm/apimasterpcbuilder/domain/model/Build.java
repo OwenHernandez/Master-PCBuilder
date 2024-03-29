@@ -96,7 +96,7 @@ public class Build {
                 ", notes='" + notes + '\'' +
                 ", category='" + category + '\'' +
                 ", totalPrice=" + totalPrice +
-                ", user=" + user.toString() +
+                ", user=" + ((this.user != null) ? user.toString() : null) +
                 ", buildsComponents=" + buildsComponents +
                 '}';
     }
