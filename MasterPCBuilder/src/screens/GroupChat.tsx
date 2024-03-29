@@ -51,7 +51,7 @@ const GroupChat = (props: Props) => {
         let stompClient = stompRef.current;
         let messageTo = {
             author: user.nick,
-            topic: groupSelected.name + groupSelected.id,
+            topic: "groupChat" + groupSelected.id,
             content: message
         };
 
@@ -99,7 +99,7 @@ const GroupChat = (props: Props) => {
         }
         async function getTopicMsgs() {
             let topicMsgs = await axios.get(
-                Globals.IP_HTTP + "/api/v2/messages?topic=" + groupSelected.name + groupSelected.id,
+                Globals.IP_HTTP + "/api/v2/messages?topic=groupChat" + groupSelected.id,
                 {
                     headers: {
                         "Access-Control-Allow-Origin": "*",
@@ -145,7 +145,7 @@ const GroupChat = (props: Props) => {
         function connectOK() {
             console.log("entra en conectarOK");
             let stompClient = stompRef.current;
-            stompClient.subscribe('/topic/' + groupSelected.name + groupSelected.id, onPublicMessageReceived);
+            stompClient.subscribe('/topic/groupChat' + groupSelected.id, onPublicMessageReceived);
         }
 
         stompRef.current.activate();

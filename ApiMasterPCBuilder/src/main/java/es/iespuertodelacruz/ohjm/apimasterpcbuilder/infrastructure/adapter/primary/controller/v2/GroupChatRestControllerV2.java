@@ -162,11 +162,18 @@ public class GroupChatRestControllerV2 {
             if (!byId.getAdmin().getNick().equals(byNick.getNick())) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not the admin of this group chat");
             }
-            String codedPicture = inputDTO.getPictureBase64();
-            byte[] photoBytes = Base64.getDecoder().decode(codedPicture);
-            String newFileName = storageService.save(byId.getName() + "_" + inputDTO.getPicture(), photoBytes);
-            byId.setPicture(newFileName);
-            byId.setDescription(inputDTO.getDescription());
+            if (!inputDTO.getPictureBase64().isBlank()) {
+                String codedPicture = inputDTO.getPictureBase64();
+                byte[] photoBytes = Base64.getDecoder().decode(codedPicture);
+                String newFileName = storageService.save("GroupChat" + byId.getId() + "_" + inputDTO.getPicture(), photoBytes);
+                byId.setPicture(newFileName);
+            }
+            if (!inputDTO.getName().isBlank()) {
+                byId.setName(inputDTO.getName());
+            }
+            if (!inputDTO.getDescription().isBlank()) {
+                byId.setDescription(inputDTO.getDescription());
+            }
             boolean update = groupChatService.update(byId);
             if (update) {
                 return ResponseEntity.ok(mapper.toDTO(byId));

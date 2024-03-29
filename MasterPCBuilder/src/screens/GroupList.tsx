@@ -39,7 +39,7 @@ const GroupList = (props: Props) => {
         setGroupsByName([]);
         setGroupList([]);
         getGroups();
-    }, [groups]);
+    }, [groups, user]);
 
     async function getGroups() {
         try {
@@ -88,7 +88,7 @@ const GroupList = (props: Props) => {
 
     return (
         <View style={{backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"}}>
-            <HeaderScreen name={"Friends"} navigation={navigation} profile={false} drawer={true}/>
+            <HeaderScreen name={"Groups"} navigation={navigation} profile={false} drawer={true}/>
             <View style={{height: "90%"}}>
                 <View style={{
                     flexDirection: "row",

@@ -2,7 +2,7 @@ import {
     Alert,
     Dimensions,
     FlatList,
-    Image, Modal,
+    Image, ImageBackground, Modal,
     PixelRatio,
     ScrollView,
     StyleSheet,
@@ -15,10 +15,8 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {RootStackParamList} from '../navigations/StackNavigator';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {usePrimaryContext} from '../contexts/PrimaryContext';
-import useLogout from '../hooks/useLogout';
 import {Styles} from '../themes/Styles';
-import Octicon from 'react-native-vector-icons/Octicons';
-import {DrawerActions} from '@react-navigation/native';
+import Entypo from 'react-native-vector-icons/Entypo';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import HeaderScreen from "../components/HeaderScreen";
 import axios from "axios";
@@ -26,9 +24,11 @@ import {Globals} from "../components/Globals";
 import RNFetchBlob from "rn-fetch-blob";
 import IUserType from "../interfaces/IUserType";
 import IGroupChatType from "../interfaces/IGroupChatType";
-import IBuildComponentType from "../interfaces/IBuildComponentType";
-import Component from "../components/Component";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
+import LinearGradient from "react-native-linear-gradient";
+import {Menu, MenuOptions, MenuOption, MenuTrigger} from 'react-native-popup-menu';
+import * as ImagePicker from "react-native-image-picker";
+import {ImagePickerResponse} from "react-native-image-picker";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'GroupChatDetails'>;
 
@@ -44,8 +44,13 @@ const GroupChatDetails = (props: Props) => {
     const [groupAdmin, setGroupAdmin] = useState(false);
     const [size, setSize] = useState(0);
     const [modalAddMemberVisible, setModalAddMemberVisible] = useState(false);
+    const [modalEditGroupVisible, setModalEditGroupVisible] = useState(false);
     const [friendsList, setFriendsList] = useState([{}] as IUserType[]);
     const [friendsByName, setFriendsByName] = useState([{}] as IUserType[]);
+    const [newName, setNewName] = useState("");
+    const [newDescription, setNewDescription] = useState("");
+    const [newPicture, setNewPicture] = useState("");
+    const [newPictureBase64, setNewPictureBase64] = useState("");
 
     useEffect(() => {
         setGroupTemp(groupSelected);
@@ -53,7 +58,7 @@ const GroupChatDetails = (props: Props) => {
         setGroupAdmin(groupSelected.admin.id === user.id);
         setFriendsList(user.friends);
         setFriendsByName(user.friends);
-    }, [groupSelected, user]);
+    }, []);
 
     function isBlocked(userSelected: IUserType) {
         for (const blockedUser of user.blockedUsers) {
@@ -72,6 +77,20 @@ const GroupChatDetails = (props: Props) => {
                 {headers: {Authorization: "Bearer " + token}}
             );
             setNewGroup(response.data);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async function changeAdmin(userSelected: IUserType) {
+        try {
+            const response = await axios.put(
+                Globals.IP_HTTP + "/api/v2/groups/" + groupSelected.id + "/admins/" + userSelected.id,
+                null,
+                {headers: {Authorization: "Bearer " + token}}
+            );
+            setNewGroup(response.data);
+            navigation.navigate("Group List");
         } catch (error) {
             console.error(error);
         }
@@ -115,6 +134,49 @@ const GroupChatDetails = (props: Props) => {
             setGroupTemp(newGroup);
             setSize(groupSelected.users.length);
             setGroupAdmin(groupSelected.admin.id === user.id);
+            setUser({...user});
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    function openGallery() {
+        ImagePicker.launchImageLibrary({mediaType: 'photo'}, async (response: ImagePickerResponse) => {
+            if (response.didCancel) {
+                console.log('The user has cancelled the image picker');
+            } else if (response.errorMessage) {
+                console.log('Error while trying to open gallery:', response.errorMessage);
+            } else {
+                const imageFile = await RNFetchBlob.fs.readFile(response.assets[0].uri, 'base64');
+                try {
+                    setNewPicture(response.assets[0].fileName);
+                    setNewPictureBase64(imageFile);
+                } catch (error) {
+                    console.log("Error while trying to change the picture: ", error);
+                }
+
+            }
+        });
+    }
+
+    async function editGroup() {
+        try {
+            const response = await axios.put(
+                Globals.IP_HTTP + "/api/v2/groups/" + groupSelected.id,
+                {
+                    name: newName,
+                    description: newDescription,
+                    picture: newPicture,
+                    pictureBase64: newPictureBase64
+                },
+                {headers: {Authorization: "Bearer " + token}}
+            );
+            setNewGroup(response.data);
+            setModalEditGroupVisible(!modalEditGroupVisible);
+            setNewName("");
+            setNewDescription("");
+            setNewPicture("");
+            setNewPictureBase64("");
         } catch (error) {
             console.error(error);
         }
@@ -124,61 +186,89 @@ const GroupChatDetails = (props: Props) => {
         <SafeAreaView style={{flex: 1, backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"}}>
             <HeaderScreen name={groupTemp?.name + "'s Details"} navigation={navigation} profile={false}
                           drawer={false}/>
-            <ScrollView>
-                <View style={{alignItems: 'center', margin: "5%"}}>
-                    <Image
-                        source={{
-                            uri: (groupTemp?.picture !== "") ? "data:image/jpeg;base64," + groupTemp?.picture : "https://www.tenniscall.com/images/chat.jpg"
-                        }}
-                        style={{
-                            ...Styles.imageStyle,
-                            borderColor: (darkMode) ? "white" : "black",
-                            borderWidth: 1,
-                            width: getIconSize(300),
-                            height: getIconSize(300)
-                        }}
-                    />
-                    <Text style={{
-                        fontSize: getFontSize(40),
-                        color: (darkMode) ? "white" : "black"
-                    }}>{groupTemp.name}</Text>
-                    <Text
-                        style={{fontSize: getFontSize(20), color: (darkMode) ? "white" : "black"}}>{size} members{"\n"}</Text>
-                    <Text style={{
-                        fontSize: getFontSize(20),
-                        color: (darkMode) ? "white" : "black"
-                    }}>{groupTemp.description}{"\n"}</Text>
-                    <Text style={{
-                        fontSize: getFontSize(25),
-                        color: (darkMode) ? "white" : "black"
-                    }}>Admin</Text>
-                    <TouchableOpacity onPress={() => navigation.navigate("Chat", {friend: groupTemp.admin})}
-                                      style={{
-                                          ...Styles.touchable,
-                                          flexDirection: "row",
-                                          alignItems: "center",
-                                          margin: "3%"
-                                      }}>
-                        <TouchableOpacity
-                            onPress={() => navigation.navigate("OtherUserProfile", {userSelected: groupTemp.admin})}>
-                            <Image
-                                source={{
-                                    uri: (groupTemp.admin?.picture !== "") ? "data:image/jpeg;base64," + groupTemp.admin?.picture : "https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png?x=480&quality=40",
-                                }}
-                                style={{
-                                    ...Styles.imageStyle,
-                                    borderColor: (darkMode) ? "white" : "black",
-                                    borderWidth: 1,
-                                    width: getIconSize(110),
-                                    height: getIconSize(110)
-                                }}
-                            />
-                        </TouchableOpacity>
+            <ScrollView style={{flex: 1}}>
+                <View style={{flex: 1}}>
+                    <View style={{alignItems: 'center', flex: 1}}>
+                        <ImageBackground
+                            source={{
+                                uri: (groupTemp?.picture !== "") ? "data:image/jpeg;base64," + groupTemp?.picture : "https://www.tenniscall.com/images/chat.jpg"
+                            }}
+                            style={{...Styles.imageStyle, width: "100%", height: getIconSize(650)}}
+                        >
+                            <LinearGradient
+                                colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0)', '#3e423f', (darkMode) ? "#242121" : "#F5F5F5"]}
+                                style={{flex: 1, justifyContent: "flex-end", alignItems: "center"}}>
+                                <View style={{justifyContent: 'space-between'}}>
+                                    <Text style={{
+                                        fontSize: getFontSize(40),
+                                        color: (darkMode) ? "white" : "black",
+                                        textAlign: "center"
+                                    }}>{groupTemp?.name}</Text>
+                                    <Text style={{
+                                        fontSize: getFontSize(20),
+                                        color: (darkMode) ? "white" : "black",
+                                        textAlign: "center"
+                                    }}>{size} members</Text>
+                                </View>
+                            </LinearGradient>
+                        </ImageBackground>
+                    </View>
+                    <View style={{margin: "5%", alignItems: "center"}}>
                         <Text style={{
-                            color: (darkMode) ? "white" : "black",
-                            marginLeft: "5%"
-                        }}>{groupTemp.admin?.nick}</Text>
-                    </TouchableOpacity>
+                            fontSize: getFontSize(20),
+                            color: (darkMode) ? "white" : "black"
+                        }}>{groupTemp.description}{"\n"}</Text>
+                        <Text style={{
+                            fontSize: getFontSize(25),
+                            color: (darkMode) ? "white" : "black"
+                        }}>Admin</Text>
+                        <TouchableOpacity
+                            onPress={() => (groupTemp.admin?.id !== user.id) ? navigation.navigate("Chat", {friend: groupTemp.admin}) : navigation.navigate("Profile")}
+                            style={{
+                                ...Styles.touchable,
+                                flexDirection: "row",
+                                alignItems: "center",
+                                margin: "3%"
+                            }}>
+                            {
+                                (groupTemp.admin?.id !== user.id) ?
+                                    <TouchableOpacity
+                                        onPress={() => navigation.navigate("OtherUserProfile", {userSelected: groupTemp.admin})}>
+                                        <Image
+                                            source={{
+                                                uri: (groupTemp.admin?.picture !== "") ? "data:image/jpeg;base64," + groupTemp.admin?.picture : "https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png?x=480&quality=40",
+                                            }}
+                                            style={{
+                                                ...Styles.imageStyle,
+                                                borderColor: (darkMode) ? "white" : "black",
+                                                borderWidth: 1,
+                                                width: getIconSize(110),
+                                                height: getIconSize(110)
+                                            }}
+                                        />
+                                    </TouchableOpacity>
+                                    :
+                                    <View>
+                                        <Image
+                                            source={{
+                                                uri: (groupTemp.admin?.picture !== "") ? "data:image/jpeg;base64," + groupTemp.admin?.picture : "https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png?x=480&quality=40",
+                                            }}
+                                            style={{
+                                                ...Styles.imageStyle,
+                                                borderColor: (darkMode) ? "white" : "black",
+                                                borderWidth: 1,
+                                                width: getIconSize(110),
+                                                height: getIconSize(110)
+                                            }}
+                                        />
+                                    </View>
+                            }
+                            <Text style={{
+                                color: (darkMode) ? "white" : "black",
+                                marginLeft: "5%"
+                            }}>{groupTemp.admin?.nick}</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
                 <Text style={{
                     fontSize: getFontSize(25),
@@ -196,51 +286,12 @@ const GroupChatDetails = (props: Props) => {
                                             ...Styles.touchable,
                                             flexDirection: "row",
                                             alignItems: "center",
+                                            justifyContent: "space-between",
+                                            height: getIconSize(200),
                                             margin: "3%",
                                             opacity: (!isBlocked(member)) ? 1 : 0.5
                                         }}>
-                                        <Image
-                                            source={{
-                                                uri: (member?.picture !== "") ? "data:image/jpeg;base64," + member?.picture : "https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png?x=480&quality=40",
-                                            }}
-                                            style={{
-                                                ...Styles.imageStyle,
-                                                borderColor: (darkMode) ? "white" : "black",
-                                                borderWidth: 1,
-                                                width: getIconSize(110),
-                                                height: getIconSize(110)
-                                            }}
-                                        />
-                                        <Text style={{
-                                            color: (darkMode) ? "white" : "black",
-                                            marginLeft: "5%",
-                                            marginRight: "13%"
-                                        }}>{member?.nick}</Text>
-                                        {
-                                            groupAdmin &&
-                                            <TouchableOpacity
-                                                onPress={() => {
-                                                    addRemoveMember(member)
-                                                }}>
-                                                <Material name="account-off" size={getIconSize(80)}
-                                                          color={(darkMode) ? "white" : "black"}/>
-                                            </TouchableOpacity>
-                                        }
-                                    </TouchableOpacity>
-                                );
-                            } else {
-                                return (
-                                    <TouchableOpacity
-                                        onPress={() => navigation.navigate("Chat", {friend: member})}
-                                        style={{
-                                            ...Styles.touchable,
-                                            flexDirection: "row",
-                                            alignItems: "center",
-                                            margin: "3%",
-                                            opacity: (!isBlocked(member)) ? 1 : 0.5
-                                        }}>
-                                        <TouchableOpacity
-                                            onPress={() => navigation.navigate("OtherUserProfile", {userSelected: member})}>
+                                        <View style={{flexDirection: "row", alignItems: "center"}}>
                                             <Image
                                                 source={{
                                                     uri: (member?.picture !== "") ? "data:image/jpeg;base64," + member?.picture : "https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png?x=480&quality=40",
@@ -253,20 +304,82 @@ const GroupChatDetails = (props: Props) => {
                                                     height: getIconSize(110)
                                                 }}
                                             />
-                                        </TouchableOpacity>
-                                        <Text style={{
-                                            color: (darkMode) ? "white" : "black",
-                                            marginLeft: "5%",
-                                            marginRight: "13%"
-                                        }}>{member?.nick}</Text>
-                                        {groupAdmin &&
+                                            <Text style={{
+                                                color: (darkMode) ? "white" : "black",
+                                                marginLeft: "10%",
+                                                marginRight: "13%"
+                                            }}>{member?.nick}</Text>
+                                        </View>
+                                    </TouchableOpacity>
+                                );
+                            } else {
+                                return (
+                                    <TouchableOpacity
+                                        onPress={() => navigation.navigate("Chat", {friend: member})}
+                                        style={{
+                                            ...Styles.touchable,
+                                            flexDirection: "row",
+                                            alignItems: "center",
+                                            justifyContent: "space-between",
+                                            height: getIconSize(200),
+                                            margin: "3%",
+                                            opacity: (!isBlocked(member)) ? 1 : 0.5
+                                        }}>
+                                        <View style={{flexDirection: "row", alignItems: "center"}}>
                                             <TouchableOpacity
-                                                onPress={() => {
-                                                    addRemoveMember(member)
-                                                }}>
-                                                <Material name="account-off" size={getIconSize(80)}
-                                                          color={(darkMode) ? "white" : "black"}/>
+                                                onPress={() => navigation.navigate("OtherUserProfile", {userSelected: member})}>
+                                                <Image
+                                                    source={{
+                                                        uri: (member?.picture !== "") ? "data:image/jpeg;base64," + member?.picture : "https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png?x=480&quality=40",
+                                                    }}
+                                                    style={{
+                                                        ...Styles.imageStyle,
+                                                        borderColor: (darkMode) ? "white" : "black",
+                                                        borderWidth: 1,
+                                                        width: getIconSize(110),
+                                                        height: getIconSize(110)
+                                                    }}
+                                                />
                                             </TouchableOpacity>
+                                            <Text style={{
+                                                color: (darkMode) ? "white" : "black",
+                                                marginLeft: "10%",
+                                                marginRight: "13%"
+                                            }}>{member?.nick}</Text>
+                                        </View>
+                                        {groupAdmin &&
+                                            <Menu>
+                                                <MenuTrigger>
+                                                    <Entypo name={"dots-three-vertical"} size={getIconSize(60)}
+                                                            color={(darkMode) ? "white" : "black"}/>
+                                                </MenuTrigger>
+                                                <MenuOptions
+                                                    optionsContainerStyle={{
+                                                        backgroundColor: (darkMode) ? "#242121" : "#F5F5F5",
+                                                        borderRadius: 20,
+                                                        width: getIconSize(500),
+                                                        borderColor: "#ca2613",
+                                                        borderWidth: 2,
+                                                        padding: "2%"
+                                                    }}
+                                                >
+                                                    <MenuOption
+                                                        onSelect={() => addRemoveMember(member)}
+                                                        text='Remove Member'
+                                                        customStyles={{
+                                                            optionText: {color: (darkMode) ? "white" : "black"}
+                                                        }}
+                                                    />
+                                                    <MenuOption
+                                                        onSelect={() => changeAdmin(member)}
+                                                        text='Make Admin'
+                                                        customStyles={{
+                                                            optionText: {color: (darkMode) ? "white" : "black"}
+                                                        }}
+                                                    />
+                                                    {/* Puedes agregar más opciones aquí */}
+                                                </MenuOptions>
+                                            </Menu>
                                         }
                                     </TouchableOpacity>
                                 );
@@ -276,23 +389,48 @@ const GroupChatDetails = (props: Props) => {
                 }
                 <View>
                     {groupAdmin &&
-                        <TouchableOpacity
-                            onPress={() => setModalAddMemberVisible(!modalAddMemberVisible)}
-                            style={{
-                                ...Styles.touchable,
-                                flexDirection: "row",
-                                alignItems: "center",
-                                margin: "3%"
-                            }}
-                        >
-                            <Material name="account-plus" size={getIconSize(80)}
-                                      color={(darkMode) ? "white" : "black"}/>
-                            <Text style={{
-                                fontSize: getFontSize(20),
-                                color: (darkMode) ? "white" : "black",
-                                margin: "3%"
-                            }}>Add member</Text>
-                        </TouchableOpacity>
+                        <View style={{flexDirection: "row", justifyContent: "space-around"}}>
+                            <TouchableOpacity
+                                onPress={() => setModalAddMemberVisible(!modalAddMemberVisible)}
+                                style={{
+                                    ...Styles.touchable,
+                                    flexDirection: "row",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    height: getIconSize(200),
+                                    width: "43%",
+                                    margin: "3%"
+                                }}
+                            >
+                                <Material name="account-plus" size={getIconSize(80)}
+                                          color={(darkMode) ? "white" : "black"}/>
+                                <Text style={{
+                                    fontSize: getFontSize(15),
+                                    color: (darkMode) ? "white" : "black",
+                                    margin: "3%"
+                                }}>Add member</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={() => setModalEditGroupVisible(!modalEditGroupVisible)}
+                                style={{
+                                    ...Styles.touchable,
+                                    flexDirection: "row",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    height: getIconSize(200),
+                                    width: "43%",
+                                    margin: "3%"
+                                }}
+                            >
+                                <Material name="pencil" size={getIconSize(80)}
+                                          color={(darkMode) ? "white" : "black"}/>
+                                <Text style={{
+                                    fontSize: getFontSize(15),
+                                    color: (darkMode) ? "white" : "black",
+                                    margin: "3%"
+                                }}>Edit Group</Text>
+                            </TouchableOpacity>
+                        </View>
                     }
                     <TouchableOpacity
                         onPress={() => {
@@ -303,6 +441,7 @@ const GroupChatDetails = (props: Props) => {
                             ...Styles.touchable,
                             flexDirection: "row",
                             alignItems: "center",
+                            height: getIconSize(200),
                             margin: "3%"
                         }}
                     >
@@ -402,6 +541,108 @@ const GroupChatDetails = (props: Props) => {
                     </View>
                 </View>
             </Modal>
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalEditGroupVisible}
+                onRequestClose={() => setModalEditGroupVisible(!modalEditGroupVisible)}
+            >
+                <View style={{...styles.modalContainer}}>
+                    <View style={{...styles.modalContent, backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"}}>
+                        <View style={{flexDirection: "row", justifyContent: "space-between", margin: "5%"}}>
+                            <Text style={{
+                                fontSize: getFontSize(20),
+                                color: (darkMode) ? "white" : "black",
+                                marginHorizontal: "5%"
+                            }}>Choose a user and press to add them</Text>
+                            <TouchableOpacity onPress={() => setModalEditGroupVisible(!modalEditGroupVisible)}>
+                                <Material name='close-box' size={getIconSize(100)}
+                                          color={(darkMode) ? "white" : "black"}></Material>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={{
+                            margin: "10%",
+                            alignItems: "center",
+                            justifyContent: "center"
+                        }}>
+                            <TextInput
+                                placeholder='Change the name of the group'
+                                defaultValue={groupTemp.name}
+                                placeholderTextColor={"#a3a3a3"}
+                                style={{
+                                    borderWidth: 2,
+                                    borderColor: "#ca2613",
+                                    borderRadius: 20,
+                                    paddingHorizontal: "5%",
+                                    width: "80%",
+                                    fontSize: getFontSize(15),
+                                    color: (darkMode) ? "white" : "black",
+                                    textAlign: "center",
+                                    marginBottom: "5%"
+                                }}
+                                onChangeText={setNewName}
+                            ></TextInput>
+                            <TextInput
+                                placeholder='Change the description of the group'
+                                defaultValue={groupTemp.description}
+                                multiline={true}
+                                numberOfLines={3}
+                                placeholderTextColor={"#a3a3a3"}
+                                style={{
+                                    borderWidth: 2,
+                                    borderColor: "#ca2613",
+                                    borderRadius: 20,
+                                    paddingHorizontal: "5%",
+                                    width: "80%",
+                                    fontSize: getFontSize(15),
+                                    color: (darkMode) ? "white" : "black",
+                                    textAlign: "center"
+                                }}
+                                onChangeText={setNewDescription}
+                            ></TextInput>
+                            <TouchableOpacity style={{...Styles.touchable}} onPress={openGallery}>
+                                {
+                                    (newPictureBase64 !== "") ?
+                                        <Image
+                                            source={{
+                                                uri: "data:image/jpeg;base64," + newPictureBase64,
+                                                width: getIconSize(300),
+                                                height: getIconSize(300)
+                                            }}
+                                            style={{ ...Styles.imageStyle, borderColor: (darkMode) ? "white" : "black", borderWidth: 1, borderRadius: 10 }}
+                                        />
+                                        :
+                                        (groupTemp.picture !== "") ?
+                                            <Image
+                                                source={{
+                                                    uri: "data:image/jpeg;base64," + groupTemp.picture,
+                                                    width: getIconSize(300),
+                                                    height: getIconSize(300)
+                                                }}
+                                                style={{ ...Styles.imageStyle, borderColor: (darkMode) ? "white" : "black", borderWidth: 1, borderRadius: 10 }}
+                                            />
+                                            :
+                                            <Text style={{
+                                                fontSize: getFontSize(20),
+                                                textAlign: 'center',
+                                                color: (darkMode) ? "white" : "black"
+                                            }}>Select a new picture for the group</Text>
+                                }
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={editGroup}
+                                style={{...Styles.touchable}}
+                            >
+                                <Text style={{
+                                    fontSize: getFontSize(20),
+                                    textAlign: 'center',
+                                    color: (darkMode) ? "white" : "black"
+                                }}>Save changes</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
         </SafeAreaView>
     )
 }
@@ -414,7 +655,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        marginTop: "40%",
+        marginTop: "50%",
         borderColor: "#ca2613",
         borderWidth: 2
     },
