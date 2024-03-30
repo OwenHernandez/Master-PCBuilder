@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
 import java.io.IOException;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -28,25 +29,31 @@ import java.util.logging.Logger;
 @CrossOrigin
 @RequestMapping("/api/v2/components")
 public class ComponentRestControllerV2 {
-    Logger log;
 
 
     @Autowired
-    IComponentService componentService;
+    private IComponentService componentService;
 
     @Autowired
-    ISellerService sellerService;
+    private ISellerService sellerService;
 
     @Autowired
-    IUserService userService;
+    private IUserService userService;
 
     @Autowired
-    FileStorageService storageService;
+    private FileStorageService storageService;
 
-    ComponentDTOMapper componentDTOMapper = new ComponentDTOMapper();
+    private final ComponentDTOMapper componentDTOMapper = new ComponentDTOMapper();
 
     @GetMapping
-    public ResponseEntity<?> getAllOrByName(@RequestParam(value = "name", required = false) String name, @RequestParam(value = "userId", required = false) Long userId) {
+    public ResponseEntity<?> get(@RequestParam(value = "name", required = false) String name, @RequestParam(value = "userId", required = false) Long userId) {
+        Object principal =
+                SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = ((UserDetails) principal).getUsername();
+        User userByNick = userService.findByNick(username);
+        if (userByNick == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You should not be here");
+        }
         if (name != null) {
             List<Component> components = componentService.findByName(name);
             List<ComponentOutputDTO> componentsDTO = new ArrayList<>();
@@ -165,21 +172,6 @@ public class ComponentRestControllerV2 {
         }
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getById(@PathVariable("id") Long id) {
-        if (id != null) {
-            Component byId = componentService.findById(id);
-            if (byId != null) {
-                ComponentOutputDTO compOutputDTO = componentDTOMapper.toDTO(byId);
-                return ResponseEntity.ok(compOutputDTO);
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The component does not exist");
-            }
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The id must not be null");
-        }
-    }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
         if (id != null) {
@@ -237,7 +229,7 @@ public class ComponentRestControllerV2 {
                             component.setUsersWhoWants(byId.getUsersWhoWants());
                             boolean ok = componentService.update(component);
                             if (ok) {
-                                return ResponseEntity.ok("Component successfully updated");
+                                return ResponseEntity.ok("Component Successfully updated");
                             } else {
                                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong");
                             }
@@ -257,64 +249,63 @@ public class ComponentRestControllerV2 {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The id must not be null");
         }
     }
-    @GetMapping("/searchEbay/{search}")
+
+    @GetMapping("/ebay/{search}")
     public ResponseEntity<?> searchEbay(@PathVariable("search") String search) {
         if (search != null) {
             List<Component> components = componentService.searchEbay(search);
-            if (!components.isEmpty()) {
-                    return ResponseEntity.ok(components);
-            }
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The requested components were not found");
-            }
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The requested components were not found");
-    }
-    @GetMapping("/searchAmazon/{search}")
-    public ResponseEntity<?> searchAmazon(@PathVariable("search") String search) {
-        if (search != null) {
-            List<Component> components = componentService.searchAmazon(search);
-            if (components!=null && !components.isEmpty()) {
+            if (components != null && !components.isEmpty()) {
                 return ResponseEntity.ok(components);
             }
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The requested components were not found");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The search must not be null");
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The requested components were not found");
     }
 
-    @PutMapping("/updatePrice/{id}")
-    public ResponseEntity<?> updatePrice(@RequestBody ComponentPriceInputDTO componentInputDTO, @PathVariable("id") Long id) {
-        log= Logger.getLogger("ComponentController");
-        log.info(componentInputDTO.toString());
-        if (componentInputDTO != null && id != null) {
-                Component byId = componentService.findById(id);
-                if (byId != null) {
-                        Component component = new Component();
-                        component.setName(componentInputDTO.getName());
-                        component.setImage(byId.getImage());
-                        component.setDescription(componentInputDTO.getDescription());
-                        component.setType(byId.getType());
-                        component.setPrice(byId.getPrice());
-                        component.setEbay_price(componentInputDTO.getEbay_price());
-                        component.setAmazon_price(componentInputDTO.getAmazon_price());
-                        component.setId(byId.getId());
-                        component.setSeller(byId.getSeller());
-                        component.setUsersWhoWants(byId.getUsersWhoWants());
-                        boolean ok = componentService.update(component);
-                        if (ok) {
-                            return ResponseEntity.ok("Component successfully updated");
-                        } else {
-                            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong");
-                        }
+    @GetMapping("/amazon/{search}")
+    public ResponseEntity<?> searchAmazon(@PathVariable("search") String search) {
+        if (search != null) {
+            List<Component> components = componentService.searchAmazon(search);
+            if (components != null && !components.isEmpty()) {
+                return ResponseEntity.ok(components);
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The search must not be null");
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The requested components were not found");
+    }
 
+    @PutMapping("/price/{id}")
+    public ResponseEntity<?> updatePrice(@RequestBody ComponentPriceInputDTO componentInputDTO, @PathVariable("id") Long id) {
+        if (componentInputDTO != null && id != null) {
+            Component byId = componentService.findById(id);
+            if (byId != null) {
+                Component component = new Component();
+                component.setName(componentInputDTO.getName());
+                component.setImage(byId.getImage());
+                component.setDescription(componentInputDTO.getDescription());
+                component.setType(byId.getType());
+                component.setPrice(byId.getPrice());
+                component.setEbay_price(componentInputDTO.getEbay_price());
+                component.setAmazon_price(componentInputDTO.getAmazon_price());
+                component.setId(byId.getId());
+                component.setSeller(byId.getSeller());
+                component.setUsersWhoWants(byId.getUsersWhoWants());
+                boolean ok = componentService.update(component);
+                if (ok) {
+                    return ResponseEntity.ok("Component Successfully updated");
                 } else {
-                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The component does not exist");
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong");
                 }
+
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The component does not exist");
+            }
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The id must not be null");
         }
     }
-
 
 
 }

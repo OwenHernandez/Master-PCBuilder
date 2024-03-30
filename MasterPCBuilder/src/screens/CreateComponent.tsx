@@ -90,7 +90,7 @@ const CreateComponent = (props: Props) => {
             let ebayPrice = 0;
             async function getAmazonPrice(){
                 try {
-                    const response = await axios.get(Globals.IP_HTTP + "/api/v2/components/searchAmazon/" + name);
+                    const response = await axios.get(Globals.IP_HTTP + "/api/v2/components/amazon/" + name);
                     let stringAmazon:string= response.data[0].price;
 
                     stringAmazon=stringAmazon.replace("$","");
@@ -101,7 +101,7 @@ const CreateComponent = (props: Props) => {
             }
             async function getEbayPrice(){
                 try {
-                    const response = await axios.get(Globals.IP_HTTP + "/api/v2/components/searchEbay/" + name);
+                    const response = await axios.get(Globals.IP_HTTP + "/api/v2/components/ebay/" + name);
                     let stringEbay:string= response.data[1].price;
                     stringEbay=stringEbay.replace("$","");
                     ebayPrice = parseFloat(stringEbay);
