@@ -1,7 +1,6 @@
 package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.primary.controller.v2;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Build;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Component;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Seller;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.User;
@@ -10,7 +9,6 @@ import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.ISellerS
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.IUserService;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.service.FileStorageService;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.controller.v2.ComponentRestControllerV2;
-import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.BuildInputDTO;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.ComponentInputDTO;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.security.JwtService;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,16 +19,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.net.URLConnection;
 import java.util.Arrays;
 import java.util.List;
 
@@ -470,7 +465,7 @@ public class ComponentRestControllerV2Test {
         componentInputDTO.setName("Test Component");
         componentInputDTO.setSellerName("Test Seller");
         componentInputDTO.setImage("Test Image");
-        componentInputDTO.setImage64("hghsdfhgfsjuighsfdujhsdfjungnhrdfnhsgujifdhguihsrighrdighhsdkjngjfdngkjsfhdgsrhdgurhlrudhgihdsrhusughsruidhgrdshgurhdsluigh");
+        componentInputDTO.setImage64("hghsdfhgfsjuighsfdujhsdfjungnhrdfnhgujifdhguihsrighrdighhsdkjngjfdngkjsfhdgsrhdgurhlrudhgihdsrhusughsruidhgrdshgurhdsluigh");
 
         Component component = new Component();
         component.setId(1L);
