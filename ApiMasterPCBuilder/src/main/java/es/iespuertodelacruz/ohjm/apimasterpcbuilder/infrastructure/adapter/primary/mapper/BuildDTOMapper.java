@@ -3,19 +3,17 @@ package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.prim
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Build;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.BuildComponent;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.BuildComponentDTO;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.BuildInputDTO;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.BuildOutputDTO;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
-public class BuildOutputDTOMapper {
-    Logger log;
+public class BuildDTOMapper {
 
-    ComponentOutputDTOMapper outputDTOMapper = new ComponentOutputDTOMapper();
+    ComponentDTOMapper componentDTOMapper = new ComponentDTOMapper();
 
-    public BuildOutputDTO  toDTO(Build build) {
+    public BuildOutputDTO toDTO(Build build) {
         BuildOutputDTO buildOutputDTO = new BuildOutputDTO();
         buildOutputDTO.setId(build.getId());
         buildOutputDTO.setName(build.getName());
@@ -28,9 +26,8 @@ public class BuildOutputDTOMapper {
                 BuildComponentDTO bcDTO = new BuildComponentDTO();
                 bcDTO.setDateCreated(bc.getDateCreated());
                 bcDTO.setPriceAtTheTime(bc.getPriceAtTheTime());
-                log= Logger.getLogger(BuildOutputDTOMapper.class.getName());
                 if (bc.getComponent() != null) {
-                    bcDTO.setComponent(outputDTOMapper.toDTO(bc.getComponent()));
+                    bcDTO.setComponent(componentDTOMapper.toDTO(bc.getComponent()));
                 }
                 bcDTOList.add(bcDTO);
             }
@@ -41,5 +38,14 @@ public class BuildOutputDTOMapper {
         }
 
         return buildOutputDTO;
+    }
+
+    public Build toDomain(BuildInputDTO buildInputDTO) {
+        Build build = new Build();
+        build.setName(buildInputDTO.getName());
+        build.setNotes(buildInputDTO.getNotes());
+        build.setCategory(buildInputDTO.getCategory());
+
+        return build;
     }
 }
