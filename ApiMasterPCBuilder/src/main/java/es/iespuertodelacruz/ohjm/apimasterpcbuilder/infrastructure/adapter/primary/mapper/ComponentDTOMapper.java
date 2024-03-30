@@ -4,18 +4,15 @@ import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Component;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.ComponentInputDTO;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.ComponentOutputDTO;
 
-import java.util.logging.Logger;
+public class ComponentDTOMapper {
 
-public class ComponentOutputDTOMapper {
-    Logger log;
-    public Component toDomain(ComponentOutputDTO componentOutputDTO) {
+    public Component toDomain(ComponentInputDTO componentInputDTO) {
         Component component = new Component();
-        component.setId(componentOutputDTO.getId());
-        component.setName(componentOutputDTO.getName());
-        component.setImage(componentOutputDTO.getImage());
-        component.setType(componentOutputDTO.getType());
-        component.setDescription(componentOutputDTO.getDescription());
-        component.setPrice(componentOutputDTO.getPrice());
+        component.setName(componentInputDTO.getName());
+        component.setImage(componentInputDTO.getImage());
+        component.setDescription(componentInputDTO.getDescription());
+        component.setType(componentInputDTO.getType());
+        component.setPrice(componentInputDTO.getPrice());
 
         return component;
     }

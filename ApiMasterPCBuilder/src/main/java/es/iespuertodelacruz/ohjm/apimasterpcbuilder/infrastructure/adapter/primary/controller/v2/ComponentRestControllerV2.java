@@ -1,7 +1,6 @@
 package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.controller.v2;
 
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Component;
-import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Post;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Seller;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.User;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.IComponentService;
@@ -9,10 +8,8 @@ import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.ISellerS
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.IUserService;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.service.FileStorageService;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.*;
-import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.mapper.ComponentInputDTOMapper;
-import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.mapper.ComponentOutputDTOMapper;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.mapper.ComponentDTOMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,20 +18,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
-import java.lang.annotation.Documented;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Base64;
-import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 
 @RestController
 @CrossOrigin
@@ -55,9 +43,7 @@ public class ComponentRestControllerV2 {
     @Autowired
     FileStorageService storageService;
 
-    ComponentInputDTOMapper inputDTOMapper = new ComponentInputDTOMapper();
-
-    ComponentOutputDTOMapper outputDTOMapper = new ComponentOutputDTOMapper();
+    ComponentDTOMapper componentDTOMapper = new ComponentDTOMapper();
 
     @GetMapping
     public ResponseEntity<?> getAllOrByName(@RequestParam(value = "name", required = false) String name, @RequestParam(value = "userId", required = false) Long userId) {
@@ -66,7 +52,7 @@ public class ComponentRestControllerV2 {
             List<ComponentOutputDTO> componentsDTO = new ArrayList<>();
             if (components != null) {
                 for (Component comp : components) {
-                    ComponentOutputDTO compOutputDTO = outputDTOMapper.toDTO(comp);
+                    ComponentOutputDTO compOutputDTO = componentDTOMapper.toDTO(comp);
                     componentsDTO.add(compOutputDTO);
                 }
 
@@ -79,7 +65,7 @@ public class ComponentRestControllerV2 {
             List<ComponentOutputDTO> componentsDTO = new ArrayList<>();
             if (components != null) {
                 for (Component comp : components) {
-                    ComponentOutputDTO compOutputDTO = outputDTOMapper.toDTO(comp);
+                    ComponentOutputDTO compOutputDTO = componentDTOMapper.toDTO(comp);
                     componentsDTO.add(compOutputDTO);
                 }
 
@@ -91,7 +77,7 @@ public class ComponentRestControllerV2 {
             List<Component> all = componentService.findAll();
             List<ComponentOutputDTO> allDTO = new ArrayList<>();
             for (Component comp : all) {
-                ComponentOutputDTO compOutputDTO = outputDTOMapper.toDTO(comp);
+                ComponentOutputDTO compOutputDTO = componentDTOMapper.toDTO(comp);
                 allDTO.add(compOutputDTO);
             }
             return ResponseEntity.ok(allDTO);
@@ -112,7 +98,7 @@ public class ComponentRestControllerV2 {
                     byte[] photoBytes = Base64.getDecoder().decode(codedPicture);
                     String newFileName = storageService.save(userByNick.getNick() + "_" + componentInputDTO.getImage(), photoBytes);
                     componentInputDTO.setImage(newFileName);
-                    Component component = inputDTOMapper.toDomain(componentInputDTO);
+                    Component component = componentDTOMapper.toDomain(componentInputDTO);
                     component.setSeller(sellerByName);
                     component.setUserWhoCreated(userByNick);
                     component.setAmazon_price(componentInputDTO.getAmazon_price());
@@ -120,7 +106,7 @@ public class ComponentRestControllerV2 {
                     Component save = componentService.save(component);
 
                     if (save != null) {
-                        ComponentOutputDTO compOutputDTO = outputDTOMapper.toDTO(save);
+                        ComponentOutputDTO compOutputDTO = componentDTOMapper.toDTO(save);
                         return ResponseEntity.ok(compOutputDTO);
                     } else {
                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong");
@@ -184,7 +170,7 @@ public class ComponentRestControllerV2 {
         if (id != null) {
             Component byId = componentService.findById(id);
             if (byId != null) {
-                ComponentOutputDTO compOutputDTO = outputDTOMapper.toDTO(byId);
+                ComponentOutputDTO compOutputDTO = componentDTOMapper.toDTO(byId);
                 return ResponseEntity.ok(compOutputDTO);
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The component does not exist");
@@ -242,7 +228,7 @@ public class ComponentRestControllerV2 {
                             byte[] photoBytes = Base64.getDecoder().decode(codedPicture);
                             String newFileName = storageService.save(userByNick.getNick() + "_" + componentInputDTO.getImage(), photoBytes);
                             componentInputDTO.setImage(newFileName);
-                            Component component = inputDTOMapper.toDomain(componentInputDTO);
+                            Component component = componentDTOMapper.toDomain(componentInputDTO);
                             component.setId(id);
                             component.setSeller(sellerByName);
                             component.setEbay_price(componentInputDTO.getEbay_price());
