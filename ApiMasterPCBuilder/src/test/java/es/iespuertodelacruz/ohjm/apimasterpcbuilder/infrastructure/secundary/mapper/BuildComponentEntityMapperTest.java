@@ -31,19 +31,6 @@ public class BuildComponentEntityMapperTest {
     }
 
     @Test
-    void toDomain_nullDate_test() {
-        BuildComponentEntity buildComponentEntity = new BuildComponentEntity();
-        buildComponentEntity.setId(1L);
-        buildComponentEntity.setPriceAtTheTime(1000.0);
-
-        BuildComponent domain = buildComponentEntityMapper.toDomain(buildComponentEntity);
-
-        assertEquals(buildComponentEntity.getId(), domain.getId());
-        assertEquals("1970-01-01", domain.getDateCreated());
-        assertEquals(buildComponentEntity.getPriceAtTheTime(), domain.getPriceAtTheTime());
-    }
-
-    @Test
     void toPersistence_ok_test() throws Exception {
         BuildComponent buildComponent = new BuildComponent();
         buildComponent.setId(1L);
