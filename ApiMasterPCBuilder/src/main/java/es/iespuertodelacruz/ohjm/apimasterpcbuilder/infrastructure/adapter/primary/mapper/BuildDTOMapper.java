@@ -33,9 +33,7 @@ public class BuildDTOMapper {
             }
             buildOutputDTO.setBuildsComponents(bcDTOList);
         }
-        if (build.getUser() != null) {
-            buildOutputDTO.setUserNick(build.getUser().getNick());
-        }
+        buildOutputDTO.setUserNick(build.getUser().getNick());
 
         return buildOutputDTO;
     }
