@@ -41,9 +41,7 @@ public class BuildEntityMapper {
             for (BuildComponentEntity bce : buildEntity.getBuildsComponents()) {
                 BuildComponent bc = bcMapper.toDomain(bce);
                 Component comp = componentMapper.toDomain(bce.getComponent());
-                if (bce.getComponent().getUser() != null) {
-                    comp.setUserWhoCreated(userMapper.toDomain(bce.getComponent().getUser(), new HashSet<Long>(), new HashSet<Long>(), "builds"));
-                }
+                comp.setUserWhoCreated(userMapper.toDomain(bce.getComponent().getUser(), new HashSet<Long>(), new HashSet<Long>(), "builds"));
                 if (bce.getComponent().getUsersWhoWants() != null) {
                     if (comp.getUsersWhoWants() == null) {
                         comp.setUsersWhoWants(new ArrayList<>());
