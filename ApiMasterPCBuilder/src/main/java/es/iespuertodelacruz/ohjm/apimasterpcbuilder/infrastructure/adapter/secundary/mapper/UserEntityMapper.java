@@ -53,7 +53,7 @@ public class UserEntityMapper {
             }
         }
 
-        if (userEntity.getComponentsWanted() != null) {
+        if (userEntity.getComponentsWanted() != null && !userEntity.getComponentsWanted().isEmpty()) {
             List<Component> componentsWanted = new ArrayList<>();
             for (ComponentEntity ce : userEntity.getComponentsWanted()) {
                 Component c = compMapper.toDomain(ce);
