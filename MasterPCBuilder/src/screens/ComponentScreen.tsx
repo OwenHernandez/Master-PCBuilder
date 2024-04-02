@@ -88,7 +88,7 @@ const ComponentScreen = (props: Props) => {
         let i = 0;
         comp.priceHistory.map((comp) => {
             let date = new Date(comp.date);
-            let month = date.toLocaleString('default', {day:"numeric",month: 'long'});
+            let month = date.toLocaleString('default', {day:"numeric",month: 'numeric'})
             console.log(month)
             auxMeses.push(month);
             auxPrecios.push(comp.price);
