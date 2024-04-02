@@ -67,7 +67,8 @@ const ComponentScreen = (props: Props) => {
                 Globals.IP_HTTP + "/api/v2/components/" + comp?.id,
                 {headers: {Authorization: "Bearer " + token}}
             );
-            navigation.navigate("Components List");
+            const responseComponents=await axios.get(Globals.IP_HTTP + "/api/v2/components", {headers: {"Authorization": "Bearer " + token}});
+            navigation.navigate("Components List",{components:responseComponents.data});
         } catch (err) {
             console.log(err);
         }
@@ -99,6 +100,9 @@ const ComponentScreen = (props: Props) => {
         setPrecios(auxPrecios);
         setPreciosAmazon(auxPreciosAmazon);
         setPreciosEbay(auxPreciosEbay);
+        console.log(precios)
+        console.log(preciosAmazon)
+        console.log(preciosEbay)
     }, []);
 
     const data = {
@@ -134,6 +138,7 @@ const ComponentScreen = (props: Props) => {
                     style={{flex:1, width: "100%", height: "100%", borderRadius: 10, alignSelf: "center"}}
                     imageStyle={{opacity: 0.3}}
                 >
+
                    <View style={{flex:1,margin:"5%", justifyContent:"flex-start",alignItems:"flex-end"}}>
                        <TouchableOpacity
                            onPress={() => {
@@ -146,7 +151,8 @@ const ComponentScreen = (props: Props) => {
                    </View>
                     <View style={{flex: 1, margin: "5%",justifyContent:"flex-start",alignItems:"flex-start"}}>
                             {
-                                viewGraphic?<LineChart
+
+                                (viewGraphic)?<LineChart
                                     data={data}
                                     width={Dimensions.get('window').width / 1.1}
                                     height={220}
@@ -169,13 +175,17 @@ const ComponentScreen = (props: Props) => {
                                             color: (darkMode) ? "white" : "black",
                                             textAlign: "center"
                                         }}>{comp?.name}</Text>
-                                    <View style={{justifyContent:"center",alignItems:"center",marginHorizontal:20 }}>
-                                        <TouchableOpacity onPress={()=>{
-                                            setViewGraphic(!viewGraphic)
-                                        }}>
-                                            <Material name={"trending-up"} color={"white"} size={getIconSize(70)}/>
-                                        </TouchableOpacity>
-                                    </View>
+                                    {
+                                        (precios.length>0 && preciosAmazon.length>0 && preciosEbay.length>0)?
+                                            <View style={{justifyContent:"center",alignItems:"center",marginHorizontal:20 }}>
+                                                <TouchableOpacity onPress={()=>{
+                                                    setViewGraphic(!viewGraphic)
+                                                }}>
+                                                    <Material name={"trending-up"} color={"white"} size={getIconSize(70)}/>
+                                                </TouchableOpacity>
+                                            </View>:<></>
+                                    }
+
                                 </View>
                                 <View style={{flexDirection: "row", justifyContent: "space-between"}}>
                                     <TouchableOpacity onPress={toggleOpen}

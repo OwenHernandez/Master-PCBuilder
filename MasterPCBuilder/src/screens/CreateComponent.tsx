@@ -41,6 +41,8 @@ const CreateComponent = (props: Props) => {
     const [sellers, setSellers] = useState([]);
     const [types, setTypes] = useState([]);
     const [selectedType, setSelectedType] = useState({});
+    const [amazon_price, setAmazon_price] = useState<number>(0)
+    const [ebay_price, setEbay_price] = useState<number>(0)
 
     useEffect(() => {
         setSellers([]);
@@ -86,15 +88,12 @@ const CreateComponent = (props: Props) => {
 
     async function createComponent() {
         if (!isNaN(Number(price))) {
-            let amazonPrice = 0;
-            let ebayPrice = 0;
             async function getAmazonPrice(){
                 try {
                     const response = await axios.get(Globals.IP_HTTP + "/api/v2/components/searchAmazon/" + name);
-                    let stringAmazon:string= response.data[0].price;
-
-                    stringAmazon=stringAmazon.replace("$","");
-                    amazonPrice = parseFloat(stringAmazon);
+                    console.log(response.data[0].amazon_price)
+                    setAmazon_price(parseFloat(response.data[0].amazon_price));
+                    console.log(amazon_price)
                 } catch (err) {
                     console.log(err);
                 }
@@ -102,14 +101,16 @@ const CreateComponent = (props: Props) => {
             async function getEbayPrice(){
                 try {
                     const response = await axios.get(Globals.IP_HTTP + "/api/v2/components/searchEbay/" + name);
-                    let stringEbay:string= response.data[1].price;
-                    stringEbay=stringEbay.replace("$","");
-                    ebayPrice = parseFloat(stringEbay);
+                    console.log(response.data[1].ebay_price)
+                    setEbay_price(parseFloat(response.data[1].ebay_price));
+                    console.log(ebay_price)
                 } catch (err) {
                     console.log(err);
                 }
             }
             try {
+                getAmazonPrice();
+                getEbayPrice();
                 const response = await axios.post(Globals.IP_HTTP + "/api/v2/components", {
                     name,
                     description,
@@ -118,8 +119,8 @@ const CreateComponent = (props: Props) => {
                     type: selectedType,
                     image,
                     image64,
-                    amazon_price: amazonPrice,
-                    ebay_price: ebayPrice,
+                    amazon_price: amazon_price,
+                    ebay_price: ebay_price,
                 }, {headers: {"Authorization": "Bearer " + token}});
                 setName("");
                 setDescription("");
@@ -166,7 +167,7 @@ const CreateComponent = (props: Props) => {
             <HeaderScreen name={route.name} navigation={navigation} profile={false} drawer={true} />
                 <ScrollView style={{flex:1}} contentContainerStyle={{ flexGrow: 1 }}>
                     <View style={{flex:1}}>
-                        <View style={{flex:1,flexDirection:"row",backgroundColor:"yellow"}}>
+                        <View style={{flex:1,flexDirection:"row",}}>
                             <View style={{flex: 1,flexDirection:"column",}}>
                                 <View style={{
                                     flex:1, marginLeft:4,paddingRight:4
@@ -323,7 +324,7 @@ const CreateComponent = (props: Props) => {
                                 />
                             </View>
                         </View>
-                        <View style={{flex:1,backgroundColor:"red"}}>
+                        <View style={{flex:1}}>
                             <TouchableOpacity style={{...Styles.touchable}} onPress={openGallery}>
                                 <Text style={{
                                     fontSize: getFontSize(20),
