@@ -43,6 +43,8 @@ public class UserDTOMapper {
                 componentsWanted.add(cDTO);
             }
             userDTO.setComponentsWanted(componentsWanted);
+        }else {
+            userDTO.setComponentsWanted(new ArrayList<>());
         }
         if (user.getFriends() != null && !user.getFriends().isEmpty()) {
             userDTO.setFriends(new ArrayList<>());
@@ -51,6 +53,8 @@ public class UserDTOMapper {
                 UserDTO uDTO = toDTO(u);
                 userDTO.getFriends().add(uDTO);
             }
+        }else{
+            userDTO.setFriends(new ArrayList<>());
         }
         if (user.getBlockedUsers() != null && !user.getBlockedUsers().isEmpty()) {
             userDTO.setBlockedUsers(new ArrayList<>());
@@ -59,6 +63,8 @@ public class UserDTOMapper {
                 UserDTO uDTO = toDTO(u);
                 userDTO.getBlockedUsers().add(uDTO);
             }
+        }else {
+            userDTO.setBlockedUsers(new ArrayList<>());
         }
         return userDTO;
     }

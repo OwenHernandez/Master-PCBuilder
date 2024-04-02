@@ -301,31 +301,6 @@ const Builder = (props: Props) => {
                                                         <View>
                                                             <TouchableOpacity
                                                                 onPress={() => toggleModal(touch.item.type)}>
-                                                                {
-                                                                    (buildTemp !== null && buildTemp !== undefined && buildTemp.buildsComponents !== undefined) &&
-                                                                    buildTemp.buildsComponents.map((buildComp) => {
-                                                                        if (buildComp.component.type === touch.item.type) {
-                                                                            return (
-                                                                                <View style={{
-                                                                                    ...Styles.touchable,
-                                                                                    flexDirection: 'row'
-                                                                                }}>
-                                                                                    <Component
-                                                                                        comp={buildComp.component}/>
-                                                                                    <TouchableOpacity
-                                                                                        onPress={() => removeFromBuild(buildComp.component)}>
-                                                                                        <Material name='close-box'
-                                                                                                  size={getIconSize(100)}
-                                                                                                  color={(darkMode) ? "white" : "black"}></Material>
-                                                                                    </TouchableOpacity>
-                                                                                </View>
-                                                                            );
-                                                                        }
-                                                                    })
-                                                                }
-                                                            </TouchableOpacity>
-                                                            <TouchableOpacity
-                                                                onPress={() => toggleModal(touch.item.type)}>
                                                                 <View
                                                                     style={{...Styles.touchable, flexDirection: 'row'}}>
                                                                     <Octicons name={touch.item.icon}
@@ -345,31 +320,6 @@ const Builder = (props: Props) => {
                                                 case "Material" :
                                                     return (
                                                         <View>
-                                                            <TouchableOpacity
-                                                                onPress={() => toggleModal(touch.item.type)}>
-                                                                {
-                                                                    (buildTemp !== null && buildTemp !== undefined && buildTemp.buildsComponents !== undefined) &&
-                                                                    buildTemp.buildsComponents.map((buildComp) => {
-                                                                        if (buildComp.component.type === touch.item.type) {
-                                                                            return (
-                                                                                <View style={{
-                                                                                    ...Styles.touchable,
-                                                                                    flexDirection: 'row'
-                                                                                }}>
-                                                                                    <Component
-                                                                                        comp={buildComp.component}/>
-                                                                                    <TouchableOpacity
-                                                                                        onPress={() => removeFromBuild(buildComp.component)}>
-                                                                                        <Material name='close-box'
-                                                                                                  size={getIconSize(100)}
-                                                                                                  color={(darkMode) ? "white" : "black"}></Material>
-                                                                                    </TouchableOpacity>
-                                                                                </View>
-                                                                            );
-                                                                        }
-                                                                    })
-                                                                }
-                                                            </TouchableOpacity>
                                                             <TouchableOpacity
                                                                 onPress={() => toggleModal(touch.item.type)}>
                                                                 <View
@@ -393,31 +343,6 @@ const Builder = (props: Props) => {
                                                         <View>
                                                             <TouchableOpacity
                                                                 onPress={() => toggleModal(touch.item.type)}>
-                                                                {
-                                                                    (buildTemp !== null && buildTemp !== undefined && buildTemp.buildsComponents !== undefined) &&
-                                                                    buildTemp.buildsComponents.map((buildComp) => {
-                                                                        if (buildComp.component.type === touch.item.type) {
-                                                                            return (
-                                                                                <View style={{
-                                                                                    ...Styles.touchable,
-                                                                                    flexDirection: 'row'
-                                                                                }}>
-                                                                                    <Component
-                                                                                        comp={buildComp.component}/>
-                                                                                    <TouchableOpacity
-                                                                                        onPress={() => removeFromBuild(buildComp.component)}>
-                                                                                        <Material name='close-box'
-                                                                                                  size={getIconSize(100)}
-                                                                                                  color={(darkMode) ? "white" : "black"}></Material>
-                                                                                    </TouchableOpacity>
-                                                                                </View>
-                                                                            );
-                                                                        }
-                                                                    })
-                                                                }
-                                                            </TouchableOpacity>
-                                                            <TouchableOpacity
-                                                                onPress={() => toggleModal(touch.item.type)}>
                                                                 <View
                                                                     style={{...Styles.touchable, flexDirection: 'row'}}>
                                                                     <FontAwesome5 name={touch.item.icon}
@@ -437,31 +362,6 @@ const Builder = (props: Props) => {
                                                 default:
                                                     return (
                                                         <View>
-                                                            <TouchableOpacity
-                                                                onPress={() => toggleModal(touch.item.type)}>
-                                                                {
-                                                                    (buildTemp !== null && buildTemp !== undefined && buildTemp.buildsComponents !== undefined) &&
-                                                                    buildTemp.buildsComponents.map((buildComp) => {
-                                                                        if (buildComp.component.type === touch.item.type) {
-                                                                            return (
-                                                                                <View style={{
-                                                                                    ...Styles.touchable,
-                                                                                    flexDirection: 'row'
-                                                                                }}>
-                                                                                    <Component
-                                                                                        comp={buildComp.component}/>
-                                                                                    <TouchableOpacity
-                                                                                        onPress={() => removeFromBuild(buildComp.component)}>
-                                                                                        <Material name='close-box'
-                                                                                                  size={getIconSize(100)}
-                                                                                                  color={(darkMode) ? "white" : "black"}></Material>
-                                                                                    </TouchableOpacity>
-                                                                                </View>
-                                                                            );
-                                                                        }
-                                                                    })
-                                                                }
-                                                            </TouchableOpacity>
                                                             <TouchableOpacity
                                                                 onPress={() => toggleModal(touch.item.type)}
                                                                 style={{...Styles.touchable, flexDirection: 'row'}}>
@@ -531,31 +431,7 @@ const Builder = (props: Props) => {
                                                 case "Octicon" :
                                                     return (
                                                         <View>
-                                                            <TouchableOpacity
-                                                                onPress={() => toggleModal(touch.item.type)}>
-                                                                {
-                                                                    (buildTemp !== null && buildTemp !== undefined && buildTemp.buildsComponents !== undefined) &&
-                                                                    buildTemp.buildsComponents.map((buildComp) => {
-                                                                        if (buildComp.component.type === touch.item.type) {
-                                                                            return (
-                                                                                <View style={{
-                                                                                    ...Styles.touchable,
-                                                                                    flexDirection: 'row'
-                                                                                }}>
-                                                                                    <Component
-                                                                                        comp={buildComp.component}/>
-                                                                                    <TouchableOpacity
-                                                                                        onPress={() => removeFromBuild(buildComp.component)}>
-                                                                                        <Material name='close-box'
-                                                                                                  size={getIconSize(100)}
-                                                                                                  color={(darkMode) ? "white" : "black"}></Material>
-                                                                                    </TouchableOpacity>
-                                                                                </View>
-                                                                            );
-                                                                        }
-                                                                    })
-                                                                }
-                                                            </TouchableOpacity>
+
                                                             <TouchableOpacity
                                                                 onPress={() => toggleModal(touch.item.type)}>
                                                                 <View
@@ -578,31 +454,6 @@ const Builder = (props: Props) => {
                                                         <View>
                                                             <TouchableOpacity
                                                                 onPress={() => toggleModal(touch.item.type)}>
-                                                                {
-                                                                    (buildTemp !== null && buildTemp !== undefined && buildTemp.buildsComponents !== undefined) &&
-                                                                    buildTemp.buildsComponents.map((buildComp) => {
-                                                                        if (buildComp.component.type === touch.item.type) {
-                                                                            return (
-                                                                                <View style={{
-                                                                                    ...Styles.touchable,
-                                                                                    flexDirection: 'row'
-                                                                                }}>
-                                                                                    <Component
-                                                                                        comp={buildComp.component}/>
-                                                                                    <TouchableOpacity
-                                                                                        onPress={() => removeFromBuild(buildComp.component)}>
-                                                                                        <Material name='close-box'
-                                                                                                  size={getIconSize(100)}
-                                                                                                  color={(darkMode) ? "white" : "black"}></Material>
-                                                                                    </TouchableOpacity>
-                                                                                </View>
-                                                                            );
-                                                                        }
-                                                                    })
-                                                                }
-                                                            </TouchableOpacity>
-                                                            <TouchableOpacity
-                                                                onPress={() => toggleModal(touch.item.type)}>
                                                                 <View
                                                                     style={{...Styles.touchable, flexDirection: 'row'}}>
                                                                     <Material name={touch.item.icon}
@@ -621,31 +472,7 @@ const Builder = (props: Props) => {
                                                 case "FontAwesome5":
                                                     return (
                                                         <View>
-                                                            <TouchableOpacity
-                                                                onPress={() => toggleModal(touch.item.type)}>
-                                                                {
-                                                                    (buildTemp !== null && buildTemp !== undefined && buildTemp.buildsComponents !== undefined) &&
-                                                                    buildTemp.buildsComponents.map((buildComp) => {
-                                                                        if (buildComp.component.type === touch.item.type) {
-                                                                            return (
-                                                                                <View style={{
-                                                                                    ...Styles.touchable,
-                                                                                    flexDirection: 'row'
-                                                                                }}>
-                                                                                    <Component
-                                                                                        comp={buildComp.component}/>
-                                                                                    <TouchableOpacity
-                                                                                        onPress={() => removeFromBuild(buildComp.component)}>
-                                                                                        <Material name='close-box'
-                                                                                                  size={getIconSize(100)}
-                                                                                                  color={(darkMode) ? "white" : "black"}></Material>
-                                                                                    </TouchableOpacity>
-                                                                                </View>
-                                                                            );
-                                                                        }
-                                                                    })
-                                                                }
-                                                            </TouchableOpacity>
+
                                                             <TouchableOpacity
                                                                 onPress={() => toggleModal(touch.item.type)}>
                                                                 <View

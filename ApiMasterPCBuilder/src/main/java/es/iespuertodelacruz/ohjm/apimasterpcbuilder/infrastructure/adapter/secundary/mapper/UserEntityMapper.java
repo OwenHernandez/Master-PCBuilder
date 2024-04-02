@@ -126,6 +126,9 @@ public class UserEntityMapper {
                 ce.setUser(res);
                 res.getComponentsWanted().add(ce);
             }
+        }else{
+            res.setComponentsWanted(new ArrayList<>());
+
         }
 
         if (user.getFriends() != null && !user.getFriends().isEmpty()) {
@@ -142,6 +145,8 @@ public class UserEntityMapper {
                 UserEntity ue = toPersistence(u, new HashSet<>(processedFriendsIds), new HashSet<>(processedBlockedUsersIds), "blockedUsers");
                 res.getBlockedUsers().add(ue);
             }
+        }else{
+            res.setBlockedUsers(new ArrayList<>());
         }
 
         return res;

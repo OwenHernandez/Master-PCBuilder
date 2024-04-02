@@ -101,14 +101,10 @@ const CreatePost = (props: Props) => {
     return (
         <SafeAreaView style={{flex: 1, backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"}}>
             <HeaderScreen name={route.name} navigation={navigation} profile={false} drawer={true}/>
-            <ScrollView>
-                <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+            <ScrollView contentContainerStyle={{flexGrow:1}}>
+                <View style={{flex: 1,justifyContent:"center"}}>
                     <View style={{
-                        padding: "10%",
-                        borderRadius: 20,
-                        alignItems: "center",
-                        marginHorizontal: "10%",
-                        marginBottom: "2%"
+                        margin:"5%",
                     }}>
                         <TextInput
                             placeholder='Title'
@@ -117,8 +113,7 @@ const CreatePost = (props: Props) => {
                                 borderColor: "#ca2613",
                                 borderRadius: 20,
                                 paddingHorizontal: "5%",
-                                marginBottom: "20%",
-                                width: getIconSize(800),
+                                width:"100%",
                                 fontSize: getFontSize(20),
                                 color: (darkMode) ? "white" : "black",
                                 textAlign: 'center'
@@ -126,73 +121,85 @@ const CreatePost = (props: Props) => {
                             placeholderTextColor={"#a3a3a3"}
                             onChangeText={(text) => setTitle(text)}
                         ></TextInput>
-                        <TextInput
-                            placeholder='Description'
-                            style={{
-                                borderWidth: 2,
-                                borderColor: "#ca2613",
-                                borderRadius: 20,
-                                paddingHorizontal: "5%",
-                                width: getIconSize(800),
-                                fontSize: getFontSize(15),
-                                color: (darkMode) ? "white" : "black",
-                                textAlign: 'center'
-                            }}
-                            placeholderTextColor={"#a3a3a3"}
-                            numberOfLines={3}
-                            multiline={true}
-                            onChangeText={(text) => setDescription(text)}
-                        ></TextInput>
                     </View>
-                    <Dropdown
-                        data={items}
-                        labelField={"label"}
-                        valueField={"value"}
-                        value={selectedValue}
-                        onChange={(newValue) => setSelectedValue(newValue.value)}
-                        style={{
-                            height: getIconSize(130),
-                            backgroundColor: (darkMode) ? "#242121" : "#F5F5F5",
-                            borderColor: "#ca2613",
-                            //borderRadius: 20,
-                            width: getIconSize(800),
-                            borderWidth: 2,
-                            marginBottom: "8%",
-                        }}
-                        placeholderStyle={{
-                            fontSize: getFontSize(20),
-                            color: (darkMode) ? "white" : "black",
-                            textAlign: 'center'
-                        }}
-                        iconStyle={{
-                            tintColor: '#ca2613',
-                            width: getIconSize(100),
-                            height: getIconSize(100)
-                        }}
-                        containerStyle={{
-                            backgroundColor: (darkMode) ? "#242121" : "#F5F5F5",
-                            borderColor: "#ca2613",
-                            borderWidth: 2/*, borderRadius: 20*/
-                        }}
-                        itemTextStyle={{
-                            fontSize: getFontSize(20),
-                            color: (darkMode) ? "white" : "black",
-                            textAlign: 'center'
-                        }}
-                        activeColor={"#ca2613"}
-                        selectedTextStyle={{
-                            fontSize: getFontSize(20),
-                            color: (darkMode) ? "white" : "black",
-                            textAlign: 'center'
-                        }}
-                    />
-                    <TouchableOpacity style={{...Styles.touchable}} onPress={openGallery}>
-                        <Text style={{
-                            fontSize: getFontSize(20),
-                            textAlign: 'center',
-                            color: (darkMode) ? "white" : "black"
-                        }}>Select a picture for the post</Text>
-                    </TouchableOpacity>
+                    <View style={{
+                        flex:2,
+                        margin:"5%",
+                        flexDirection:"row",
+                    }}>
+                        <View style={{flex:1, marginRight:"3%",flexDirection:"column"}}>
+                            <Dropdown
+                                data={items}
+                                labelField={"label"}
+                                valueField={"value"}
+                                value={selectedValue}
+                                onChange={(newValue) => setSelectedValue(newValue.value)}
+                                style={{
+                                    height: "50%", // Aumenta la altura del contenedor del Dropdown
+                                    borderColor: "#ca2613",
+                                    width: "100%",
+                                    borderWidth: 2,
+                                    marginBottom: "8%",
+                                }}
+                                placeholderStyle={{
+                                    fontSize: getFontSize(20),
+                                    color: (darkMode) ? "white" : "black",
+                                    textAlign: 'center',
+                                    lineHeight: getFontSize(20), // Ajusta la altura de la línea del texto
+                                }}
+                                iconStyle={{
+                                    tintColor: '#ca2613',
+                                    width: getIconSize(100),
+                                    height: getIconSize(100)
+                                }}
+                                containerStyle={{
+                                    backgroundColor: (darkMode) ? "#242121" : "#F5F5F5",
+                                    borderColor: "#ca2613",
+                                    borderWidth: 2,
+                                }}
+                                itemTextStyle={{
+                                    fontSize: getFontSize(20),
+                                    color: (darkMode) ? "white" : "black",
+                                    textAlign: 'center'
+                                }}
+                                activeColor={"#ca2613"}
+                                selectedTextStyle={{
+                                    fontSize: getFontSize(20),
+                                    color: (darkMode) ? "white" : "black",
+                                    textAlign: 'center'
+                                }}
+                            />
+                            <TouchableOpacity style={{...Styles.touchable,height:"46%",justifyContent:"center"}} onPress={openGallery}>
+                                <Text style={{
+                                    fontSize: getFontSize(20),
+                                    textAlign: 'center',
+                                    color: (darkMode) ? "white" : "black"
+                                }}>Select a picture for the post</Text>
+                            </TouchableOpacity>
+                        </View>
+                            <TextInput
+                                placeholder='Description'
+                                style={{
+                                    justifyContent:"flex-start",
+                                    alignItems:"flex-start",
+                                    borderWidth: 2,
+                                    borderColor: "#ca2613",
+                                    borderRadius: 20,
+                                    paddingHorizontal: "5%",
+                                    width: "60%",
+                                    minHeight:"50%",
+                                    fontSize: getFontSize(15),
+                                    color: (darkMode) ? "white" : "black",
+                                }}
+                                placeholderTextColor={"#a3a3a3"}
+                                numberOfLines={3}
+                                multiline={true}
+                                onChangeText={(text) => setDescription(text)}
+                            ></TextInput>
+                    </View>
+
+
+
                     <TouchableOpacity style={{...Styles.touchable}} onPress={createPost}>
                         <Text
                             style={{
@@ -202,6 +209,7 @@ const CreatePost = (props: Props) => {
                             }}>Create
                             Post</Text>
                     </TouchableOpacity>
+
                 </View>
             </ScrollView>
         </SafeAreaView>
