@@ -33,22 +33,20 @@ const ComponentsList = (props: Props) => {
     const getFontSize = (size: number) => size / fontScale;
     const fullScreen = Dimensions.get("window").scale;
     const getIconSize = (size: number) => size / fullScreen;
-    const [componentsList, setComponentsList] = useState([{}] as IComponentType[]);
-    const [componentsByName, setComponentsByName] = useState([{}] as IComponentType[]);
+    const [componentsList, setComponentsList] = useState<Array<IComponentType>>([]);
+    const [componentsByName, setComponentsByName] = useState<Array<IComponentType>>([]);
     const [wished, setWished] = useState(false);
 
     useEffect(() => {
         setComponentsList([]);
         setComponentsByName([]);
         getUserComponents();
-        console.log(componentsList)
     }, [components]);
 
     async function getUserComponents() {
-        let auxComps=[];
+        let auxComps:Array<IComponentType>=[];
         try {
             const getCompsResponse = await axios.get(Globals.IP_HTTP + "/api/v2/components", {headers: {"Authorization": "Bearer " + token}});
-            console.log(getCompsResponse.data);
             for (let comp of getCompsResponse.data) {
                 const getImgResponse = await RNFetchBlob.fetch(
                     'GET',
@@ -71,7 +69,7 @@ const ComponentsList = (props: Props) => {
     }
 
     return (
-        <View style={{backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"}}>
+        <View style={{flex:1,backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"}}>
             <HeaderScreen name={"Components List"} navigation={navigation} profile={false} drawer={true}/>
             <View style={{height: "89%"}}>
                 <View style={{
@@ -102,7 +100,7 @@ const ComponentsList = (props: Props) => {
                     <FontAwesome5Icon name="search" size={getIconSize(80)}
                                       color={(darkMode) ? "white" : "black"}/>
                 </View>
-                <View style={{justifyContent:"center",alignItems:"center"}}>
+                <View style={{justifyContent:"center",alignItems:"center",marginBottom:"35%"}}>
                     <FlatList
                         data={componentsByName}
                         numColumns={2}
@@ -114,7 +112,16 @@ const ComponentsList = (props: Props) => {
                                 }
                             });
                             return (
-                                <TouchableOpacity style={{...Styles.touchable, width: getIconSize(500)}} onPress={() => navigation.navigate("ComponentScreen", { comp: comp.item, wished})}>
+                                <TouchableOpacity
+                                    style={{...Styles.touchable,
+                                        padding:"0%",
+                                        margin:"2%",
+                                        height:getIconSize(800),
+                                        width: getIconSize(450)}}
+                                    onPress={() => {
+                                        navigation.navigate("ComponentScreen", { comp: comp.item, wished})}
+
+                                }>
                                     <Component comp={comp.item} />
                                 </TouchableOpacity>
                             )

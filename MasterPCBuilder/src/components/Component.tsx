@@ -16,6 +16,7 @@ import {Styles} from '../themes/Styles';
 import {Globals} from "./Globals";
 import axios, {AxiosError} from "axios";
 import RNFetchBlob from "rn-fetch-blob";
+import LinearGradient from "react-native-linear-gradient";
 
 type Props = {
     comp: IComponentType;
@@ -57,39 +58,37 @@ const Component = (props: Props) => {
                     </View>
  */
     return (
-        <SafeAreaView style={{flex: 1}}>
-            <View style={{flex: 1, justifyContent: "center",}}>
-                <View style={{alignItems: "center"}}>
+        <SafeAreaView style={{flex: 1,}}>
+            <View style={{flex: 1,borderRadius: 20, overflow: 'hidden'}}>
                     <ImageBackground
                         source={{
                             uri: "data:image/jpeg;base64," + comp?.image
                         }}
                         style={{
-                            margin: "2%",
-                            width: getIconSize(300),
-                            height: getIconSize(300),
+                            width: "100%",
+                            height: "100%",
                             alignItems: "center",
-                            borderRadius: 10
                         }}
                     >
+                        <LinearGradient colors={['rgba(0, 0, 0, 0)','rgba(0, 0, 0, 0)' ,'#3e423f', (darkMode) ? "#242121" : "#F5F5F5"]} style={{flex:1,justifyContent:"flex-start",alignItems:"flex-end",flexDirection:"row",width:"100%"}} >
+                            <View style={{padding:"5%"}}>
+                                <View style={{}}>
+                                    <Text style={{
+                                        fontSize: getFontSize(20),
+                                        color: (darkMode) ? "white" : "black",
+                                    }}>{comp?.name}</Text>
+                                    <Text style={{
+                                        fontSize: getFontSize(20),
+                                        color: (darkMode) ? "white" : "black",
+                                    }}>{comp?.price}€</Text>
+                                </View>
+                            </View>
+                        </LinearGradient>
 
                     </ImageBackground>
-                </View>
-                <View style={{flex:1,flexDirection:"row"}}>
-                    <View style={{justifyContent: "center",paddingHorizontal:"5%"}}>
-                        <Text style={{
-                            fontSize: getFontSize(20),
-                            color: (darkMode) ? "white" : "black",
-                            marginRight: "10%"
-                        }}>{comp?.name}</Text>
-                        <Text style={{
-                            fontSize: getFontSize(20),
-                            color: (darkMode) ? "white" : "black",
-                        }}>{comp?.price}€</Text>
-                    </View>
-                </View>
+
             </View>
-            <View style={{justifyContent: "flex-end", marginTop: "5%"}}>
+            {/*<View style={{justifyContent: "flex-end", marginTop: "5%"}}>
                 {
                     (comp?.wished) ?
                         <TouchableOpacity style={{...Styles.touchable, borderRadius: 15}}
@@ -103,7 +102,7 @@ const Component = (props: Props) => {
                                 List</Text>
                         </TouchableOpacity>
                 }
-            </View>
+            </View>*/}
         </SafeAreaView>
     )
 }

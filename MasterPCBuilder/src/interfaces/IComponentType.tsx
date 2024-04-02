@@ -1,3 +1,5 @@
+import IPriceHistoryType from "./IPriceHistoryType";
+
 export default interface IComponentType {
     id: number;
     name: string;
@@ -10,4 +12,5 @@ export default interface IComponentType {
     sellerName: string;
     userNick: string;
     wished?: boolean;
+    priceHistory: Array<IPriceHistoryType>;
 }

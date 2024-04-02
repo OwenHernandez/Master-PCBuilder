@@ -20,8 +20,6 @@ async def root(search:str):
     if data:
         for product in data['products']:
             product['search_url'] = amazon_url
-            print("Got: %s" % product['title'])
-            # APARTIR DE AQUI PUEDO CAMBIARLO YO PARA HACER
             products.append(product)
         return products
 
