@@ -1,20 +1,14 @@
 package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.service;
 
-import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Build;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Component;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.User;
-import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.secundary.IBuildRepository;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.secundary.IComponentRepository;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.ProductAmazonDTO;
-import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.ProductEbayDTO;
-import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.mapper.BuildEntityMapper;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.mapper.ComponentEntityMapper;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.mapper.UserEntityMapper;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.BuildComponentEntity;
-import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.BuildEntity;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.ComponentEntity;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.repository.IBuildComponentEntityRepository;
-import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.repository.IBuildEntityRepository;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.repository.IComponentEntityRepository;
 import jakarta.transaction.Transactional;
 import org.jsoup.Jsoup;
@@ -23,8 +17,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -32,6 +24,7 @@ import reactor.core.publisher.Mono;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -63,7 +56,7 @@ public class ComponentEntityService implements IComponentRepository {
 
         for (ComponentEntity ce : all) {
             Component c = mapper.toDomain(ce);
-            c.setUserWhoCreated(userMapper.toDomain(ce.getUser()));
+            c.setUserWhoCreated(userMapper.toDomain(ce.getUser(), new HashSet<Long>(), new HashSet<Long>(), "comp"));
             res.add(c);
         }
 
@@ -76,11 +69,11 @@ public class ComponentEntityService implements IComponentRepository {
         try {
             Component res = null;
             if (component != null) {
-                ComponentEntity ce = mapper.toPersistance(component);
-                ce.setUser(userMapper.toPersistance(component.getUserWhoCreated()));
+                ComponentEntity ce = mapper.toPersistence(component);
+                ce.setUser(userMapper.toPersistence(component.getUserWhoCreated(), new HashSet<>(), new HashSet<>(), "comp"));
                 ComponentEntity save = repo.save(ce);
                 res = mapper.toDomain(save);
-                res.setUserWhoCreated(userMapper.toDomain(ce.getUser()));
+                res.setUserWhoCreated(userMapper.toDomain(ce.getUser(), new HashSet<Long>(), new HashSet<Long>(), "comp"));
             }
             return res;
         } catch (RuntimeException | ParseException e) {
@@ -97,7 +90,7 @@ public class ComponentEntityService implements IComponentRepository {
             if (opt.isPresent()) {
                 ComponentEntity componentEntity = opt.get();
                 component = mapper.toDomain(componentEntity);
-                component.setUserWhoCreated(userMapper.toDomain(opt.get().getUser()));
+                component.setUserWhoCreated(userMapper.toDomain(opt.get().getUser(), new HashSet<Long>(), new HashSet<Long>(), "comp"));
             }
         }
         return component;
@@ -113,7 +106,7 @@ public class ComponentEntityService implements IComponentRepository {
             if (list != null) {
                 for (ComponentEntity ce : list) {
                     Component c = mapper.toDomain(ce);
-                    c.setUserWhoCreated(userMapper.toDomain(ce.getUser()));
+                    c.setUserWhoCreated(userMapper.toDomain(ce.getUser(), new HashSet<Long>(), new HashSet<Long>(), "comp"));
                     res.add(c);
                 }
             }
@@ -153,12 +146,12 @@ public class ComponentEntityService implements IComponentRepository {
         try {
             Optional<ComponentEntity> byId = repo.findById(component.getId());
             if (byId.isPresent()) {
-                ComponentEntity ce = mapper.toPersistance(component);
-                ce.setUser(userMapper.toPersistance(component.getUserWhoCreated()));
+                ComponentEntity ce = mapper.toPersistence(component);
+                ce.setUser(userMapper.toPersistence(component.getUserWhoCreated(), new HashSet<>(), new HashSet<>(), "comp"));
                 if (component.getUsersWhoWants() != null && !component.getUsersWhoWants().isEmpty()) {
                     ce.setUsersWhoWants(new ArrayList<>());
                     for (User user : component.getUsersWhoWants()) {
-                        ce.getUsersWhoWants().add(userMapper.toPersistance(user));
+                        ce.getUsersWhoWants().add(userMapper.toPersistence(user, new HashSet<>(), new HashSet<>(), "comp"));
                     }
                 }
                 repo.save(ce);

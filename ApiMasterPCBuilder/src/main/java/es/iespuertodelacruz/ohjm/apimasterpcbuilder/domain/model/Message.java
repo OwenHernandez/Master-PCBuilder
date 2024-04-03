@@ -8,6 +8,7 @@ public class Message {
     private String author;
     private String receiver;
     private String content;
+    private String topic;
     private String date;
 
     public Message() {}
@@ -16,6 +17,7 @@ public class Message {
         Message m = new Message();
         m.setAuthor(author);
         m.setContent(content);
+        m.setTopic(topic);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         m.setDate(sdf.format(new Date()));
         return m;
@@ -26,6 +28,7 @@ public class Message {
         m.setAuthor(author);
         m.setReceiver(receiver);
         m.setContent(content);
+        m.setTopic("private");
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         m.setDate(sdf.format(new Date()));
         return m;
@@ -53,6 +56,14 @@ public class Message {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getTopic() {
+        return topic;
+    }
+
+    public void setTopic(String topic) {
+        this.topic = topic;
     }
 
     public String getDate() {

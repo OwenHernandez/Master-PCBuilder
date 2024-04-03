@@ -3,16 +3,11 @@ package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.prim
 import java.util.List;
 
 public class BuildOutputDTO {
-
     private long id;
     private String name;
-
     private String notes;
-
     private double totalPrice;
-
     private String category;
-
     private String userNick;
 
     private List<BuildComponentDTO> buildsComponents;

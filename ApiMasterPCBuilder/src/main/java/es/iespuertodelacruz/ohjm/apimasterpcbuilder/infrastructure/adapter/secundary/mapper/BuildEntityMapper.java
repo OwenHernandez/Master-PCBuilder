@@ -9,8 +9,10 @@ import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secun
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.UserEntity;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.logging.Logger;
+import java.util.Date;
+import java.util.HashSet;
 
 public class BuildEntityMapper {
     private final UserEntityMapper userMapper = new UserEntityMapper();
@@ -26,9 +28,12 @@ public class BuildEntityMapper {
         res.setName(buildEntity.getName());
         res.setNotes(buildEntity.getNotes());
         res.setTotalPrice(buildEntity.getTotalPrice());
-        res.setDateOfCreation(buildEntity.getDateOfCreation());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date(buildEntity.getDateOfCreation());
+        String dateStr = sdf.format(date);
+        res.setDateOfCreation(dateStr);
         res.setCategory(buildEntity.getCategory());
-        res.setUser(userMapper.toDomain(buildEntity.getUser()));
+        res.setUser(userMapper.toDomain(buildEntity.getUser(), new HashSet<Long>(), new HashSet<Long>(), "builds"));
         if (res.getBuildsComponents() == null) {
             res.setBuildsComponents(new ArrayList<>());
         }
@@ -36,14 +41,14 @@ public class BuildEntityMapper {
             BuildComponent bc = bcMapper.toDomain(bce);
             Component comp = componentMapper.toDomain(bce.getComponent());
             if (bce.getComponent().getUser() != null) {
-                comp.setUserWhoCreated(userMapper.toDomain(bce.getComponent().getUser()));
+                comp.setUserWhoCreated(userMapper.toDomain(bce.getComponent().getUser(), new HashSet<Long>(), new HashSet<Long>(), "builds"));
             }
             if (bce.getComponent().getUsersWhoWants() != null) {
                 if (comp.getUsersWhoWants() == null) {
                     comp.setUsersWhoWants(new ArrayList<>());
                 }
                 for (UserEntity ue : bce.getComponent().getUsersWhoWants()) {
-                    comp.getUsersWhoWants().add(userMapper.toDomain(ue));
+                    comp.getUsersWhoWants().add(userMapper.toDomain(ue, new HashSet<Long>(), new HashSet<Long>(), "builds"));
                 }
             }
             bc.setComponent(comp);
@@ -61,16 +66,19 @@ public class BuildEntityMapper {
         res.setName(build.getName());
         res.setNotes(build.getNotes());
         res.setTotalPrice(build.getTotalPrice());
-        res.setDateOfCreation(build.getDateOfCreation());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = sdf.parse(build.getDateOfCreation());
+        long dateLong = date.getTime();
+        res.setDateOfCreation(dateLong);
         res.setCategory(build.getCategory());
-        res.setUser(userMapper.toPersistance(build.getUser()));
+        res.setUser(userMapper.toPersistence(build.getUser(), new HashSet<>(), new HashSet<>(), "builds"));
         if (res.getBuildsComponents() == null) {
             res.setBuildsComponents(new ArrayList<>());
         }
         for (BuildComponent bc : build.getBuildsComponents()) {
-            BuildComponentEntity bce = bcMapper.toPersistance(bc);
-            ComponentEntity comp = componentMapper.toPersistance(bc.getComponent());
-            comp.setUser(userMapper.toPersistance(bc.getComponent().getUserWhoCreated()));
+            BuildComponentEntity bce = bcMapper.toPersistence(bc);
+            ComponentEntity comp = componentMapper.toPersistence(bc.getComponent());
+            comp.setUser(userMapper.toPersistence(bc.getComponent().getUserWhoCreated(), new HashSet<>(), new HashSet<>(), "builds"));
             bce.setComponent(comp);
             res.getBuildsComponents().add(bce);
         }

@@ -7,13 +7,34 @@ import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secun
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class UserEntityMapper {
 
     private final ComponentEntityMapper compMapper = new ComponentEntityMapper();
 
-    public User toDomain(UserEntity userEntity) {
+    public User toDomain(UserEntity userEntity, Set<Long> processedFriendsIds, Set<Long> processedBlockedUsersIds, String calledBy) {
+
+        if (calledBy.equals("friends")) {
+            if (processedFriendsIds.contains(userEntity.getId())) {
+                // Esta entidad ya ha sido procesada, evitar la recursión infinita.
+                return null;
+            } else {
+                processedFriendsIds.add(userEntity.getId());
+            }
+        }
+
+        if (calledBy.equals("blockedUsers")) {
+            if (processedBlockedUsersIds.contains(userEntity.getId())) {
+                // Esta entidad ya ha sido procesada, evitar la recursión infinita.
+                return null;
+            } else {
+                processedBlockedUsersIds.add(userEntity.getId());
+            }
+        }
+
         User res = new User();
         res.setId(userEntity.getId());
         res.setNick(userEntity.getNick());
@@ -42,20 +63,44 @@ public class UserEntityMapper {
             res.setComponentsWanted(componentsWanted);
         }
 
-        List<User> friends = null;
         if (userEntity.getFriends() != null && !userEntity.getFriends().isEmpty()) {
-            friends = new ArrayList<>();
+            res.setFriends(new ArrayList<>());
             for (UserEntity ue : userEntity.getFriends()) {
-                ue.setFriends(null);
-                User u = toDomain(ue);
-                friends.add(u);
+                User u = toDomain(ue, new HashSet<>(processedFriendsIds), new HashSet<>(processedBlockedUsersIds), "friends");
+                res.getFriends().add(u);
             }
         }
-        res.setFriends(friends);
+
+        if (userEntity.getBlockedUsers() != null && !userEntity.getBlockedUsers().isEmpty()) {
+            res.setBlockedUsers(new ArrayList<>());
+            for (UserEntity ue : userEntity.getBlockedUsers()) {
+                User u = toDomain(ue, new HashSet<>(processedFriendsIds), new HashSet<>(processedBlockedUsersIds), "blockedUsers");
+                res.getBlockedUsers().add(u);
+            }
+        }
+
         return res;
     }
 
-    public UserEntity toPersistance(User user) throws ParseException {
+    public UserEntity toPersistence(User user, Set<Long> processedFriendsIds, Set<Long> processedBlockedUsersIds, String calledBy) throws ParseException {
+        if (calledBy.equals("friends")) {
+            if (processedFriendsIds.contains(user.getId())) {
+                // Esta entidad ya ha sido procesada, evitar la recursión infinita.
+                return null;
+            } else {
+                processedFriendsIds.add(user.getId());
+            }
+        }
+
+        if (calledBy.equals("blockedUsers")) {
+            if (processedBlockedUsersIds.contains(user.getId())) {
+                // Esta entidad ya ha sido procesada, evitar la recursión infinita.
+                return null;
+            } else {
+                processedBlockedUsersIds.add(user.getId());
+            }
+        }
+
         UserEntity res = new UserEntity();
         res.setId(user.getId());
         res.setNick(user.getNick());
@@ -68,7 +113,7 @@ public class UserEntityMapper {
         if (user.getComponentsCreated() != null && !user.getComponentsCreated().isEmpty()) {
             res.setComponentsCreated(new ArrayList<>());
             for (Component c : user.getComponentsCreated()) {
-                ComponentEntity ce = compMapper.toPersistance(c);
+                ComponentEntity ce = compMapper.toPersistence(c);
                 ce.setUser(res);
                 res.getComponentsCreated().add(ce);
             }
@@ -77,12 +122,32 @@ public class UserEntityMapper {
         if (user.getComponentsWanted() != null) {
             res.setComponentsWanted(new ArrayList<>());
             for (Component c : user.getComponentsWanted()) {
-                ComponentEntity ce = compMapper.toPersistance(c);
+                ComponentEntity ce = compMapper.toPersistence(c);
                 ce.setUser(res);
                 res.getComponentsWanted().add(ce);
             }
+        }else{
+            res.setComponentsWanted(new ArrayList<>());
+
         }
-        res.setFriends(null);
+
+        if (user.getFriends() != null && !user.getFriends().isEmpty()) {
+            res.setFriends(new ArrayList<>());
+            for (User u : user.getFriends()) {
+                UserEntity ue = toPersistence(u, new HashSet<>(processedFriendsIds), new HashSet<>(processedBlockedUsersIds), "friends");
+                res.getFriends().add(ue);
+            }
+        }
+
+        if (user.getBlockedUsers() != null && !user.getBlockedUsers().isEmpty()) {
+            res.setBlockedUsers(new ArrayList<>());
+            for (User u : user.getBlockedUsers()) {
+                UserEntity ue = toPersistence(u, new HashSet<>(processedFriendsIds), new HashSet<>(processedBlockedUsersIds), "blockedUsers");
+                res.getBlockedUsers().add(ue);
+            }
+        }else{
+            res.setBlockedUsers(new ArrayList<>());
+        }
 
         return res;
     }

@@ -151,6 +151,12 @@ public class UserRestControllerV2 {
         if (friend.getId() == byId.getId()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You can't add yourself as a friend");
         }
+        if (byId.getBlockedUsers() != null && byId.getBlockedUsers().contains(friend)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You can't add a blocked user as a friend");
+        }
+        if (friend.getBlockedUsers() != null && friend.getBlockedUsers().contains(byId)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You can't add a user that has blocked you as a friend");
+        }
         if (byId.getFriends() == null) {
             byId.setFriends(new ArrayList<>());
         }
@@ -196,6 +202,51 @@ public class UserRestControllerV2 {
             byId.getComponentsWanted().remove(compById);
         } else {
             byId.getComponentsWanted().add(compById);
+        }
+        User save = userService.save(byId);
+        if (save != null) {
+            return ResponseEntity.ok(mapper.toDTO(save));
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
+        }
+    }
+
+    @PutMapping("/block/{id}/{blockedId}")
+    public ResponseEntity<?> addRemoveBlock(@PathVariable("id") long id, @PathVariable("blockedId") long blockedId) {
+        User byId = userService.findById(id);
+        User userBlocked = userService.findById(blockedId);
+        if (byId == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The user does not exist");
+        } else if (userBlocked == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The friend does not exist");
+        }
+        Object principal =
+                SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = ((UserDetails) principal).getUsername();
+        User userByNick = userService.findByNick(username);
+
+        if (userByNick == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You should not be here");
+        }
+        if (byId.getId() != userByNick.getId()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not that user");
+        }
+        if (userBlocked.getId() == byId.getId()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You can't block yourself");
+        }
+        if (byId.getBlockedUsers() == null) {
+            byId.setBlockedUsers(new ArrayList<>());
+        }
+        if (byId.getFriends() != null) {
+            byId.getFriends().remove(userBlocked);
+        }
+        if (userBlocked.getFriends() != null) {
+            userBlocked.getFriends().remove(byId);
+        }
+        if (byId.getBlockedUsers().contains(userBlocked)) {
+            byId.getBlockedUsers().remove(userBlocked);
+        } else {
+            byId.getBlockedUsers().add(userBlocked);
         }
         User save = userService.save(byId);
         if (save != null) {

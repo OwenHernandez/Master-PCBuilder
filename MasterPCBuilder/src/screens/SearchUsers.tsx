@@ -64,6 +64,15 @@ const SearchUsers = (props: Props) => {
         }
     }
 
+    function isBlocked(userSelected: IUserType): boolean {
+        for (const blockedUser of user.blockedUsers) {
+            if (blockedUser.id === userSelected.id) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     return (
         <SafeAreaView style={{flex: 1, backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"}}>
             <HeaderScreen name={"Search"} navigation={navigation} profile={false} drawer={true}/>
@@ -105,7 +114,8 @@ const SearchUsers = (props: Props) => {
                                                   ...Styles.touchable,
                                                   flexDirection: "row",
                                                   alignItems: "center",
-                                                  margin: "3%"
+                                                  margin: "3%",
+                                                  opacity: (!isBlocked(u.item)) ? 1 : 0.5
                                               }}>
                                 <Image
                                     source={{

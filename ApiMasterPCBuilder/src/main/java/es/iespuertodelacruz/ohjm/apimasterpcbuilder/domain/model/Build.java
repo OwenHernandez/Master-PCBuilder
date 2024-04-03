@@ -12,7 +12,7 @@ public class Build {
     private String notes;
 
     private String category;
-    private BigInteger dateOfCreation;
+    private String dateOfCreation;
 
     private double totalPrice;
 
@@ -24,11 +24,11 @@ public class Build {
 
     public Build() {}
 
-    public BigInteger getDateOfCreation() {
+    public String getDateOfCreation() {
         return dateOfCreation;
     }
 
-    public void setDateOfCreation(BigInteger dateOfCreation) {
+    public void setDateOfCreation(String dateOfCreation) {
         this.dateOfCreation = dateOfCreation;
     }
 

@@ -2,14 +2,12 @@ package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secu
 
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Build;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.BuildComponent;
-import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Component;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.secundary.IBuildRepository;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.mapper.BuildEntityMapper;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.mapper.ComponentEntityMapper;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.mapper.UserEntityMapper;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.BuildComponentEntity;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.BuildEntity;
-import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.UserEntity;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.repository.IBuildComponentEntityRepository;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.repository.IBuildEntityRepository;
 import jakarta.transaction.Transactional;
@@ -61,7 +59,7 @@ public class BuildEntityService implements IBuildRepository {
                     for (int i = 0; i < build.getBuildsComponents().size(); i++) {
                         BuildComponent bc = build.getBuildsComponents().get(i);
                         BuildComponentEntity bce = be.getBuildsComponents().get(i);
-                        bce.setComponent(compMapper.toPersistance(bc.getComponent()));
+                        bce.setComponent(compMapper.toPersistence(bc.getComponent()));
                         bce.setBuild(save);
                         bceRepo.save(bce);
                         save.getBuildsComponents().add(bce);
@@ -103,9 +101,7 @@ public class BuildEntityService implements IBuildRepository {
             if (byId.isPresent()) {
                 BuildEntity be = byId.get();
                 if (be.getBuildsComponents() != null || !be.getBuildsComponents().isEmpty()) {
-                    for (BuildComponentEntity bce : be.getBuildsComponents()) {
-                        bceRepo.delete(bce);
-                    }
+                    bceRepo.deleteAll(be.getBuildsComponents());
                 }
                 repo.deleteById(id);
             } else {
@@ -123,12 +119,10 @@ public class BuildEntityService implements IBuildRepository {
     public boolean update(Build build) {
         try {//We will need to change it when I do Posts
             Optional<BuildEntity> opt = repo.findById(build.getId());
-            if (!opt.isEmpty()) {
+            if (opt.isPresent()) {
                 BuildEntity optGet = opt.get();
                 if (optGet.getBuildsComponents() != null || !optGet.getBuildsComponents().isEmpty()) {
-                    for (BuildComponentEntity bce : optGet.getBuildsComponents()) {
-                        bceRepo.delete(bce);
-                    }
+                    bceRepo.deleteAll(optGet.getBuildsComponents());
                 }
                 BuildEntity be = mapper.toPersistence(build);
                 BuildEntity save = repo.save(be);
@@ -137,7 +131,7 @@ public class BuildEntityService implements IBuildRepository {
                     for (int i = 0; i < build.getBuildsComponents().size(); i++) {
                         BuildComponent bc = build.getBuildsComponents().get(i);
                         BuildComponentEntity bce = be.getBuildsComponents().get(i);
-                        bce.setComponent(compMapper.toPersistance(bc.getComponent()));
+                        bce.setComponent(compMapper.toPersistence(bc.getComponent()));
                         bce.setBuild(save);
                         bceRepo.save(bce);
                         save.getBuildsComponents().add(bce);
