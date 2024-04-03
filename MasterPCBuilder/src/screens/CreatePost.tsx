@@ -111,7 +111,6 @@ const CreatePost = (props: Props) => {
                             style={{
                                 borderWidth: 2,
                                 borderColor: "#ca2613",
-                                borderRadius: 20,
                                 paddingHorizontal: "5%",
                                 width:"100%",
                                 fontSize: getFontSize(20),
@@ -127,7 +126,7 @@ const CreatePost = (props: Props) => {
                         margin:"5%",
                         flexDirection:"row",
                     }}>
-                        <View style={{flex:1, marginRight:"3%",flexDirection:"column"}}>
+                        <View style={{flex:1, marginRight:"5%",flexDirection:"column"}}>
                             <Dropdown
                                 data={items}
                                 labelField={"label"}
@@ -135,6 +134,7 @@ const CreatePost = (props: Props) => {
                                 value={selectedValue}
                                 onChange={(newValue) => setSelectedValue(newValue.value)}
                                 style={{
+
                                     height: "50%", // Aumenta la altura del contenedor del Dropdown
                                     borderColor: "#ca2613",
                                     width: "100%",
@@ -169,7 +169,7 @@ const CreatePost = (props: Props) => {
                                     textAlign: 'center'
                                 }}
                             />
-                            <TouchableOpacity style={{...Styles.touchable,height:"46%",justifyContent:"center"}} onPress={openGallery}>
+                            <TouchableOpacity style={{borderWidth: 2,borderColor: "#ca2613",height:"50%",justifyContent:"center"}} onPress={openGallery}>
                                 <Text style={{
                                     fontSize: getFontSize(20),
                                     textAlign: 'center',
@@ -177,17 +177,18 @@ const CreatePost = (props: Props) => {
                                 }}>Select a picture for the post</Text>
                             </TouchableOpacity>
                         </View>
+                        <View style={{flex:1.5}}>
                             <TextInput
                                 placeholder='Description'
                                 style={{
+                                    backgroundColor:"yellow",
                                     justifyContent:"flex-start",
                                     alignItems:"flex-start",
                                     borderWidth: 2,
                                     borderColor: "#ca2613",
-                                    borderRadius: 20,
                                     paddingHorizontal: "5%",
-                                    width: "60%",
-                                    minHeight:"50%",
+                                    width: "100%",
+                                    height:"100%",
                                     fontSize: getFontSize(15),
                                     color: (darkMode) ? "white" : "black",
                                 }}
@@ -196,11 +197,10 @@ const CreatePost = (props: Props) => {
                                 multiline={true}
                                 onChangeText={(text) => setDescription(text)}
                             ></TextInput>
+                        </View>
                     </View>
 
-
-
-                    <TouchableOpacity style={{...Styles.touchable}} onPress={createPost}>
+                    <TouchableOpacity style={{...Styles.touchable,borderRadius:0}} onPress={createPost}>
                         <Text
                             style={{
                                 fontSize: getFontSize(20),
