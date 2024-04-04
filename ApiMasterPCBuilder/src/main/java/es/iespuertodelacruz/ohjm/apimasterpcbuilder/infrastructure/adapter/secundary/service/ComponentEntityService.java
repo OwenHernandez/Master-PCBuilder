@@ -16,6 +16,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -37,6 +38,8 @@ public class ComponentEntityService implements IComponentRepository {
     public ComponentEntityService(WebClient.Builder webClientBuilder) {
         this.webClient = webClientBuilder.baseUrl("http://146.190.12.221:8000").build();
     }
+    @Value("${fastapi.apikey}")
+    private String apiKey;
 
     @Autowired
     private IComponentEntityRepository repo;
@@ -256,10 +259,14 @@ public class ComponentEntityService implements IComponentRepository {
     }
 
 
+
     public List<Component> searchAmazon(String name){
+        log=Logger.getLogger("amazon");
+        log.info("API Key: " + apiKey);
         name = name.replace(" ", "+");
         Mono<List<ProductAmazonDTO>> responseMono = this.webClient.get()
                 .uri("/" + name)
+                .header("access_token", apiKey)
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<List<ProductAmazonDTO>>() {});
         List<ProductAmazonDTO> block = responseMono.block();
