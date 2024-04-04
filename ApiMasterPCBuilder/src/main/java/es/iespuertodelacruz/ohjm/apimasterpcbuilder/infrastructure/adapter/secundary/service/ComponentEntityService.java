@@ -36,7 +36,7 @@ public class ComponentEntityService implements IComponentRepository {
     Logger log;
     @Autowired
     public ComponentEntityService(WebClient.Builder webClientBuilder) {
-        this.webClient = webClientBuilder.baseUrl("http://146.190.12.221:8000").build();
+        this.webClient = webClientBuilder.baseUrl("http://localhost:8000").build();
     }
     @Value("${fastapi.apikey}")
     private String apiKey;
