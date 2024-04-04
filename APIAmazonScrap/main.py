@@ -1,12 +1,9 @@
 import random
 
-from fastapi import FastAPI, Depends
 from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.security import APIKeyHeader
 from selectorlib import Extractor
 import requests
-import json
-from time import sleep
 
 app = FastAPI()
 
