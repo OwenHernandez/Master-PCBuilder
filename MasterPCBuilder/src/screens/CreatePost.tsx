@@ -169,7 +169,7 @@ const CreatePost = (props: Props) => {
                                     textAlign: 'center'
                                 }}
                             />
-                            <TouchableOpacity style={{borderWidth: 2,borderColor: "#ca2613",height:"50%",justifyContent:"center"}} onPress={openGallery}>
+                            <TouchableOpacity style={{borderWidth: 2,borderColor: "#ca2613",height:"47.5%",justifyContent:"center"}} onPress={openGallery}>
                                 <Text style={{
                                     fontSize: getFontSize(20),
                                     textAlign: 'center',
@@ -181,7 +181,6 @@ const CreatePost = (props: Props) => {
                             <TextInput
                                 placeholder='Description'
                                 style={{
-                                    backgroundColor:"yellow",
                                     justifyContent:"flex-start",
                                     alignItems:"flex-start",
                                     borderWidth: 2,
