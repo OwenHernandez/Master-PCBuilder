@@ -40,7 +40,9 @@ async def root(search: str, api_key: str = Depends(get_api_key)):
             product['search_url'] = amazon_url
             products.append(product)
         return products
-
+@app.get("/hola/{texto}")
+def root(texto: str):
+    print(texto)
 
 def scrape(url, proxy):
     headers = {
