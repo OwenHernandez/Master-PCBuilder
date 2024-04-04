@@ -1,6 +1,8 @@
 import random
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi.security import APIKeyHeader
 from selectorlib import Extractor
 import requests
 import json
@@ -10,9 +12,22 @@ app = FastAPI()
 
 e = Extractor.from_yaml_file('search_results.yml')
 
+API_KEY = "2b7e151628aed2a6abf7158809cf4f3c"
+API_KEY_NAME = "access_token"
+api_key_header = APIKeyHeader(name=API_KEY_NAME, auto_error=False)
+
+
+async def get_api_key(api_key_header: str = Depends(api_key_header)):
+    if api_key_header == API_KEY:
+        return api_key_header
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail="No tiene acceso"
+        )
+
 
 @app.get("/{search}")
-async def root(search: str):
+async def root(search: str, api_key: str = Depends(get_api_key)):
     # product_data = []
     amazon_url = "https://www.amazon.com/s?k=" + search
     proxies_list = open("rotating_ip.txt", "r").read().strip().split("\n")
