@@ -4,7 +4,12 @@ import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.*;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.BuildInputDTO;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.BuildOutputDTO;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.mapper.BuildDTOMapper;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.mapper.ComponentDTOMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
@@ -15,7 +20,16 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 public class BuildDTOMapperTest {
 
-    private final BuildDTOMapper buildDTOMapper = new BuildDTOMapper();
+    @InjectMocks
+    private BuildDTOMapper buildDTOMapper;
+
+    @Mock
+    private ComponentDTOMapper componentDTOMapper; // Suponiendo que existe y es usado internamente
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
 
     @Test
     void toDTO_ok_everything_test() {

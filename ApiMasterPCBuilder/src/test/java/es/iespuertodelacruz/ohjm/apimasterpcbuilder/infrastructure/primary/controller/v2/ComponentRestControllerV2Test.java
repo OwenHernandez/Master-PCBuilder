@@ -1,9 +1,7 @@
 package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.primary.controller.v2;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Component;
-import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Seller;
-import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.User;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.*;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.IComponentService;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.ISellerService;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.IUserService;
@@ -535,7 +533,6 @@ public class ComponentRestControllerV2Test {
         Component component = new Component();
         component.setId(1L);
         component.setName("Test Component");
-
         User user = new User();
         user.setId(1);
         component.setUserWhoCreated(new User());
