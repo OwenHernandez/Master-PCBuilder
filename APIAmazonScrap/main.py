@@ -27,9 +27,7 @@ async def get_api_key(api_key_header: str = Depends(api_key_header)):
 async def root(search: str, api_key: str = Depends(get_api_key)):
     # product_data = []
     amazon_url = "https://www.amazon.com/s?k=" + search
-    proxies_list = open("rotating_ip.txt", "r").read().strip().split("\n")
-    numero = random.randint(0, len(proxies_list) - 1)
-    data = scrape(amazon_url, proxies_list[numero])
+    data = scrape(amazon_url, )
     products = []
     if data:
         for product in data['products']:
@@ -59,7 +57,7 @@ def scrape(url, proxy):
 
     # Download the page using requests
     print("Downloading %s" % url)
-    r = requests.get(url, proxies={'http': f"http://{proxy}"}, headers=headers)
+    r = requests.get(url,  headers=headers)
     # Simple check to check if page was blocked (Usually 503)
     if r.status_code > 500:
         if "To discuss automated access to Amazon data please contact" in r.text:
