@@ -100,7 +100,7 @@ const ComponentsList = (props: Props) => {
                     <FontAwesome5Icon name="search" size={getIconSize(80)}
                                       color={(darkMode) ? "white" : "black"}/>
                 </View>
-                <View style={{justifyContent:"center",alignItems:"center",marginBottom:"35%"}}>
+                <View style={{justifyContent:"center",alignItems:"center",marginBottom:"35%",marginLeft:"5%"}}>
                     <FlatList
                         data={componentsByName}
                         numColumns={2}
@@ -117,7 +117,7 @@ const ComponentsList = (props: Props) => {
                                         padding:"0%",
                                         margin:"2%",
                                         height:getIconSize(800),
-                                        width: getIconSize(450)}}
+                                        width: "40%"}}
                                     onPress={() => {
                                         navigation.navigate("ComponentScreen", { comp: comp.item, wished})}
 
