@@ -1,0 +1,23 @@
+# Seller
+type Seller {
+    id: Int
+    name: String
+    image: String
+}
+
+type Query {
+    sellers: [Seller]
+    seller(id : Int! ): Seller
+}
+
+input SellerDTO {
+    id: Int
+    name: String
+    image: String
+}
+
+type Mutation {
+    save(seller: SellerDTO!): Seller!
+    update(seller: SellerDTO!): Boolean!
+    delete(id: Int!): Boolean!
+}

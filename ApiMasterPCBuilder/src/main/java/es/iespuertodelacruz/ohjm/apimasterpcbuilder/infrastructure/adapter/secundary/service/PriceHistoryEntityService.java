@@ -8,19 +8,25 @@ import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secun
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.BuildComponentEntity;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.PriceHistoryEntity;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.repository.IPriceHistoryEntityRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class PriceHistoryEntityService implements IPriceHistoryRepository {
+
     @Autowired
     IPriceHistoryEntityRepository repo;
+
     PriceHistoryEntityMapper mapper = new PriceHistoryEntityMapper();
+
     @Override
+    @Transactional
     public List<PriceHistory> findAll() {
         List<PriceHistory> res = new ArrayList<>();
         List<PriceHistoryEntity> all = repo.findAll();
@@ -34,9 +40,15 @@ public class PriceHistoryEntityService implements IPriceHistoryRepository {
     }
 
     @Override
+    @Transactional
     public PriceHistory save(PriceHistory bc) {
         if (bc != null) {
-            PriceHistoryEntity bce = mapper.toPersistance(bc);
+            PriceHistoryEntity bce = null;
+            try {
+                bce = mapper.toPersistance(bc);
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
             if (bce == null) {
                 return null;
             }
@@ -50,6 +62,7 @@ public class PriceHistoryEntityService implements IPriceHistoryRepository {
     }
 
     @Override
+    @Transactional
     public void saveManual(double amazonPrice, Long componentId, long date, double ebayPrice, double price) {
         if (amazonPrice != 0 && componentId != null && date != 0 && ebayPrice != 0 && price != 0) {
             try {
@@ -61,6 +74,7 @@ public class PriceHistoryEntityService implements IPriceHistoryRepository {
     }
 
     @Override
+    @Transactional
     public PriceHistory findById(Long id) {
         if (id == null) {
             return null;
@@ -74,6 +88,7 @@ public class PriceHistoryEntityService implements IPriceHistoryRepository {
     }
 
     @Override
+    @Transactional
     public boolean delete(Long id) {
         if (id == null) {
             return false;

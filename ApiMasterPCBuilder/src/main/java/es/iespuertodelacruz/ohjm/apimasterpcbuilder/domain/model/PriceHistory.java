@@ -11,13 +11,13 @@ public class PriceHistory {
     private double ebayPrice;
     private double amazonPrice;
     private double price;
-    private BigInteger date;
+    private String date;
     private Component component;
 
     public PriceHistory() {
     }
 
-    public PriceHistory(long id, double ebayPrice, double amazonPrice, double price, BigInteger date, Component componentEntity) {
+    public PriceHistory(long id, double ebayPrice, double amazonPrice, double price, String date, Component componentEntity) {
         this.id = id;
         this.ebayPrice = ebayPrice;
         this.amazonPrice = amazonPrice;
@@ -58,11 +58,11 @@ public class PriceHistory {
         this.price = price;
     }
 
-    public BigInteger getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(BigInteger date) {
+    public void setDate(String date) {
         this.date = date;
     }
 

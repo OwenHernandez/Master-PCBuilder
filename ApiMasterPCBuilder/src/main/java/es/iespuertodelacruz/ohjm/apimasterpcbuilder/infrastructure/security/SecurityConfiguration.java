@@ -24,7 +24,7 @@ public class SecurityConfiguration {
 				.csrf(csrf -> csrf.disable())
 				.authorizeHttpRequests(auth -> auth.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 						.requestMatchers("/", "/swagger-ui.html", "/swagger-ui/**", "/api/v2/components/**","/api/v2/components/searchEbay/**","/api/v2/components/searchAmazon/**","/api/v2/components/updatePrice/**","/v2/**", "configuration/**",
-								"/swagger*/**", "/webjars/**", "/api/login", "/api/register", "/api/v1/**", "/v3/**", "/websocket*/**",
+								"/swagger*/**", "/webjars/**", "/api/v1/login", "/api/v1/register", "/api/v1/**", "/v3/**", "/websocket*/**",
 								"/chat", "/topic/messages", "/graphql", "/graphiql")
 						.permitAll().requestMatchers("/api/v3/**").hasRole("ADMIN").anyRequest().authenticated())
 				.sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
