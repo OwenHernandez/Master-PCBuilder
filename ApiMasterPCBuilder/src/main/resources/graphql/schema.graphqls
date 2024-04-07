@@ -1,3 +1,25 @@
+type Query {
+    # Seller
+    sellers: [Seller]!
+    seller(id: Int!): Seller!
+
+    # Component
+    components: [Component]!
+    component(id: Int!): Component!
+}
+
+type Mutation {
+    # Seller
+    saveSeller(seller: SellerDTO!): Seller!
+    updateSeller(id: Int!, seller: SellerDTO!): Boolean!
+    deleteSeller(id: Int!): Boolean!
+
+    # Component
+    saveComponent(component: ComponentDTO!): Component!
+    updateComponent(id: Int!, component: ComponentDTO!): Boolean!
+    deleteComponent(id: Int!): Boolean!
+}
+
 # Seller
 type Seller {
     id: Int
@@ -5,19 +27,43 @@ type Seller {
     image: String
 }
 
-type Query {
-    sellers: [Seller]
-    seller(id : Int! ): Seller
-}
-
 input SellerDTO {
-    id: Int
     name: String
     image: String
 }
 
-type Mutation {
-    save(seller: SellerDTO!): Seller!
-    update(seller: SellerDTO!): Boolean!
-    delete(id: Int!): Boolean!
+# PriceHistory
+type PriceHistory {
+    id: Int
+    price: Float
+    amazonPrice: Float
+    ebayPrice: Float
+    date: String
+}
+
+# Component
+type Component {
+    id: Int
+    description: String
+    image: String
+    name: String
+    type: String
+    price: Float
+    amazon_price: Float
+    ebay_price: Float
+    sellerName: String
+    userNick: String
+    priceHistory: [PriceHistory]
+}
+
+input ComponentDTO {
+    name: String
+    description: String
+    image: String
+    image64: String
+    type: String
+    price: Float
+    amazon_price: Float
+    ebay_price: Float
+    sellerName: String
 }

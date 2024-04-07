@@ -10,7 +10,7 @@ import java.util.List;
 
 public class UserDTOMapper {
 
-    ComponentOutputDTOMapper compMapper = new ComponentOutputDTOMapper();
+    ComponentDTOMapper compMapper = new ComponentDTOMapper();
     public User toDomain(UserDTO userDTO) {
         User user = new User();
         user.setId(userDTO.getId());

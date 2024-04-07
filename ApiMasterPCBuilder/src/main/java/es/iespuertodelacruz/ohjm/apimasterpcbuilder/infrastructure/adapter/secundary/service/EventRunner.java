@@ -62,7 +62,6 @@ public class EventRunner {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 Date date = new Date(Instant.now().getEpochSecond());
                 priceHistory.setDate(sdf.format(date));
-                priceHistory.setComponent(savedComponent);
 
                 priceHistoryService.saveManual(priceHistory.getAmazonPrice(), savedComponent.getId(), Instant.now().getEpochSecond(), priceHistory.getEbayPrice(), priceHistory.getPrice());
                 savedComponent.getPriceHistories().add(priceHistory);

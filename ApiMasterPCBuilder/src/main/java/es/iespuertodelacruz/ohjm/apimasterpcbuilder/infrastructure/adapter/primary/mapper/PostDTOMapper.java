@@ -2,17 +2,26 @@ package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.prim
 
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Post;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.User;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.PostInputDTO;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.PostOutputDTO;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.UserDTO;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PostOutputDTOMapper {
+public class PostDTOMapper {
 
     UserDTOMapper userDTOMapper = new UserDTOMapper();
 
-    BuildOutputDTOMapper buildMapper = new BuildOutputDTOMapper();
+    BuildDTOMapper buildMapper = new BuildDTOMapper();
+
+    public Post toDomain(PostInputDTO inputDTO) {
+        Post post = new Post();
+        post.setDescription(inputDTO.getDescription());
+        post.setImage(inputDTO.getImage());
+        post.setTitle(inputDTO.getTitle());
+        return post;
+    }
 
     public PostOutputDTO toDTO(Post post) {
         PostOutputDTO outputDTO = new PostOutputDTO();

@@ -43,7 +43,7 @@ public class PriceHistoryEntityService implements IPriceHistoryRepository {
     @Transactional
     public PriceHistory save(PriceHistory bc) {
         if (bc != null) {
-            PriceHistoryEntity bce = null;
+            PriceHistoryEntity bce;
             try {
                 bce = mapper.toPersistance(bc);
             } catch (ParseException e) {
@@ -53,9 +53,6 @@ public class PriceHistoryEntityService implements IPriceHistoryRepository {
                 return null;
             }
             PriceHistoryEntity save = repo.save(bce);
-            if (save == null) {
-                return null;
-            }
             return mapper.toDomain(save);
         }
         return null;
@@ -65,11 +62,7 @@ public class PriceHistoryEntityService implements IPriceHistoryRepository {
     @Transactional
     public void saveManual(double amazonPrice, Long componentId, long date, double ebayPrice, double price) {
         if (amazonPrice != 0 && componentId != null && date != 0 && ebayPrice != 0 && price != 0) {
-            try {
-                repo.saveManual(amazonPrice, componentId, date, ebayPrice, price);
-            }catch (RuntimeException e) {
-                throw new RuntimeException("The price cannot be negative");
-            }
+            repo.saveManual(amazonPrice, componentId, date, ebayPrice, price);
         }
     }
 
@@ -93,14 +86,10 @@ public class PriceHistoryEntityService implements IPriceHistoryRepository {
         if (id == null) {
             return false;
         }
-        try {
-            if (!repo.existsById(id)) {
-                return false;
-            }
-            repo.deleteById(id);
-            return true;
-        } catch (RuntimeException e) {
+        if (!repo.existsById(id)) {
             return false;
         }
+        repo.deleteById(id);
+        return true;
     }
 }

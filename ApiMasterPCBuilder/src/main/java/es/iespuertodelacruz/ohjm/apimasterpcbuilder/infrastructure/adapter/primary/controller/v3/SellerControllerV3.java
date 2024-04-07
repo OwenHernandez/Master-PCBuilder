@@ -11,7 +11,6 @@ import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -31,24 +30,24 @@ public class SellerControllerV3 {
         return sellerService.findAll();
     }
 
-
     @SchemaMapping(typeName = "Query", field = "seller")
     public Seller getSeller(@Argument long id) {
         return sellerService.findById(id);
     }
 
-    @SchemaMapping(typeName = "Mutation", field = "save")
-    public Seller saveSeller(@Argument SellerDTO seller) {
+    @SchemaMapping(typeName = "Mutation", field = "saveSeller")
+    public Seller save(@Argument SellerDTO seller) {
         return sellerService.save(sellerDTOMapper.toDomain(seller));
     }
 
-    @SchemaMapping(typeName = "Mutation", field = "update")
-    public boolean updateSeller(@Argument SellerDTO seller) {
+    @SchemaMapping(typeName = "Mutation", field = "updateSeller")
+    public boolean update(@Argument Long id, @Argument SellerDTO seller) {
+        seller.setId(id);
         return sellerService.update(sellerDTOMapper.toDomain(seller));
     }
 
-    @SchemaMapping(typeName = "Mutation", field = "delete")
-    public boolean deleteSeller(@Argument long id) {
+    @SchemaMapping(typeName = "Mutation", field = "deleteSeller")
+    public boolean delete(@Argument long id) {
         return sellerService.deleteById(id);
     }
 }

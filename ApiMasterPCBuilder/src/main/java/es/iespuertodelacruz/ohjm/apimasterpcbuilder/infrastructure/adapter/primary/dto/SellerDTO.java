@@ -1,7 +1,5 @@
 package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto;
 
-import java.util.List;
-
 public class SellerDTO {
 
     private Long id;
