@@ -1,6 +1,7 @@
 package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.controller.v3;
 
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Component;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Seller;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.User;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.IComponentService;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.ISellerService;
@@ -8,10 +9,12 @@ import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.IUserSer
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.service.FileStorageService;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.ComponentInputDTO;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.ComponentOutputDTO;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.exception.GraphQLErrorException;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.mapper.ComponentDTOMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -41,16 +44,14 @@ public class ComponentControllerV3 {
 
     @SchemaMapping(typeName = "Query", field = "components")
     public List<ComponentOutputDTO> getComponents() {
-        List<Component> all = componentService.findAll();
-        return all.stream()
+        return componentService.findAll().stream()
                 .map(componentDTOMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
     @SchemaMapping(typeName = "Query", field = "component")
     public ComponentOutputDTO getComponent(@Argument long id) {
-        Component byId = componentService.findById(id);
-        return componentDTOMapper.toDTO(byId);
+        return componentDTOMapper.toDTO(componentService.findById(id));
     }
 
     @SchemaMapping(typeName = "Mutation", field = "saveComponent")
@@ -67,16 +68,20 @@ public class ComponentControllerV3 {
 
         Component domain = componentDTOMapper.toDomain(component);
         domain.setUserWhoCreated(userByNick);
-        domain.setSeller(sellerService.findByName(component.getSellerName()));
+        Seller byName = sellerService.findByName(component.getSellerName());
+        if (byName == null) {
+            throw new GraphQLErrorException("Seller not found", HttpStatus.NOT_FOUND);
+        }
+        domain.setSeller(byName);
 
         return componentDTOMapper.toDTO(componentService.save(domain));
     }
 
     @SchemaMapping(typeName = "Mutation", field = "updateComponent")
-    public boolean update(@Argument Long id, @Argument ComponentInputDTO component) {
+    public ComponentOutputDTO update(@Argument Long id, @Argument ComponentInputDTO component) {
         Component byId = componentService.findById(id);
         if (byId == null) {
-            return false;
+            throw new GraphQLErrorException("Component not found", HttpStatus.NOT_FOUND);
         }
         if (component.getImage64() != null) {
             String codedPicture = component.getImage64();
@@ -89,13 +94,26 @@ public class ComponentControllerV3 {
         Component domain = componentDTOMapper.toDomain(component);
         domain.setId(id);
         domain.setUserWhoCreated(byId.getUserWhoCreated());
-        domain.setSeller(sellerService.findByName(component.getSellerName()));
+        Seller byName = sellerService.findByName(component.getSellerName());
+        if (byName == null) {
+            throw new GraphQLErrorException("Seller not found", HttpStatus.NOT_FOUND);
+        }
+        domain.setSeller(byName);
 
-        return componentService.update(domain);
+        Component save = componentService.save(domain);
+        if (save == null) {
+            throw new GraphQLErrorException("Error saving component", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return componentDTOMapper.toDTO(save);
     }
 
     @SchemaMapping(typeName = "Mutation", field = "deleteComponent")
     public boolean delete(@Argument long id) {
-        return componentService.deleteById(id);
+        Component byId = componentService.findById(id);
+        if (byId == null) {
+            throw new GraphQLErrorException("Component not found", HttpStatus.NOT_FOUND);
+        }
+        componentService.deleteById(id);
+        return true;
     }
 }
