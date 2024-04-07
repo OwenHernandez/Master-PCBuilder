@@ -6,18 +6,27 @@ type Query {
     # Component
     components: [Component]!
     component(id: Int!): Component!
+
+    # Build
+    builds: [Build]!
+    build(id: Int!): Build!
 }
 
 type Mutation {
     # Seller
     saveSeller(seller: SellerDTO!): Seller!
-    updateSeller(id: Int!, seller: SellerDTO!): Boolean!
+    updateSeller(id: Int!, seller: SellerDTO!): Seller!
     deleteSeller(id: Int!): Boolean!
 
     # Component
     saveComponent(component: ComponentDTO!): Component!
-    updateComponent(id: Int!, component: ComponentDTO!): Boolean!
+    updateComponent(id: Int!, component: ComponentDTO!): Component!
     deleteComponent(id: Int!): Boolean!
+
+    # Build
+    saveBuild(build: BuildDTO!): Build!
+    updateBuild(id: Int!, build: BuildDTO!): Build!
+    deleteBuild(id: Int!): Boolean!
 }
 
 # Seller
@@ -66,4 +75,29 @@ input ComponentDTO {
     amazon_price: Float
     ebay_price: Float
     sellerName: String
+}
+
+# BuildComponent
+type BuildComponent {
+    dateCreated: String
+    component: Component
+    priceAtTheTime: Float
+}
+
+# Build
+type Build {
+    id: Int
+    name: String
+    notes: String
+    category: String
+    userNick: String
+    totalPrice: Float
+    buildsComponents: [BuildComponent]
+}
+
+input BuildDTO {
+    name: String
+    notes: String
+    category: String
+    componentsIds: [Int]
 }
