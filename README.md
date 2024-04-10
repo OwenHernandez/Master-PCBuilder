@@ -1,3 +1,21 @@
-# Master-PCBuilder
-### by Owen Daniel Hernández Hanrahan & Julio Manuel Gonzalez Gonzalez
-An application where you can buiild your pc between a selection of shops
+# masterpcbuilderadmin
+
+> App for the admin control of the mobile App named MasterPCBuilder
+
+## Build Setup
+
+``` bash
+# install dependencies
+npm install
+
+# serve with hot reload at localhost:8080
+npm run dev
+
+# build for production with minification
+npm run build
+
+# build for production and view the bundle analyzer report
+npm run build --report
+```
+
+For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
