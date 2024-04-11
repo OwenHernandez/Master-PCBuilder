@@ -1,42 +1,48 @@
 {
-  "name": "MasterPCBuilderAdmin",
-  "version": "0.0.0",
-  "scripts": {
-    "dev": "vite",
-    "build": "vue-tsc --noEmit && vite build",
-    "preview": "vite preview",
-    "lint": "eslint . --fix --ignore-path .gitignore"
-  },
+  "name": "masterpcbuilderadmin",
+  "version": "0.1.0",
+  "private": true,
   "dependencies": {
-    "@mdi/font": "6.2.95",
-    "core-js": "^3.34.0",
-    "roboto-fontface": "*",
-    "vue": "^3.4.21",
-    "vuetify": "^3.5.8"
+    "@testing-library/jest-dom": "^5.17.0",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "@types/jest": "^27.5.2",
+    "@types/node": "^16.18.96",
+    "@types/react": "^18.2.75",
+    "@types/react-dom": "^18.2.24",
+    "axios": "^1.6.8",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.22.3",
+    "react-scripts": "5.0.1",
+    "typescript": "^4.9.5",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   },
   "devDependencies": {
-    "@babel/types": "^7.24.0",
-    "@types/node": "^20.11.25",
-    "@vitejs/plugin-vue": "^5.0.4",
-    "@vue/eslint-config-typescript": "^13.0.0",
-    "eslint": "^8.57.0",
-    "eslint-config-standard": "^17.1.0",
-    "eslint-plugin-import": "^2.29.1",
-    "eslint-plugin-n": "^16.6.2",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^6.1.1",
-    "eslint-plugin-vue": "^9.22.0",
-    "pinia": "^2.1.7",
-    "sass": "^1.71.1",
-    "typescript": "^5.4.2",
-    "unplugin-auto-import": "^0.17.5",
-    "unplugin-fonts": "^1.1.1",
-    "unplugin-vue-components": "^0.26.0",
-    "unplugin-vue-router": "^0.8.4",
-    "vite": "^5.1.5",
-    "vite-plugin-vue-layouts": "^0.11.0",
-    "vite-plugin-vuetify": "^2.0.3",
-    "vue-router": "^4.3.0",
-    "vue-tsc": "^2.0.6"
+    "tailwindcss": "^3.4.3"
   }
 }

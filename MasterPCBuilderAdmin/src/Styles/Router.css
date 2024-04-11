@@ -1,0 +1,17 @@
+.Router{
+    display: block;
+    flex-direction: column;
+    height: 100vh;
+    background-color: #282c34;
+    color: white;
+    z-index: 50;
+}
+.Sidebar {
+    display: block;
+    padding-top: 5vh;
+    width: 256px; 
+    height: 100vh;
+    background-color: #282c34;
+    color: white;
+    z-index: 50;
+}
