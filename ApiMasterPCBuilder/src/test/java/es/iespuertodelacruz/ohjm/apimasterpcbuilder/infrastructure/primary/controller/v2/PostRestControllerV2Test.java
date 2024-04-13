@@ -38,6 +38,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -77,6 +78,16 @@ public class PostRestControllerV2Test {
         post.setId(1L);
         post.setTitle("Test Post");
 
+        Build build = new Build();
+        build.setId(1L);
+        build.setName("My Build");
+        post.setBuild(build);
+
+        User user = new User();
+        user.setId(1L);
+        user.setNick("user");
+        post.setUser(user);
+        build.setUser(user);
 
         given(service.findAll()).willReturn(Arrays.asList(post));
 
@@ -92,7 +103,8 @@ public class PostRestControllerV2Test {
         PostInputDTO inputDTO = new PostInputDTO();
         inputDTO.setTitle("Test Post");
         inputDTO.setBuildId(1L);
-        inputDTO.setImage("base64ImageString");
+        inputDTO.setImage("image");
+        inputDTO.setImage64("base64ImageStringkhdfhjghjdkshruhgislghirhiugrihsgrhguidhgsvhgirdshgddrighrd");
 
         User user = new User();
         user.setId(1L);
@@ -113,7 +125,7 @@ public class PostRestControllerV2Test {
 
 
         given(userService.findByNick(anyString())).willReturn(user);
-        given(buildService.findById(anyLong())).willReturn(new Build());
+        given(buildService.findById(anyLong())).willReturn(build);
         given(storageService.save(anyString(), any(byte[].class))).willReturn("newFileName.jpg");
         given(service.save(any(Post.class))).willReturn(post);
 
@@ -156,6 +168,17 @@ public class PostRestControllerV2Test {
         post.setId(1L);
         post.setTitle("Test Post");
 
+        Build build = new Build();
+        build.setId(1L);
+        build.setName("My Build");
+        post.setBuild(build);
+
+        User user = new User();
+        user.setId(1L);
+        user.setNick("user");
+        post.setUser(user);
+        build.setUser(user);
+
         given(service.findById(anyLong())).willReturn(post);
 
         mockMvc.perform(get("/api/v2/posts/{id}", 1)
@@ -188,11 +211,20 @@ public class PostRestControllerV2Test {
         PostInputDTO inputDTO = new PostInputDTO();
         inputDTO.setTitle("Updated Test Post");
         inputDTO.setBuildId(1L);
-        inputDTO.setImage("base64ImageString");
+        inputDTO.setImage("image");
+        inputDTO.setImage64("base64ImageStringkhdfhjghjdkshruhgislghirhiugrihsgrhguidhgsvhgirdshgddrighrd");
 
         User user = new User();
         user.setId(1L);
         user.setNick("user");
+
+        Build build = new Build();
+        build.setId(1L);
+        build.setName("My Build");
+        build.setNotes("This is a description of my build.");
+        build.setTotalPrice(1000.00);
+        build.setBuildsComponents(Arrays.asList(new BuildComponent(), new BuildComponent()));
+        build.setUser(user);
 
         Post post = new Post();
         post.setId(1L);
@@ -202,7 +234,7 @@ public class PostRestControllerV2Test {
 
         given(userService.findByNick(anyString())).willReturn(user);
         given(service.findById(anyLong())).willReturn(post);
-        given(buildService.findById(anyLong())).willReturn(new Build());
+        given(buildService.findById(anyLong())).willReturn(build);
         given(storageService.save(anyString(), any(byte[].class))).willReturn("newFileName.jpg");
         given(service.update(any(Post.class))).willReturn(true);
 
