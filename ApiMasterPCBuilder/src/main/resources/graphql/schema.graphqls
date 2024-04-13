@@ -14,6 +14,10 @@ type Query {
     # User
     users: [User]!
     user(id: Int!): User!
+
+    # Post
+    posts: [Post]!
+    post(id: Int!): Post!
 }
 
 type Mutation {
@@ -36,6 +40,11 @@ type Mutation {
     saveUser(user: UserSaveDTO!): User!
     updateUser(id: Int!, user: UserUpdateDTO!): User!
     deleteUser(id: Int!): Boolean!
+
+    # Post
+    savePost(post: PostDTO!): Post!
+    updatePost(id: Int!, post: PostDTO!): Post!
+    deletePost(id: Int!): Boolean!
 }
 
 # Seller
@@ -144,3 +153,20 @@ input UserUpdateDTO {
 }
 
 # Post
+type Post {
+    id: Int
+    title: String
+    description: String
+    image: String
+    user: User
+    build: Build
+    usersWhoLiked: [User]
+}
+
+input PostDTO {
+    title: String
+    description: String
+    image: String
+    image64: String
+    buildId: Int
+}
