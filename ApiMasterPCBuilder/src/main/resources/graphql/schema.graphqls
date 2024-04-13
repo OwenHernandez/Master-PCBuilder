@@ -10,6 +10,10 @@ type Query {
     # Build
     builds: [Build]!
     build(id: Int!): Build!
+
+    # User
+    users: [User]!
+    user(id: Int!): User!
 }
 
 type Mutation {
@@ -27,6 +31,11 @@ type Mutation {
     saveBuild(build: BuildDTO!): Build!
     updateBuild(id: Int!, build: BuildDTO!): Build!
     deleteBuild(id: Int!): Boolean!
+
+    # User
+    saveUser(user: UserSaveDTO!): User!
+    updateUser(id: Int!, user: UserUpdateDTO!): User!
+    deleteUser(id: Int!): Boolean!
 }
 
 # Seller
@@ -101,3 +110,37 @@ input BuildDTO {
     category: String
     componentsIds: [Int]
 }
+
+# User
+type User {
+    id: Int
+    nick: String
+    email: String
+    picture: String
+    role: String
+    active: Boolean
+    friends: [User]
+    blockedUsers: [User]
+    componentsWanted: [Component]
+}
+
+input UserSaveDTO {
+    nick: String
+    email: String
+    password: String
+    picture: String
+    pictureBase64: String
+    role: String
+    active: Int
+}
+
+input UserUpdateDTO {
+    nick: String
+    email: String
+    picture: String
+    pictureBase64: String
+    role: String
+    active: Int
+}
+
+# Post

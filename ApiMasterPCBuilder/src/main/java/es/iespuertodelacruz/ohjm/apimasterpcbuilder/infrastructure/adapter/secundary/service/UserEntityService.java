@@ -93,6 +93,40 @@ public class UserEntityService implements IUserRepository {
     }
 
     @Override
+    @Transactional
+    public boolean delete(Long id) {
+        if (id != null) {
+            Optional<UserEntity> byId = repo.findById(id);
+            if (byId.isEmpty()) {
+                return false;
+            }
+            UserEntity userEntity = byId.get();
+            if (userEntity.getBuilds() != null && !userEntity.getBuilds().isEmpty()) {
+                return false;
+            }
+            if (userEntity.getPostsMade() != null && !userEntity.getPostsMade().isEmpty()) {
+                return false;
+            }
+            if (userEntity.getComponentsCreated() != null && !userEntity.getComponentsCreated().isEmpty()) {
+                return false;
+            }
+            if (userEntity.getGroupChatsAdmin() != null && !userEntity.getGroupChatsAdmin().isEmpty()) {
+                return false;
+            }
+            repo.deleteBlocked(id);
+            repo.deleteFriends(id);
+            repo.deleteLikes(id);
+            repo.deleteWishlist(id);
+            repo.deleteGroupChatsUsers(id);
+
+            repo.deleteById(id);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    @Transactional
     public List<User> findByRole(String role) {
         List<User> users = new ArrayList<>();
         List<UserEntity> repoByRole = this.repo.findByRole(role);
