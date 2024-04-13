@@ -20,6 +20,16 @@ public class GroupChat {
 
     public GroupChat() {}
 
+    public GroupChat(long id, String name, String description, String picture, String dateOfCreation, User admin, List<User> users) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.picture = picture;
+        this.dateOfCreation = dateOfCreation;
+        this.admin = admin;
+        this.users = users;
+    }
+
     public long getId() {
         return id;
     }

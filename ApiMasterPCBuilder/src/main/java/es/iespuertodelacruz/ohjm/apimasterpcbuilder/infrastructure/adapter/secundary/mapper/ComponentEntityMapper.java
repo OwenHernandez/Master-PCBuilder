@@ -64,7 +64,6 @@ public class ComponentEntityMapper {
         res.setEbay_price(component.getEbay_price());
         res.setImage(component.getImage());
         res.setSeller(sellerMapper.toPersistence(component.getSeller()));
-        ///res.setUser(userMapper.toPersistance(component.getUserWhoCreated()));
         if (component.getBuildsComponents() != null) {
 
             if (res.getBuildsComponents() == null) {

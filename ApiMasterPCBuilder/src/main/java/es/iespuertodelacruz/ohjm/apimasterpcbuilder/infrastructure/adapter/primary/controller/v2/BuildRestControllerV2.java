@@ -133,11 +133,12 @@ public class BuildRestControllerV2 {
                         } else {
                             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong");
                         }
+                    } else {
+                        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("That is not your build");
                     }
                 } else {
                     return ResponseEntity.status(HttpStatus.NOT_FOUND).body("build not found");
                 }
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The build with the provided id was not found");
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You should not be here");
             }

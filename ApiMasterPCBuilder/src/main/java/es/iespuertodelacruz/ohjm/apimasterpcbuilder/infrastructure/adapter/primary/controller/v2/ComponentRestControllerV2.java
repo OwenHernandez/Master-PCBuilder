@@ -31,21 +31,28 @@ import java.util.logging.Logger;
 public class ComponentRestControllerV2 {
 
     @Autowired
-    IComponentService componentService;
+    private IComponentService componentService;
 
     @Autowired
-    ISellerService sellerService;
+    private ISellerService sellerService;
 
     @Autowired
-    IUserService userService;
+    private IUserService userService;
 
     @Autowired
-    FileStorageService storageService;
+    private FileStorageService storageService;
 
     private final ComponentDTOMapper mapper = new ComponentDTOMapper();
 
     @GetMapping
-    public ResponseEntity<?> getAllOrByName(@RequestParam(value = "name", required = false) String name, @RequestParam(value = "userId", required = false) Long userId) {
+    public ResponseEntity<?> get(@RequestParam(value = "name", required = false) String name, @RequestParam(value = "userId", required = false) Long userId) {
+        Object principal =
+                SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = ((UserDetails) principal).getUsername();
+        User userByNick = userService.findByNick(username);
+        if (userByNick == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You should not be here");
+        }
         if (name != null) {
             List<Component> components = componentService.findByName(name);
             List<ComponentOutputDTO> componentsDTO = new ArrayList<>();
@@ -240,7 +247,7 @@ public class ComponentRestControllerV2 {
                             component.setUsersWhoWants(byId.getUsersWhoWants());
                             boolean ok = componentService.update(component);
                             if (ok) {
-                                return ResponseEntity.ok("Component successfully updated");
+                                return ResponseEntity.ok("Component Successfully updated");
                             } else {
                                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong");
                             }
@@ -282,7 +289,7 @@ public class ComponentRestControllerV2 {
                 return ResponseEntity.ok(components);
             }
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The requested components were not found");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The search must not be null");
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The requested components were not found");
     }
@@ -291,29 +298,29 @@ public class ComponentRestControllerV2 {
     @PutMapping("/price/{id}")
     public ResponseEntity<?> updatePrice(@RequestBody ComponentPriceInputDTO componentInputDTO, @PathVariable("id") Long id) {
         if (componentInputDTO != null && id != null) {
-                Component byId = componentService.findById(id);
-                if (byId != null) {
-                        Component component = new Component();
-                        component.setName(componentInputDTO.getName());
-                        component.setImage(byId.getImage());
-                        component.setDescription(componentInputDTO.getDescription());
-                        component.setType(byId.getType());
-                        component.setPrice(byId.getPrice());
-                        component.setEbay_price(componentInputDTO.getEbay_price());
-                        component.setAmazon_price(componentInputDTO.getAmazon_price());
-                        component.setId(byId.getId());
-                        component.setSeller(byId.getSeller());
-                        component.setUsersWhoWants(byId.getUsersWhoWants());
-                        boolean ok = componentService.update(component);
-                        if (ok) {
-                            return ResponseEntity.ok("Component successfully updated");
-                        } else {
-                            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong");
-                        }
-
+            Component byId = componentService.findById(id);
+            if (byId != null) {
+                Component component = new Component();
+                component.setName(componentInputDTO.getName());
+                component.setImage(byId.getImage());
+                component.setDescription(componentInputDTO.getDescription());
+                component.setType(byId.getType());
+                component.setPrice(byId.getPrice());
+                component.setEbay_price(componentInputDTO.getEbay_price());
+                component.setAmazon_price(componentInputDTO.getAmazon_price());
+                component.setId(byId.getId());
+                component.setSeller(byId.getSeller());
+                component.setUsersWhoWants(byId.getUsersWhoWants());
+                boolean ok = componentService.update(component);
+                if (ok) {
+                    return ResponseEntity.ok("Component Successfully updated");
                 } else {
-                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The component does not exist");
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong");
                 }
+
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The component does not exist");
+            }
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The id must not be null");
         }

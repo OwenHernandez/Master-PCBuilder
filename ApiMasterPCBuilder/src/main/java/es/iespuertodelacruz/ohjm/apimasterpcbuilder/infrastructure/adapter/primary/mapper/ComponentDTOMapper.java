@@ -8,6 +8,7 @@ import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.prima
 import java.util.ArrayList;
 
 public class ComponentDTOMapper {
+
     public Component toDomain(ComponentInputDTO componentInputDTO) {
         Component component = new Component();
         component.setName(componentInputDTO.getName());
