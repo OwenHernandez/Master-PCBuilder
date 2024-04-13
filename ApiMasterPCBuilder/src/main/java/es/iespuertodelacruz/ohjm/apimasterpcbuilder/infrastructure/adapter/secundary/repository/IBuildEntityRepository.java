@@ -13,9 +13,6 @@ public interface IBuildEntityRepository extends JpaRepository<BuildEntity, Long>
     @Query(value = "SELECT * FROM BUILDS b WHERE b.NAME = :name", nativeQuery = true)
     List<BuildEntity> findByName(@Param("name") String name);
 
-    @Query(value = "SELECT * FROM BUILDS b WHERE b.TOTAL_PRICE = :total_price", nativeQuery = true)
-    List<BuildEntity> findByTotalPrice(@Param("total_price") double totalPrice);
-
     @Query(value = "SELECT * FROM BUILDS b WHERE b.USER_ID = :userId", nativeQuery = true)
     List<BuildEntity> findByUserId(@Param("userId") Long userId);
 

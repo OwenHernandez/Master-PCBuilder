@@ -84,4 +84,17 @@ public class Post {
     public void setUsersWhoLiked(List<User> usersWhoLiked) {
         this.usersWhoLiked = usersWhoLiked;
     }
+
+    @Override
+    public String toString() {
+        return "Post{" +
+                "id=" + id +
+                ", description='" + description + '\'' +
+                ", image='" + image + '\'' +
+                ", title='" + title + '\'' +
+                ", build=" + build +
+                ", user=" + user +
+                ", usersWhoLiked=" + usersWhoLiked +
+                '}';
+    }
 }

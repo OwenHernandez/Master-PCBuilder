@@ -36,6 +36,7 @@ public class PostEntityService implements IPostRepository {
         try {
             return mapper.toDomain(repo.save(mapper.toPersistence(post)));
         } catch (RuntimeException | ParseException e) {
+            System.out.println(e.getMessage());
             return null;
         }
     }

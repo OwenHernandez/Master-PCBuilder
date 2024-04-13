@@ -6,28 +6,16 @@ import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.prima
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.ComponentOutputDTO;
 
 import java.util.ArrayList;
-import java.util.logging.Logger;
 
-public class ComponentOutputDTOMapper {
-    Logger log;
-    public Component toDomain(ComponentOutputDTO componentOutputDTO) {
+public class ComponentDTOMapper {
+
+    public Component toDomain(ComponentInputDTO componentInputDTO) {
         Component component = new Component();
-        component.setId(componentOutputDTO.getId());
-        component.setName(componentOutputDTO.getName());
-        component.setImage(componentOutputDTO.getImage());
-        component.setType(componentOutputDTO.getType());
-        component.setDescription(componentOutputDTO.getDescription());
-        component.setPrice(componentOutputDTO.getPrice());
-        component.setAmazon_price(componentOutputDTO.getAmazon_price());
-        component.setEbay_price(componentOutputDTO.getEbay_price());
-        if (componentOutputDTO.getPriceHistory() != null) {
-            if (component.getPriceHistories() == null) {
-                component.setPriceHistories(new ArrayList<>());
-            }
-            for (PriceHistory bce : componentOutputDTO.getPriceHistory()) {
-                component.getPriceHistories().add(bce);
-            }
-        }
+        component.setName(componentInputDTO.getName());
+        component.setImage(componentInputDTO.getImage());
+        component.setDescription(componentInputDTO.getDescription());
+        component.setType(componentInputDTO.getType());
+        component.setPrice(componentInputDTO.getPrice());
 
         return component;
     }
