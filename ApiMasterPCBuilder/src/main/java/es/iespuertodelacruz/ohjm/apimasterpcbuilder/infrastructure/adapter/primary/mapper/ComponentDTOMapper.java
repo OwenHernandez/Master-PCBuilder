@@ -16,6 +16,8 @@ public class ComponentDTOMapper {
         component.setDescription(componentInputDTO.getDescription());
         component.setType(componentInputDTO.getType());
         component.setPrice(componentInputDTO.getPrice());
+        component.setAmazon_price(componentInputDTO.getAmazon_price());
+        component.setEbay_price(componentInputDTO.getEbay_price());
 
         return component;
     }

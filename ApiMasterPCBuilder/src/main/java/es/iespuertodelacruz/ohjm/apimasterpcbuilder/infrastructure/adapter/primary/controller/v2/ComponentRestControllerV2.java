@@ -30,7 +30,6 @@ import java.util.logging.Logger;
 @RequestMapping("/api/v2/components")
 public class ComponentRestControllerV2 {
 
-
     @Autowired
     private IComponentService componentService;
 
@@ -43,7 +42,7 @@ public class ComponentRestControllerV2 {
     @Autowired
     private FileStorageService storageService;
 
-    private final ComponentDTOMapper componentDTOMapper = new ComponentDTOMapper();
+    private final ComponentDTOMapper mapper = new ComponentDTOMapper();
 
     @GetMapping
     public ResponseEntity<?> get(@RequestParam(value = "name", required = false) String name, @RequestParam(value = "userId", required = false) Long userId) {
@@ -59,7 +58,7 @@ public class ComponentRestControllerV2 {
             List<ComponentOutputDTO> componentsDTO = new ArrayList<>();
             if (components != null) {
                 for (Component comp : components) {
-                    ComponentOutputDTO compOutputDTO = componentDTOMapper.toDTO(comp);
+                    ComponentOutputDTO compOutputDTO = mapper.toDTO(comp);
                     componentsDTO.add(compOutputDTO);
                 }
 
@@ -72,7 +71,7 @@ public class ComponentRestControllerV2 {
             List<ComponentOutputDTO> componentsDTO = new ArrayList<>();
             if (components != null) {
                 for (Component comp : components) {
-                    ComponentOutputDTO compOutputDTO = componentDTOMapper.toDTO(comp);
+                    ComponentOutputDTO compOutputDTO = mapper.toDTO(comp);
                     componentsDTO.add(compOutputDTO);
                 }
 
@@ -84,7 +83,7 @@ public class ComponentRestControllerV2 {
             List<Component> all = componentService.findAll();
             List<ComponentOutputDTO> allDTO = new ArrayList<>();
             for (Component comp : all) {
-                ComponentOutputDTO compOutputDTO = componentDTOMapper.toDTO(comp);
+                ComponentOutputDTO compOutputDTO = mapper.toDTO(comp);
                 allDTO.add(compOutputDTO);
             }
             return ResponseEntity.ok(allDTO);
@@ -103,9 +102,9 @@ public class ComponentRestControllerV2 {
                 if (sellerByName != null) {
                     String codedPicture = componentInputDTO.getImage64();
                     byte[] photoBytes = Base64.getDecoder().decode(codedPicture);
-                    String newFileName = storageService.save(userByNick.getNick() + "_" + componentInputDTO.getImage(), photoBytes);
+                    String newFileName = storageService.save(componentInputDTO.getName()  + "_" + componentInputDTO.getImage(), photoBytes);
                     componentInputDTO.setImage(newFileName);
-                    Component component = componentDTOMapper.toDomain(componentInputDTO);
+                    Component component = mapper.toDomain(componentInputDTO);
                     component.setSeller(sellerByName);
                     component.setUserWhoCreated(userByNick);
                     component.setAmazon_price(componentInputDTO.getAmazon_price());
@@ -113,7 +112,7 @@ public class ComponentRestControllerV2 {
                     Component save = componentService.save(component);
 
                     if (save != null) {
-                        ComponentOutputDTO compOutputDTO = componentDTOMapper.toDTO(save);
+                        ComponentOutputDTO compOutputDTO = mapper.toDTO(save);
                         return ResponseEntity.ok(compOutputDTO);
                     } else {
                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong");
@@ -172,6 +171,21 @@ public class ComponentRestControllerV2 {
         }
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getById(@PathVariable("id") Long id) {
+        if (id != null) {
+            Component byId = componentService.findById(id);
+            if (byId != null) {
+                ComponentOutputDTO compOutputDTO = mapper.toDTO(byId);
+                return ResponseEntity.ok(compOutputDTO);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The component does not exist");
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The id must not be null");
+        }
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
         if (id != null) {
@@ -216,11 +230,15 @@ public class ComponentRestControllerV2 {
                     if (byId.getUserWhoCreated().getId() == userByNick.getId()) {
                         Seller sellerByName = sellerService.findByName(componentInputDTO.getSellerName());
                         if (sellerByName != null) {
-                            String codedPicture = componentInputDTO.getImage64();
-                            byte[] photoBytes = Base64.getDecoder().decode(codedPicture);
-                            String newFileName = storageService.save(userByNick.getNick() + "_" + componentInputDTO.getImage(), photoBytes);
-                            componentInputDTO.setImage(newFileName);
-                            Component component = componentDTOMapper.toDomain(componentInputDTO);
+                            if (componentInputDTO.getImage64() != null) {
+                                String codedPicture = componentInputDTO.getImage64();
+                                byte[] photoBytes = Base64.getDecoder().decode(codedPicture);
+                                String newFileName = storageService.save(componentInputDTO.getName()  + "_" + componentInputDTO.getImage(), photoBytes);
+                                componentInputDTO.setImage(newFileName);
+                            } else {
+                                componentInputDTO.setImage(byId.getImage());
+                            }
+                            Component component = mapper.toDomain(componentInputDTO);
                             component.setId(id);
                             component.setSeller(sellerByName);
                             component.setEbay_price(componentInputDTO.getEbay_price());
@@ -254,11 +272,11 @@ public class ComponentRestControllerV2 {
     public ResponseEntity<?> searchEbay(@PathVariable("search") String search) {
         if (search != null) {
             List<Component> components = componentService.searchEbay(search);
-            if (components != null && !components.isEmpty()) {
+            if (!components.isEmpty()) {
                 return ResponseEntity.ok(components);
             }
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The search must not be null");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The requested components were not found");
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The requested components were not found");
     }
@@ -276,6 +294,7 @@ public class ComponentRestControllerV2 {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The requested components were not found");
     }
 
+    /*
     @PutMapping("/price/{id}")
     public ResponseEntity<?> updatePrice(@RequestBody ComponentPriceInputDTO componentInputDTO, @PathVariable("id") Long id) {
         if (componentInputDTO != null && id != null) {
@@ -306,6 +325,5 @@ public class ComponentRestControllerV2 {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The id must not be null");
         }
     }
-
-
+     */
 }
