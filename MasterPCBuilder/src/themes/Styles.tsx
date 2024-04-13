@@ -33,7 +33,6 @@ export const Styles = StyleSheet.create({
         flex: 1,
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
         marginTop: "40%",
-        borderColor: "#ca2613",
         borderWidth: 2
     },
     loadingContainer: {

@@ -17,17 +17,13 @@ public class UserDTOMapper {
         user.setNick(userDTO.getNick());
         user.setEmail(userDTO.getEmail());
         user.setPicture(userDTO.getPicture());
-        List<User> friends = null;
+        user.setFriends(new ArrayList<>());
         if (userDTO.getFriends() != null && !userDTO.getFriends().isEmpty()) {
-            friends = new ArrayList<>();
             for (UserDTO uDTO : userDTO.getFriends()) {
                 User u = toDomain(uDTO);
-                friends.add(u);
+                user.getFriends().add(u);
             }
-        }else {
-            friends = new ArrayList<>();
         }
-        user.setFriends(friends);
         return user;
     }
 
@@ -48,25 +44,21 @@ public class UserDTOMapper {
         }else {
             userDTO.setComponentsWanted(new ArrayList<>());
         }
+        userDTO.setFriends(new ArrayList<>());
         if (user.getFriends() != null && !user.getFriends().isEmpty()) {
-            userDTO.setFriends(new ArrayList<>());
             for (User u : user.getFriends()) {
                 u.setFriends(null);
                 UserDTO uDTO = toDTO(u);
                 userDTO.getFriends().add(uDTO);
             }
-        }else {
-            userDTO.setFriends(new ArrayList<>());
         }
+        userDTO.setBlockedUsers(new ArrayList<>());
         if (user.getBlockedUsers() != null && !user.getBlockedUsers().isEmpty()) {
-            userDTO.setBlockedUsers(new ArrayList<>());
             for (User u : user.getBlockedUsers()) {
                 u.setBlockedUsers(null);
                 UserDTO uDTO = toDTO(u);
                 userDTO.getBlockedUsers().add(uDTO);
             }
-        }else {
-            userDTO.setBlockedUsers(new ArrayList<>());
         }
         return userDTO;
     }

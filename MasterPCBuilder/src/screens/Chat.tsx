@@ -21,6 +21,7 @@ import {Client} from "@stomp/stompjs";
 import axios from "axios";
 import {Globals} from "../components/Globals";
 import RNFetchBlob from "rn-fetch-blob";
+import Animated from "react-native-reanimated";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Chat'>;
 
@@ -145,7 +146,7 @@ const Chat = (props: Props) => {
                 let newMsg: IMsgType = {
                     author: msg.author,
                     receiver: msg.receiver,
-                    content: msg.content,
+                    msg: msg.content,
                     date: msg.date
                 }
                 setMsgs((msgs) => [newMsg, ...msgs]);
