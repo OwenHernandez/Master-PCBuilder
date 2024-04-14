@@ -1,9 +1,11 @@
 package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.service;
 
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.User;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.IMessageRepository;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.secundary.IUserRepository;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.mapper.UserEntityMapper;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.UserEntity;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.repository.IMessageDocumentRepository;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.repository.IUserEntityRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,9 @@ public class UserEntityService implements IUserRepository {
 
     @Autowired
     private IUserEntityRepository repo;
+
+    @Autowired
+    private IMessageDocumentRepository messageRepo;
 
     private final UserEntityMapper mapper = new UserEntityMapper();
 
@@ -113,6 +118,8 @@ public class UserEntityService implements IUserRepository {
             if (userEntity.getGroupChatsAdmin() != null && !userEntity.getGroupChatsAdmin().isEmpty()) {
                 return false;
             }
+            messageRepo.deleteByAuthor(userEntity.getNick());
+            messageRepo.deleteByReceiver(userEntity.getNick());
             repo.deleteBlocked(id);
             repo.deleteFriends(id);
             repo.deleteLikes(id);

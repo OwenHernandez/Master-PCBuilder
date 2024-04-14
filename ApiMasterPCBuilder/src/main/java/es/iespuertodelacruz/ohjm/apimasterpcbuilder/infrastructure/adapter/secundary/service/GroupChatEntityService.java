@@ -5,6 +5,7 @@ import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.secundary.IGroup
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.mapper.GroupChatEntityMapper;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.GroupChatEntity;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.repository.IGroupChatEntityRepository;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.repository.IMessageDocumentRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,9 @@ public class GroupChatEntityService implements IGroupChatRepository {
 
     @Autowired
     IGroupChatEntityRepository repo;
+
+    @Autowired
+    private IMessageDocumentRepository messageRepo;
 
     private final GroupChatEntityMapper mapper = new GroupChatEntityMapper();
 
@@ -53,6 +57,7 @@ public class GroupChatEntityService implements IGroupChatRepository {
         if (!repo.existsById(id)) {
             return false;
         }
+        messageRepo.deleteByTopic("groupChat" + id);
         repo.deleteById(id);
         return true;
     }
