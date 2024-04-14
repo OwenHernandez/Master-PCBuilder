@@ -18,6 +18,10 @@ type Query {
     # Post
     posts: [Post]!
     post(id: Int!): Post!
+
+    # GroupChat
+    groupChats: [GroupChat]!
+    groupChat(id: Int!): GroupChat!
 }
 
 type Mutation {
@@ -45,6 +49,13 @@ type Mutation {
     savePost(post: PostDTO!): Post!
     updatePost(id: Int!, post: PostDTO!): Post!
     deletePost(id: Int!): Boolean!
+
+    # GroupChat
+    saveGroupChat(groupChat: GroupChatDTO!): GroupChat!
+    updateGroupChat(id: Int!, groupChat: GroupChatDTO!): GroupChat!
+    deleteGroupChat(id: Int!): Boolean!
+    addRemoveUserGroupChat(groupId: Int!, userId: Int!): GroupChat!
+    addRemoveAdminGroupChat(groupId: Int!, userId: Int!): GroupChat!
 }
 
 # Seller
@@ -169,4 +180,22 @@ input PostDTO {
     image: String
     image64: String
     buildId: Int
+}
+
+# GroupChat
+type GroupChat {
+    id: Int
+    name: String
+    description: String
+    picture: String
+    dateOfCreation: String
+    admin: User
+    users: [User]
+}
+
+input GroupChatDTO {
+    name: String
+    description: String
+    picture: String
+    pictureBase64: String
 }
