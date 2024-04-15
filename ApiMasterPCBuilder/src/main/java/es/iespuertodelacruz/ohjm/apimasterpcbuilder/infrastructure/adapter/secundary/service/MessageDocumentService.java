@@ -45,8 +45,10 @@ public class MessageDocumentService implements IMessageRepository {
                 MessageDocument save = repo.save(messageDocument);
                 return mapper.toDomain(save);
             }
+            System.out.println("Message is null");
             return null;
         } catch (RuntimeException | ParseException e) {
+            e.printStackTrace();
             return null;
         }
     }

@@ -36,6 +36,7 @@ public class GroupChatEntityService implements IGroupChatRepository {
         try{
             return mapper.toDomain(repo.save(mapper.toPersistence(groupChat)));
         } catch (RuntimeException | ParseException e) {
+            e.printStackTrace();
             return null;
         }
     }
