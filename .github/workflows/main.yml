@@ -23,17 +23,17 @@ jobs:
     - name: Build with Maven
       run: mvn -B clean package --file ApiMasterPCBuilder/pom.xml
 
-    - name: subir fichero
-      uses: actions/upload-artifact@v4
-      with:
-        name: allartifacts
-        path: ApiMasterPCBuilder/target/*
+   # - name: subir fichero
+   #   uses: actions/upload-artifact@v4
+    #  with:
+    #    name: allartifacts
+   #     path: ApiMasterPCBuilder/target/*
 
-    - name: Download artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: allartifacts
-        path: distfiles
+   # - name: Download artifact
+   #   uses: actions/download-artifact@v4
+   #   with:
+   #     name: allartifacts
+   #     path: distfiles
 
 
     #- name: Build Docker image
