@@ -19,10 +19,6 @@ const Login = (props: Props) => {
             const response = await axios.post(Globals.IP_HTTP + '/api/v1/login', {
                 nick: nickname,
                 password: password
-            }, {
-                headers: {
-                    'Access-Control-Allow-Origin': '*', // Añade la cabecera CORS
-                }
             })
             console.log(response)
         } catch (error) {
