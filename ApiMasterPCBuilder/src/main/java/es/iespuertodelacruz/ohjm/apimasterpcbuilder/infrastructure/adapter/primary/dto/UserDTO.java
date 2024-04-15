@@ -10,8 +10,25 @@ public class UserDTO {
     private List<UserDTO> friends;
     private List<UserDTO> blockedUsers;
     private List<ComponentOutputDTO> componentsWanted;
-
+    private String role;
+    private boolean isActive;
     public UserDTO() {
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public long getId() {

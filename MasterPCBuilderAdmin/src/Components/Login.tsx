@@ -1,12 +1,14 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import logo from '../img/logo_transparent.png'
 import axios from 'axios'
 import { Globals } from '../Type/Globals';
+import { useAppContext } from '../Context/AppContextProvider';
 type Props = {}
 
 const Login = (props: Props) => {
-
+    const { setToken, setIsLoged } = useAppContext();
+    const navigate = useNavigate();
     async function login(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault()
         const form = event.currentTarget
@@ -16,11 +18,22 @@ const Login = (props: Props) => {
         try {
             console.log(Globals.IP_HTTP + '/api/v1/login');
 
-            const response = await axios.post(Globals.IP_HTTP + '/api/v1/login', {
+            const response = await axios.post('http://localhost:8080/api/v1/login', {
                 nick: nickname,
                 password: password
             })
-            console.log(response)
+            const data = response.data;
+            if (data !== undefined) {
+                const responseUser = await axios.get('http://localhost:8080/api/v2/users?nick=' + nickname, { headers: { 'Authorization': "Bearer " + data } });
+                const dataUser = responseUser.data;
+                if (dataUser.role === "ROLE_ADMIN" && dataUser.active === true) {
+                    setToken(data);
+                    setIsLoged(true);
+                    navigate('/home');
+                } else {
+                    alert("You are not an admin");
+                }
+            }
         } catch (error) {
             console.error(error)
         }

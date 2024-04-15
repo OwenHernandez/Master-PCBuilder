@@ -4,9 +4,9 @@ type Props = {}
 
 const Home = (props: Props) => {
   return (
-    <h1 className="text-3xl font-bold underline">
-      Hello world!
-    </h1>
+    <div className="text-3xl font-bold underline bg-white h-full">
+      <h1>Hello world!</h1>
+    </div>
   )
 }
 
