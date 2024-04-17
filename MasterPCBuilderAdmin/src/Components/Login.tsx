@@ -4,8 +4,7 @@ import logo from '../img/logo_transparent.png'
 import axios from 'axios'
 import { Globals } from '../Type/Globals';
 import { useAppContext } from '../Context/AppContextProvider';
-import { Form, Button, Container } from 'react-bootstrap';
-import "../Styles/Login.css";
+import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 import { UserType } from '../Type/User';
 type Props = {}
 
@@ -56,37 +55,38 @@ const Login = (props: Props) => {
 
     }
     return (
-        <div className="gradient-background">
-            <Container className="mt-5 rounded shadow-lg container-login">
-                <h2>Login</h2>
-                <Form onSubmit={login}>
-                    <Form.Group>
-                        <Form.Label>Nombre de usuario</Form.Label>
-                        <Form.Control
-                            type="text"
-                            name="username"
-                            placeholder="Ingresa tu nombre de usuario"
-                            value={nickname}
-                            onChange={(event) => setNickname(event.target.value)}
-                        />
-                    </Form.Group>
-                    <Form.Group >
-                        <Form.Label>Contraseña</Form.Label>
-                        <Form.Control
-                            type="password"
-                            name="password"
-                            placeholder="Contraseña"
-                            value={password}
-                            onChange={(event) => setPassword(event.target.value)}
-                        />
-                    </Form.Group>
-                    <Button variant="primary" type="submit" className="login-button">
-                        Login
-                    </Button>
-                </Form>
-            </Container>
+        <div style={{width:"100vw",height:"100vh",display:"flex", justifyContent:"center" }}>
+            <Row style={{ width: "100vh",alignItems:"center" }}>
+                <Col>
+                    <h2>Login</h2>
+                    <Form onSubmit={login}>
+                        <Form.Group>
+                            <Form.Label>Nombre de usuario</Form.Label>
+                            <Form.Control
+                                type="text"
+                                name="username"
+                                placeholder="Ingresa tu nombre de usuario"
+                                value={nickname}
+                                onChange={(event) => setNickname(event.target.value)}
+                            />
+                        </Form.Group>
+                        <Form.Group >
+                            <Form.Label>Contraseña</Form.Label>
+                            <Form.Control
+                                type="password"
+                                name="password"
+                                placeholder="Contraseña"
+                                value={password}
+                                onChange={(event) => setPassword(event.target.value)}
+                            />
+                        </Form.Group>
+                        <Button variant="primary" type="submit" className="login-button">
+                            Login
+                        </Button>
+                    </Form>
+                </Col>
+            </Row>
         </div>
-
     )
 }
 export default Login;
