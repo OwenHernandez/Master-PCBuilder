@@ -41,7 +41,6 @@ public class UserDTOMapper {
             List<ComponentOutputDTO> componentsWanted = new ArrayList<>();
             for (Component c : user.getComponentsWanted()) {
                 ComponentOutputDTO cDTO = compMapper.toDTO(c);
-
                 componentsWanted.add(cDTO);
             }
             userDTO.setComponentsWanted(componentsWanted);
