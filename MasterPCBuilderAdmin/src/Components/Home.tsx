@@ -1,21 +1,39 @@
 import React, { useEffect, useState } from 'react';
-import { Doughnut, Line } from 'react-chartjs-2';
-import { Chart, ArcElement, Tooltip, Legend, CategoryScale, LineElement, LinearScale, PointElement, Title } from 'chart.js/auto';
+import { Doughnut, Bar } from 'react-chartjs-2'; // Cambiado de Line a Bar
+import { Chart, ArcElement, Tooltip, Legend, CategoryScale, BarElement, LinearScale, Title } from 'chart.js/auto'; // Asegúrate de registrar BarElement
 import { Card, Col, Row, Button } from 'react-bootstrap';
 import CountUp from 'react-countup';
 import axios from 'axios';
 import { useAppContext } from '../Context/AppContextProvider';
 
-Chart.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+Chart.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend); // Registra BarElement en lugar de LineElement
 Chart.register(ArcElement, Tooltip, Legend);
-
+export interface IPriceHistory {
+  date: number;
+  ebayPrice: number;
+  amazonPrice: number;
+  price: number;
+}
+export interface IComponentType {
+  id: number;
+  name: string;
+  price: number;
+  amazon_price: number;
+  ebay_price: number;
+  type: string;
+  image: string;
+  description: string;
+  sellerName: string;
+  userNick: string;
+  wished?: boolean;
+  priceHistory: Array<IPriceHistory>;
+}
 const Home = () => {
-  const { token } = useAppContext();
+  const {token}=useAppContext();
   const [users, setUsers] = useState([]);
   const [builds, setBuilds] = useState([]);
-  const [components, setComponents] = useState([]);
-  const [compType, setCompType] = useState([]);
-  const [priceHistory, setPriceHistory] = useState([]);
+  const [components, setComponents] = useState<Array<IComponentType>>([]);
+  const [compType, setCompType] = useState<Array<string>>([]);
   const [dataLine, setDataLine] = useState({
     labels: [],
     datasets: [
@@ -39,6 +57,15 @@ const Home = () => {
       }
     ]
   });
+  const [sellersData, setSellersData] = useState<{ labels: string[], datasets: { label: string, data: number[], backgroundColor: string[], hoverBackgroundColor: string[] }[] }>({
+    labels: [],
+    datasets: [{
+      label: 'Components per Seller',
+      data: [],
+      backgroundColor: [],
+      hoverBackgroundColor: []
+    }]
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -53,7 +80,7 @@ const Home = () => {
   }, [token]);
 
   useEffect(() => {
-    let auxCompType:any[] = [];
+    let auxCompType:string[] = [];
     let priceData:any = {
       labels: [],
       ebay: [],
@@ -61,23 +88,28 @@ const Home = () => {
       app: []
     };
     components.forEach(component => {
-      component.priceHistory.forEach(({ date, ebayPrice, amazonPrice, price }) => {
-        const dateStr = new Date(date * 1000).toLocaleDateString();
-        if (!priceData.labels.includes(dateStr)) {
-          priceData.labels.push(dateStr);
-          priceData.ebay.push({ max: ebayPrice, min: ebayPrice });
-          priceData.amazon.push({ max: amazonPrice, min: amazonPrice });
-          priceData.app.push({ max: price, min: price });
-        } else {
-          const index = priceData.labels.indexOf(dateStr);
-          priceData.ebay[index].max = Math.max(priceData.ebay[index].max, ebayPrice);
-          priceData.ebay[index].min = Math.min(priceData.ebay[index].min, ebayPrice);
-          priceData.amazon[index].max = Math.max(priceData.amazon[index].max, amazonPrice);
-          priceData.amazon[index].min = Math.min(priceData.amazon[index].min, amazonPrice);
-          priceData.app[index].max = Math.max(priceData.app[index].max, price);
-          priceData.app[index].min = Math.min(priceData.app[index].min, price);
-        }
+      // Solo agregamos el componente una vez al label
+      priceData.labels.push(component.name);
+      let ebayMax = Number.MIN_VALUE;
+      let amazonMax = Number.MIN_VALUE;
+      let appMax = Number.MIN_VALUE;
+      let ebayMin = Number.MAX_VALUE;
+      let amazonMin = Number.MAX_VALUE;
+      let appMin = Number.MAX_VALUE;
+
+      component.priceHistory.forEach(({ ebayPrice, amazonPrice, price }) => {
+        ebayMax = Math.max(ebayMax, ebayPrice);
+        amazonMax = Math.max(amazonMax, amazonPrice);
+        appMax = Math.max(appMax, price);
+        ebayMin = Math.min(ebayMin, ebayPrice);
+        amazonMin = Math.min(amazonMin, amazonPrice);
+        appMin = Math.min(appMin, price);
       });
+
+      priceData.ebay.push({ max: ebayMax, min: ebayMin });
+      priceData.amazon.push({ max: amazonMax, min: amazonMin });
+      priceData.app.push({ max: appMax, min: appMin });
+
       if (!auxCompType.includes(component.type)) {
         auxCompType.push(component.type);
       }
@@ -89,30 +121,105 @@ const Home = () => {
       datasets: [
         {
           label: 'Max eBay Prices',
-          data: priceData.ebay.map(e => e.max),
+          data: priceData.ebay.map((e: { max: number }) => e.max),
           borderColor: 'rgba(255, 99, 132, 1)',
           backgroundColor: 'rgba(255, 99, 132, 0.2)',
         },
         {
           label: 'Max Amazon Prices',
-          data: priceData.amazon.map(a => a.max),
+          data: priceData.amazon.map((a: { max: number }) => a.max),
           borderColor: 'rgba(54, 162, 235, 1)',
           backgroundColor: 'rgba(54, 162, 235, 0.2)',
         },
         {
           label: 'Max App Prices',
-          data: priceData.app.map(p => p.max),
+          data: priceData.app.map((p: { max: number }) => p.max),
           borderColor: 'rgba(75, 192, 192, 1)',
           backgroundColor: 'rgba(75, 192, 192, 0.2)',
         }
       ]
     });
-  }, [components]);
+    const sellerCounts: Record<string, number> = {}; // Defining the type of sellerCounts
+    components.forEach(component => {
+      sellerCounts[component.sellerName] = (sellerCounts[component.sellerName] || 0) + 1;
+    });
 
+    const labels:string[] = Object.keys(sellerCounts);
+    const data = Object.values(sellerCounts);
+    const backgroundColors = labels.map(() => `hsla(${Math.random() * 360}, 100%, 75%, 0.7)`);
+
+    setSellersData({
+      labels,
+      datasets: [{
+        label: 'Components per Seller',
+        data,
+        backgroundColor: backgroundColors,
+        hoverBackgroundColor: backgroundColors.map(color => color.replace('0.7', '1.0'))
+      }]
+    });
+  }, [components]);
+  function changeGraphics(type: string |null) {
+    let filteredComponents = type ? components.filter(component => component.type === type) : components;
+
+    let priceData:any = {
+      labels: [],
+      ebay: [],
+      amazon: [],
+      app: []
+    };
+
+    filteredComponents.forEach(component => {
+      // Solo agregamos el componente una vez al label
+      priceData.labels.push(component.name);
+      let ebayMax = Number.MIN_VALUE;
+      let amazonMax = Number.MIN_VALUE;
+      let appMax = Number.MIN_VALUE;
+      let ebayMin = Number.MAX_VALUE;
+      let amazonMin = Number.MAX_VALUE;
+      let appMin = Number.MAX_VALUE;
+
+      component.priceHistory.forEach(({ ebayPrice, amazonPrice, price }) => {
+        ebayMax = Math.max(ebayMax, ebayPrice);
+        amazonMax = Math.max(amazonMax, amazonPrice);
+        appMax = Math.max(appMax, price);
+        ebayMin = Math.min(ebayMin, ebayPrice);
+        amazonMin = Math.min(amazonMin, amazonPrice);
+        appMin = Math.min(appMin, price);
+      });
+
+      priceData.ebay.push({ max: ebayMax, min: ebayMin });
+      priceData.amazon.push({ max: amazonMax, min: amazonMin });
+      priceData.app.push({ max: appMax, min: appMin });
+    });
+
+    // Update chart data
+    setDataLine({
+      labels: priceData.labels,
+      datasets: [
+        {
+          label: 'Max eBay Prices',
+          data: priceData.ebay.map((e: { max: number }) => e.max),
+          borderColor: 'rgba(255, 99, 132, 1)',
+          backgroundColor: 'rgba(255, 99, 132, 0.2)',
+        },
+        {
+          label: 'Max Amazon Prices',
+          data: priceData.amazon.map((a: { max: number }) => a.max),
+          borderColor: 'rgba(54, 162, 235, 1)',
+          backgroundColor: 'rgba(54, 162, 235, 0.2)',
+        },
+        {
+          label: 'Max App Prices',
+          data: priceData.app.map((p: { max: number }) => p.max),
+          borderColor: 'rgba(75, 192, 192, 1)',
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        }
+      ]
+    });
+  }
   return (
       <div style={{ width: "100%", height: "100%" }}>
         <Row>
-          {/* Layout for stats cards */}
           <Col xs={12} className="mb-4">
             <Row className="d-flex justify-content-around mt-3">
               <Col md={3}><Card><Card.Body><Card.Title>Total Users</Card.Title><Card.Text><CountUp start={0} end={users.length}/></Card.Text></Card.Body></Card></Col>
@@ -120,21 +227,32 @@ const Home = () => {
               <Col md={3}><Card><Card.Body><Card.Title>Total Components</Card.Title><Card.Text><CountUp start={0} end={components.length}/></Card.Text></Card.Body></Card></Col>
             </Row>
           </Col>
-          {/* Layout for charts */}
           <Col xs={12}>
-            <Row>
-              <Col md={9}><Line data={dataLine} /></Col>
-              <Col md={3}><Doughnut data={data} /></Col>
+            <Row className="gx-0">
+              <Col md={9} className="p-0 " >
+                <div style={{ height: '100%',paddingLeft:"0%" }}>
+                  <Bar data={dataLine} options={{ maintainAspectRatio: true, responsive: true }} />
+                </div>
+              </Col>
+              <Col md={3} className="p-0">
+                <div style={{ height: '100%', paddingTop:"20%" }}>
+                  <Doughnut data={sellersData} options={{ maintainAspectRatio: true, responsive: true }} />
+                </div>
+              </Col>
             </Row>
           </Col>
-          {/* Layout for buttons based on component types */}
-          <Col xs={12}>
-            <Row>
-              {compType.map((tipo) => (
-                  <Col md={3} className="d-flex justify-content-around align-content-around mt-5">
-                    <Button variant="secondary" size="lg">{tipo}</Button>
-                  </Col>
-              ))}
+          <Col xs={9} style={{marginTop:"3%"}}>
+            <Row className="gx-0 " style={{marginLeft:"2%",marginRight:"3.3%"}}>
+              <Col className="p-0 " >
+                <Button variant="secondary" style={{ width: '60%'}} onClick={()=>{changeGraphics(null)}}>All</Button>
+              </Col>
+              {
+                compType.map((type, index) => (
+                    <Col className="p-0 " >
+                      <Button key={index} variant="secondary" style={{ width: '60%'}} onClick={()=>{changeGraphics(type)}}>{type}</Button>
+                    </Col>
+                ))
+              }
             </Row>
           </Col>
         </Row>
