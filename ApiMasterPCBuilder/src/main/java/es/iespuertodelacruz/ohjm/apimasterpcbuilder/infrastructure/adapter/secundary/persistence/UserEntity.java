@@ -43,6 +43,7 @@ public class UserEntity implements Serializable {
 	private String picture;
 
 	private String role;
+	private byte deleted;
 
 	//bi-directional many-to-many association to UserEntity
 	@JsonIgnore
@@ -99,6 +100,30 @@ public class UserEntity implements Serializable {
 	private List<GroupChatEntity> groupChats;
 
 	public UserEntity() {
+	}
+
+	public byte getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(byte deleted) {
+		this.deleted = deleted;
+	}
+
+	public List<GroupChatEntity> getGroupChatsAdmin() {
+		return groupChatsAdmin;
+	}
+
+	public void setGroupChatsAdmin(List<GroupChatEntity> groupChatsAdmin) {
+		this.groupChatsAdmin = groupChatsAdmin;
+	}
+
+	public List<GroupChatEntity> getGroupChats() {
+		return groupChats;
+	}
+
+	public void setGroupChats(List<GroupChatEntity> groupChats) {
+		this.groupChats = groupChats;
 	}
 
 	public long getId() {

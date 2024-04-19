@@ -7,6 +7,7 @@ public class User {
     private long id;
 
     private byte active;
+    private byte deleted;
 
     private String email;
 
@@ -33,6 +34,14 @@ public class User {
     private List<Component> componentsWanted;
 
     public User() {}
+
+    public byte getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(byte deleted) {
+        this.deleted = deleted;
+    }
 
     @Override
     public boolean equals(Object o) {

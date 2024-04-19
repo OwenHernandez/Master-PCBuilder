@@ -218,7 +218,7 @@ const Home = () => {
     });
   }
   return (
-      <div style={{ width: "100%", height: "100%" }}>
+      <div style={{ width: "90vw", height: "100vh" }}>
         <Row>
           <Col xs={12} className="mb-4">
             <Row className="d-flex justify-content-around mt-3">

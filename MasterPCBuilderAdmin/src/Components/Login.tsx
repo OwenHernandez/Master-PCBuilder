@@ -56,8 +56,8 @@ const Login = (props: Props) => {
     }
     return (
         <div style={{width:"100vw",height:"100vh",display:"flex", justifyContent:"center" }}>
-            <Row style={{ width: "100vh",alignItems:"center" }}>
-                <Col>
+            <Row style={{ width: "20vw",alignItems:"center",  }} className="">
+                <Col style={{backgroundColor:"#f5f5f5", padding:"5%"}} className="rounded shadow-lg">
                     <h2>Login</h2>
                     <Form onSubmit={login}>
                         <Form.Group>
@@ -80,7 +80,7 @@ const Login = (props: Props) => {
                                 onChange={(event) => setPassword(event.target.value)}
                             />
                         </Form.Group>
-                        <Button variant="primary" type="submit" className="login-button">
+                        <Button variant="primary" type="submit" className="login-button mt-2">
                             Login
                         </Button>
                     </Form>

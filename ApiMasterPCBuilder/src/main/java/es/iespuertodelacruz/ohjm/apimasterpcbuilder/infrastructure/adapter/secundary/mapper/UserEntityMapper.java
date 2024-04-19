@@ -41,6 +41,7 @@ public class UserEntityMapper {
         res.setPassword(userEntity.getPassword());
         res.setRole(userEntity.getRole());
         res.setActive(userEntity.getActive());
+        res.setDeleted(userEntity.getDeleted());
         res.setEmail(userEntity.getEmail());
         res.setPicture(userEntity.getPicture());
         res.setHash(userEntity.getHash());
@@ -108,6 +109,7 @@ public class UserEntityMapper {
         res.setRole(user.getRole());
         res.setEmail(user.getEmail());
         res.setActive(user.getActive());
+        res.setDeleted(user.getDeleted());
         res.setHash(user.getHash());
         res.setPicture(user.getPicture());
         if (user.getComponentsCreated() != null && !user.getComponentsCreated().isEmpty()) {

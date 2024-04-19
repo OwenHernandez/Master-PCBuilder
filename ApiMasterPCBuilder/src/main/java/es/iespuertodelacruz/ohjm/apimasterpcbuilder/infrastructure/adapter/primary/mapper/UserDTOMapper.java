@@ -37,6 +37,7 @@ public class UserDTOMapper {
         userDTO.setPicture(user.getPicture());
         userDTO.setRole(user.getRole());
         userDTO.setActive(user.getActive()==1?true:false);
+        userDTO.setDeleted(user.getDeleted()==1?true:false);
         if (user.getComponentsWanted() != null && !user.getComponentsWanted().isEmpty()) {
             List<ComponentOutputDTO> componentsWanted = new ArrayList<>();
             for (Component c : user.getComponentsWanted()) {

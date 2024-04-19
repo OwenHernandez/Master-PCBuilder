@@ -12,7 +12,17 @@ public class UserDTO {
     private List<ComponentOutputDTO> componentsWanted;
     private String role;
     private boolean isActive;
+    private boolean isDeleted;
+
     public UserDTO() {
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
     }
 
     public boolean isActive() {
