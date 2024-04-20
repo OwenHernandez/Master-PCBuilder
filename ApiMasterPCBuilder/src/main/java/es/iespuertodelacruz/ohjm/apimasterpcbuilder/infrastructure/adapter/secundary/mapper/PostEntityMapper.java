@@ -22,12 +22,8 @@ public class PostEntityMapper {
         res.setTitle(postEntity.getTitle());
         res.setDescription(postEntity.getDescription());
         res.setImage(postEntity.getImage());
-        if (postEntity.getBuild() != null) {
-            res.setBuild(buildMapper.toDomain(postEntity.getBuild()));
-        }
-        if (postEntity.getUser() != null) {
-            res.setUser(userMapper.toDomain(postEntity.getUser(), new HashSet<Long>(), new HashSet<Long>(), "posts"));
-        }
+        res.setBuild(buildMapper.toDomain(postEntity.getBuild()));
+        res.setUser(userMapper.toDomain(postEntity.getUser(), new HashSet<Long>(), new HashSet<Long>(), "posts"));
         if (postEntity.getUsersWhoLiked() != null) {
             res.setUsersWhoLiked(new ArrayList<>());
             for (UserEntity userEntity : postEntity.getUsersWhoLiked()) {
@@ -45,12 +41,8 @@ public class PostEntityMapper {
         res.setTitle(post.getTitle());
         res.setDescription(post.getDescription());
         res.setImage(post.getImage());
-        if (post.getBuild() != null) {
-            res.setBuild(buildMapper.toPersistence(post.getBuild()));
-        }
-        if (post.getUser() != null) {
-            res.setUser(userMapper.toPersistence(post.getUser(), new HashSet<>(), new HashSet<>(), "posts"));
-        }
+        res.setBuild(buildMapper.toPersistence(post.getBuild()));
+        res.setUser(userMapper.toPersistence(post.getUser(), new HashSet<>(), new HashSet<>(), "posts"));
         if (post.getUsersWhoLiked() != null) {
             res.setUsersWhoLiked(new ArrayList<>());
             for (User user : post.getUsersWhoLiked()) {

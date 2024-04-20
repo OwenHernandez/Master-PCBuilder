@@ -40,7 +40,7 @@ public class MessageRestControllerV2 {
                 List<Message> byReceiverAndAuthor = messageService.findByReceiverAndAuthor(receiver, author);
                 return ResponseEntity.ok(byReceiverAndAuthor);
             }
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You can only see your messages");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You can only see your messages");
         } else if (topic != null) {
             List<Message> byTopic = messageService.findByTopic(topic);
             return ResponseEntity.ok(byTopic);

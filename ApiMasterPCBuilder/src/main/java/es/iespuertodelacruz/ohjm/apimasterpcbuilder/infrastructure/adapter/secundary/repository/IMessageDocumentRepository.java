@@ -14,4 +14,10 @@ public interface IMessageDocumentRepository extends MongoRepository<MessageDocum
     List<MessageDocument> findByReceiverAndAuthor(String receiver, String author);
 
     List<MessageDocument> findByTopic(String topic);
+
+    void deleteByAuthor(String author);
+
+    void deleteByReceiver(String receiver);
+
+    void deleteByTopic(String topic);
 }
