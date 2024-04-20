@@ -119,7 +119,7 @@ const ComponentsList = (props: Props) => {
                                         height:getIconSize(800),
                                         width: "40%"}}
                                     onPress={() => {
-                                        navigation.navigate("ComponentScreen", { comp: comp.item, wished})}
+                                        navigation.navigate("ComponentScreen", { comp: comp.item})}
 
                                 }>
                                     <Component comp={comp.item} />
