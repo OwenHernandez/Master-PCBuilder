@@ -37,7 +37,7 @@ public class BuildRestControllerV2 {
     @Autowired
     IComponentService componentService;
 
-    BuildDTOMapper buildDTOMapper = new BuildDTOMapper();
+    BuildDTOMapper mapper = new BuildDTOMapper();
 
     @Transactional
     @GetMapping
@@ -51,7 +51,7 @@ public class BuildRestControllerV2 {
             if (byUserId != null) {
                 List<BuildOutputDTO> res = new ArrayList<>();
                 for (Build b : byUserId) {
-                    BuildOutputDTO bdto = buildDTOMapper.toDTO(b);
+                    BuildOutputDTO bdto = mapper.toDTO(b);
                     res.add(bdto);
                 }
                 return ResponseEntity.ok(res);
@@ -75,7 +75,7 @@ public class BuildRestControllerV2 {
                 if (!buildInputDTO.getCategory().equals("Gaming") && !buildInputDTO.getCategory().equals("Work") && !buildInputDTO.getCategory().equals("Budget")) {
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The category must be Gaming, Work or Budget");
                 }
-                Build build = buildDTOMapper.toDomain(buildInputDTO);
+                Build build = mapper.toDomain(buildInputDTO);
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 Date date = new Date();
                 String dateStr = sdf.format(date);
@@ -101,7 +101,7 @@ public class BuildRestControllerV2 {
 
                 Build save = buildService.save(build);
                 if (save != null) {
-                    BuildOutputDTO outputDTO = buildDTOMapper.toDTO(save);
+                    BuildOutputDTO outputDTO = mapper.toDTO(save);
                     return ResponseEntity.ok(outputDTO);
                 } else {
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong");
@@ -162,7 +162,7 @@ public class BuildRestControllerV2 {
                         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The category must be Gaming, Work or Budget");
                     }
                     if (buildById.getUser().getId() == userByNick.getId()) {
-                        Build build = buildDTOMapper.toDomain(buildInputDTO);
+                        Build build = mapper.toDomain(buildInputDTO);
                         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                         Date date = new Date();
                         String dateStr = sdf.format(date);

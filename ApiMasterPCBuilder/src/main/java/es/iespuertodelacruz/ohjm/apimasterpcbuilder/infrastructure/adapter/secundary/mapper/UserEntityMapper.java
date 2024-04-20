@@ -110,8 +110,9 @@ public class UserEntityMapper {
         res.setActive(user.getActive());
         res.setHash(user.getHash());
         res.setPicture(user.getPicture());
+
+        res.setComponentsCreated(new ArrayList<>());
         if (user.getComponentsCreated() != null && !user.getComponentsCreated().isEmpty()) {
-            res.setComponentsCreated(new ArrayList<>());
             for (Component c : user.getComponentsCreated()) {
                 ComponentEntity ce = compMapper.toPersistence(c);
                 ce.setUser(res);
@@ -119,34 +120,29 @@ public class UserEntityMapper {
             }
         }
 
+        res.setComponentsWanted(new ArrayList<>());
         if (user.getComponentsWanted() != null) {
-            res.setComponentsWanted(new ArrayList<>());
             for (Component c : user.getComponentsWanted()) {
                 ComponentEntity ce = compMapper.toPersistence(c);
                 ce.setUser(res);
                 res.getComponentsWanted().add(ce);
             }
-        }else{
-            res.setComponentsWanted(new ArrayList<>());
-
         }
 
+        res.setFriends(new ArrayList<>());
         if (user.getFriends() != null && !user.getFriends().isEmpty()) {
-            res.setFriends(new ArrayList<>());
             for (User u : user.getFriends()) {
                 UserEntity ue = toPersistence(u, new HashSet<>(processedFriendsIds), new HashSet<>(processedBlockedUsersIds), "friends");
                 res.getFriends().add(ue);
             }
         }
 
+        res.setBlockedUsers(new ArrayList<>());
         if (user.getBlockedUsers() != null && !user.getBlockedUsers().isEmpty()) {
-            res.setBlockedUsers(new ArrayList<>());
             for (User u : user.getBlockedUsers()) {
                 UserEntity ue = toPersistence(u, new HashSet<>(processedFriendsIds), new HashSet<>(processedBlockedUsersIds), "blockedUsers");
                 res.getBlockedUsers().add(ue);
             }
-        }else{
-            res.setBlockedUsers(new ArrayList<>());
         }
 
         return res;

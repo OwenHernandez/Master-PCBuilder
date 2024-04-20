@@ -80,6 +80,7 @@ class UserDTOMapperTest {
         user.setFriends(Collections.singletonList(friend));
 
         Component component = new Component();
+        user.setComponentsWanted(Collections.singletonList(component));
         ComponentOutputDTO componentDTO = new ComponentOutputDTO();
         when(compMapper.toDTO(any(Component.class))).thenReturn(componentDTO);
 

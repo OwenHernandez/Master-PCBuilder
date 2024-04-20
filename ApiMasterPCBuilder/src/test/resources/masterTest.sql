@@ -1,5 +1,6 @@
 SET MODE MYSQL;
 
+DROP TABLE IF EXISTS `price_history`;
 DROP TABLE IF EXISTS `wishlist`;
 DROP TABLE IF EXISTS `likes`;
 DROP TABLE IF EXISTS `builds_components`;
@@ -152,6 +153,18 @@ CREATE TABLE `wishlist`
     PRIMARY KEY (`ID`),
     CONSTRAINT `FK_COMPONENT_WISHLIST` FOREIGN KEY (`COMPONENT_ID`) REFERENCES `components` (`ID`),
     CONSTRAINT `FK_USER_WISHLIST` FOREIGN KEY (`USER_ID`) REFERENCES `users` (`ID`)
+);
+
+CREATE TABLE `price_history`
+(
+    `ID`           int            NOT NULL AUTO_INCREMENT,
+    `COMPONENT_ID` int            NOT NULL,
+    `PRICE`        decimal(10, 2) NOT NULL,
+    `AMAZON_PRICE` decimal(10, 2) NOT NULL,
+    `EBAY_PRICE`   decimal(10, 2) NOT NULL,
+    `DATE`         bigint         NOT NULL,
+    PRIMARY KEY (`ID`),
+    CONSTRAINT `FK_COMPONENT_PRICE_HISTORY` FOREIGN KEY (`COMPONENT_ID`) REFERENCES `components` (`ID`)
 );
 
 INSERT INTO `users`

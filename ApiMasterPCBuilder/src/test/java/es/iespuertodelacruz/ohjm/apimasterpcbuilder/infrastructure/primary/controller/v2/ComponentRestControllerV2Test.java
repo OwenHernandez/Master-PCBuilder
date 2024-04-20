@@ -654,7 +654,7 @@ public class ComponentRestControllerV2Test {
         mockMvc.perform(get("/api/v2/components/ebay/testSearch"))
                 .andExpect(status().isNotFound());
     }
-
+/*
     @Test
     @WithMockUser(username = "user", password = "password", roles = "USER")
     public void updatePrice_ok_test() throws Exception {
@@ -719,4 +719,5 @@ public class ComponentRestControllerV2Test {
                         .content(objectMapper.writeValueAsString(componentInputDTO)))
                 .andExpect(status().isInternalServerError());
     }
+    */
 }

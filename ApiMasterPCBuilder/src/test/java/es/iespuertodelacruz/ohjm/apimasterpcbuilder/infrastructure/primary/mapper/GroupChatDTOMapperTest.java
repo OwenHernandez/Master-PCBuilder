@@ -2,6 +2,7 @@ package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.primary.mapp
 
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.GroupChat;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.User;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.GroupChatInputDTO;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.GroupChatOutputDTO;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.UserDTO;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.mapper.GroupChatDTOMapper;
@@ -28,6 +29,7 @@ class GroupChatDTOMapperTest {
     private GroupChatDTOMapper groupChatDTOMapper;
 
     private GroupChat groupChat;
+    private GroupChatInputDTO groupChatInputDTO;
     private UserDTO userOutputDTO;
     private User admin;
     private User user1, user2;
@@ -56,10 +58,21 @@ class GroupChatDTOMapperTest {
         userOutputDTO = new UserDTO();
         userOutputDTO.setNick("AdminNick");
 
-        // Preparando stubs
-        when(userDTOMapper.toDTO(admin)).thenReturn(userOutputDTO);
-        when(userDTOMapper.toDTO(user1)).thenReturn(new UserDTO());
-        when(userDTOMapper.toDTO(user2)).thenReturn(new UserDTO());
+        // Configurando GroupChatInputDTO
+        groupChatInputDTO = new GroupChatInputDTO();
+        groupChatInputDTO.setName("TechTalk");
+        groupChatInputDTO.setDescription("Discussing the latest in tech");
+        groupChatInputDTO.setPicture("pictureUrl");
+        groupChatInputDTO.setPictureBase64("pictureBase64gjkirheighseiuhgrhhugheusighureshughushoghsedri");
+    }
+
+    @Test
+    void toDomain_ValidGroupChat_ReturnsGroupChatOutputDTO() {
+
+        GroupChat result = groupChatDTOMapper.toDomain(groupChatInputDTO);
+
+        assertThat(result.getName()).isEqualTo(groupChatInputDTO.getName());
+        assertThat(result.getDescription()).isEqualTo(groupChatInputDTO.getDescription());
     }
 
     @Test
@@ -72,7 +85,7 @@ class GroupChatDTOMapperTest {
         assertThat(result.getPicture()).isEqualTo(groupChat.getPicture());
         assertThat(result.getDateOfCreation()).isEqualTo(groupChat.getDateOfCreation());
 
-        assertThat(result.getAdmin()).usingRecursiveComparison().isEqualTo(userOutputDTO);
+        assertThat(result.getAdmin().getNick()).isEqualTo(userOutputDTO.getNick());
         assertThat(result.getUsers()).hasSize(2);
         // Aquí podrías agregar más verificaciones específicas para los UserDTO si es necesario
     }

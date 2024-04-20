@@ -4,8 +4,12 @@ import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Seller;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.SellerDTO;
 
 public class SellerDTOMapper {
+
     public Seller toDomain(SellerDTO sellerDTO) {
         Seller seller = new Seller();
+        if (sellerDTO.getId() != null) {
+            seller.setId(sellerDTO.getId());
+        }
         seller.setName(sellerDTO.getName());
         seller.setImage(sellerDTO.getImage());
 

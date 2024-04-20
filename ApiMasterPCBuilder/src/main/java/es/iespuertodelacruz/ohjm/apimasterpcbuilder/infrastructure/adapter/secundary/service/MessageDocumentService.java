@@ -45,8 +45,10 @@ public class MessageDocumentService implements IMessageRepository {
                 MessageDocument save = repo.save(messageDocument);
                 return mapper.toDomain(save);
             }
+            System.out.println("Message is null");
             return null;
-        } catch (RuntimeException | ParseException e) {
+        } catch (ParseException e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -68,12 +70,8 @@ public class MessageDocumentService implements IMessageRepository {
     @Override
     @Transactional
     public boolean deleteById(String id) {
-        try {
-            repo.deleteById(id);
-            return true;
-        } catch (RuntimeException e) {
-            return false;
-        }
+        repo.deleteById(id);
+        return true;
     }
 
     @Override
@@ -84,7 +82,7 @@ public class MessageDocumentService implements IMessageRepository {
             repo.save(messageDocument);
 
             return true;
-        } catch (RuntimeException | ParseException e) {
+        } catch (ParseException e) {
             return false;
         }
     }

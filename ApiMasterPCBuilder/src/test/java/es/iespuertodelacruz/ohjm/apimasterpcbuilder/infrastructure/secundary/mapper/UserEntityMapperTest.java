@@ -159,9 +159,9 @@ public class UserEntityMapperTest {
         assertEquals(user.getEmail(), userEntity.getEmail());
         assertEquals(user.getPicture(), userEntity.getPicture());
         assertEquals(user.getHash(), userEntity.getHash());
-        assertNull(userEntity.getComponentsCreated());
-        assertNull(userEntity.getComponentsWanted());
-        assertNull(userEntity.getFriends());
-        assertNull(userEntity.getBlockedUsers());
+        assertNotNull(userEntity.getComponentsCreated());
+        assertNotNull(userEntity.getComponentsWanted());
+        assertNotNull(userEntity.getFriends());
+        assertNotNull(userEntity.getBlockedUsers());
     }
 }

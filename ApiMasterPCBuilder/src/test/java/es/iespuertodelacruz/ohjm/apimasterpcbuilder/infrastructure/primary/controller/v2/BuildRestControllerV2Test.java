@@ -77,6 +77,10 @@ public class BuildRestControllerV2Test {
         build.setId(1L);
         build.setName("Test Build");
 
+        User user = new User();
+        user.setNick("user");
+        build.setUser(user);
+
         List<Build> builds = Arrays.asList(build);
 
         when(userService.findByNick(any(String.class))).thenReturn(new User());
@@ -122,6 +126,10 @@ public class BuildRestControllerV2Test {
         Build build = new Build();
         build.setId(1L);
         build.setName("Test Build");
+
+        User user = new User();
+        user.setNick("user");
+        build.setUser(user);
 
         when(userService.findByNick(any(String.class))).thenReturn(new User());
 

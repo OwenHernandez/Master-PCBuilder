@@ -4,7 +4,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "MESSAGES")
 public class MessageDocument {
-
+    private String id;
     private String author;
     private String receiver;
     private String content;
@@ -12,6 +12,14 @@ public class MessageDocument {
     private long date;
 
     public MessageDocument() {
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getAuthor() {

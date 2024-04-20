@@ -42,7 +42,7 @@ public class PostRestControllerV2 {
     @Autowired
     FileStorageService storageService;
 
-    PostDTOMapper postDTOMapper = new PostDTOMapper();
+    PostDTOMapper mapper = new PostDTOMapper();
 
     @GetMapping
     public ResponseEntity<?> findAll(@RequestParam(value = "buildId", required = false) Long buildId, @RequestParam(value = "userId", required = false) Long userId) {
@@ -50,19 +50,19 @@ public class PostRestControllerV2 {
         if (buildId != null) {
             List<Post> byBuildId = service.findByBuildId(buildId);
             for (Post post : byBuildId) {
-                PostOutputDTO outputDTO = postDTOMapper.toDTO(post);
+                PostOutputDTO outputDTO = mapper.toDTO(post);
                 res.add(outputDTO);
             }
         } else if (userId != null) {
             List<Post> byUserId = service.findByUserId(userId);
             for (Post post : byUserId) {
-                PostOutputDTO outputDTO = postDTOMapper.toDTO(post);
+                PostOutputDTO outputDTO = mapper.toDTO(post);
                 res.add(outputDTO);
             }
         } else {
             List<Post> all = service.findAll();
             for (Post post : all) {
-                PostOutputDTO outputDTO = postDTOMapper.toDTO(post);
+                PostOutputDTO outputDTO = mapper.toDTO(post);
                 res.add(outputDTO);
             }
         }
@@ -78,7 +78,7 @@ public class PostRestControllerV2 {
             User byNick = userService.findByNick(username);
 
             if (byNick != null) {
-                Post post = postDTOMapper.toDomain(inputDTO);
+                Post post = mapper.toDomain(inputDTO);
                 post.setUser(byNick);
                 Build build = buildService.findById(inputDTO.getBuildId());
                 if (build != null) {
@@ -92,7 +92,7 @@ public class PostRestControllerV2 {
                     post.setBuild(build);
                     Post save = service.save(post);
                     if (save != null) {
-                        return ResponseEntity.ok(postDTOMapper.toDTO(save));
+                        return ResponseEntity.ok(mapper.toDTO(save));
                     } else {
                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong");
                     }
@@ -154,7 +154,7 @@ public class PostRestControllerV2 {
     public ResponseEntity<?> findById(@PathVariable long id) {
         Post post = service.findById(id);
         if (post != null) {
-            return ResponseEntity.ok(postDTOMapper.toDTO(post));
+            return ResponseEntity.ok(mapper.toDTO(post));
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Post not found");
         }
@@ -206,7 +206,7 @@ public class PostRestControllerV2 {
                 Post postById = service.findById(id);
                 if (postById != null) {
                     if (postById.getUser().getId() == userByNick.getId()) {
-                        Post post = postDTOMapper.toDomain(postInputDTO);
+                        Post post = mapper.toDomain(postInputDTO);
                         post.setId(id);
                         post.setUser(userByNick);
                         Build build = buildService.findById(postInputDTO.getBuildId());

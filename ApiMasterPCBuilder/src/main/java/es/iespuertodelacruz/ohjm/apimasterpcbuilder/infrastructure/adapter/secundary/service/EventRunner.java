@@ -15,7 +15,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.math.BigInteger;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -57,11 +59,11 @@ public class EventRunner {
                 priceHistory.setAmazonPrice(savedComponent.getAmazon_price());
                 priceHistory.setEbayPrice(savedComponent.getEbay_price());
                 priceHistory.setPrice(savedComponent.getPrice());
-                BigInteger nowUnixTimestamp = BigInteger.valueOf(Instant.now().getEpochSecond());
-                priceHistory.setDate(nowUnixTimestamp);
-                priceHistory.setComponent(savedComponent);
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                Date date = new Date(Instant.now().getEpochSecond());
+                priceHistory.setDate(sdf.format(date));
 
-                priceHistoryService.saveManual(priceHistory.getAmazonPrice(), savedComponent.getId(), priceHistory.getDate().longValue(), priceHistory.getEbayPrice(), priceHistory.getPrice());
+                priceHistoryService.saveManual(priceHistory.getAmazonPrice(), savedComponent.getId(), Instant.now().getEpochSecond(), priceHistory.getEbayPrice(), priceHistory.getPrice());
                 savedComponent.getPriceHistories().add(priceHistory);
                 componentService.save(savedComponent);
             }catch (Exception e){

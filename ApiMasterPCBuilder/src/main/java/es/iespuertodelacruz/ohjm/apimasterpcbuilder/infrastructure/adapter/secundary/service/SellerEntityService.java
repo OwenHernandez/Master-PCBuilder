@@ -38,16 +38,12 @@ public class SellerEntityService implements ISellerRepository {
     @Override
     @Transactional
     public Seller save(Seller seller) {
-        try {
-            if (seller != null) {
-                SellerEntity sellerEntity = mapper.toPersistence(seller);
-                SellerEntity save = repo.save(sellerEntity);
-                return mapper.toDomain(save);
-            }
-            return null;
-        } catch (RuntimeException e) {
-            return null;
+        if (seller != null) {
+            SellerEntity sellerEntity = mapper.toPersistence(seller);
+            SellerEntity save = repo.save(sellerEntity);
+            return mapper.toDomain(save);
         }
+        return null;
     }
 
     @Override
@@ -67,28 +63,18 @@ public class SellerEntityService implements ISellerRepository {
     @Override
     @Transactional
     public boolean deleteById(long id) {
-        try {//I will need to change this once the Component class is done
-            repo.deleteById(id);
-            return true;
-        } catch (RuntimeException e) {
-            return false;
-        }
+        repo.deleteById(id);
+        return true;
     }
 
     @Override
     @Transactional
     public boolean update(Seller seller) {
-        try {
-            SellerEntity sellerEntity = mapper.toPersistence(seller);
-            SellerEntity save = repo.save(sellerEntity);
+        repo.findById(seller.getId()).orElseThrow(() -> new RuntimeException("Seller not found"));
+        SellerEntity sellerEntity = mapper.toPersistence(seller);
+        repo.save(sellerEntity);
 
-            if (save != null)
-                return true;
-            else
-                return false;
-        } catch (RuntimeException e) {
-            return false;
-        }
+        return true;
     }
 
     @Override

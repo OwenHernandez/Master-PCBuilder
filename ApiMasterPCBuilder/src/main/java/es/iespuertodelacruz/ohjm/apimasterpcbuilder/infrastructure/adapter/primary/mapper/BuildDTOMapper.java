@@ -11,9 +11,18 @@ import java.util.List;
 
 public class BuildDTOMapper {
 
-    ComponentDTOMapper componentDTOMapper = new ComponentDTOMapper();
+    ComponentDTOMapper mapper = new ComponentDTOMapper();
 
-    public BuildOutputDTO toDTO(Build build) {
+    public Build toDomain(BuildInputDTO buildInputDTO) {
+        Build build = new Build();
+        build.setName(buildInputDTO.getName());
+        build.setNotes(buildInputDTO.getNotes());
+        build.setCategory(buildInputDTO.getCategory());
+
+        return build;
+    }
+
+    public BuildOutputDTO  toDTO(Build build) {
         BuildOutputDTO buildOutputDTO = new BuildOutputDTO();
         buildOutputDTO.setId(build.getId());
         buildOutputDTO.setName(build.getName());
@@ -27,7 +36,7 @@ public class BuildDTOMapper {
                 bcDTO.setDateCreated(bc.getDateCreated());
                 bcDTO.setPriceAtTheTime(bc.getPriceAtTheTime());
                 if (bc.getComponent() != null) {
-                    bcDTO.setComponent(componentDTOMapper.toDTO(bc.getComponent()));
+                    bcDTO.setComponent(mapper.toDTO(bc.getComponent()));
                 }
                 bcDTOList.add(bcDTO);
             }
@@ -36,14 +45,5 @@ public class BuildDTOMapper {
         buildOutputDTO.setUserNick(build.getUser().getNick());
 
         return buildOutputDTO;
-    }
-
-    public Build toDomain(BuildInputDTO buildInputDTO) {
-        Build build = new Build();
-        build.setName(buildInputDTO.getName());
-        build.setNotes(buildInputDTO.getNotes());
-        build.setCategory(buildInputDTO.getCategory());
-
-        return build;
     }
 }
