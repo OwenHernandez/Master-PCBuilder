@@ -46,13 +46,4 @@ public class BuildDTOMapper {
 
         return buildOutputDTO;
     }
-
-    public Build toDomain(BuildInputDTO buildInputDTO) {
-        Build build = new Build();
-        build.setName(buildInputDTO.getName());
-        build.setNotes(buildInputDTO.getNotes());
-        build.setCategory(buildInputDTO.getCategory());
-
-        return build;
-    }
 }

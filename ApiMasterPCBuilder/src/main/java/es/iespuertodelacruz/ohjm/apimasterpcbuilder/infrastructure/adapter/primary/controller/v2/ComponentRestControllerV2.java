@@ -272,7 +272,7 @@ public class ComponentRestControllerV2 {
     public ResponseEntity<?> searchEbay(@PathVariable("search") String search) {
         if (search != null) {
             List<Component> components = componentService.searchEbay(search);
-            if (!components.isEmpty()) {
+            if (components != null && !components.isEmpty()) {
                 return ResponseEntity.ok(components);
             }
         } else {
