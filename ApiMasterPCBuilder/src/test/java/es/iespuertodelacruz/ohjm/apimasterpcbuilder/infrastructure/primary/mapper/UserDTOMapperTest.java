@@ -8,6 +8,7 @@ import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Component;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.User;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.ComponentOutputDTO;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.UserDTO;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.UserV3DTO;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.mapper.ComponentDTOMapper;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.mapper.UserDTOMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,6 +42,8 @@ class UserDTOMapperTest {
         user.setPicture("user_picture_url");
         user.setFriends(Collections.emptyList()); // Inicializa con listas vacías
         user.setComponentsWanted(Collections.emptyList());
+        user.setActive((byte) 1);
+        user.setRole("ROLE_USER");
 
         userDTO = new UserDTO();
         userDTO.setId(1L);
@@ -118,6 +121,60 @@ class UserDTOMapperTest {
         user.setPicture(null);
 
         UserDTO result = userDTOMapper.toDTO(user);
+
+        assertThat(result.getPicture()).isNull();
+    }
+
+    @Test
+    void toDTOV3_ValidUser_ReturnsUserV3DTO() {
+        User friend = new User();
+        friend.setId(2L);
+        friend.setNick("FriendNick");
+        friend.setEmail("friend@example.com");
+        friend.setPicture("friend_picture_url");
+        user.setFriends(Collections.singletonList(friend));
+
+        Component component = new Component();
+        user.setComponentsWanted(Collections.singletonList(component));
+        ComponentOutputDTO componentDTO = new ComponentOutputDTO();
+        when(compMapper.toDTO(any(Component.class))).thenReturn(componentDTO);
+
+        UserV3DTO result = userDTOMapper.toV3DTO(user);
+
+        assertThat(result.getId()).isEqualTo(user.getId());
+        assertThat(result.getNick()).isEqualTo(user.getNick());
+        assertThat(result.getEmail()).isEqualTo(user.getEmail());
+        assertThat(result.getPicture()).isEqualTo(user.getPicture());
+        assertThat(result.getFriends()).hasSize(1);
+        assertThat(result.getFriends().get(0).getNick()).isEqualTo("FriendNick");
+        assertThat(result.getComponentsWanted()).containsExactly(componentDTO);
+        assertThat(result.getActive()).isEqualTo(user.getActive());
+        assertThat(result.getRole()).isEqualTo(user.getRole());
+    }
+
+    @Test
+    void toDTOV3_WithNullFriendsList_ShouldHandleGracefully() {
+        user.setFriends(null);
+
+        UserV3DTO result = userDTOMapper.toV3DTO(user);
+
+        assertThat(result.getFriends()).isEmpty();
+    }
+
+    @Test
+    void toDTOV3_WithEmptyComponentsWantedList_ReturnsUserDTOWithEmptyList() {
+        user.setComponentsWanted(Collections.emptyList());
+
+        UserV3DTO result = userDTOMapper.toV3DTO(user);
+
+        assertThat(result.getComponentsWanted()).isEmpty();
+    }
+
+    @Test
+    void toDTOV3_WhenPictureIsNull_ShouldHandleGracefully() {
+        user.setPicture(null);
+
+        UserV3DTO result = userDTOMapper.toV3DTO(user);
 
         assertThat(result.getPicture()).isNull();
     }
