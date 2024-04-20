@@ -46,7 +46,7 @@ export type RootStackParamList = {
     Chat: { friend: IUserType },
     AdminChat: undefined,
     OtherUserProfile: { userSelected: IUserType },
-    ComponentScreen: { comp: IComponentType,wished:boolean },
+    ComponentScreen: { comp: IComponentType },
     EditComponent: { comp: IComponentType },
     "Group List": { groups?: IGroupChatType[] },
     GroupChat: { group: IGroupChatType },

@@ -18,7 +18,6 @@ public class PostDTOMapper {
     public Post toDomain(PostInputDTO inputDTO) {
         Post post = new Post();
         post.setDescription(inputDTO.getDescription());
-        post.setImage(inputDTO.getImage());
         post.setTitle(inputDTO.getTitle());
         return post;
     }

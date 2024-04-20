@@ -654,7 +654,8 @@ public class ComponentRestControllerV2Test {
         mockMvc.perform(get("/api/v2/components/ebay/testSearch"))
                 .andExpect(status().isNotFound());
     }
-/*
+
+    /*
     @Test
     @WithMockUser(username = "user", password = "password", roles = "USER")
     public void updatePrice_ok_test() throws Exception {
@@ -680,7 +681,7 @@ public class ComponentRestControllerV2Test {
     @WithMockUser(username = "user", password = "password", roles = "USER")
     public void updatePrice_badRequest_test() throws Exception {
 
-        mockMvc.perform(put("/api/v2/components/price/null")
+        mockMvc.perform(put("/api/v2/components/price/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(null)))
                 .andExpect(status().isBadRequest());

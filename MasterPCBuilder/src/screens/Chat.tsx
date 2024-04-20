@@ -146,7 +146,7 @@ const Chat = (props: Props) => {
                 let newMsg: IMsgType = {
                     author: msg.author,
                     receiver: msg.receiver,
-                    msg: msg.content,
+                    content: msg.content,
                     date: msg.date
                 }
                 setMsgs((msgs) => [newMsg, ...msgs]);
@@ -271,7 +271,7 @@ const Chat = (props: Props) => {
                                             margin: "2%",
                                             maxWidth: "90%"
                                         }}>
-                                            <Text style={{fontSize: getFontSize(15), color: "white"}}>{msg.item.msg}</Text>
+                                            <Text style={{fontSize: getFontSize(15), color: "white"}}>{msg.item.content}</Text>
                                         </View>
                                     </View>
                                 </View>
@@ -291,7 +291,7 @@ const Chat = (props: Props) => {
                                             margin: "2%",
                                             maxWidth: "90%"
                                         }}>
-                                            <Text style={{fontSize: getFontSize(15), color: "white"}}>{msg.item.msg}</Text>
+                                            <Text style={{fontSize: getFontSize(15), color: "white"}}>{msg.item.content}</Text>
                                         </View>
                                     </View>
                                 </View>
