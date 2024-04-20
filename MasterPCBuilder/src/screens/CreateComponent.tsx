@@ -88,22 +88,25 @@ const CreateComponent = (props: Props) => {
 
     async function createComponent() {
         if (!isNaN(Number(price))) {
+            let amazonPrice = 0;
+            let ebayPrice = 0;
             async function getAmazonPrice(){
                 try {
-                    const response = await axios.get(Globals.IP_HTTP + "/api/v2/components/searchAmazon/" + name);
-                    console.log(response.data[0].amazon_price)
-                    setAmazon_price(parseFloat(response.data[0].amazon_price));
-                    console.log(amazon_price)
+                    const response = await axios.get(Globals.IP_HTTP + "/api/v2/components/amazon/" + name);
+                    let stringAmazon:string= response.data[0].price;
+
+                    stringAmazon=stringAmazon.replace("$","");
+                    amazonPrice = parseFloat(stringAmazon);
                 } catch (err) {
                     console.log(err);
                 }
             }
             async function getEbayPrice(){
                 try {
-                    const response = await axios.get(Globals.IP_HTTP + "/api/v2/components/searchEbay/" + name);
-                    console.log(response.data[1].ebay_price)
-                    setEbay_price(parseFloat(response.data[1].ebay_price));
-                    console.log(ebay_price)
+                    const response = await axios.get(Globals.IP_HTTP + "/api/v2/components/ebay/" + name);
+                    let stringEbay:string= response.data[1].price;
+                    stringEbay=stringEbay.replace("$","");
+                    ebayPrice = parseFloat(stringEbay);
                 } catch (err) {
                     console.log(err);
                 }

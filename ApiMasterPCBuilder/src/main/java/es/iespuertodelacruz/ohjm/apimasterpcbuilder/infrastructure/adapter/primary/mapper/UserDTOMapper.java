@@ -4,28 +4,28 @@ import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Component;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.User;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.ComponentOutputDTO;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.UserDTO;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.UserV3DTO;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class UserDTOMapper {
 
-    ComponentOutputDTOMapper compMapper = new ComponentOutputDTOMapper();
+    ComponentDTOMapper compMapper = new ComponentDTOMapper();
+
     public User toDomain(UserDTO userDTO) {
         User user = new User();
         user.setId(userDTO.getId());
         user.setNick(userDTO.getNick());
         user.setEmail(userDTO.getEmail());
         user.setPicture(userDTO.getPicture());
-        List<User> friends = null;
+        user.setFriends(new ArrayList<>());
         if (userDTO.getFriends() != null && !userDTO.getFriends().isEmpty()) {
-            friends = new ArrayList<>();
             for (UserDTO uDTO : userDTO.getFriends()) {
                 User u = toDomain(uDTO);
-                friends.add(u);
+                user.getFriends().add(u);
             }
         }
-        user.setFriends(friends);
         return user;
     }
 
@@ -48,26 +48,60 @@ public class UserDTOMapper {
         }else {
             userDTO.setComponentsWanted(new ArrayList<>());
         }
+        userDTO.setFriends(new ArrayList<>());
         if (user.getFriends() != null && !user.getFriends().isEmpty()) {
-            userDTO.setFriends(new ArrayList<>());
             for (User u : user.getFriends()) {
                 u.setFriends(null);
                 UserDTO uDTO = toDTO(u);
                 userDTO.getFriends().add(uDTO);
             }
-        }else{
-            userDTO.setFriends(new ArrayList<>());
         }
+        userDTO.setBlockedUsers(new ArrayList<>());
         if (user.getBlockedUsers() != null && !user.getBlockedUsers().isEmpty()) {
-            userDTO.setBlockedUsers(new ArrayList<>());
             for (User u : user.getBlockedUsers()) {
                 u.setBlockedUsers(null);
                 UserDTO uDTO = toDTO(u);
                 userDTO.getBlockedUsers().add(uDTO);
             }
-        }else {
-            userDTO.setBlockedUsers(new ArrayList<>());
         }
+        return userDTO;
+    }
+
+    public UserV3DTO toV3DTO(User user) {
+        UserV3DTO userDTO = new UserV3DTO();
+        userDTO.setId(user.getId());
+        userDTO.setNick(user.getNick());
+        userDTO.setEmail(user.getEmail());
+        userDTO.setPicture(user.getPicture());
+        if (user.getComponentsWanted() != null && !user.getComponentsWanted().isEmpty()) {
+            List<ComponentOutputDTO> componentsWanted = new ArrayList<>();
+            for (Component c : user.getComponentsWanted()) {
+                ComponentOutputDTO cDTO = compMapper.toDTO(c);
+
+                componentsWanted.add(cDTO);
+            }
+            userDTO.setComponentsWanted(componentsWanted);
+        }else {
+            userDTO.setComponentsWanted(new ArrayList<>());
+        }
+        userDTO.setFriends(new ArrayList<>());
+        if (user.getFriends() != null && !user.getFriends().isEmpty()) {
+            for (User u : user.getFriends()) {
+                u.setFriends(null);
+                UserDTO uDTO = toDTO(u);
+                userDTO.getFriends().add(uDTO);
+            }
+        }
+        userDTO.setBlockedUsers(new ArrayList<>());
+        if (user.getBlockedUsers() != null && !user.getBlockedUsers().isEmpty()) {
+            for (User u : user.getBlockedUsers()) {
+                u.setBlockedUsers(null);
+                UserDTO uDTO = toDTO(u);
+                userDTO.getBlockedUsers().add(uDTO);
+            }
+        }
+        userDTO.setActive(user.getActive());
+        userDTO.setRole(user.getRole());
         return userDTO;
     }
 }

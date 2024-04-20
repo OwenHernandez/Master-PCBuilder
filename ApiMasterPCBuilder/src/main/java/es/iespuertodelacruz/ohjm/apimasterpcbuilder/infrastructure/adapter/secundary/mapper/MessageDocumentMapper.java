@@ -11,6 +11,9 @@ public class MessageDocumentMapper {
 
     public Message toDomain(MessageDocument messageDocument) {
         Message message = new Message();
+        if (messageDocument != null && messageDocument.getId() != null && !messageDocument.getId().isEmpty()){
+            message.setId(messageDocument.getId());
+        }
         message.setAuthor(messageDocument.getAuthor());
         message.setReceiver(messageDocument.getReceiver());
         message.setContent(messageDocument.getContent());
@@ -22,6 +25,7 @@ public class MessageDocumentMapper {
 
     public MessageDocument toPersistence(Message message) throws ParseException {
         MessageDocument messageDocument = new MessageDocument();
+        messageDocument.setId(message.getId());
         messageDocument.setAuthor(message.getAuthor());
         messageDocument.setReceiver(message.getReceiver());
         messageDocument.setContent(message.getContent());

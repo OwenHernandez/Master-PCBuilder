@@ -1,0 +1,219 @@
+type Query {
+    # Seller
+    sellers: [Seller]!
+    seller(id: Int!): Seller!
+
+    # Component
+    components: [Component]!
+    component(id: Int!): Component!
+
+    # Build
+    builds: [Build]!
+    build(id: Int!): Build!
+
+    # User
+    users: [User]!
+    user(id: Int!): User!
+
+    # Post
+    posts: [Post]!
+    post(id: Int!): Post!
+
+    # GroupChat
+    groupChats: [GroupChat]!
+    groupChat(id: Int!): GroupChat!
+
+    # Message
+    messages: [Message]!
+    message(id: String!): Message!
+    byTopic(topic: String!): [Message]!
+    byReceiverAndAuthor(author: String!, receiver: String!): [Message]!
+}
+
+type Mutation {
+    # Seller
+    saveSeller(seller: SellerDTO!): Seller!
+    updateSeller(id: Int!, seller: SellerDTO!): Seller!
+    deleteSeller(id: Int!): Boolean!
+
+    # Component
+    saveComponent(component: ComponentDTO!): Component!
+    updateComponent(id: Int!, component: ComponentDTO!): Component!
+    deleteComponent(id: Int!): Boolean!
+
+    # Build
+    saveBuild(build: BuildDTO!): Build!
+    updateBuild(id: Int!, build: BuildDTO!): Build!
+    deleteBuild(id: Int!): Boolean!
+
+    # User
+    saveUser(user: UserSaveDTO!): User!
+    updateUser(id: Int!, user: UserUpdateDTO!): User!
+    deleteUser(id: Int!): Boolean!
+
+    # Post
+    savePost(post: PostDTO!): Post!
+    updatePost(id: Int!, post: PostDTO!): Post!
+    deletePost(id: Int!): Boolean!
+
+    # GroupChat
+    saveGroupChat(groupChat: GroupChatDTO!): GroupChat!
+    updateGroupChat(id: Int!, groupChat: GroupChatDTO!): GroupChat!
+    deleteGroupChat(id: Int!): Boolean!
+    addRemoveUserGroupChat(groupId: Int!, userId: Int!): GroupChat!
+    addRemoveAdminGroupChat(groupId: Int!, userId: Int!): GroupChat!
+
+    # Message
+    deleteMessage(id: String!): Boolean!
+}
+
+# Seller
+type Seller {
+    id: Int
+    name: String
+    image: String
+}
+
+input SellerDTO {
+    name: String
+    image: String
+}
+
+# PriceHistory
+type PriceHistory {
+    id: Int
+    price: Float
+    amazonPrice: Float
+    ebayPrice: Float
+    date: String
+}
+
+# Component
+type Component {
+    id: Int
+    description: String
+    image: String
+    name: String
+    type: String
+    price: Float
+    amazon_price: Float
+    ebay_price: Float
+    sellerName: String
+    userNick: String
+    priceHistory: [PriceHistory]
+}
+
+input ComponentDTO {
+    name: String
+    description: String
+    image: String
+    image64: String
+    type: String
+    price: Float
+    amazon_price: Float
+    ebay_price: Float
+    sellerName: String
+}
+
+# BuildComponent
+type BuildComponent {
+    dateCreated: String
+    component: Component
+    priceAtTheTime: Float
+}
+
+# Build
+type Build {
+    id: Int
+    name: String
+    notes: String
+    category: String
+    userNick: String
+    totalPrice: Float
+    buildsComponents: [BuildComponent]
+}
+
+input BuildDTO {
+    name: String
+    notes: String
+    category: String
+    componentsIds: [Int]
+}
+
+# User
+type User {
+    id: Int
+    nick: String
+    email: String
+    picture: String
+    role: String
+    active: Boolean
+    friends: [User]
+    blockedUsers: [User]
+    componentsWanted: [Component]
+}
+
+input UserSaveDTO {
+    nick: String
+    email: String
+    password: String
+    picture: String
+    pictureBase64: String
+    role: String
+    active: Int
+}
+
+input UserUpdateDTO {
+    nick: String
+    email: String
+    picture: String
+    pictureBase64: String
+    role: String
+    active: Int
+}
+
+# Post
+type Post {
+    id: Int
+    title: String
+    description: String
+    image: String
+    user: User
+    build: Build
+    usersWhoLiked: [User]
+}
+
+input PostDTO {
+    title: String
+    description: String
+    image: String
+    image64: String
+    buildId: Int
+}
+
+# GroupChat
+type GroupChat {
+    id: Int
+    name: String
+    description: String
+    picture: String
+    dateOfCreation: String
+    admin: User
+    users: [User]
+}
+
+input GroupChatDTO {
+    name: String
+    description: String
+    picture: String
+    pictureBase64: String
+}
+
+# Message
+type Message {
+    content: String
+    date: String
+    author: String
+    receiver: String
+    topic: String
+}

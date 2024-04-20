@@ -5,6 +5,7 @@ import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.secundary.IGroup
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.mapper.GroupChatEntityMapper;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.GroupChatEntity;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.repository.IGroupChatEntityRepository;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.repository.IMessageDocumentRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,9 @@ public class GroupChatEntityService implements IGroupChatRepository {
     @Autowired
     IGroupChatEntityRepository repo;
 
+    @Autowired
+    private IMessageDocumentRepository messageRepo;
+
     private final GroupChatEntityMapper mapper = new GroupChatEntityMapper();
 
     @Override
@@ -33,9 +37,9 @@ public class GroupChatEntityService implements IGroupChatRepository {
     @Override
     @Transactional
     public GroupChat save(GroupChat groupChat) {
-        try{
+        try {
             return mapper.toDomain(repo.save(mapper.toPersistence(groupChat)));
-        } catch (RuntimeException | ParseException e) {
+        } catch (ParseException e) {
             return null;
         }
     }
@@ -50,15 +54,12 @@ public class GroupChatEntityService implements IGroupChatRepository {
     @Override
     @Transactional
     public boolean deleteById(long id) {
-        try {
-            if (!repo.existsById(id)) {
-                return false;
-            }
-            repo.deleteById(id);
-            return true;
-        } catch (RuntimeException e) {
+        if (!repo.existsById(id)) {
             return false;
         }
+        messageRepo.deleteByTopic("groupChat" + id);
+        repo.deleteById(id);
+        return true;
     }
 
     @Override
@@ -70,7 +71,7 @@ public class GroupChatEntityService implements IGroupChatRepository {
             }
             repo.save(mapper.toPersistence(groupChat));
             return true;
-        } catch (RuntimeException | ParseException e) {
+        } catch (ParseException e) {
             return false;
         }
     }

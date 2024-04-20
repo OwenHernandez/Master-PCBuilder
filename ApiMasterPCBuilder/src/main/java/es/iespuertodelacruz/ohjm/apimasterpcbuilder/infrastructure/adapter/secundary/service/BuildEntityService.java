@@ -10,6 +10,7 @@ import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secun
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.BuildEntity;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.repository.IBuildComponentEntityRepository;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.repository.IBuildEntityRepository;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.repository.IPostEntityRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,10 +29,10 @@ public class BuildEntityService implements IBuildRepository {
     @Autowired
     private IBuildComponentEntityRepository bceRepo;
 
-    private final BuildEntityMapper mapper = new BuildEntityMapper();
+    @Autowired
+    private IPostEntityRepository postRepo;
 
-    private final ComponentEntityMapper compMapper = new ComponentEntityMapper();
-    private final UserEntityMapper userMapper = new UserEntityMapper();
+    private final BuildEntityMapper mapper = new BuildEntityMapper();
 
     @Override
     @Transactional
@@ -55,26 +56,18 @@ public class BuildEntityService implements IBuildRepository {
             Optional<BuildEntity> findOpt = repo.findById(build.getId());
             if (!findOpt.isPresent()) {
                 BuildEntity save = repo.save(be);
-                if (be.getBuildsComponents() != null) {
-                    for (int i = 0; i < build.getBuildsComponents().size(); i++) {
-                        BuildComponent bc = build.getBuildsComponents().get(i);
-                        BuildComponentEntity bce = be.getBuildsComponents().get(i);
-                        bce.setComponent(compMapper.toPersistence(bc.getComponent()));
-                        bce.setBuild(save);
-                        bceRepo.save(bce);
-                        save.getBuildsComponents().add(bce);
-                    }
+                if (be.getBuildsComponents() != null && !be.getBuildsComponents().isEmpty()) {
+                    be.getBuildsComponents().forEach(bce -> bce.setBuild(save));
+                    bceRepo.saveAll(be.getBuildsComponents());
+                    save.setBuildsComponents(be.getBuildsComponents());
                 } else {
                     save.setBuildsComponents(new ArrayList<>());
                 }
-                Build domain = mapper.toDomain(save);
-                domain.setBuildsComponents(build.getBuildsComponents());
-                return domain;
+                return mapper.toDomain(save);
             } else {
                 throw new RuntimeException("The build must not exist");
             }
         } catch (RuntimeException | ParseException e) {
-            e.printStackTrace();
             return null;
         }
     }
@@ -96,46 +89,40 @@ public class BuildEntityService implements IBuildRepository {
     @Override
     @Transactional
     public boolean deleteById(long id) {
-        try {//We will need to change it when I do Posts
-            Optional<BuildEntity> byId = repo.findById(id);
-            if (byId.isPresent()) {
-                BuildEntity be = byId.get();
-                if (be.getBuildsComponents() != null || !be.getBuildsComponents().isEmpty()) {
-                    bceRepo.deleteAll(be.getBuildsComponents());
-                }
-                repo.deleteById(id);
-            } else {
-                return false;
+        Optional<BuildEntity> byId = repo.findById(id);
+        if (byId.isPresent()) {
+            BuildEntity be = byId.get();
+            if (be.getBuildsComponents() != null && !be.getBuildsComponents().isEmpty()) {
+                bceRepo.deleteAll(be.getBuildsComponents());
             }
-
-            return true;
-        } catch (RuntimeException e) {
+            if (be.getPosts() != null && !be.getPosts().isEmpty()) {
+                throw new RuntimeException("The build has posts");
+            }
+            repo.deleteById(id);
+        } else {
             return false;
         }
+
+        return true;
     }
 
     @Override
     @Transactional
     public boolean update(Build build) {
-        try {//We will need to change it when I do Posts
+        try {
             Optional<BuildEntity> opt = repo.findById(build.getId());
             if (opt.isPresent()) {
                 BuildEntity optGet = opt.get();
-                if (optGet.getBuildsComponents() != null || !optGet.getBuildsComponents().isEmpty()) {
+                if (optGet.getBuildsComponents() != null && !optGet.getBuildsComponents().isEmpty()) {
                     bceRepo.deleteAll(optGet.getBuildsComponents());
                 }
                 BuildEntity be = mapper.toPersistence(build);
                 BuildEntity save = repo.save(be);
 
-                if (be.getBuildsComponents() != null) {
-                    for (int i = 0; i < build.getBuildsComponents().size(); i++) {
-                        BuildComponent bc = build.getBuildsComponents().get(i);
-                        BuildComponentEntity bce = be.getBuildsComponents().get(i);
-                        bce.setComponent(compMapper.toPersistence(bc.getComponent()));
-                        bce.setBuild(save);
-                        bceRepo.save(bce);
-                        save.getBuildsComponents().add(bce);
-                    }
+                if (be.getBuildsComponents() != null && !be.getBuildsComponents().isEmpty()) {
+                    be.getBuildsComponents().forEach(bce -> bce.setBuild(save));
+                    bceRepo.saveAll(be.getBuildsComponents());
+                    save.setBuildsComponents(be.getBuildsComponents());
                 } else {
                     save.setBuildsComponents(new ArrayList<>());
                 }
@@ -143,7 +130,7 @@ public class BuildEntityService implements IBuildRepository {
             } else {
                 return false;
             }
-        } catch (RuntimeException | ParseException e) {
+        } catch (ParseException e) {
             return false;
         }
     }
@@ -158,32 +145,6 @@ public class BuildEntityService implements IBuildRepository {
             if (list != null) {
                 for (BuildEntity be : list) {
                     Build b = mapper.toDomain(be);
-                    for (int i = 0; i < b.getBuildsComponents().size(); i++) {
-                        BuildComponent bc = b.getBuildsComponents().get(i);
-                        BuildComponentEntity bce = be.getBuildsComponents().get(i);
-                        bc.setComponent(compMapper.toDomain(bce.getComponent()));
-                    }
-                    res.add(b);
-                }
-            }
-        }
-        return res;
-    }
-
-    @Override
-    @Transactional
-    public List<Build> findByTotalPrice(double totalPrice) {
-        List<Build> res = null;
-        if (totalPrice != 0) {
-            List<BuildEntity> list = repo.findByTotalPrice(totalPrice);
-            if (list != null) {
-                for (BuildEntity be : list) {
-                    Build b = mapper.toDomain(be);
-                    for (int i = 0; i < b.getBuildsComponents().size(); i++) {
-                        BuildComponent bc = b.getBuildsComponents().get(i);
-                        BuildComponentEntity bce = be.getBuildsComponents().get(i);
-                        bc.setComponent(compMapper.toDomain(bce.getComponent()));
-                    }
                     res.add(b);
                 }
             }

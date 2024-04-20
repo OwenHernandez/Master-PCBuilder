@@ -11,6 +11,8 @@ public interface IUserRepository {
 
     User save(User user);
 
+    boolean delete(Long id);
+
     User findById(Long id);
 
     User findByNick(String nick);

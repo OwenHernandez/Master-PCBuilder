@@ -43,6 +43,19 @@ public class AuthService {
 				"http://localhost:8080/api/v1/verify?usermail=" + save.getEmail() + "&hash=" + save.getHash());
 	}
 
+	public User registerV3(UserDetailsLogin udl) {
+		int numRnd = (int) (Math.random() * 100000000);
+		String hash = passwordEncoder.encode(numRnd + "");
+		User user = new User();
+		user.setNick(udl.getUsername());
+		user.setPassword(passwordEncoder.encode(udl.getPassword()));
+		user.setRole(udl.getRole());
+		user.setEmail(udl.getEmail());
+		user.setHash(hash);
+
+		return user;
+	}
+
 	public String authenticate(UserDetailsLogin udl) {
 		User userentity = userService.findByNick(udl.getUsername());
 		UserDetailsLogin userlogin = null;
