@@ -44,6 +44,7 @@ class UserDTOMapperTest {
         user.setComponentsWanted(Collections.emptyList());
         user.setActive((byte) 1);
         user.setRole("ROLE_USER");
+        user.setDeleted((byte) 0);
 
         userDTO = new UserDTO();
         userDTO.setId(1L);
@@ -148,8 +149,9 @@ class UserDTOMapperTest {
         assertThat(result.getFriends()).hasSize(1);
         assertThat(result.getFriends().get(0).getNick()).isEqualTo("FriendNick");
         assertThat(result.getComponentsWanted()).containsExactly(componentDTO);
-        assertThat(result.getActive()).isEqualTo(user.getActive());
+        assertThat(result.isActive()).isTrue();
         assertThat(result.getRole()).isEqualTo(user.getRole());
+        assertThat(result.isDeleted()).isFalse();
     }
 
     @Test
