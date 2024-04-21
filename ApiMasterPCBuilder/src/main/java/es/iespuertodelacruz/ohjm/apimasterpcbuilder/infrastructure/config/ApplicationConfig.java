@@ -18,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -35,9 +36,9 @@ public class ApplicationConfig {
 	                @Override
 	                public void addCorsMappings(CorsRegistry registry) {
 	                        registry.addMapping("/**")
-	                                .allowedOrigins("http://**")
-	                                .allowedMethods("GET", "POST", "PUT", "DELETE")
-	                                .maxAge(3600);
+									.allowedMethods(CorsConfiguration.ALL)
+									.allowedHeaders(CorsConfiguration.ALL)
+									.allowedOriginPatterns(CorsConfiguration.ALL);
 	                }
 
 	        };

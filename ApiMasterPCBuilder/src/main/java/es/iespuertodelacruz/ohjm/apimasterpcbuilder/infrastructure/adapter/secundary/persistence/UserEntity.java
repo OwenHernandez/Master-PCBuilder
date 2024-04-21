@@ -110,21 +110,6 @@ public class UserEntity implements Serializable {
 		this.deleted = deleted;
 	}
 
-	public List<GroupChatEntity> getGroupChatsAdmin() {
-		return groupChatsAdmin;
-	}
-
-	public void setGroupChatsAdmin(List<GroupChatEntity> groupChatsAdmin) {
-		this.groupChatsAdmin = groupChatsAdmin;
-	}
-
-	public List<GroupChatEntity> getGroupChats() {
-		return groupChats;
-	}
-
-	public void setGroupChats(List<GroupChatEntity> groupChats) {
-		this.groupChats = groupChats;
-	}
 
 	public long getId() {
 		return this.id;

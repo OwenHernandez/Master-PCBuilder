@@ -32,6 +32,7 @@ const Login = (props: Props) => {
                 if (dataUser.role === "ROLE_ADMIN" && dataUser.active === true) {
                     setIsWorking(1);
                     setToken(data);
+                    localStorage.setItem('authToken', data);
                     setIsLoged(true);
                     let newUser: UserType = {
                         id: dataUser.id,

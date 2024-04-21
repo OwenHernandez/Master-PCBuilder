@@ -8,15 +8,17 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import logo from '../img/logo_light.png'
-import {FaTools, FaUsers, FaHome, FaChartPie, FaUser, FaCog, FaSignOutAlt} from 'react-icons/fa';
+import {FaTools, FaUsers, FaHome, FaChartPie, FaUser, FaCog, FaSignOutAlt, FaAmazon} from 'react-icons/fa';
 import React from "react";
 import User from "./User";
+import Components from "./Components";
+import {local} from "d3";
 type Props = {}
 
 
 const Router = (props: Props) => {
     const { isLoged, user } = useAppContext();
-    console.log(isLoged);
+    const token = localStorage.getItem('authToken');
 
     return (
         <BrowserRouter>
@@ -30,6 +32,7 @@ const Router = (props: Props) => {
                             <Route path='/login' element={<Login />} />
                             <Route path='/home' element={<Protector isLoged={isLoged}><Home /></Protector>} />
                             <Route path='/users' element={<Protector isLoged={isLoged}><User /></Protector>} />
+                            <Route path='/components' element={<Protector isLoged={isLoged}><Components /></Protector>} />
 
                         </Routes>
                     </div>
@@ -72,6 +75,9 @@ function Side() {
                         </Nav.Link>
                         <Nav.Link className="text-dark">
                             <Link to="/users"><FaUser/> Users</Link>
+                        </Nav.Link>
+                        <Nav.Link className="text-dark">
+                            <Link to="/components"><FaAmazon/> Components</Link>
                         </Nav.Link>
                         <Nav.Link href="#dashboard" className="text-dark">
                             <FaChartPie/> Dashboard
