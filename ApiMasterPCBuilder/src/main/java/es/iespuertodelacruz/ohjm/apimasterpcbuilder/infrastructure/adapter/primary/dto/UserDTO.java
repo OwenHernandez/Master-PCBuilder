@@ -10,35 +10,8 @@ public class UserDTO {
     private List<UserDTO> friends;
     private List<UserDTO> blockedUsers;
     private List<ComponentOutputDTO> componentsWanted;
-    private String role;
-    private boolean isActive;
-    private boolean isDeleted;
 
     public UserDTO() {
-    }
-
-    public boolean isDeleted() {
-        return isDeleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        isDeleted = deleted;
-    }
-
-    public boolean isActive() {
-        return isActive;
-    }
-
-    public void setActive(boolean active) {
-        isActive = active;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
     }
 
     public long getId() {

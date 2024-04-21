@@ -35,9 +35,6 @@ public class UserDTOMapper {
         userDTO.setNick(user.getNick());
         userDTO.setEmail(user.getEmail());
         userDTO.setPicture(user.getPicture());
-        userDTO.setRole(user.getRole());
-        userDTO.setActive(user.getActive()==1?true:false);
-        userDTO.setDeleted(user.getDeleted()==1?true:false);
         if (user.getComponentsWanted() != null && !user.getComponentsWanted().isEmpty()) {
             List<ComponentOutputDTO> componentsWanted = new ArrayList<>();
             for (Component c : user.getComponentsWanted()) {
@@ -100,8 +97,9 @@ public class UserDTOMapper {
                 userDTO.getBlockedUsers().add(uDTO);
             }
         }
-        userDTO.setActive(user.getActive());
+        userDTO.setActive(user.getActive() == 1);
         userDTO.setRole(user.getRole());
+        userDTO.setDeleted(user.getDeleted() == 1);
         return userDTO;
     }
 }
