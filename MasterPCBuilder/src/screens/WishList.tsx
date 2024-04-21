@@ -63,12 +63,28 @@ const WishList = (props: Props) => {
                     <FlatList
                         data={wishList}
                         numColumns={2}
+                        contentContainerStyle={{alignItems: "center", marginLeft: "2%"}}
                         renderItem={(comp) => {
                             if (comp.item.id !== undefined) {
+                                comp.item.wished = false;
+                                user.componentsWanted?.forEach((compWished) => {
+                                    if (comp.item.id === compWished.id) {
+                                        comp.item.wished = true;
+                                    }
+                                });
                                 return (
                                     <TouchableOpacity
-                                        style={{...Styles.touchable, width: "40%"}}
-                                        onPress={() => navigation.navigate("ComponentScreen", {comp: comp.item})}>
+                                        style={{
+                                            ...Styles.touchable,
+                                            margin: "2%",
+                                            height: getIconSize(800),
+                                            width: "45%"
+                                        }}
+                                        onPress={() => {
+                                            navigation.navigate("ComponentScreen", {comp: comp.item})
+                                        }
+
+                                        }>
                                         <Component comp={comp.item}/>
                                     </TouchableOpacity>
                                 )

@@ -6,8 +6,7 @@ import {
     PixelRatio,
     Dimensions,
     TextInput,
-    Alert,
-    ScrollView
+    ScrollView, Image
 } from 'react-native'
 import React, {useEffect, useState} from 'react'
 import {usePrimaryContext} from '../contexts/PrimaryContext';
@@ -22,6 +21,7 @@ import * as ImagePicker from "react-native-image-picker";
 import {ImagePickerResponse} from "react-native-image-picker";
 import RNFetchBlob from "rn-fetch-blob";
 import Toast from "react-native-toast-message";
+import IComponentType from "../interfaces/IComponentType";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'EditComponent'>;
 
@@ -47,8 +47,10 @@ const EditComponent = (props: Props) => {
     const [sellers, setSellers] = useState([]);
     const [types, setTypes] = useState([]);
     const [selectedType, setSelectedType] = useState({} as Select);
+    const [component, setComponent] = useState({} as IComponentType);
 
     useEffect(() => {
+        setComponent(comp);
         setSellers([]);
         setTypes([]);
         getSellers();
@@ -56,6 +58,7 @@ const EditComponent = (props: Props) => {
         setName(comp?.name);
         setDescription(comp?.description);
         setPrice(comp?.price.toString());
+        setImage64(comp?.image);
     }, []);
 
     async function getSellers() {
@@ -98,18 +101,25 @@ const EditComponent = (props: Props) => {
     async function editComponent() {
         if (!isNaN(Number(price))) {
             try {
-                console.log("seller" + selectedSeller.value)
-                console.log("type" + selectedType.value)
                 const updateResponse = await axios.put(Globals.IP_HTTP + "/api/v2/components/" + comp?.id, {
                     name,
                     description,
                     price: Number(price),
                     sellerName: selectedSeller.value,
                     type: selectedType.value,
+                    amazon_price: comp?.amazon_price,
+                    ebay_price: comp?.ebay_price,
                     image,
                     image64
                 }, {headers: {"Authorization": "Bearer " + token}});
-                navigation.goBack();
+                comp.name = name;
+                comp.description = description;
+                comp.price = Number(price);
+                comp.sellerName = selectedSeller.value;
+                comp.type = selectedType.value;
+                comp.image = image64;
+
+                navigation.navigate("Components List", {components: []});
             } catch (e) {
                 console.log(e);
             }
@@ -147,7 +157,7 @@ const EditComponent = (props: Props) => {
         <SafeAreaView style={{flex: 1, backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"}}>
             <HeaderScreen name={route.name} navigation={navigation} profile={false} drawer={true}/>
             <ScrollView>
-                <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', marginTop: "5%"}}>
+                <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
                     <View style={{
                         padding: "5%",
                         borderRadius: 20,
@@ -192,7 +202,7 @@ const EditComponent = (props: Props) => {
                             onChangeText={(text) => setDescription(text)}
                         ></TextInput>
                         <TextInput
-                            placeholder='Price'
+                            placeholder='Price in €'
                             defaultValue={price.toString()}
                             style={{
                                 borderWidth: 2,
@@ -267,7 +277,7 @@ const EditComponent = (props: Props) => {
                             //borderRadius: 20,
                             width: getIconSize(800),
                             borderWidth: 2,
-                            marginBottom: "8%",
+                            marginBottom: "4%",
                         }}
                         placeholderStyle={{
                             fontSize: getFontSize(20),
@@ -297,11 +307,23 @@ const EditComponent = (props: Props) => {
                         }}
                     />
                     <TouchableOpacity style={{...Styles.touchable}} onPress={openGallery}>
-                        <Text style={{
-                            fontSize: getFontSize(20),
-                            textAlign: 'center',
-                            color: (darkMode) ? "white" : "black"
-                        }}>{(image === "") ? "Select a picture for the component" : image}</Text>
+                        {
+                            (image64 !== "") ?
+                                <Image
+                                    source={{
+                                        uri: "data:image/jpeg;base64," + image64,
+                                        width: getIconSize(300),
+                                        height: getIconSize(300)
+                                    }}
+                                    style={{ ...Styles.imageStyle, borderColor: (darkMode) ? "white" : "black", borderWidth: 1, borderRadius: 10 }}
+                                />
+                                :
+                                <Text style={{
+                                    fontSize: getFontSize(20),
+                                    textAlign: 'center',
+                                    color: (darkMode) ? "white" : "black"
+                                }}>Select a picture for the Component</Text>
+                        }
                     </TouchableOpacity>
                     <TouchableOpacity style={{...Styles.touchable}} onPress={editComponent}>
                         <Text

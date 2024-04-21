@@ -21,7 +21,6 @@ import {Client} from "@stomp/stompjs";
 import axios from "axios";
 import {Globals} from "../components/Globals";
 import RNFetchBlob from "rn-fetch-blob";
-import Animated from "react-native-reanimated";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Chat'>;
 
