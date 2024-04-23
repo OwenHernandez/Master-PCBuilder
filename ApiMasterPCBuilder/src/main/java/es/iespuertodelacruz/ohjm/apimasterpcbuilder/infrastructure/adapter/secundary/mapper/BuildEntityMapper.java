@@ -28,6 +28,7 @@ public class BuildEntityMapper {
         res.setName(buildEntity.getName());
         res.setNotes(buildEntity.getNotes());
         res.setTotalPrice(buildEntity.getTotalPrice());
+        res.setDeleted(buildEntity.getDeleted());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date(buildEntity.getDateOfCreation());
         String dateStr = sdf.format(date);
@@ -66,6 +67,7 @@ public class BuildEntityMapper {
         res.setName(build.getName());
         res.setNotes(build.getNotes());
         res.setTotalPrice(build.getTotalPrice());
+        res.setDeleted(build.getDeleted());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date date = sdf.parse(build.getDateOfCreation());
         long dateLong = date.getTime();

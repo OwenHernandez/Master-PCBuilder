@@ -133,7 +133,7 @@ public class BuildControllerV3 {
         }
         domain.setTotalPrice(totalPrice);
         domain.setUser(byId.getUser());
-
+        domain.setName(byId.getName());
         boolean update = buildService.update(domain);
         if (!update) {
             throw new GraphQLErrorException("Error updating build", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -147,6 +147,12 @@ public class BuildControllerV3 {
         if (byId == null) {
             throw new GraphQLErrorException("Build not found", HttpStatus.NOT_FOUND);
         }
-        return buildService.deleteById(id);
+        byId.setDeleted((byte) 1);
+        boolean save = buildService.update(byId);
+
+        if (save) {
+            return true;
+        }
+        return false;
     }
 }
