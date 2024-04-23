@@ -30,11 +30,13 @@ const Social = (props: Props) => {
     const [categoryToFilter, setCategoryToFilter] = useState(Globals.CATEGORY_ALL);
     const [modalvisible, setModalvisible] = useState<boolean>(false);
     const [byPrice, setByPrice] = useState<boolean>(false);
+
     useEffect(() => {
         setPostsList([]);
         setPostsFiltered([]);
         getPosts();
     }, [posts, user]);
+
     const toggleModal = () => {
         setModalvisible(!modalvisible);
     }

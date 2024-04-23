@@ -1,15 +1,10 @@
-import {Alert, Dimensions, FlatList, Image, PixelRatio, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {Dimensions, FlatList, PixelRatio, Text, TouchableOpacity, View} from 'react-native'
 import React, {useEffect, useState} from 'react'
 import {RootStackParamList} from '../navigations/StackNavigator';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import IComponentType from '../interfaces/IComponentType';
 import IBuildType from '../interfaces/IBuildType';
-import Component from '../components/Component';
 import {Styles} from '../themes/Styles';
-import Icon from 'react-native-vector-icons/Octicons';
 import {usePrimaryContext} from '../contexts/PrimaryContext';
-import Material from 'react-native-vector-icons/MaterialCommunityIcons';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
 import {Globals} from '../components/Globals';
 import HeaderScreen from "../components/HeaderScreen";
