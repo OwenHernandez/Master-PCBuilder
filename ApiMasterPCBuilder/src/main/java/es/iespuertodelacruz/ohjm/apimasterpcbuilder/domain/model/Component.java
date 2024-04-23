@@ -18,7 +18,7 @@ public class Component {
     private double price;
     private double amazon_price;
     private double ebay_price;
-
+    private byte isDeleted;
     private List<BuildComponent> buildsComponents;
     private List<PriceHistory> priceHistories;
 
@@ -36,6 +36,14 @@ public class Component {
         if (o == null || getClass() != o.getClass()) return false;
         Component component = (Component) o;
         return id == component.id;
+    }
+
+    public byte getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(byte isDeleted) {
+        this.isDeleted = isDeleted;
     }
 
     public List<PriceHistory> getPriceHistories() {

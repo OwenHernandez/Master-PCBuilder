@@ -233,29 +233,31 @@ public class ComponentEntityService implements IComponentRepository {
         List<Component> productEbayDTOS= new ArrayList<>();
         for (Element listing : listings) {
             String title = listing.select("div.s-item__title").text();
-            String urla = listing.select("a.s-item__link").attr("href");
             String price = listing.select("span.s-item__price").text();
-
-            String details = listing.select("div.s-item__subtitle").text();
-            String sellerInfo = listing.select("span.s-item__seller-info-text").text();
-            String shippingCost = listing.select("span.s-item__shipping").text();
-            String location = listing.select("span.s-item__location").text();
-            String sold = listing.select("span.s-item__quantity-sold").text();
-            if (price!=null){
-                Component component=new Component();
+            String monetaryValueRegex = "^\\$?\\d+(\\.\\d{1,2})?$";
+            if (price != null && price.matches(monetaryValueRegex)) {
+                Component component = new Component();
                 component.setName(title);
-                price=price.replace("$","");
-                price=price.replace(",","");
-                price=price.replaceAll("\s*to.*","");
+                price = price.replace("$", "");
+                price = price.replace(",", "");
+                price = price.replaceAll("\\s*to.*", "");
                 String[] parts = price.split(" ");
-                log=Logger.getLogger("ebay");
-                log.info("PRECIO: "+parts[0]);
-                component.setEbay_price(Double.parseDouble(parts[0]));
-                log.info("COMPONENTE: "+component.getAmazon_price());
-                productEbayDTOS.add(component);
+                Logger log = Logger.getLogger("ebay");
+                log.info("PRECIO: " + parts[0]);
+
+                try {
+                    double parsedPrice = Double.parseDouble(parts[0]);
+                    component.setEbay_price(parsedPrice);
+                    log.info("COMPONENTE: " + component.getAmazon_price());
+                    productEbayDTOS.add(component);
+                } catch (NumberFormatException e) {
+                    log.severe("Failed to parse price: " + parts[0]);
+                    // Handle the parsing error or ignore this component
+                }
             }
         }
         return productEbayDTOS;
+
     }
 
 

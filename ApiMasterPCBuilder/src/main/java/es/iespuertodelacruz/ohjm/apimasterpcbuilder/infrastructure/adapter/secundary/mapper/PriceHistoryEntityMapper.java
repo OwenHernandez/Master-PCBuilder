@@ -15,9 +15,7 @@ public class PriceHistoryEntityMapper {
         priceHistory.setPrice(componentEntity.getPrice());
         priceHistory.setAmazonPrice(componentEntity.getAmazonPrice());
         priceHistory.setEbayPrice(componentEntity.getEbayPrice());
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = new Date(priceHistory.getDate());
-        priceHistory.setDate(sdf.format(date));
+        priceHistory.setDate(componentEntity.getDate().toString());
         return priceHistory;
     }
 
@@ -27,9 +25,7 @@ public class PriceHistoryEntityMapper {
         priceHistoryEntity.setPrice(priceHistory.getPrice());
         priceHistoryEntity.setAmazonPrice(priceHistory.getAmazonPrice());
         priceHistoryEntity.setEbayPrice(priceHistory.getEbayPrice());
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = sdf.parse(priceHistory.getDate());
-        priceHistoryEntity.setDate(date.getTime());
+        priceHistoryEntity.setDate(Long.valueOf(priceHistory.getDate()));
         return priceHistoryEntity;
     }
 }

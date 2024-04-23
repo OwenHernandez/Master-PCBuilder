@@ -28,7 +28,7 @@ public class BuildEntity implements Serializable {
 	private String notes;
 
 	private String category;
-
+	private byte deleted;
 	@Column(name="TOTAL_PRICE")
 	private double totalPrice;
 	@Column(name="DATE_OF_CREATION")
@@ -47,6 +47,14 @@ public class BuildEntity implements Serializable {
 	private List<PostEntity> posts;
 
 	public BuildEntity() {
+	}
+
+	public byte getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(byte deleted) {
+		this.deleted = deleted;
 	}
 
 	public Long getDateOfCreation() {

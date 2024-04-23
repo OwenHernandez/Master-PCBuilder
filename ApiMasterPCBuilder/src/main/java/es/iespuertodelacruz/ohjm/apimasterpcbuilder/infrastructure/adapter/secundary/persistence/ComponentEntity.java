@@ -36,6 +36,7 @@ public class ComponentEntity implements Serializable {
 	private double amazon_price;
 
 	private double ebay_price;
+	private byte deleted;
 	//bi-directional many-to-one association to UserEntity
 	@JsonIgnore
 	@ManyToOne
@@ -59,6 +60,14 @@ public class ComponentEntity implements Serializable {
 
 
 	public ComponentEntity() {
+	}
+
+	public byte getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(byte deleted) {
+		this.deleted = deleted;
 	}
 
 	public List<PriceHistoryEntity> getPriceHistories() {
