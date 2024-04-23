@@ -29,7 +29,8 @@ const Login = (props: Props) => {
             if (data !== undefined) {
                 const responseUser = await axios.get('http://localhost:8080/api/v2/users?nick=' + nickname, { headers: { 'Authorization': "Bearer " + data } });
                 const dataUser = responseUser.data;
-                if (dataUser.role === "ROLE_ADMIN" && dataUser.active === true) {
+                console.log(dataUser.role)
+                if (dataUser.role === "ROLE_ADMIN") {
                     setIsWorking(1);
                     setToken(data);
                     localStorage.setItem('authToken', data);

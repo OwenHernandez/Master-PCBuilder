@@ -9,6 +9,17 @@ import { UserType } from '../Type/User';
 import NavDropdown from "react-bootstrap/NavDropdown";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
+import {useMutation, useQuery} from "@apollo/client";
+import {IBuild} from "./Home";
+import {
+    DELETE_COMPONENT,
+    GET_BUILDS,
+    GET_COMPONENTS,
+    GET_SELLER,
+    SAVE_COMPONENT,
+    UPDATE_COMPONENT
+} from "../Querys/Querys";
+import IComponentInput from "../Type/ComponentInput";
 type Props = {}
 export interface IComponentType {
     id: number;
@@ -20,11 +31,23 @@ export interface IComponentType {
     picture: string;
     description: string;
     sellerId: number;
+    deleted: number;
+}
+export interface ISellerType {
+    id: number;
+    name: string;
+    image: string;
+
 }
 const Components=(props: Props) => {
     const {token} = useAppContext();
+    const { loading, error, data:dataComponents } = useQuery(GET_COMPONENTS);
+    const { loading:loadingSeller, error:errorSeller, data:dataSeller } = useQuery(GET_SELLER);
+    const [saveComponentG] = useMutation(SAVE_COMPONENT);
+    const [updateComponentG] = useMutation(UPDATE_COMPONENT);
+    const [deleteComponentG] = useMutation(DELETE_COMPONENT);
     const [components, setComponents] = useState([])
-    const [sellers, setSellers] = useState([])
+    const [sellers, setSellers] = useState<Array<ISellerType>>([])
     const [componentSelected, setComponentSelected] = useState<IComponentType>()
     const [showAdd, setShowAdd] = useState(false)
     const [showEdit, setShowEdit] = useState(false);
@@ -42,13 +65,15 @@ const Components=(props: Props) => {
     const [type, setType] = useState("")
     useEffect(() => {
         async function getComponents() {
-            const response = await axios.get("http://localhost:8080/api/v2/components", { headers: { "Authorization": "Bearer " + token } });
-            const responseSeller = await axios.get("http://localhost:8080/api/v3/sellers", { headers: { "Authorization": "Bearer " + token } });
-            setComponents(response.data);
-            setSellers(responseSeller.data)
+            setComponents(dataComponents?.components || []);
+            console.log(components)
+            console.log(loadingSeller)
+            console.log(errorSeller)
+            setSellers(dataSeller?.sellers || []);
+            console.log(sellers)
         }
         getComponents()
-    }, [locura]);
+    }, [locura || dataComponents || dataSeller || loadingSeller || loading || errorSeller || error]);
     function handleShowEdit() {
         setShowEdit(!showEdit)
     }
@@ -58,18 +83,28 @@ const Components=(props: Props) => {
     function handleShowAdd() {
         setShowAdd(!showAdd);
     }
-    async function updateUser(event:React.FormEvent<HTMLFormElement>){
+    async function updateComponent(event:React.FormEvent<HTMLFormElement>){
         event.preventDefault();
         const cleanBase64 = photoBase64.replace(/^data:image\/png;base64,/, "");
-        const response = await axios.put("http://localhost:8080/api/v3/components/"+componentSelected?.id, {
-            description: description,
-            image: nombrefichero,
-            image64: cleanBase64,
-            type: type,
-            price: price,
-            sellerId: sellerId
-        },{headers: {"Authorization": "Bearer " + token}});
-        setLocura(!locura);
+        try {
+            const updateComponent: IComponentInput = {
+                description: description,
+                image: nombrefichero,
+                image64: cleanBase64,
+                type: type,
+                price: parseInt(price),
+                amazon_price: componentSelected?.amazon_price!,
+                ebay_price: componentSelected?.ebay_price!,
+                name: componentSelected?.name!,
+                sellerName: sellerName
+            };
+            console.log(sellerName);
+            const update = await updateComponentG({variables: {id: componentSelected?.id, component: updateComponent}});
+            console.log(update);
+            setLocura(!locura);
+        } catch (error) {
+            console.log(error);
+        }
         handleShowEdit()
     }
     async function addUser(event:React.FormEvent<HTMLFormElement>){
@@ -78,8 +113,7 @@ const Components=(props: Props) => {
 
         console.log("PICTURE:"+nombrefichero)
         console.log("PICTURE:"+cleanBase64)
-
-        const response = await axios.post("http://localhost:8080/api/v3/components", {
+        const newComponent={
             description: description,
             image: nombrefichero,
             image64: cleanBase64,
@@ -89,14 +123,31 @@ const Components=(props: Props) => {
             amazon_price: amazon_price,
             ebay_price: ebay_price,
             sellerName: sellerName
-        },{headers: {"Authorization": "Bearer " + token}});
+        }
+        try{
+            const response = await saveComponentG({variables: {component: newComponent}});
+            console.log(response);
+        }catch (error){
+            console.log(error)
+        }
         setLocura(!locura);
         handleShowAdd();
     }
     async function deleteUser(){
-        const response = await axios.delete("http://localhost:8080/api/v3/components/"+componentSelected?.id,{headers : {"Authorization": "Bearer " + token}});
-        setLocura(!locura);
+        try{
+            const response = await deleteComponentG({variables: {id: componentSelected?.id}});
+            setLocura(!locura);
+        }catch (error){
+            console.log(error)
+        }
         handleShowDelete()
+    }
+    if (loading || loadingSeller ) {
+        return <div>Loading data...</div>;
+    }
+
+    if ( !components || !sellers ){
+        return <div>Data is not fully loaded yet.</div>;
     }
     return (
         <div style={{width: "90vw", height: "100vh"}}>
@@ -108,6 +159,7 @@ const Components=(props: Props) => {
                     {
                         components.map((component: any, index: number) => {
                             return (
+                                component.deleted===1 ? <></> :
                                 <>
                                     {
                                         !component.deleted ? <Accordion.Item eventKey={"" + index}>
@@ -122,7 +174,7 @@ const Components=(props: Props) => {
                                                                 return(
                                                                     <>
                                                                         {
-                                                                            seller.id === component.sellerId ? <h4>Seller: {seller.name}</h4> : <></>
+                                                                            seller.name === component.sellerName ? <h4>Seller: {seller.name}</h4> : <></>
                                                                         }
                                                                     </>
 
@@ -151,7 +203,8 @@ const Components=(props: Props) => {
                                                             </Navbar.Collapse>
                                                         </Navbar>
                                                         {
-                                                            sellers.map((seller: any, index: number) => {
+                                                            sellers.map((seller, index  ) => {
+
                                                                 return(
                                                                     <>
                                                                         {
@@ -204,7 +257,7 @@ const Components=(props: Props) => {
                 <Modal.Header closeButton>
                     <Modal.Title>Edit {componentSelected?.name}</Modal.Title>
                 </Modal.Header>
-                <Form onSubmit={updateUser}>
+                <Form onSubmit={updateComponent}>
                     <Modal.Body>
                         <Form.Group>
                             <Form.Label>Description</Form.Label>
@@ -252,13 +305,14 @@ const Components=(props: Props) => {
                             }}/>
                         </Form.Group>
                         <Form.Group>
-                            <Form.Select aria-label="Seller" value={sellerId} onChange={(event) => {
-                                setSellerId(parseInt(event.target.value))
+                            <Form.Select aria-label="Seller" value={sellerName} onChange={(event) => {
+                                setSellerName(event.target.value)
                             }}>
+                                <option>Choose a Seller</option>
                                 {
                                     sellers.map((seller: any, index: number) => {
                                         return (
-                                            <option value={seller.id}>{seller.name}</option>
+                                            <option value={seller.name}>{seller.name}</option>
                                         )
                                     })
                                 }

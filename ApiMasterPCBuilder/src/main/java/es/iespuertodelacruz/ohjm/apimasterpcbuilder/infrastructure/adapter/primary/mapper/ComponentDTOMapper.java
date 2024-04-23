@@ -18,6 +18,7 @@ public class ComponentDTOMapper {
         component.setPrice(componentInputDTO.getPrice());
         component.setAmazon_price(componentInputDTO.getAmazon_price());
         component.setEbay_price(componentInputDTO.getEbay_price());
+        component.setIsDeleted((byte) (componentInputDTO.getDeleted() == 1 ? 1 : 0));
 
         return component;
     }
@@ -34,6 +35,7 @@ public class ComponentDTOMapper {
         componentOutputDTO.setUserNick(component.getUserWhoCreated().getNick());
         componentOutputDTO.setAmazon_price(component.getAmazon_price());
         componentOutputDTO.setEbay_price(component.getEbay_price());
+        componentOutputDTO.setDeleted(component.getIsDeleted() == 1 ? 1 : 0);
         if (component.getPriceHistories() != null) {
             if (componentOutputDTO.getPriceHistory() == null) {
                 componentOutputDTO.setPriceHistory(new ArrayList<>());

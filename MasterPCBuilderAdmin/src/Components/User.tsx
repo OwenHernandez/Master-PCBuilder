@@ -42,12 +42,6 @@
             console.log("PICTURE:"+nombrefichero);
             const cleanBase64 = photoBase64.replace(/^data:image\/png;base64,/, "");
             console.log("PICTURE:"+cleanBase64);
-            const response = await axios.put("http://localhost:8080/api/v3/users/"+userSelected?.id, {
-                password: password,
-                role: "ROL_"+rol,
-                picture: nombrefichero,
-                pictureBase64: cleanBase64
-            },{headers: {"Authorization": "Bearer " + token}});
             try {
                 const userInput = {
                     nick: userSelected?.nick,

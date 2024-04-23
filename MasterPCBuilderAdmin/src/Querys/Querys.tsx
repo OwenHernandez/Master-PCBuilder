@@ -1,5 +1,13 @@
 import {gql} from "@apollo/client";
-
+//QUERIES
+export const GET_SELLER= gql`
+query MyQuery {
+  sellers {
+    id
+    image
+    name
+  }
+}`;
 export const GET_USERS = gql`
   query GetUsers {
   users {
@@ -33,6 +41,7 @@ export const GET_COMPONENTS = gql`
     sellerName
     type
     userNick
+    deleted
     priceHistory {
       amazonPrice
       date
@@ -78,7 +87,7 @@ export const GET_BUILDS = gql`
   }
 }
 `;
-
+//USERS MUTATIONS
 export const SAVE_USER = gql`
   mutation SaveUser($user: UserSaveDTO!) {
     saveUser(user: $user) {
@@ -91,7 +100,6 @@ export const SAVE_USER = gql`
     }
   }
 `;
-
 export const UPDATE_USER = gql`
   mutation UpdateUser($id: Int!, $user: UserUpdateDTO!) {
     updateUser(id: $id, user: $user) {
@@ -108,4 +116,92 @@ export const DELETE_USER = gql`
   mutation DeleteUser($id: Int!) {
     deleteUser(id: $id)
   }
+`;
+//COMPONENTS MUTATIONS
+export const SAVE_COMPONENT = gql`
+  mutation SaveComponent($component: ComponentDTO!) {
+    saveComponent(component: $component) {
+      id
+      name
+      description
+      price
+      type
+      image
+      sellerName
+      amazon_price
+      ebay_price
+    }
+  }
+`;
+export const UPDATE_COMPONENT= gql`
+  mutation UpdateComponent($id: Int!, $component: ComponentDTO!) {
+  updateComponent(id: $id, component: $component) {
+    id
+    name
+    description
+    image
+    type
+    price
+    amazon_price
+    ebay_price
+    sellerName
+  }
+}
+`;
+export const DELETE_COMPONENT = gql`
+    mutation DeleteComponent($id: Int!) {
+    deleteComponent(id: $id)
+    }
+    `;
+//BUILDS MUTATIONS
+export const SAVE_BUILD = gql`
+  mutation SaveBuild($build: BuildDTO!) {
+  saveBuild(build: $build) {
+    id
+    name
+    notes
+    category
+    userNick
+    totalPrice
+    buildsComponents {
+      dateCreated
+      priceAtTheTime
+      component {
+        id
+        name
+        type
+        price
+        sellerName
+      }
+    }
+  }
+}
+`;
+export const DELETE_BUILD = gql`
+    mutation DeleteBuild($id: Int!) {
+    deleteBuild(id: $id)
+    }
+    `;
+export const UPDATE_BUILD = gql`
+    mutation UpdateBuild($id: Int!, $build: BuildDTO!) {
+  updateBuild(id: $id, build: $build) {
+    id
+    name
+    notes
+    category
+    userNick
+    totalPrice
+    buildsComponents {
+      dateCreated
+      priceAtTheTime
+      component {
+        id
+        name
+        type
+        price
+        sellerName
+      }
+    }
+  }
+}
 `;

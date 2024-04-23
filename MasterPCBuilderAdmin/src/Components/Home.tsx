@@ -7,7 +7,7 @@ import axios from 'axios';
 import { useAppContext } from '../Context/AppContextProvider';
 import {gql, useQuery} from "@apollo/client";
 import {UserType} from "../Type/User";
-import {GET_BUILDS, GET_COMPONENTS, GET_USERS} from "../Querys/Querys";
+import {GET_BUILDS, GET_COMPONENTS, GET_SELLER, GET_USERS} from "../Querys/Querys";
 
 Chart.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend); // Registra BarElement en lugar de LineElement
 Chart.register(ArcElement, Tooltip, Legend);
@@ -31,6 +31,7 @@ export interface IComponentType {
   userNick: string;
   wished?: boolean;
   priceHistory: Array<IPriceHistory>;
+  deleted: number
 }
 export interface IBuildComponent {
   dateCreated: string;
@@ -46,6 +47,7 @@ export interface IBuild {
   totalPrice: number;
   userNick: string;
   buildsComponents: IBuildComponent[];
+  deleted: number;
 }
 const Home = () => {
   const {token}=useAppContext();
@@ -55,6 +57,7 @@ const Home = () => {
   const { loading, error, data:dataUsers } = useQuery(GET_USERS);
   const { loading: loadingComponents, error: errorComponents, data: dataComponents } = useQuery(GET_COMPONENTS);
   const { loading: loadingBuilds, error: errorBuilds, data: dataBuilds } = useQuery(GET_BUILDS);
+  const { loading:loadingSeller, error:errorSeller, data:dataSeller } = useQuery(GET_SELLER);
   const [compType, setCompType] = useState<Array<string>>([]);
   const [dataLine, setDataLine] = useState({
     labels: [] as string[],
@@ -193,8 +196,6 @@ const Home = () => {
       console.error('Expected components to be an array, received:', components);
     }
     setLocura(!locura)
-    console.log("AYUDAAAAA")
-    console.log("Data states:", { usersData: users, componentsData: components, buildsData: builds });
 
   },  [components]);  // Dependency array ensures useEffect runs when components data changes
   useEffect(() => {

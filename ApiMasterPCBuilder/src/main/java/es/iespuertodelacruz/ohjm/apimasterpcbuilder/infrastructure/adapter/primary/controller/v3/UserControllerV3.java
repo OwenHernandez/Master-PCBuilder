@@ -14,6 +14,7 @@ import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 
 import java.util.Base64;
@@ -28,6 +29,9 @@ public class UserControllerV3 {
     private IUserService userService;
 
     @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
     private AuthService authService;
 
     @Autowired
@@ -37,7 +41,10 @@ public class UserControllerV3 {
 
     @SchemaMapping(typeName = "Query", field = "users")
     public List<UserV3DTO> getUsers() {
-        return userService.findAll().stream().map(userDTOMapper::toV3DTO).collect(Collectors.toList());
+        List<User> users = userService.findAll();
+        return userService.findAll().stream()
+                .map(userDTOMapper::toV3DTO)
+                .collect(Collectors.toList());
     }
 
     @SchemaMapping(typeName = "Query", field = "user")
@@ -60,6 +67,7 @@ public class UserControllerV3 {
         udl.setEmail(user.getEmail());
         udl.setRole(user.getRole());
 
+
         User newUser = authService.registerV3(udl);
 
         if (user.getPicture() != null) {
@@ -70,7 +78,8 @@ public class UserControllerV3 {
         } else {
             newUser.setPicture("default.png");
         }
-        newUser.setActive(user.getActive());
+        newUser.setActive((byte) 1);
+        newUser.setDeleted((byte) 0);
         User save = userService.save(newUser);
 
         return userDTOMapper.toV3DTO(save);
@@ -85,10 +94,9 @@ public class UserControllerV3 {
         if (userToUpdate == null) {
             throw new GraphQLErrorException("User not found", HttpStatus.NOT_FOUND);
         }
-        userToUpdate.setNick(user.getNick());
-        userToUpdate.setEmail(user.getEmail());
+        userToUpdate.setPassword(passwordEncoder.encode(user.getPassword()));
         userToUpdate.setRole(user.getRole());
-        userToUpdate.setActive(user.getActive());
+
 
         if (user.getPicture() != null) {
             String codedPicture = user.getPictureBase64();
@@ -107,6 +115,15 @@ public class UserControllerV3 {
         if (byId == null) {
             throw new GraphQLErrorException("User not found", HttpStatus.NOT_FOUND);
         }
-        return userService.delete(id);
+        byId.setDeleted((byte) 1);
+        try {
+            User save = userService.save(byId);
+            if (save.getDeleted()==1) {
+                return true;
+            }
+        } catch (Exception e) {
+            throw new GraphQLErrorException("Error deleting user", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return false;
     }
 }

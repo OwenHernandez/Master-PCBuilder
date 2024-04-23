@@ -13,6 +13,8 @@ import React from "react";
 import User from "./User";
 import Components from "./Components";
 import {local} from "d3";
+import Build from "./Build";
+import {FaComputer} from "react-icons/fa6";
 type Props = {}
 
 
@@ -33,7 +35,7 @@ const Router = (props: Props) => {
                             <Route path='/home' element={<Protector isLoged={isLoged}><Home /></Protector>} />
                             <Route path='/users' element={<Protector isLoged={isLoged}><User /></Protector>} />
                             <Route path='/components' element={<Protector isLoged={isLoged}><Components /></Protector>} />
-
+                            <Route path='/builds' element={<Protector isLoged={isLoged}><Build /></Protector>} />
                         </Routes>
                     </div>
                 </div>
@@ -51,13 +53,6 @@ function NavLocal() {
                     <Nav className="me-auto">
                         <Nav.Link href="#home">Home</Nav.Link>
                         <Nav.Link href="#link">Link</Nav.Link>
-                        <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-                            <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-                            <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
-                            <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-                            <NavDropdown.Divider />
-                            <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
-                        </NavDropdown>
                     </Nav>
                 </Navbar.Collapse>
             </Navbar>
@@ -79,15 +74,12 @@ function Side() {
                         <Nav.Link className="text-dark">
                             <Link to="/components"><FaAmazon/> Components</Link>
                         </Nav.Link>
-                        <Nav.Link href="#dashboard" className="text-dark">
-                            <FaChartPie/> Dashboard
+                        <Nav.Link className="text-dark">
+                            <Link to="/builds"><FaComputer/> Builds</Link>
                         </Nav.Link>
 
                     </Nav>
                     <Nav.Item className="mt-auto p-3 ">
-                        <Nav.Link href="#settings" className="text-dark pb-2">
-                            <FaCog/> Settings
-                        </Nav.Link>
                         <Nav.Link href="#logout" className="text-danger">
                             <FaSignOutAlt/> Logout
                         </Nav.Link>
