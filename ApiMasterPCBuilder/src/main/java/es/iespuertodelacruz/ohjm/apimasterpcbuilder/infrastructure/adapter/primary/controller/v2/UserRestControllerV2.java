@@ -15,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -37,6 +38,9 @@ public class UserRestControllerV2 {
     FileStorageService storageService;
 
     UserDTOMapper mapper = new UserDTOMapper();
+    
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @GetMapping
     public ResponseEntity<?> getAllOrByNickOrByBuild(@RequestParam(value = "nick", required = false) String nick) {
@@ -70,14 +74,15 @@ public class UserRestControllerV2 {
                 } else if (byId.getId() != userByNick.getId()) {
                     return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not that user");
                 }
-                String codedPicture = userDTO.getPictureBase64();
-                byte[] photoBytes = Base64.getDecoder().decode(codedPicture);
-                String newFileName = storageService.save(byId.getNick() + "_" + userDTO.getPicture(), photoBytes);
-                if (userDTO.getPictureBase64() != null && !userDTO.getPictureBase64().isBlank()) {
+                if (userDTO.getPictureBase64() == null || userDTO.getPictureBase64().isBlank()) {
+                    String codedPicture = userDTO.getPictureBase64();
+                    byte[] photoBytes = Base64.getDecoder().decode(codedPicture);
+                    String newFileName = storageService.save(byId.getNick() + "_" + userDTO.getPicture(), photoBytes);
                     byId.setPicture(newFileName);
                 }
+
                 if (userDTO.getPassword() != null && !userDTO.getPassword().isBlank()) {
-                    byId.setPassword(userDTO.getPassword());
+                    byId.setPassword(passwordEncoder.encode(userDTO.getPassword()));
                 }
 
                 User save = userService.save(byId);
@@ -160,13 +165,19 @@ public class UserRestControllerV2 {
         if (byId.getFriends() == null) {
             byId.setFriends(new ArrayList<>());
         }
+        if (friend.getFriends() == null) {
+            friend.setFriends(new ArrayList<>());
+        }
         if (byId.getFriends().contains(friend)) {
             byId.getFriends().remove(friend);
+            friend.getFriends().remove(byId);
         } else {
             byId.getFriends().add(friend);
+            friend.getFriends().add(byId);
         }
+        User friendSave = userService.save(friend);
         User save = userService.save(byId);
-        if (save != null) {
+        if (save != null && friendSave != null) {
             return ResponseEntity.ok(mapper.toDTO(save));
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");

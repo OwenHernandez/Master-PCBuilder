@@ -116,6 +116,9 @@ public class UserEntityMapper {
         res.setComponentsCreated(new ArrayList<>());
         if (user.getComponentsCreated() != null && !user.getComponentsCreated().isEmpty()) {
             for (Component c : user.getComponentsCreated()) {
+                if (c == null) {
+                    continue;
+                }
                 ComponentEntity ce = compMapper.toPersistence(c);
                 ce.setUser(res);
                 res.getComponentsCreated().add(ce);
@@ -125,6 +128,9 @@ public class UserEntityMapper {
         res.setComponentsWanted(new ArrayList<>());
         if (user.getComponentsWanted() != null) {
             for (Component c : user.getComponentsWanted()) {
+                if (c == null) {
+                    continue;
+                }
                 ComponentEntity ce = compMapper.toPersistence(c);
                 ce.setUser(res);
                 res.getComponentsWanted().add(ce);
@@ -134,6 +140,9 @@ public class UserEntityMapper {
         res.setFriends(new ArrayList<>());
         if (user.getFriends() != null && !user.getFriends().isEmpty()) {
             for (User u : user.getFriends()) {
+                if (u == null) {
+                    continue;
+                }
                 UserEntity ue = toPersistence(u, new HashSet<>(processedFriendsIds), new HashSet<>(processedBlockedUsersIds), "friends");
                 res.getFriends().add(ue);
             }
@@ -142,6 +151,9 @@ public class UserEntityMapper {
         res.setBlockedUsers(new ArrayList<>());
         if (user.getBlockedUsers() != null && !user.getBlockedUsers().isEmpty()) {
             for (User u : user.getBlockedUsers()) {
+                if (u == null) {
+                    continue;
+                }
                 UserEntity ue = toPersistence(u, new HashSet<>(processedFriendsIds), new HashSet<>(processedBlockedUsersIds), "blockedUsers");
                 res.getBlockedUsers().add(ue);
             }

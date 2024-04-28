@@ -60,7 +60,7 @@ const Profile = (props: Props) => {
                                 <Text style={{ fontSize: getFontSize(40), color: (darkMode) ? "white" : "black" }}>{user?.nick}</Text>
                                 <Text style={{ fontSize: getFontSize(18), color: (darkMode) ? "white" : "black" }}>{user?.email}</Text>
                             </View>
-                            </LinearGradient>
+                        </LinearGradient>
                     </ImageBackground>
                 </View>
                 <View style={{margin:"5%",}}>
