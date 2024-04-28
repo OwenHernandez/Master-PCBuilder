@@ -10,4 +10,8 @@ export class Globals {
     static NOT_ACTIVE: string = "not active";
     static INC_PASS_USR: string = "User/Pass incorrect";
     static IMG_NOT_FOUND: string = "The file does not exist";
+    static CATEGORY_ALL: string = "All";
+    static CATEGORY_GAMING: string = "Gaming";
+    static CATEGORY_WORK: string = "Work";
+    static CATEGORY_BUDGET: string = "Budget";
 }

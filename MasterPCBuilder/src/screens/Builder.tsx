@@ -9,7 +9,7 @@ import {
     PixelRatio,
     Dimensions,
     TextInput,
-    KeyboardAvoidingView, Platform, ScrollView
+    ScrollView
 } from 'react-native';
 import React, {useEffect, useState} from 'react'
 import {Styles} from '../themes/Styles';
@@ -27,8 +27,14 @@ import {Globals} from '../components/Globals';
 import IBuildComponentType from "../interfaces/IBuildComponentType";
 import HeaderScreen from "../components/HeaderScreen";
 import RNFetchBlob from "rn-fetch-blob";
+import {Dropdown} from "react-native-element-dropdown";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Builder'>;
+
+type Select = {
+    label: string,
+    value: string
+}
 
 const Builder = (props: Props) => {
     const {user, darkMode, token} = usePrimaryContext();
@@ -49,6 +55,8 @@ const Builder = (props: Props) => {
     const [periVisible, setPeriVisible] = useState(false);
     const [componentsSelected, setComponentsSelected] = useState([] as IBuildComponentType[]);
     const [compByType, setCompByType] = useState([{}] as IComponentType[]);
+    const [categories, setCategories] = useState([]);
+    const [selectedCategory, setSelectedCategory] = useState({} as Select);
 
     const fontScale = PixelRatio.getFontScale();
     const getFontSize = (size: number) => size / fontScale;
@@ -65,12 +73,23 @@ const Builder = (props: Props) => {
             } else {
                 setBuildUpt(undefined);
             }
+        } else {
+            newBuild();
         }
         if (builds !== null) {
             setBuildsTemp(builds);
         }
         getComponents();
+        getCategories();
     }, [build]);
+
+    function getCategories() {
+        setCategories([
+            {label: Globals.CATEGORY_GAMING, value: Globals.CATEGORY_GAMING},
+            {label: Globals.CATEGORY_BUDGET, value: Globals.CATEGORY_BUDGET},
+            {label: Globals.CATEGORY_WORK, value: Globals.CATEGORY_WORK}
+        ]);
+    }
 
     function newBuild() {
         setComponentsSelected([]);
@@ -551,33 +570,69 @@ const Builder = (props: Props) => {
                             margin: "5%",
                             alignItems: "center"
                         }}>
-                        <TextInput
-                            maxLength={20}
-                            defaultValue={(buildTemp !== null && buildTemp !== undefined) && buildTemp.category}
-                            placeholder='category' placeholderTextColor="#a3a3a3"
+                        <Dropdown
+                            data={categories}
+                            labelField={"label"}
+                            valueField={"value"}
+                            value={selectedCategory}
+                            placeholder={"Select a category"}
+                            onChange={(newValue) => setSelectedCategory(newValue.value)}
                             style={{
-                                borderWidth: 2,
+                                height: getIconSize(130),
+                                backgroundColor: (darkMode) ? "#242121" : "#F5F5F5",
                                 borderColor: "#ca2613",
-                                borderRadius: 20,
-                                paddingLeft: 20,
-                                width: "100%",
-                                fontSize: getFontSize(20),
-                                color: (darkMode) ? "white" : "black"
+                                //borderRadius: 20,
+                                width: getIconSize(800),
+                                borderWidth: 2,
+                                marginBottom: "8%",
                             }}
-                            onChangeText={(text) => setBuildTemp((prevBuild) => ({...prevBuild, category: text}))}
-                        ></TextInput>
+                            placeholderStyle={{
+                                fontSize: getFontSize(20),
+                                color: (darkMode) ? "white" : "black",
+                                textAlign: 'center'
+                            }}
+                            iconStyle={{
+                                tintColor: '#ca2613',
+                                width: getIconSize(100),
+                                height: getIconSize(100)
+                            }}
+                            containerStyle={{
+                                backgroundColor: (darkMode) ? "#242121" : "#F5F5F5",
+                                borderColor: "#ca2613",
+                                borderWidth: 2/*, borderRadius: 20*/
+                            }}
+                            itemTextStyle={{
+                                fontSize: getFontSize(20),
+                                color: (darkMode) ? "white" : "black",
+                                textAlign: 'center'
+                            }}
+                            activeColor={"#ca2613"}
+                            selectedTextStyle={{
+                                fontSize: getFontSize(20),
+                                color: (darkMode) ? "white" : "black",
+                                textAlign: 'center'
+                            }}
+                        />
                     </View>
                     <View style={{backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"}}>
                         {
                             (buildTemp !== null && buildTemp !== undefined) &&
-                            <FlatList style={{paddingHorizontal: "5%"}} numColumns={2} data={buildTemp.buildsComponents}
+                            <FlatList numColumns={2} data={buildTemp.buildsComponents}
+                                      contentContainerStyle={{alignItems: "center", width: "100%"}}
                                       renderItem={(buildComp) => {
                                           return <TouchableOpacity
-                                              style={{...Styles.touchable, width: getIconSize(400)}}>
+                                              style={{...Styles.touchable, width: getIconSize(450), height: getIconSize(600), margin: "2%"}}>
                                               {
                                                   buildComp.item !== null &&
                                                   <TouchableOpacity
-                                                      style={{alignItems: "flex-end"}}
+                                                      style={{
+                                                          ...Styles.touchable,
+                                                          width: getIconSize(450),
+                                                          height: getIconSize(600),
+                                                          margin: "5%",
+                                                          justifyContent: "center",
+                                                          alignItems: "center"
+                                                      }}
                                                       onPress={() => removeFromBuild(buildComp.item.component)}>
                                                       <Material name='close-box' size={getIconSize(100)}
                                                                 color={(darkMode) ? "white" : "black"}></Material>

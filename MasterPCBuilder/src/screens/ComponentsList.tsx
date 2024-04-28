@@ -1,10 +1,7 @@
 import {
     Dimensions,
     FlatList,
-    Image,
     PixelRatio,
-    StyleSheet,
-    Text,
     TextInput,
     TouchableOpacity,
     View
@@ -14,7 +11,6 @@ import {Styles} from '../themes/Styles';
 import {usePrimaryContext} from '../contexts/PrimaryContext';
 import {RootStackParamList} from '../navigations/StackNavigator';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import IUserType from '../interfaces/IUserType';
 import HeaderScreen from "../components/HeaderScreen";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import axios from "axios";
@@ -35,7 +31,6 @@ const ComponentsList = (props: Props) => {
     const getIconSize = (size: number) => size / fullScreen;
     const [componentsList, setComponentsList] = useState<Array<IComponentType>>([]);
     const [componentsByName, setComponentsByName] = useState<Array<IComponentType>>([]);
-    const [wished, setWished] = useState(false);
 
     useEffect(() => {
         setComponentsList([]);
@@ -100,7 +95,7 @@ const ComponentsList = (props: Props) => {
                     <FontAwesome5Icon name="search" size={getIconSize(80)}
                                       color={(darkMode) ? "white" : "black"}/>
                 </View>
-                <View style={{justifyContent:"center",alignItems:"center",marginBottom:"35%",marginLeft:"5%"}}>
+                <View style={{justifyContent:"center", alignItems:"center", marginBottom:"35%", marginLeft:"2%"}}>
                     <FlatList
                         data={componentsByName}
                         numColumns={2}
@@ -114,10 +109,9 @@ const ComponentsList = (props: Props) => {
                             return (
                                 <TouchableOpacity
                                     style={{...Styles.touchable,
-                                        padding:"0%",
                                         margin:"2%",
                                         height:getIconSize(800),
-                                        width: "40%"}}
+                                        width: "45%"}}
                                     onPress={() => {
                                         navigation.navigate("ComponentScreen", { comp: comp.item})}
 

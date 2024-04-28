@@ -1,13 +1,11 @@
-import {View, Text, TouchableOpacity, FlatList, Image, Alert, PixelRatio, TextInput, Modal} from 'react-native'
+import {View, Text, TouchableOpacity, FlatList, Image, PixelRatio, TextInput, Modal} from 'react-native'
 import React, {useEffect, useState} from 'react'
 import {Styles} from '../themes/Styles';
-import {DrawerActions} from '@react-navigation/native';
 import {usePrimaryContext} from '../contexts/PrimaryContext';
 import IPostType from '../interfaces/IPostType';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../navigations/StackNavigator';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import Octicons from 'react-native-vector-icons/Octicons';
 import {Dimensions} from 'react-native';
 import HeaderScreen from "../components/HeaderScreen";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
@@ -29,13 +27,16 @@ const Social = (props: Props) => {
     const getIconSize = (size: number) => size / fullScreen;
     const [postsList, setPostsList] = useState([{}] as IPostType[]);
     const [postsFiltered, setPostsFiltered] = useState([{}] as IPostType[]);
+    const [categoryToFilter, setCategoryToFilter] = useState(Globals.CATEGORY_ALL);
     const [modalvisible, setModalvisible] = useState<boolean>(false);
     const [byPrice, setByPrice] = useState<boolean>(false);
+
     useEffect(() => {
         setPostsList([]);
         setPostsFiltered([]);
         getPosts();
-    }, [posts]);
+    }, [posts, user]);
+
     const toggleModal = () => {
         setModalvisible(!modalvisible);
     }
@@ -94,7 +95,7 @@ const Social = (props: Props) => {
         }
     }
 
-    const arrayCategoriaBuilder: Array<string> = ["All", "Gaming", "Budget", "Work"];
+    const arrayCategoriaBuilder: Array<string> = [Globals.CATEGORY_ALL, Globals.CATEGORY_GAMING, Globals.CATEGORY_BUDGET, Globals.CATEGORY_WORK];
 
     function isBlocked(userSelected: IUserType): boolean {
         for (const blockedUser of user.blockedUsers) {
@@ -204,8 +205,7 @@ const Social = (props: Props) => {
                                     <TouchableOpacity
                                         style={Styles.touchable}
                                         onPress={() => {
-                                            setModalvisible(!modalvisible)
-                                            setPostsFiltered(postsList);
+                                            setModalvisible(!modalvisible);
                                             setPostsFiltered(postsList.sort((a, b) => {
                                                 switch (byPrice) {
                                                     case true:
@@ -228,7 +228,7 @@ const Social = (props: Props) => {
                                                         }
                                                         return 0;
                                                 }
-                                            }))
+                                            }));
                                             setByPrice(!byPrice);
                                         }}>
                                         <View style={{flexDirection: "row"}}>
@@ -258,19 +258,45 @@ const Social = (props: Props) => {
                                         margin: 10,
                                         borderRadius: 20,
                                         borderWidth: 2,
-                                        borderColor: "#ca2613",
+                                        borderColor: (categoryToFilter === categoria.item) ? "violet" : "#ca2613",
                                         padding: 10,
                                         width: 100
                                     }}
                                     onPress={() => {
-                                        if (categoria.item === "All") {
+                                        if (categoria.item === Globals.CATEGORY_ALL) {
                                             setPostsFiltered(postsList);
-
+                                            setCategoryToFilter(Globals.CATEGORY_ALL);
                                         } else {
-                                            setPostsFiltered(postsList);
                                             setPostsFiltered(postsList.filter((post) => post.build?.category === categoria.item))
-                                        }
+                                            switch (categoria.item) {
+                                                case Globals.CATEGORY_WORK:
+                                                    if (categoryToFilter === Globals.CATEGORY_WORK) {
+                                                        setPostsFiltered(postsList);
+                                                        setCategoryToFilter(Globals.CATEGORY_ALL);
+                                                    } else {
+                                                        setCategoryToFilter(Globals.CATEGORY_WORK);
+                                                    }
+                                                    break;
 
+                                                case Globals.CATEGORY_GAMING:
+                                                    if (categoryToFilter === Globals.CATEGORY_GAMING) {
+                                                        setPostsFiltered(postsList);
+                                                        setCategoryToFilter(Globals.CATEGORY_ALL);
+                                                    } else {
+                                                        setCategoryToFilter(Globals.CATEGORY_GAMING);
+                                                    }
+                                                    break;
+
+                                                case Globals.CATEGORY_BUDGET:
+                                                    if (categoryToFilter === Globals.CATEGORY_BUDGET) {
+                                                        setPostsFiltered(postsList);
+                                                        setCategoryToFilter(Globals.CATEGORY_ALL);
+                                                    } else {
+                                                        setCategoryToFilter(Globals.CATEGORY_BUDGET);
+                                                    }
+                                                    break;
+                                            }
+                                        }
                                     }}
                                 >
                                     <View style={{alignItems: "center"}}>
@@ -281,8 +307,7 @@ const Social = (props: Props) => {
                                     </View>
                                 </TouchableOpacity>
                             )
-                        }
-                        }
+                        }}
                     />
                 </View>
                 <FlatList
@@ -303,7 +328,7 @@ const Social = (props: Props) => {
                                             }}>
                                                 <TouchableOpacity
                                                     style={{alignItems: "center", flexDirection: "row"}}
-                                                    onPress={() => navigation.navigate("OtherUserProfile", {userSelected: post.item.user})}>
+                                                    onPress={() => (post.item.user?.id !== user.id) ? navigation.navigate("OtherUserProfile", {userSelected: post.item.user}): navigation.navigate("Profile")}>
                                                     <Image
                                                         source={{
                                                             uri: (post.item.user?.picture !== "") ? "data:image/jpeg;base64," + post.item.user?.picture : "https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png?x=480&quality=40",
@@ -322,8 +347,11 @@ const Social = (props: Props) => {
                                                         marginHorizontal: "10%"
                                                     }}>{post.item.user?.nick}</Text>
                                                 </TouchableOpacity>
-                                                <TouchableOpacity style={{justifyContent: "space-between", flexDirection: "row", alignItems: "center"}}
-                                                                  onPress={() => addRemoveLike(post.item)}>
+                                                <TouchableOpacity style={{
+                                                    justifyContent: "space-between",
+                                                    flexDirection: "row",
+                                                    alignItems: "center"
+                                                }} onPress={() => addRemoveLike(post.item)}>
                                                     <FontAwesome
                                                         name={!(post.item.liked) ? 'thumbs-o-up' : 'thumbs-up'}
                                                         size={getIconSize(80)}
@@ -344,13 +372,26 @@ const Social = (props: Props) => {
                                                     fontSize: getFontSize(15),
                                                     color: (darkMode) ? "white" : "black"
                                                 }}>Price: {post.item.build?.totalPrice}€</Text>
+                                                <Text style={{
+                                                    fontSize: getFontSize(15),
+                                                    color: (darkMode) ? "white" : "black"
+                                                }}>Category: {post.item.build?.category}</Text>
                                             </View>
-
                                         </View>
                                         <View style={{alignItems: "center"}}>
                                             <Image
                                                 source={{
-                                                    uri: "data:image/jpeg;base64," + post.item.image
+                                                    uri: (post.item.image !== "") ? "data:image/jpeg;base64," + post.item.image :
+                                                        (post.item.build?.category === Globals.CATEGORY_GAMING) ?
+                                                            "https://regeneration.co.nz/cdn/shop/files/ullr-gaming-pc-regen-computers.webp?v=1696907011"
+                                                            :
+                                                            (post.item.build?.category === Globals.CATEGORY_BUDGET) ?
+                                                                "https://pcbuildsonabudget.com/wp-content/uploads/2022/10/1200-Dollar-PC-Build-Case.jpg"
+                                                                :
+                                                                (post.item.build?.category === Globals.CATEGORY_WORK) ?
+                                                                    "https://www.pcspecialist.co.uk/images/cases/12030/h.png?1602846384"
+                                                                    :
+                                                                    ""
                                                 }}
                                                 style={{
                                                     width: getIconSize(900),
