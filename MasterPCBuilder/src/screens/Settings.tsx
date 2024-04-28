@@ -1,12 +1,10 @@
-import { StyleSheet, Text, TouchableOpacity, View, Alert, Image, Switch, PixelRatio, Dimensions } from 'react-native';
-import React, {useState} from 'react'
+import { Text, TouchableOpacity, View, Alert, Switch, PixelRatio, Dimensions } from 'react-native';
+import React from 'react'
 import { Styles } from '../themes/Styles';
-import Icon from 'react-native-vector-icons/Octicons';
 import { RootStackParamList } from '../navigations/StackNavigator';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { usePrimaryContext } from '../contexts/PrimaryContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { DrawerActions } from '@react-navigation/native';
 import * as ImagePicker from 'react-native-image-picker';
 import {ImagePickerResponse} from "react-native-image-picker";
 import RNFetchBlob from "rn-fetch-blob";
@@ -14,7 +12,6 @@ import axios from "axios";
 import {Globals} from "../components/Globals";
 import HeaderScreen from "../components/HeaderScreen";
 import {FAB} from "react-native-elements";
-import IUserType from "../interfaces/IUserType";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Settings'>;
 

@@ -43,6 +43,7 @@ const Chat = (props: Props) => {
     const [message, setMessage] = useState("");
     const flatListRef = useRef();
     const [blockedUser, setBlockedUser] = useState(false);
+    const msgsRef = useRef([{}] as IMsgType[]);
 
     useEffect(() => {
         connect();
@@ -54,12 +55,14 @@ const Chat = (props: Props) => {
         let messageTo = {
             author: user.nick,
             receiver: userSelected.nick,
-            content: message
+            content: message,
+            date: getFormattedDate()
         };
         stompClient.publish({destination: "/app/private", body: JSON.stringify(messageTo)});
         console.log("enviado privado");
+        msgsRef.current.unshift({content: messageTo.content, author: messageTo.author, receiver: messageTo.receiver, date: messageTo.date});
 
-        setMsgs( prevMsgs => [{content: messageTo.content, author: messageTo.author, receiver: messageTo.receiver, date: getFormattedDate()}, ...prevMsgs]);
+        setMsgs( [...msgsRef.current]);
         setMessage("");
         // @ts-ignore
         flatListRef.current.scrollToOffset({ animated: true });
@@ -78,7 +81,7 @@ const Chat = (props: Props) => {
 
         return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     }
-
+/*
     function onPublicMessageReceived(datos: any) {
         console.log("datos: " + datos);
         //setRecibido(datos.body);
@@ -88,27 +91,26 @@ const Chat = (props: Props) => {
         arr.push({content: nuevoMensaje.content, author: nuevoMensaje.author, receiver: nuevoMensaje.receiver, date: nuevoMensaje.date});
         setMsgs([...arr]);
     }
-
+*/
     function onPrivateMessageReceived(datos: any) {
         console.log("datos: " + datos);
         //setRecibido(datos.body);
         let nuevoMensaje = JSON.parse(datos.body);
         console.log(nuevoMensaje);
-        let arr = msgs;
-        arr.push({content: nuevoMensaje.content, author: nuevoMensaje.author, receiver: nuevoMensaje.receiver, date: nuevoMensaje.date});
-        setMsgs([...arr]);
+        msgsRef.current.unshift({content: nuevoMensaje.content, author: nuevoMensaje.author, receiver: nuevoMensaje.receiver, date: nuevoMensaje.date});
+        setMsgs([...msgsRef.current]);
     }
-
 
     function connect() {
 
         function getPrivateMessages() {
+            msgsRef.current = [];
             setMsgs([]);
-            getUserAuthorMsgs();
-            getUserReceiverMsgs();
-            setMsgs(msgs.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()));
+            getMsgs();
+
+
         }
-        async function getUserAuthorMsgs() {
+        async function getMsgs() {
             let userAuthor = await axios.get(
                 Globals.IP_HTTP + "/api/v2/messages?receiver=" + userSelected.nick + "&author=" + user.nick,
                 {
@@ -126,12 +128,9 @@ const Chat = (props: Props) => {
                     content: msg.content,
                     date: msg.date
                 }
-                setMsgs((msgs) => [newMsg, ...msgs]);
+                msgsRef.current.push(newMsg);
             });
 
-        }
-
-        async function getUserReceiverMsgs() {
             let userReceiver = await axios.get(
                 Globals.IP_HTTP + "/api/v2/messages?receiver=" + user.nick + "&author=" + userSelected.nick,
                 {
@@ -148,8 +147,16 @@ const Chat = (props: Props) => {
                     content: msg.content,
                     date: msg.date
                 }
-                setMsgs((msgs) => [newMsg, ...msgs]);
+                msgsRef.current.push(newMsg);
             });
+
+            msgsRef.current.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+            setMsgs([...msgsRef.current]);
+        }
+
+        async function getUserReceiverMsgs() {
+
         }
 
 
@@ -259,15 +266,16 @@ const Chat = (props: Props) => {
                             return (
                                 <View>
                                     <View style={{flexDirection: "row", justifyContent: "flex-end"}}>
-                                        <Text style={{fontSize: getFontSize(15), color: "#a3a3a3", fontStyle: "italic"}}>{msg.item.date}</Text>
+                                        <Text style={{fontSize: getFontSize(15), color: "#a3a3a3", fontStyle: "italic", marginRight: "2%"}}>{msg.item.date}</Text>
                                     </View>
                                     <View style={{flexDirection: "row", justifyContent: "flex-end"}}>
                                         <View style={{
                                             backgroundColor: "#ca2613",
-                                            borderRadius: 20,
+                                            //borderRadius: 20,
                                             padding: "1%",
                                             paddingHorizontal: "3%",
                                             margin: "2%",
+                                            marginRight: "3%",
                                             maxWidth: "90%"
                                         }}>
                                             <Text style={{fontSize: getFontSize(15), color: "white"}}>{msg.item.content}</Text>
@@ -278,16 +286,17 @@ const Chat = (props: Props) => {
                         } else if (msg.item?.author === userSelected.nick) {
                             return (
                                 <View>
-                                    <View style={{flexDirection: "row", justifyContent: "flex-end"}}>
-                                        <Text style={{fontSize: getFontSize(15), color: "#a3a3a3", fontStyle: "italic"}}>{msg.item.date}</Text>
+                                    <View style={{flexDirection: "row", justifyContent: "flex-start"}}>
+                                        <Text style={{fontSize: getFontSize(15), color: "#a3a3a3", fontStyle: "italic", marginLeft: "2%"}}>{msg.item.date}</Text>
                                     </View>
-                                    <View style={{flexDirection: "row", justifyContent: "flex-end"}}>
+                                    <View style={{flexDirection: "row", justifyContent: "flex-start"}}>
                                         <View style={{
-                                            backgroundColor: "#ca2613",
-                                            borderRadius: 20,
+                                            backgroundColor: "#676767",
+                                            //borderRadius: 20,
                                             padding: "1%",
                                             paddingHorizontal: "3%",
                                             margin: "2%",
+                                            marginLeft: "3%",
                                             maxWidth: "90%"
                                         }}>
                                             <Text style={{fontSize: getFontSize(15), color: "white"}}>{msg.item.content}</Text>
@@ -321,7 +330,7 @@ const Chat = (props: Props) => {
                     style={{
                         borderWidth: 2,
                         borderColor: "#ca2613",
-                        borderRadius: 20,
+                        //borderRadius: 20,
                         paddingHorizontal: "5%",
                         width: "80%",
                         fontSize: getFontSize(15),

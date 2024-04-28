@@ -90,7 +90,7 @@ public class UserEntityService implements IUserRepository {
                 UserEntity save = repo.save(ue);
 
                 res = mapper.toDomain(save, new HashSet<Long>(), new HashSet<Long>(), "save");
-            } catch (RuntimeException | ParseException e) {
+            } catch (ParseException e) {
                 return null;
             }
         }

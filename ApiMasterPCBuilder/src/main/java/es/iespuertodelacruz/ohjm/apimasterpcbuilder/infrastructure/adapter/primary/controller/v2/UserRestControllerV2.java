@@ -160,13 +160,19 @@ public class UserRestControllerV2 {
         if (byId.getFriends() == null) {
             byId.setFriends(new ArrayList<>());
         }
+        if (friend.getFriends() == null) {
+            friend.setFriends(new ArrayList<>());
+        }
         if (byId.getFriends().contains(friend)) {
             byId.getFriends().remove(friend);
+            friend.getFriends().remove(byId);
         } else {
             byId.getFriends().add(friend);
+            friend.getFriends().add(byId);
         }
+        User friendSave = userService.save(friend);
         User save = userService.save(byId);
-        if (save != null) {
+        if (save != null && friendSave != null) {
             return ResponseEntity.ok(mapper.toDTO(save));
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
