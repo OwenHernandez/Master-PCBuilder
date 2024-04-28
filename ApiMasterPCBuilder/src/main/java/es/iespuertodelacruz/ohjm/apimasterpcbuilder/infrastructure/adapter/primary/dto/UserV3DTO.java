@@ -1,11 +1,10 @@
 package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto;
 
-import java.util.List;
-
 public class UserV3DTO extends UserDTO {
 
     private String role;
-    private byte active;
+    private boolean active;
+    private boolean deleted;
 
     public UserV3DTO() {
     }
@@ -18,11 +17,19 @@ public class UserV3DTO extends UserDTO {
         this.role = role;
     }
 
-    public byte getActive() {
+    public boolean isActive() {
         return active;
     }
 
-    public void setActive(byte active) {
+    public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

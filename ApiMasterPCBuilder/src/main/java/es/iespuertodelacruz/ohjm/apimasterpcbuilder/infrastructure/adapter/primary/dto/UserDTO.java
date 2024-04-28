@@ -10,8 +10,16 @@ public class UserDTO {
     private List<UserDTO> friends;
     private List<UserDTO> blockedUsers;
     private List<ComponentOutputDTO> componentsWanted;
-
+    private String role;
     public UserDTO() {
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public long getId() {

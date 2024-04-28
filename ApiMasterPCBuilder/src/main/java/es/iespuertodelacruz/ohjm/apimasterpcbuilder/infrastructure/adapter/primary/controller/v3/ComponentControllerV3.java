@@ -91,16 +91,22 @@ public class ComponentControllerV3 {
         } else {
             component.setImage(byId.getImage());
         }
-        Component domain = componentDTOMapper.toDomain(component);
-        domain.setId(id);
-        domain.setUserWhoCreated(byId.getUserWhoCreated());
+        Component componentInput = componentDTOMapper.toDomain(component);
+        componentInput.setId(id);
+        componentInput.setAmazon_price(byId.getAmazon_price());
+        componentInput.setEbay_price(byId.getEbay_price());
+        componentInput.setPrice(component.getPrice());
+        componentInput.setDescription(component.getDescription());
+        componentInput.setUserWhoCreated(byId.getUserWhoCreated());
+        System.out.println(component.getSellerName());
         Seller byName = sellerService.findByName(component.getSellerName());
+
         if (byName == null) {
             throw new GraphQLErrorException("Seller not found", HttpStatus.NOT_FOUND);
         }
-        domain.setSeller(byName);
+        componentInput.setSeller(byName);
 
-        Component save = componentService.save(domain);
+        Component save = componentService.save(componentInput);
         if (save == null) {
             throw new GraphQLErrorException("Error saving component", HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -113,7 +119,15 @@ public class ComponentControllerV3 {
         if (byId == null) {
             throw new GraphQLErrorException("Component not found", HttpStatus.NOT_FOUND);
         }
-        componentService.deleteById(id);
-        return true;
+        byId.setIsDeleted((byte) 1);
+        try {
+            Component save = componentService.save(byId);
+            if (save.getIsDeleted() == 1) {
+                return true;
+            }
+        } catch (Exception e) {
+            throw new GraphQLErrorException("Error deleting component", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return false;
     }
 }

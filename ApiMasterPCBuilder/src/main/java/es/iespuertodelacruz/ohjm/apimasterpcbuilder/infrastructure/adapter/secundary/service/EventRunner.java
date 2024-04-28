@@ -40,6 +40,9 @@ public class EventRunner {
             List<Component> ebaySearch = componentService.searchEbay(comp.getName());
             log.info("Amazon: "+amazonSearch.get(0).getAmazon_price());
             log.info("Ebay: "+ebaySearch.get(1).getEbay_price());
+
+            System.out.println("https://www.youtube.com/watch?v=pyZtr3_dN3E");
+
             if (amazonSearch.size() > 0 ) {
                 if (amazonSearch.get(0).getAmazon_price() != comp.getAmazon_price()) {
                     comp.setAmazon_price(amazonSearch.get(0).getAmazon_price());

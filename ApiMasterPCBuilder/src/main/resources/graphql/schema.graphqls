@@ -101,6 +101,8 @@ type Component {
     sellerName: String
     userNick: String
     priceHistory: [PriceHistory]
+    deleted: Int
+
 }
 
 input ComponentDTO {
@@ -113,6 +115,7 @@ input ComponentDTO {
     amazon_price: Float
     ebay_price: Float
     sellerName: String
+    deleted: Int
 }
 
 # BuildComponent
@@ -161,15 +164,18 @@ input UserSaveDTO {
     pictureBase64: String
     role: String
     active: Int
+    deleted: Int
 }
 
 input UserUpdateDTO {
     nick: String
+    password: String
     email: String
     picture: String
     pictureBase64: String
     role: String
     active: Int
+    deleted: Int
 }
 
 # Post

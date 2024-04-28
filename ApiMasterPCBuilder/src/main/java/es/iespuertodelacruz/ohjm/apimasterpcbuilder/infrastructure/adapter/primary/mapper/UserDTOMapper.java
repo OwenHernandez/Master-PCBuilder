@@ -20,6 +20,7 @@ public class UserDTOMapper {
         user.setEmail(userDTO.getEmail());
         user.setPicture(userDTO.getPicture());
         user.setFriends(new ArrayList<>());
+        user.setRole(userDTO.getRole());
         if (userDTO.getFriends() != null && !userDTO.getFriends().isEmpty()) {
             for (UserDTO uDTO : userDTO.getFriends()) {
                 User u = toDomain(uDTO);
@@ -35,11 +36,11 @@ public class UserDTOMapper {
         userDTO.setNick(user.getNick());
         userDTO.setEmail(user.getEmail());
         userDTO.setPicture(user.getPicture());
+        userDTO.setRole(user.getRole());
         if (user.getComponentsWanted() != null && !user.getComponentsWanted().isEmpty()) {
             List<ComponentOutputDTO> componentsWanted = new ArrayList<>();
             for (Component c : user.getComponentsWanted()) {
                 ComponentOutputDTO cDTO = compMapper.toDTO(c);
-
                 componentsWanted.add(cDTO);
             }
             userDTO.setComponentsWanted(componentsWanted);
@@ -98,8 +99,9 @@ public class UserDTOMapper {
                 userDTO.getBlockedUsers().add(uDTO);
             }
         }
-        userDTO.setActive(user.getActive());
+        userDTO.setActive(user.getActive() == 1);
         userDTO.setRole(user.getRole());
+        userDTO.setDeleted(user.getDeleted() == 1);
         return userDTO;
     }
 }
