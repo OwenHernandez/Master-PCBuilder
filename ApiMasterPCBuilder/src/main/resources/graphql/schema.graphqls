@@ -28,6 +28,8 @@ type Query {
     message(id: String!): Message!
     byTopic(topic: String!): [Message]!
     byReceiverAndAuthor(author: String!, receiver: String!): [Message]!
+
+    getImage(filename: String!): FileResponse!
 }
 
 type Mutation {
@@ -65,6 +67,12 @@ type Mutation {
 
     # Message
     deleteMessage(id: String!): Boolean!
+}
+
+# Images
+type FileResponse {
+    contentType: String
+    content: String!
 }
 
 # Seller

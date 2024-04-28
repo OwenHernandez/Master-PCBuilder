@@ -84,7 +84,6 @@ const Build=(props: Props) => {
                 componentsIds: componentsSelected
             };
             const update = await updateBuildG({variables: {id: buildSelected?.id, build: updateComponent}});
-            console.log(update);
             setLocura(!locura);
         } catch (error) {
             console.log(error);

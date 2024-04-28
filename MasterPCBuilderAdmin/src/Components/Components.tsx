@@ -66,11 +66,7 @@ const Components=(props: Props) => {
     useEffect(() => {
         async function getComponents() {
             setComponents(dataComponents?.components || []);
-            console.log(components)
-            console.log(loadingSeller)
-            console.log(errorSeller)
             setSellers(dataSeller?.sellers || []);
-            console.log(sellers)
         }
         getComponents()
     }, [locura || dataComponents || dataSeller || loadingSeller || loading || errorSeller || error]);
@@ -98,9 +94,7 @@ const Components=(props: Props) => {
                 name: componentSelected?.name!,
                 sellerName: sellerName
             };
-            console.log(sellerName);
             const update = await updateComponentG({variables: {id: componentSelected?.id, component: updateComponent}});
-            console.log(update);
             setLocura(!locura);
         } catch (error) {
             console.log(error);
@@ -111,8 +105,6 @@ const Components=(props: Props) => {
         event.preventDefault();
         const cleanBase64 = photoBase64.replace(/^data:image\/png;base64,/, "");
 
-        console.log("PICTURE:"+nombrefichero)
-        console.log("PICTURE:"+cleanBase64)
         const newComponent={
             description: description,
             image: nombrefichero,

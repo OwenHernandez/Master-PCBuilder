@@ -1,5 +1,13 @@
 import {gql} from "@apollo/client";
 //QUERIES
+export const GET_FILE = gql`
+  query GetFile($filename: String!) {
+    getImage(filename: $filename) {
+      contentType
+      content
+    }
+  }`;
+
 export const GET_SELLER= gql`
 query MyQuery {
   sellers {

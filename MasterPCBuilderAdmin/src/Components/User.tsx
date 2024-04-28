@@ -37,11 +37,8 @@
         }
         async function updateUser(event:React.FormEvent<HTMLFormElement>){
             event.preventDefault();
-            console.log("PASSWORD:"+password);
-            console.log("ROL:"+rol);
-            console.log("PICTURE:"+nombrefichero);
             const cleanBase64 = photoBase64.replace(/^data:image\/png;base64,/, "");
-            console.log("PICTURE:"+cleanBase64);
+
             try {
                 const userInput = {
                     nick: userSelected?.nick,

@@ -15,6 +15,8 @@ import Components from "./Components";
 import {local} from "d3";
 import Build from "./Build";
 import {FaComputer} from "react-icons/fa6";
+import Chats from "./Chats";
+import AdminChat from "./AdminChat";
 type Props = {}
 
 
@@ -27,7 +29,6 @@ const Router = (props: Props) => {
             <div style={{ display: 'flex', flexDirection: 'row', height: '100vh' }}>
                 {isLoged === true ? <Side /> : null}
                 <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
-                    {isLoged === true ? <NavLocal /> : null}
                     <div style={{ flex: 1, overflowY: 'auto' }}>
                         <Routes>
                             <Route path="/" element={<Login />} />
@@ -36,28 +37,14 @@ const Router = (props: Props) => {
                             <Route path='/users' element={<Protector isLoged={isLoged}><User /></Protector>} />
                             <Route path='/components' element={<Protector isLoged={isLoged}><Components /></Protector>} />
                             <Route path='/builds' element={<Protector isLoged={isLoged}><Build /></Protector>} />
+                            <Route path='/chats' element={<Protector isLoged={isLoged}><Chats /></Protector>} />
+                            <Route path='/chat/:userNick' element={<Protector isLoged={isLoged}><AdminChat /></Protector>} />
                         </Routes>
                     </div>
                 </div>
             </div>
         </BrowserRouter>
     )
-}
-function NavLocal() {
-    return (
-        <div style={{ width: "100%" }}>
-            <Navbar expand="lg" className="bg-body-tertiary">
-
-                <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                <Navbar.Collapse id="basic-navbar-nav">
-                    <Nav className="me-auto">
-                        <Nav.Link href="#home">Home</Nav.Link>
-                        <Nav.Link href="#link">Link</Nav.Link>
-                    </Nav>
-                </Navbar.Collapse>
-            </Navbar>
-        </div>
-    );
 }
 function Side() {
     return (
@@ -77,7 +64,9 @@ function Side() {
                         <Nav.Link className="text-dark">
                             <Link to="/builds"><FaComputer/> Builds</Link>
                         </Nav.Link>
-
+                        <Nav.Link className="text-dark">
+                            <Link to="/chats"><FaUsers/> Chats</Link>
+                        </Nav.Link>
                     </Nav>
                     <Nav.Item className="mt-auto p-3 ">
                         <Nav.Link href="#logout" className="text-danger">

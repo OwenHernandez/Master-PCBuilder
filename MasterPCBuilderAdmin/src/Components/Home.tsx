@@ -198,6 +198,7 @@ const Home = () => {
     setLocura(!locura)
 
   },  [components]);  // Dependency array ensures useEffect runs when components data changes
+  /*
   useEffect(() => {
     console.log("Loading states:", { usersLoading: loading, componentsLoading: loadingComponents, buildsLoading: loadingBuilds });
     console.log("Data states:", { usersData: users, componentsData: components, buildsData: builds });
@@ -206,6 +207,7 @@ const Home = () => {
     console.log(builds)
     console.log("Error states:", { userError: error, componentError: errorComponents, buildError: errorBuilds });
   }, [loading, loadingComponents, loadingBuilds, users, components, builds, error, errorComponents, errorBuilds]);
+   */
 
   function changeGraphics(type: string |null) {
     let filteredComponents = type ? components?.filter(component => component.type === type) : components;

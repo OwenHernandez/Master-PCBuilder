@@ -17,10 +17,7 @@ const Login = (props: Props) => {
 
     async function login(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
-        console.log("NICKNAME" + nickname);
-        console.log("PASSWORD:" + password);
         try {
-            console.log(Globals.IP_HTTP + '/api/v1/login');
             const response = await axios.post('http://localhost:8080/api/v1/login', {
                 nick: nickname,
                 password: password
@@ -29,7 +26,6 @@ const Login = (props: Props) => {
             if (data !== undefined) {
                 const responseUser = await axios.get('http://localhost:8080/api/v2/users?nick=' + nickname, { headers: { 'Authorization': "Bearer " + data } });
                 const dataUser = responseUser.data;
-                console.log(dataUser.role)
                 if (dataUser.role === "ROLE_ADMIN") {
                     setIsWorking(1);
                     setToken(data);
