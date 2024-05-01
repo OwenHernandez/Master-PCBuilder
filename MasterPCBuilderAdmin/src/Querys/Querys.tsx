@@ -8,7 +8,18 @@ export const GET_FILE = gql`
     }
   }`;
 
-export const GET_SELLER= gql`
+export const GET_MESSAGES_BY_RECEIVER_AND_AUTHOR = gql`
+  query GetMessagesByRecieverAndAuthor($receiver: String!, $author: String!) {
+    byReceiverAndAuthor(receiver: $receiver, author: $author) {
+      id
+      author
+      receiver
+      content
+      date
+    }
+  }`;
+
+export const GET_SELLER = gql`
 query MyQuery {
   sellers {
     id
@@ -141,7 +152,7 @@ export const SAVE_COMPONENT = gql`
     }
   }
 `;
-export const UPDATE_COMPONENT= gql`
+export const UPDATE_COMPONENT = gql`
   mutation UpdateComponent($id: Int!, $component: ComponentDTO!) {
   updateComponent(id: $id, component: $component) {
     id

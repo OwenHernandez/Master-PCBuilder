@@ -165,7 +165,7 @@ public class User {
 
     @Override
     public String toString() {
-        return "UserEntity{" +
+        return "User{" +
                 "id=" + id +
                 ", email='" + email + '\'' +
                 ", nick='" + nick + '\'' +

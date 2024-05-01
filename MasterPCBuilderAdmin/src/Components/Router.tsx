@@ -27,7 +27,7 @@ const Router = (props: Props) => {
     return (
         <BrowserRouter>
             <div style={{ display: 'flex', flexDirection: 'row', height: '100vh' }}>
-                {isLoged === true ? <Side /> : null}
+                {isLoged ? <Side /> : null}
                 <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
                     <div style={{ flex: 1, overflowY: 'auto' }}>
                         <Routes>
@@ -38,7 +38,7 @@ const Router = (props: Props) => {
                             <Route path='/components' element={<Protector isLoged={isLoged}><Components /></Protector>} />
                             <Route path='/builds' element={<Protector isLoged={isLoged}><Build /></Protector>} />
                             <Route path='/chats' element={<Protector isLoged={isLoged}><Chats /></Protector>} />
-                            <Route path='/chat/:userNick' element={<Protector isLoged={isLoged}><AdminChat /></Protector>} />
+                            <Route path='/chat' element={<Protector isLoged={isLoged}><AdminChat /></Protector>} />
                         </Routes>
                     </div>
                 </div>

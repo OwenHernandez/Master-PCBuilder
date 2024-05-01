@@ -8,6 +8,7 @@ import {Link, useNavigate} from "react-router-dom";
 import axios from "axios";
 import {Globals} from "../Type/Globals";
 import ImgViewer from "./ImgViewer";
+import {IUserType} from "./AdminChat";
 
 type Props = {}
 
@@ -20,6 +21,7 @@ const Chats = (props: Props) => {
 
     useEffect(() => {
         async function fetchData() {
+            console.log("LOG>>>> " + dataUsers?.users)
             setUsers(dataUsers?.users);
         }
 
@@ -33,13 +35,13 @@ const Chats = (props: Props) => {
             </Row>
             <Row style={{margin: "5%", marginTop: "3%"}}>
                 {
-                    users.map((user: any, index: number) => {
+                    users.map((user: IUserType) => {
 
                         return (
                             <button
                                 className="button-style"
                                 style={{width: "30%"}}
-                                onClick={() => navigate("/chat/" + user.nick)}
+                                onClick={() => navigate("/chat", {state: {userSelected: user}})}
                             >
                                 <div
                                     className="text-style"

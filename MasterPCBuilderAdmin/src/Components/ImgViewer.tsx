@@ -27,16 +27,14 @@ const ImgViewer = (props: Props) => {
 
     if (loading) return <p>Loading...</p>;
     if (error) return <img src={"https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png?x=480&quality=40"}
-                           className="image-style"/>;
+                           className="image-style" alt={"default-profilePic"}/>;
     return (
         <>
             {
                 data && data.getImage && (
-                        <>
-                            <img src={`data:image/jpeg;base64,${data.getImage.content}`} alt={data.getImage.content}
-                                 className="image-style"/>
-                        </>
-                    )
+                    <img src={`data:image/jpeg;base64,${data.getImage.content}`} alt={filename}
+                         className="image-style"/>
+                )
             }
         </>
     );

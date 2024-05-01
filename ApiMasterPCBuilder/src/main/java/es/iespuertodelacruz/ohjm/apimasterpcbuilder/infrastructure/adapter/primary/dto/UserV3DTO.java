@@ -2,19 +2,10 @@ package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.prim
 
 public class UserV3DTO extends UserDTO {
 
-    private String role;
     private boolean active;
     private boolean deleted;
 
     public UserV3DTO() {
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
     }
 
     public boolean isActive() {

@@ -27,7 +27,7 @@ type Query {
     messages: [Message]!
     message(id: String!): Message!
     byTopic(topic: String!): [Message]!
-    byReceiverAndAuthor(author: String!, receiver: String!): [Message]!
+    byReceiverAndAuthor(receiver: String!, author: String!): [Message]!
 
     getImage(filename: String!): FileResponse!
 }
@@ -225,6 +225,7 @@ input GroupChatDTO {
 
 # Message
 type Message {
+    id: String
     content: String
     date: String
     author: String
