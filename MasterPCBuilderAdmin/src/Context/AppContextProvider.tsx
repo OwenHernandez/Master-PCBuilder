@@ -10,19 +10,24 @@ export interface AppContextType {
     setToken: Dispatch<SetStateAction<string>>;
     isLoged: boolean,
     setIsLoged: Dispatch<SetStateAction<boolean>>;
+    darkMode: boolean,
+    setDarkMode: Dispatch<SetStateAction<boolean>>;
 }
 export const AppContext = createContext<AppContextType>({} as AppContextType);
 const AppContextProvider = (props: any) => {
     const [user, setUser] = useState<UserType>({} as UserType)
     const [token, setToken] = useState<string>("")
-    const [isLoged, setIsLoged] = useState(false)
+    const [isLoged, setIsLoged] = useState(false);
+    const [darkMode, setDarkMode] = useState(true);
     const contextValues: AppContextType = {
         user: user,
         setUser: setUser,
         token: token,
         setToken: setToken,
         isLoged: isLoged,
-        setIsLoged: setIsLoged
+        setIsLoged: setIsLoged,
+        darkMode: darkMode,
+        setDarkMode: setDarkMode
     };
     return (
         <AppContext.Provider value={contextValues}>

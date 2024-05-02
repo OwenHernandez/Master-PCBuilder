@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.net.URLConnection;
 import java.util.Base64;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Controller
@@ -101,7 +102,7 @@ public class UserControllerV3 {
         userToUpdate.setRole(user.getRole());
 
 
-        if (user.getPicture() != null) {
+        if (user.getPicture() != null && !user.getPicture().isEmpty()) {
             String codedPicture = user.getPictureBase64();
             byte[] photoBytes = Base64.getDecoder().decode(codedPicture);
             String newFileName = storageService.save(user.getNick() + "_" + user.getPicture(), photoBytes);
