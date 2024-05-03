@@ -109,8 +109,7 @@ type Component {
     sellerName: String
     userNick: String
     priceHistory: [PriceHistory]
-    deleted: Int
-
+    deleted: Boolean
 }
 
 input ComponentDTO {
@@ -123,7 +122,7 @@ input ComponentDTO {
     amazon_price: Float
     ebay_price: Float
     sellerName: String
-    deleted: Int
+    deleted: Boolean
 }
 
 # BuildComponent

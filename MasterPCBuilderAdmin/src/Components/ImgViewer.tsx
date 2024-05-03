@@ -22,7 +22,6 @@ type Props = {
 
 const ImgViewer = (props: Props) => {
     const {filename} = props;
-    console.log("FILENAME: " + filename);
     const [fileBase64, setFileBase64] = useState("");
     const {data, loading, error, refetch} = useQuery<QueryData, QueryVars>(GET_FILE, {
         variables: {filename},

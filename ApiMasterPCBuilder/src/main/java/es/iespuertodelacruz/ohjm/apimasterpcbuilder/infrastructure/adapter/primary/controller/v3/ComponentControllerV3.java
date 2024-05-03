@@ -83,30 +83,30 @@ public class ComponentControllerV3 {
         if (byId == null) {
             throw new GraphQLErrorException("Component not found", HttpStatus.NOT_FOUND);
         }
-        if (component.getImage64() != null) {
+        if (component.getImage64() != null && !component.getImage64().isEmpty()) {
             String codedPicture = component.getImage64();
             byte[] photoBytes = Base64.getDecoder().decode(codedPicture);
             String newFileName = storageService.save(component.getName() + "_" + component.getImage(), photoBytes);
-            component.setImage(newFileName);
-        } else {
-            component.setImage(byId.getImage());
+            byId.setImage(newFileName);
         }
-        Component componentInput = componentDTOMapper.toDomain(component);
-        componentInput.setId(id);
-        componentInput.setAmazon_price(byId.getAmazon_price());
-        componentInput.setEbay_price(byId.getEbay_price());
-        componentInput.setPrice(component.getPrice());
-        componentInput.setDescription(component.getDescription());
-        componentInput.setUserWhoCreated(byId.getUserWhoCreated());
-        System.out.println(component.getSellerName());
-        Seller byName = sellerService.findByName(component.getSellerName());
-
-        if (byName == null) {
-            throw new GraphQLErrorException("Seller not found", HttpStatus.NOT_FOUND);
+        if (!component.getDescription().isEmpty()) {
+            byId.setDescription(component.getDescription());
         }
-        componentInput.setSeller(byName);
+        byId.setPrice(component.getPrice());
+        if (!component.getType().isEmpty()) {
+            byId.setType(component.getType());
+        }
+        if (!component.getSellerName().isEmpty()) {
+            Seller byName = sellerService.findByName(component.getSellerName());
 
-        Component save = componentService.save(componentInput);
+            if (byName == null) {
+                throw new GraphQLErrorException("Seller not found", HttpStatus.NOT_FOUND);
+            }
+            byId.setSeller(byName);
+        }
+        byId.setDeleted((byte) 0);
+
+        Component save = componentService.save(byId);
         if (save == null) {
             throw new GraphQLErrorException("Error saving component", HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -119,10 +119,10 @@ public class ComponentControllerV3 {
         if (byId == null) {
             throw new GraphQLErrorException("Component not found", HttpStatus.NOT_FOUND);
         }
-        byId.setIsDeleted((byte) 1);
+        byId.setDeleted((byte) 1);
         try {
             Component save = componentService.save(byId);
-            if (save.getIsDeleted() == 1) {
+            if (save.getDeleted() == 1) {
                 return true;
             }
         } catch (Exception e) {

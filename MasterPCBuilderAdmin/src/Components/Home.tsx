@@ -32,7 +32,7 @@ export interface IComponentType {
     userNick: string;
     wished?: boolean;
     priceHistory: Array<IPriceHistory>;
-    deleted: number
+    deleted: boolean
 }
 
 export interface IBuildComponent {
@@ -49,7 +49,7 @@ export interface IBuild {
     totalPrice: number;
     userNick: string;
     buildsComponents: IBuildComponent[];
-    deleted: number;
+    deleted: boolean;
 }
 
 const Home = () => {

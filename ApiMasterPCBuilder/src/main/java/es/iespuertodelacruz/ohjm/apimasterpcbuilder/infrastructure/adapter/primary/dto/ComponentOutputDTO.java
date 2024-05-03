@@ -19,7 +19,7 @@ public class ComponentOutputDTO {
     private double price;
     private double amazon_price;
     private double ebay_price;
-    private int deleted;
+    private boolean deleted;
 
     private String sellerName;
 
@@ -27,11 +27,11 @@ public class ComponentOutputDTO {
     private List<PriceHistory> priceHistory;
     public ComponentOutputDTO() {}
 
-    public int isDeleted() {
+    public boolean isDeleted() {
         return deleted;
     }
 
-    public void setDeleted(int deleted) {
+    public void setDeleted(boolean deleted) {
         this.deleted = deleted;
     }
 

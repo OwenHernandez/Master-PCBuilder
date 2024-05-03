@@ -13,7 +13,9 @@ import React, {useEffect, useState} from "react";
 import {Accordion, Button, Col, Form, Modal, Row} from "react-bootstrap";
 import {IComponentType, ISellerType} from "./Components";
 import {IBuild, IBuildComponent} from "./Home";
+
 type Props={}
+
 export type BuildOuputType = {
     id: number;
     name: string;
@@ -22,12 +24,14 @@ export type BuildOuputType = {
     category: string;
     userNick: string;
 }
+
 export type BuildInputType = {
     name: string;
     notes: string;
     category: string;
     componentsIds: number[];
 }
+
 const Build=(props: Props) => {
     const {token} = useAppContext();
     const [builds, setBuilds] = useState<Array<IBuild>>([])
@@ -133,10 +137,10 @@ const Build=(props: Props) => {
                     {
                         builds.map((build: IBuild, index: number) => {
                             return (
-                                build.deleted===1 ? <></> :
+                                !build.deleted &&
                                     <>
                                         {
-                                            !build.deleted ? <Accordion.Item eventKey={"" + index}>
+                                            <Accordion.Item eventKey={"" + index}>
                                                 <Accordion.Header>{build.name}</Accordion.Header>
                                                 <Accordion.Body>
                                                     <Row>
@@ -178,7 +182,7 @@ const Build=(props: Props) => {
                                                         </Col>
                                                     </Row>
                                                 </Accordion.Body>
-                                            </Accordion.Item> : <></>
+                                            </Accordion.Item>
                                         }
 
                                     </>

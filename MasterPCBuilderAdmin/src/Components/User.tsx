@@ -23,12 +23,12 @@ const User = (props: Props) => {
     const [showDelete, setShowDelete] = useState(false);
     const [userSelected, setUserSelected] = useState<UserType>()
     const [password, setPassword] = useState("");
-    const [rol, setRol] = useState("");
-    const [nombrefichero, setnombrefichero] = useState("");
-    const [photoBase64, setphotoBase64] = useState("");
-    const [showAdd, setShowAdd] = useState(false)
-    const [nickname, setNickname] = useState("")
-    const [email, setEmail] = useState("")
+    const [role, setRole] = useState("");
+    const [filename, setFilename] = useState("");
+    const [photoBase64, setPhotoBase64] = useState("");
+    const [showAdd, setShowAdd] = useState(false);
+    const [nickname, setNickname] = useState("");
+    const [email, setEmail] = useState("");
 
     useEffect(() => {
         refetch();
@@ -36,8 +36,8 @@ const User = (props: Props) => {
 
     function handleShowEdit() {
         setPassword("");
-        setphotoBase64("");
-        setnombrefichero("");
+        setPhotoBase64("");
+        setFilename("");
         setShowEdit(!showEdit);
     }
 
@@ -49,28 +49,40 @@ const User = (props: Props) => {
         setNickname("");
         setEmail("");
         setPassword("");
-        setphotoBase64("");
-        setnombrefichero("");
+        setPhotoBase64("");
+        setFilename("");
         setShowAdd(!showAdd);
     }
 
     async function updateUser(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
-        const cleanBase64 = photoBase64.replace(/^data:image\/png;base64,/, "");
+        const cleanBase64 = photoBase64.replace(/^data:.+;base64,/, "");
         try {
             let userInput = {
                 id: userSelected?.id,
                 nick: userSelected?.nick,
                 password: password,
                 email: userSelected?.email,
-                role: rol === "" ? userSelected?.role : rol,
-                picture: nombrefichero,
+                role: role === "" ? userSelected?.role : role,
+                picture: filename,
                 pictureBase64: cleanBase64,
                 active: true,
                 deleted: false
             };
             await updateUserG({variables: {id: userSelected?.id, user: userInput}});
-            setUsers(users.map(user => user.id === userSelected?.id ? { ...user, picture: userSelected!.nick + "_" + nombrefichero } : user));
+            setUsers(users.map(user => {
+                if (user.id === userSelected?.id) {
+                    let newUser = {...user};
+                    if (role !== "") {
+                        newUser.role = role;
+                    }
+                    if (filename !== "") {
+                        newUser.picture = user.nick + "_" + filename;
+                    }
+                    return newUser;
+                }
+                return user;
+            }));
         } catch (e) {
             console.error('Error saving user:', e);
         }
@@ -79,11 +91,11 @@ const User = (props: Props) => {
 
     async function addUser(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
-        if (nickname === "" || password === "" || email === "" || rol === "" || photoBase64 === "") {
+        if (nickname === "" || password === "" || email === "" || role === "" || photoBase64 === "") {
             alert("All fields are required");
             return;
         }
-        if (rol === "Choose Role") {
+        if (role === "Choose Role") {
             alert("Choose a role");
             return;
         }
@@ -91,21 +103,22 @@ const User = (props: Props) => {
             alert("The email is not valid");
             return;
         }
-        const cleanBase64 = photoBase64.replace(/^data:image\/png;base64,/, "");
+        const cleanBase64 = photoBase64.replace(/^data:.+;base64,/, "");
 
         try {
-            const userInput = {
+            let userInput = {
                 id: 0, //Un numero para que no se queje
                 nick: nickname,
                 password: password,
                 email: email,
-                role: rol,
-                picture: nombrefichero,
+                role: role,
+                picture: filename,
                 pictureBase64: cleanBase64,
                 active: true,
                 deleted: false
             };
             await saveUser({variables: {user: userInput}});
+            userInput.picture = userInput.nick + "_" + filename;
             setUsers([...users, userInput]);
         } catch (e) {
             console.error('Error saving user:', e);
@@ -182,7 +195,7 @@ const User = (props: Props) => {
                                                                     <Button style={{width: "10vw", marginTop: "3%"}}
                                                                             variant="info" onClick={() => {
                                                                         setUserSelected(user);
-                                                                        setRol(user.role);
+                                                                        setRole(user.role);
                                                                         handleShowEdit();
                                                                     }}>
                                                                         Edit
@@ -227,8 +240,8 @@ const User = (props: Props) => {
                             <Form.Group className={"mb-4"}>
                                 <Form.Select
                                     defaultValue={userSelected !== undefined ? userSelected.role : "ROLE_ADMIN"}
-                                    aria-label="Rol" value={rol} onChange={(event) => {
-                                    setRol(event.target.value)
+                                    aria-label="Rol" value={role} onChange={(event) => {
+                                    setRole(event.target.value)
                                 }}>
                                     <option>Choose Role</option>
                                     <option value="ROLE_ADMIN">Admin</option>
@@ -243,8 +256,8 @@ const User = (props: Props) => {
                                         const fileReader = new FileReader();
                                         fileReader.readAsDataURL(file);
                                         fileReader.onload = () => {
-                                            setnombrefichero(file.name);
-                                            setphotoBase64(fileReader.result as string);
+                                            setFilename(file.name);
+                                            setPhotoBase64(fileReader.result as string);
                                         };
                                     }
                                 }}/>
@@ -320,8 +333,8 @@ const User = (props: Props) => {
                                 />
                             </Form.Group>
                             <Form.Group className={"mb-4"}>
-                                <Form.Select aria-label="Rol" value={rol} onChange={(event) => {
-                                    setRol(event.target.value)
+                                <Form.Select aria-label="Rol" value={role} onChange={(event) => {
+                                    setRole(event.target.value)
                                 }} style={{borderRadius: "0"}}>
                                     <option>Choose Role</option>
                                     <option value="ADMIN">Admin</option>
@@ -336,8 +349,8 @@ const User = (props: Props) => {
                                         const fileReader = new FileReader();
                                         fileReader.readAsDataURL(file);
                                         fileReader.onload = () => {
-                                            setnombrefichero(file.name);
-                                            setphotoBase64(fileReader.result as string);
+                                            setFilename(file.name);
+                                            setPhotoBase64(fileReader.result as string);
                                         };
                                     }
                                 }} style={{borderRadius: "0"}}/>
