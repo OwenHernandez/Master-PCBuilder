@@ -19,7 +19,7 @@ export const GET_MESSAGES_BY_RECEIVER_AND_AUTHOR = gql`
     }
   }`;
 
-export const GET_SELLER = gql`
+export const GET_SELLERS = gql`
 query MyQuery {
   sellers {
     id
@@ -36,6 +36,7 @@ export const GET_USERS = gql`
     nick
     picture
     role
+    deleted
     friends {
       active
       email

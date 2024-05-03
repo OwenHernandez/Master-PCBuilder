@@ -4,7 +4,7 @@ import logo from '../img/logo_transparent.png'
 import axios from 'axios'
 import { Globals } from '../Type/Globals';
 import { useAppContext } from '../Context/AppContextProvider';
-import {Form, Button, Container, Row, Col, Accordion, Modal} from 'react-bootstrap';
+import {Form, Button, Container, Row, Col, Accordion, Modal, Image} from 'react-bootstrap';
 import { UserType } from '../Type/User';
 import NavDropdown from "react-bootstrap/NavDropdown";
 import Nav from "react-bootstrap/Nav";
@@ -15,11 +15,12 @@ import {
     DELETE_COMPONENT,
     GET_BUILDS,
     GET_COMPONENTS,
-    GET_SELLER,
+    GET_SELLERS,
     SAVE_COMPONENT,
     UPDATE_COMPONENT
 } from "../Querys/Querys";
 import IComponentInput from "../Type/ComponentInput";
+import ImgViewer from "./ImgViewer";
 type Props = {}
 export interface IComponentType {
     id: number;
@@ -40,9 +41,9 @@ export interface ISellerType {
 
 }
 const Components=(props: Props) => {
-    const {token} = useAppContext();
+    const {token, darkMode} = useAppContext();
     const { loading, error, data:dataComponents } = useQuery(GET_COMPONENTS);
-    const { loading:loadingSeller, error:errorSeller, data:dataSeller } = useQuery(GET_SELLER);
+    const { loading:loadingSeller, error:errorSeller, data:dataSeller } = useQuery(GET_SELLERS);
     const [saveComponentG] = useMutation(SAVE_COMPONENT);
     const [updateComponentG] = useMutation(UPDATE_COMPONENT);
     const [deleteComponentG] = useMutation(DELETE_COMPONENT);
@@ -63,6 +64,7 @@ const Components=(props: Props) => {
     const [ebay_price, setEbay_price] = useState(0)
     const [name, setName] = useState("")
     const [type, setType] = useState("")
+
     useEffect(() => {
         async function getComponents() {
             setComponents(dataComponents?.components || []);
@@ -70,15 +72,19 @@ const Components=(props: Props) => {
         }
         getComponents()
     }, [locura || dataComponents || dataSeller || loadingSeller || loading || errorSeller || error]);
+
     function handleShowEdit() {
         setShowEdit(!showEdit)
     }
+
     function handleShowDelete() {
         setShowDelete(!showDelete);
     }
+
     function handleShowAdd() {
         setShowAdd(!showAdd);
     }
+
     async function updateComponent(event:React.FormEvent<HTMLFormElement>){
         event.preventDefault();
         const cleanBase64 = photoBase64.replace(/^data:image\/png;base64,/, "");
@@ -101,7 +107,8 @@ const Components=(props: Props) => {
         }
         handleShowEdit()
     }
-    async function addUser(event:React.FormEvent<HTMLFormElement>){
+
+    async function addComponent(event:React.FormEvent<HTMLFormElement>){
         event.preventDefault();
         const cleanBase64 = photoBase64.replace(/^data:image\/png;base64,/, "");
 
@@ -125,6 +132,7 @@ const Components=(props: Props) => {
         setLocura(!locura);
         handleShowAdd();
     }
+
     async function deleteUser(){
         try{
             const response = await deleteComponentG({variables: {id: componentSelected?.id}});
@@ -134,6 +142,7 @@ const Components=(props: Props) => {
         }
         handleShowDelete()
     }
+
     if (loading || loadingSeller ) {
         return <div>Loading data...</div>;
     }
@@ -141,6 +150,246 @@ const Components=(props: Props) => {
     if ( !components || !sellers ){
         return <div>Data is not fully loaded yet.</div>;
     }
+
+    return (
+        <Col>
+            <Container fluid>
+                <Row className="m-4 mb-2">
+                    <h1 style={{color: (darkMode) ? "white" : "black"}}>Users</h1>
+                </Row>
+                <Row className="m-5 mt-3">
+                    <Accordion data-bs-theme={(darkMode) ? "dark" : "light"}>
+                        {
+                            components.map((comp: any, index: number) => {
+                                return (
+                                    <Accordion.Item eventKey={"" + index} style={{
+                                        color: (comp.deleted) && "gray"
+                                    }}>
+                                        <Accordion.Header>
+                                            <Col style={{
+                                                color: (comp.deleted) && "gray"
+                                            }}>
+                                                {comp.nick}
+                                            </Col>
+                                            <Col style={{
+                                                color: (comp.deleted) && "gray"
+                                            }}>
+                                                {(comp.deleted) && "Deleted"}
+                                            </Col>
+                                        </Accordion.Header>
+                                        <Accordion.Body>
+                                            <Container fluid>
+                                                <Row>
+                                                    <Col xs={6}>
+                                                        <h3>{comp.nick}</h3>
+                                                        <p>{comp.email}</p>
+                                                        <p>{comp.role}</p>
+                                                        <p>{(comp.deleted) && "Deleted"}</p>
+                                                    </Col>
+                                                    <Col xs={3}>
+                                                        <ImgViewer filename={comp.picture}/>
+                                                    </Col>
+                                                    <Col xs={3}>
+                                                        <Container fluid>
+                                                            <Row>
+                                                                <Col>
+                                                                    <Button style={{width: "10vw"}} variant="danger"
+                                                                            onClick={() => {
+                                                                                setComponentSelected(comp);
+                                                                                handleShowDelete()
+                                                                            }} disabled={comp.deleted}>
+                                                                        Delete
+                                                                    </Button>
+                                                                </Col>
+                                                                <Col>
+                                                                    <Button style={{width: "10vw", marginTop: "3%"}}
+                                                                            variant="info" onClick={() => {
+                                                                        setComponentSelected(comp);
+                                                                        handleShowEdit();
+                                                                    }}>
+                                                                        Edit
+                                                                    </Button>
+                                                                </Col>
+                                                            </Row>
+                                                        </Container>
+                                                    </Col>
+                                                </Row>
+                                            </Container>
+                                        </Accordion.Body>
+                                    </Accordion.Item>
+                                )
+                            })
+                        }
+                    </Accordion>
+                </Row>
+                <Row>
+                    <Col>
+                        <Button style={{width: "10vw", marginLeft: "6%"}} variant={"success"} onClick={handleShowAdd}>
+                            Add User
+                        </Button>
+                    </Col>
+                </Row>
+
+                <Modal show={showEdit} onHide={handleShowEdit} data-bs-theme={(darkMode) ? "dark" : "light"}>
+                    <Modal.Header closeButton>
+                        <Modal.Title
+                            style={{color: (darkMode) ? "white" : "black"}}>Edit {componentSelected?.name}</Modal.Title>
+                    </Modal.Header>
+                    <Form onSubmit={updateComponent}>
+                        <Modal.Body>
+                            <Form.Group className={"mb-4"}>
+                                <Form.Control
+                                    type="password"
+                                    name="password"
+                                    placeholder="Insert a new password"
+                                    value={password}
+                                    onChange={(event) => setPassword(event.target.value)}
+                                />
+                            </Form.Group>
+                            <Form.Group className={"mb-4"}>
+                                <Form.Select
+                                    defaultValue={userSelected !== undefined ? userSelected.role : "ROLE_ADMIN"}
+                                    aria-label="Rol" value={rol} onChange={(event) => {
+                                    setRol(event.target.value)
+                                }}>
+                                    <option>Choose Role</option>
+                                    <option value="ROLE_ADMIN">Admin</option>
+                                    <option value="ROLE_USER">User</option>
+                                </Form.Select>
+                            </Form.Group>
+                            <Form.Group>
+                                <Form.Control type="file" onChange={(event) => {
+                                    const inputElement = event.target as HTMLInputElement;
+                                    if (inputElement.files && inputElement.files.length > 0) {
+                                        const file = inputElement.files[0];
+                                        const fileReader = new FileReader();
+                                        fileReader.readAsDataURL(file);
+                                        fileReader.onload = () => {
+                                            setNombrefichero(file.name);
+                                            setphotoBase64(fileReader.result as string);
+                                        };
+                                    }
+                                }}/>
+                            </Form.Group>
+                            {
+                                (photoBase64 !== "") &&
+                                <Container fluid>
+                                    <Row>
+                                        <Col>
+                                            <Image src={photoBase64} thumbnail fluid className={"mt-4"}/>
+                                        </Col>
+                                    </Row>
+                                </Container>
+                            }
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="outline-secondary" onClick={handleShowEdit}>
+                                Close
+                            </Button>
+                            <Button variant="info" type="submit">
+                                Update User
+                            </Button>
+                        </Modal.Footer>
+                    </Form>
+                </Modal>
+                <Modal show={showDelete} onHide={handleShowDelete} data-bs-theme={(darkMode) ? "dark" : "light"}>
+                    <Modal.Header closeButton>
+                        <Modal.Title style={{color: (darkMode) ? "white" : "black"}}>Are you sure?</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body style={{color: (darkMode) ? "white" : "black"}}>Are you sure you want to
+                        delete {componentSelected?.name} ?</Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="outline-secondary" onClick={handleShowDelete}>
+                            Close
+                        </Button>
+                        <Button variant="danger" onClick={deleteUser}>
+                            Delete Component
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+                <Modal show={showAdd} onHide={handleShowAdd} data-bs-theme={(darkMode) ? "dark" : "light"}>
+                    <Form onSubmit={addComponent}>
+
+                        <Modal.Header closeButton>
+                            <Modal.Title style={{color: (darkMode) ? "white" : "black"}}>Add a User</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <Form.Group className={"mb-4"}>
+                                <Form.Control
+                                    type="text"
+                                    name="nickname"
+                                    placeholder="Insert the nickname"
+                                    value={nickname}
+                                    onChange={(event) => setNickname(event.target.value)}
+                                />
+                            </Form.Group>
+                            <Form.Group className={"mb-4"}>
+                                <Form.Control
+                                    type="password"
+                                    name="password"
+                                    placeholder="Insert the password"
+                                    value={password}
+                                    onChange={(event) => setPassword(event.target.value)}
+                                />
+                            </Form.Group>
+                            <Form.Group className={"mb-4"}>
+                                <Form.Control
+                                    type="text"
+                                    name="email"
+                                    placeholder="Insert the email"
+                                    value={email}
+                                    onChange={(event) => setEmail(event.target.value)}
+                                />
+                            </Form.Group>
+                            <Form.Group className={"mb-4"}>
+                                <Form.Select aria-label="Rol" value={rol} onChange={(event) => {
+                                    setRol(event.target.value)
+                                }} style={{borderRadius: "0"}}>
+                                    <option>Choose Role</option>
+                                    <option value="ADMIN">Admin</option>
+                                    <option value="USER">User</option>
+                                </Form.Select>
+                            </Form.Group>
+                            <Form.Group>
+                                <Form.Control type="file" onChange={(event) => {
+                                    const inputElement = event.target as HTMLInputElement;
+                                    if (inputElement.files && inputElement.files.length > 0) {
+                                        const file = inputElement.files[0];
+                                        const fileReader = new FileReader();
+                                        fileReader.readAsDataURL(file);
+                                        fileReader.onload = () => {
+                                            setNombrefichero(file.name);
+                                            setphotoBase64(fileReader.result as string);
+                                        };
+                                    }
+                                }} style={{borderRadius: "0"}}/>
+                            </Form.Group>
+                            {
+                                (photoBase64 !== "") &&
+                                <Container fluid>
+                                    <Row>
+                                        <Col>
+                                            <Image src={photoBase64} thumbnail fluid className={"mt-4"}/>
+                                        </Col>
+                                    </Row>
+                                </Container>
+                            }
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="outline-secondary" onClick={handleShowAdd} style={{borderRadius: "0"}}>
+                                Close
+                            </Button>
+                            <Button variant="success" type="submit" style={{borderRadius: "0"}}>
+                                Add Component
+                            </Button>
+                        </Modal.Footer>
+                    </Form>
+                </Modal>
+            </Container>
+        </Col>
+    )
+
+    /*
     return (
         <div style={{width: "90vw", height: "100vh"}}>
             <Row style={{margin: "4%", marginBottom: "2%"}}>
@@ -446,5 +695,6 @@ const Components=(props: Props) => {
 
         </div>
     )
+    */
 }
 export default Components;

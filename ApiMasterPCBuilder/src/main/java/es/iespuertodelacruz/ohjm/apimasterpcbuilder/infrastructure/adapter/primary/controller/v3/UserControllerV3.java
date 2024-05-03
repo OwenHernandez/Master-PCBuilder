@@ -45,7 +45,6 @@ public class UserControllerV3 {
 
     @SchemaMapping(typeName = "Query", field = "users")
     public List<UserV3DTO> getUsers() {
-        List<User> users = userService.findAll();
         return userService.findAll().stream()
                 .map(userDTOMapper::toV3DTO)
                 .collect(Collectors.toList());
@@ -98,9 +97,14 @@ public class UserControllerV3 {
         if (userToUpdate == null) {
             throw new GraphQLErrorException("User not found", HttpStatus.NOT_FOUND);
         }
-        userToUpdate.setPassword(passwordEncoder.encode(user.getPassword()));
-        userToUpdate.setRole(user.getRole());
-
+        if (!user.getPassword().isEmpty()) {
+            userToUpdate.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
+        if (!user.getRole().isEmpty()) {
+            userToUpdate.setRole(user.getRole());
+        }
+        userToUpdate.setDeleted((byte) 0);
+        userToUpdate.setActive((byte) 1);
 
         if (user.getPicture() != null && !user.getPicture().isEmpty()) {
             String codedPicture = user.getPictureBase64();

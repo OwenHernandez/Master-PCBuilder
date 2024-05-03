@@ -7,9 +7,6 @@ import * as encoding from 'text-encoding';
 import {useLocation, useParams} from "react-router-dom";
 import {Client} from "@stomp/stompjs";
 import {Globals} from "../Type/Globals";
-import axios from "axios";
-import {FaUsers} from "react-icons/fa";
-import {FaArrowRight} from "react-icons/fa6";
 import {IoMdSend} from "react-icons/io";
 
 type Props = {}

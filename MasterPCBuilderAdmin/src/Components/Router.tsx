@@ -31,13 +31,15 @@ const Router = (props: Props) => {
     return (
         <BrowserRouter>
             <Container fluid style={{
-                backgroundColor: (darkMode) ? "#242121" : "white"
+                backgroundColor: (darkMode) ? "#242121" : "white",
+                height: "100vh"
             }}>
                 {isLoged && <CustomNavbar/>}
                 <Row style={{
                     width: "100vw",
-                    height: '92.7vh',
-                    backgroundColor: (darkMode) ? "#242121" : "white"
+                    height: 'auto',
+                    backgroundColor: (darkMode) ? "#242121" : "white",
+                    overflow: "auto"
                 }}>
                     <Routes>
                         <Route path="/" element={<Login/>}/>
@@ -64,10 +66,10 @@ function CustomNavbar() {
                     data-bs-theme={(darkMode) ? "dark" : "light"}>
                 <Container fluid>
                     <Row style={{width: "100vw"}}>
-                        <Col xs={10}>
+                        <Col xs={11}>
                             <Navbar.Brand>MasterPCBuilder</Navbar.Brand>
                         </Col>
-                        <Col md={1} style={{textAlign: "center", paddingTop: "0.1%"}}>
+                        <Col xs="auto" style={{textAlign: "center", paddingTop: "0.1%"}}>
                             {
                                 (!darkMode) ? <FaRegSun size={"2rem"} onClick={() => {
                                         setDarkMode(!darkMode);
@@ -77,7 +79,7 @@ function CustomNavbar() {
                                     }}/>
                             }
                         </Col>
-                        <Col md={1} style={{textAlign: "center"}}>
+                        <Col xs="auto" style={{textAlign: "center"}}>
                             <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-${false}`}/>
                         </Col>
                         <Navbar.Offcanvas

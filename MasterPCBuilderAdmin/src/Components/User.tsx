@@ -1,10 +1,9 @@
 import React, {useEffect, useState} from 'react'
-import {Accordion, Button, Col, Container, Form, Modal, Row} from "react-bootstrap";
-import axios from "axios";
+import {Accordion, Button, Col, Container, Form, Image, Modal, Row} from "react-bootstrap";
 import {useAppContext} from "../Context/AppContextProvider";
 import {UserType} from "../Type/User";
 import {useMutation, useQuery} from "@apollo/client";
-import {SAVE_USER, GET_USERS, UPDATE_USER, DELETE_USER} from "../Querys/Querys";
+import {DELETE_USER, GET_USERS, SAVE_USER, UPDATE_USER} from "../Querys/Querys";
 import ImgViewer from "./ImgViewer";
 
 type Props = {}
@@ -13,14 +12,10 @@ const User = (props: Props) => {
     const {token, darkMode} = useAppContext();
     const {loading, error, data: dataUsers, refetch} = useQuery(GET_USERS, {
         onCompleted: () => {
-            setUsers([...dataUsers.users]);
+            setUsers(dataUsers.users);
         }
     });
-    const [saveUser, {loading: loadingSave, error: errorSave}] = useMutation(SAVE_USER, {
-        onCompleted: () => {
-            refetch();
-        }
-    });
+    const [saveUser, {loading: loadingSave, error: errorSave}] = useMutation(SAVE_USER);
     const [updateUserG, {loading: loadingUpdate, error: errorUpdate}] = useMutation(UPDATE_USER);
     const [deleteUserG, {loading: loadingDelete, error: errorDelete}] = useMutation(DELETE_USER);
     const [users, setUsers] = useState([] as any[]);
@@ -31,13 +26,19 @@ const User = (props: Props) => {
     const [rol, setRol] = useState("");
     const [nombrefichero, setnombrefichero] = useState("");
     const [photoBase64, setphotoBase64] = useState("");
-    const [locura, setLocura] = useState(false)
     const [showAdd, setShowAdd] = useState(false)
     const [nickname, setNickname] = useState("")
     const [email, setEmail] = useState("")
 
+    useEffect(() => {
+        refetch();
+    }, []);
+
     function handleShowEdit() {
-        setShowEdit(!showEdit)
+        setPassword("");
+        setphotoBase64("");
+        setnombrefichero("");
+        setShowEdit(!showEdit);
     }
 
     function handleShowDelete() {
@@ -45,25 +46,31 @@ const User = (props: Props) => {
     }
 
     function handleShowAdd() {
+        setNickname("");
+        setEmail("");
+        setPassword("");
+        setphotoBase64("");
+        setnombrefichero("");
         setShowAdd(!showAdd);
     }
 
     async function updateUser(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
         const cleanBase64 = photoBase64.replace(/^data:image\/png;base64,/, "");
-
         try {
-            const userInput = {
+            let userInput = {
+                id: userSelected?.id,
                 nick: userSelected?.nick,
-                password: password === "" ? userSelected?.password : password,
+                password: password,
                 email: userSelected?.email,
                 role: rol === "" ? userSelected?.role : rol,
                 picture: nombrefichero,
                 pictureBase64: cleanBase64,
-                active: 1,
-                deleted: 0
+                active: true,
+                deleted: false
             };
             await updateUserG({variables: {id: userSelected?.id, user: userInput}});
+            setUsers(users.map(user => user.id === userSelected?.id ? { ...user, picture: userSelected!.nick + "_" + nombrefichero } : user));
         } catch (e) {
             console.error('Error saving user:', e);
         }
@@ -72,27 +79,34 @@ const User = (props: Props) => {
 
     async function addUser(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
+        if (nickname === "" || password === "" || email === "" || rol === "" || photoBase64 === "") {
+            alert("All fields are required");
+            return;
+        }
+        if (rol === "Choose Role") {
+            alert("Choose a role");
+            return;
+        }
+        if (!(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/).test(email)) {
+            alert("The email is not valid");
+            return;
+        }
         const cleanBase64 = photoBase64.replace(/^data:image\/png;base64,/, "");
-        console.log("NICKNAME:" + nickname)
-        console.log("PASSWORD:" + password)
-        console.log("EMAIL:" + email)
-        console.log("ROL:" + rol)
-        console.log("PICTURE:" + nombrefichero)
-        console.log("PICTURE:" + cleanBase64)
-
 
         try {
             const userInput = {
+                id: 0, //Un numero para que no se queje
                 nick: nickname,
                 password: password,
                 email: email,
-                role: "ROLE_" + rol, // Assuming you need to prepend "ROLE_"
+                role: rol,
                 picture: nombrefichero,
                 pictureBase64: cleanBase64,
-                active: 1,
-                deleted: 0
+                active: true,
+                deleted: false
             };
             await saveUser({variables: {user: userInput}});
+            setUsers([...users, userInput]);
         } catch (e) {
             console.error('Error saving user:', e);
         }
@@ -100,11 +114,14 @@ const User = (props: Props) => {
     }
 
     async function deleteUser() {
-        console.log("USER SELECTED:" + userSelected?.id)
         try {
-            const isDelete = await deleteUserG({variables: {id: userSelected?.id}});
-            console.log("IS DELETE:" + isDelete)
-            console.log("OWEN HAZME FELIZ");
+            await deleteUserG({variables: {id: userSelected?.id}});
+            setUsers([...users.map((user) => {
+                if (user.id === userSelected?.id) {
+                    return {...user, deleted: true};
+                }
+                return user;
+            })]);
         } catch (e) {
             console.error('Error deleting user:', e);
         }
@@ -122,8 +139,21 @@ const User = (props: Props) => {
                         {
                             users.map((user: any, index: number) => {
                                 return (
-                                    !user.deleted && <Accordion.Item eventKey={"" + index}>
-                                        <Accordion.Header>{user.nick}</Accordion.Header>
+                                    <Accordion.Item eventKey={"" + index} style={{
+                                        color: (user.deleted) && "gray"
+                                    }}>
+                                        <Accordion.Header>
+                                            <Col style={{
+                                                color: (user.deleted) && "gray"
+                                            }}>
+                                                {user.nick}
+                                            </Col>
+                                            <Col style={{
+                                                color: (user.deleted) && "gray"
+                                            }}>
+                                                {(user.deleted) && "Deleted"}
+                                            </Col>
+                                        </Accordion.Header>
                                         <Accordion.Body>
                                             <Container fluid>
                                                 <Row>
@@ -131,20 +161,20 @@ const User = (props: Props) => {
                                                         <h3>{user.nick}</h3>
                                                         <p>{user.email}</p>
                                                         <p>{user.role}</p>
+                                                        <p>{(user.deleted) && "Deleted"}</p>
                                                     </Col>
                                                     <Col xs={3}>
-                                                        <ImgViewer filename={user.picture} />
+                                                        <ImgViewer filename={user.picture}/>
                                                     </Col>
                                                     <Col xs={3}>
                                                         <Container fluid>
                                                             <Row>
                                                                 <Col>
-                                                                    <Button style={{width: "10vw"}}
-                                                                            variant="danger"
+                                                                    <Button style={{width: "10vw"}} variant="danger"
                                                                             onClick={() => {
                                                                                 setUserSelected(user);
                                                                                 handleShowDelete()
-                                                                            }}>
+                                                                            }} disabled={user.deleted}>
                                                                         Delete
                                                                     </Button>
                                                                 </Col>
@@ -152,7 +182,8 @@ const User = (props: Props) => {
                                                                     <Button style={{width: "10vw", marginTop: "3%"}}
                                                                             variant="info" onClick={() => {
                                                                         setUserSelected(user);
-                                                                        handleShowEdit()
+                                                                        setRol(user.role);
+                                                                        handleShowEdit();
                                                                     }}>
                                                                         Edit
                                                                     </Button>
@@ -194,7 +225,9 @@ const User = (props: Props) => {
                                 />
                             </Form.Group>
                             <Form.Group className={"mb-4"}>
-                                <Form.Select defaultValue={userSelected !== undefined ? userSelected.role : "ROLE_ADMIN" } aria-label="Rol" value={rol} onChange={(event) => {
+                                <Form.Select
+                                    defaultValue={userSelected !== undefined ? userSelected.role : "ROLE_ADMIN"}
+                                    aria-label="Rol" value={rol} onChange={(event) => {
                                     setRol(event.target.value)
                                 }}>
                                     <option>Choose Role</option>
@@ -216,6 +249,16 @@ const User = (props: Props) => {
                                     }
                                 }}/>
                             </Form.Group>
+                            {
+                                (photoBase64 !== "") &&
+                                <Container fluid>
+                                    <Row>
+                                        <Col>
+                                            <Image src={photoBase64} thumbnail fluid className={"mt-4"}/>
+                                        </Col>
+                                    </Row>
+                                </Container>
+                            }
                         </Modal.Body>
                         <Modal.Footer>
                             <Button variant="outline-secondary" onClick={handleShowEdit}>
@@ -277,7 +320,7 @@ const User = (props: Props) => {
                                 />
                             </Form.Group>
                             <Form.Group className={"mb-4"}>
-                                <Form.Select defaultValue="ADMIN" aria-label="Rol" value={rol} onChange={(event) => {
+                                <Form.Select aria-label="Rol" value={rol} onChange={(event) => {
                                     setRol(event.target.value)
                                 }} style={{borderRadius: "0"}}>
                                     <option>Choose Role</option>
@@ -299,6 +342,16 @@ const User = (props: Props) => {
                                     }
                                 }} style={{borderRadius: "0"}}/>
                             </Form.Group>
+                            {
+                                (photoBase64 !== "") &&
+                                <Container fluid>
+                                    <Row>
+                                        <Col>
+                                            <Image src={photoBase64} thumbnail fluid className={"mt-4"}/>
+                                        </Col>
+                                    </Row>
+                                </Container>
+                            }
                         </Modal.Body>
                         <Modal.Footer>
                             <Button variant="outline-secondary" onClick={handleShowAdd} style={{borderRadius: "0"}}>

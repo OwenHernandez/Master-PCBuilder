@@ -159,31 +159,34 @@ type User {
     picture: String
     role: String
     active: Boolean
+    deleted: Boolean
     friends: [User]
     blockedUsers: [User]
     componentsWanted: [Component]
 }
 
 input UserSaveDTO {
+    id: Int
     nick: String
     email: String
     password: String
     picture: String
     pictureBase64: String
     role: String
-    active: Int
-    deleted: Int
+    active: Boolean
+    deleted: Boolean
 }
 
 input UserUpdateDTO {
+    id: Int
     nick: String
     password: String
     email: String
     picture: String
     pictureBase64: String
     role: String
-    active: Int
-    deleted: Int
+    active: Boolean
+    deleted: Boolean
 }
 
 # Post

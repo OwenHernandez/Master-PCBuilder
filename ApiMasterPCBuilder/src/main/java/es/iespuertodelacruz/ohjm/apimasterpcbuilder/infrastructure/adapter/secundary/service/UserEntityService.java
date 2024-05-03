@@ -73,10 +73,8 @@ public class UserEntityService implements IUserRepository {
         List<User> users = new ArrayList<>();
         Iterable<UserEntity> repoAll = repo.findAll();
         for (UserEntity ue : repoAll) {
-            if (ue.getDeleted()==0) {
-                User domain = mapper.toDomain(ue, new HashSet<Long>(), new HashSet<Long>(), "findAll");
-                users.add(domain);
-            }
+            User domain = mapper.toDomain(ue, new HashSet<Long>(), new HashSet<Long>(), "findAll");
+            users.add(domain);
         }
 
         return users;
