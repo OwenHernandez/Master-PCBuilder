@@ -11,6 +11,6 @@ export class Globals {
 
 
     static NOT_ACTIVE: string = "not active";
-    static INC_PASS_USR: string = "User/Pass incorrect";
+    static INC_PASS_USR: string = "Users/Pass incorrect";
     static IMG_NOT_FOUND: string = "The file does not exist";
 }

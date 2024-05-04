@@ -35,12 +35,13 @@ code {
 }
 
 .text-style {
-    color: black;
+    justify-content: right;
+    width: fit-content;
 }
 
 .image-style {
-    width: 10rem;
-    height: 10rem;
+    width: 8vw;
+    height: 15vh;
 }
 
 .message-style {

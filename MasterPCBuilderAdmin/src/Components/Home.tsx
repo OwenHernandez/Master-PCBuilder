@@ -57,9 +57,21 @@ const Home = () => {
     const [users, setUsers] = useState([]);
     const [builds, setBuilds] = useState([]);
     const [components, setComponents] = useState<Array<IComponentType>>([]);
-    const {loading, error, data: dataUsers} = useQuery(GET_USERS);
-    const {loading: loadingComponents, error: errorComponents, data: dataComponents} = useQuery(GET_COMPONENTS);
-    const {loading: loadingBuilds, error: errorBuilds, data: dataBuilds} = useQuery(GET_BUILDS);
+    const {loading, error, data: dataUsers} = useQuery(GET_USERS, {
+        onCompleted: () => {
+            setUsers(dataUsers?.users);
+        }
+    });
+    const {loading: loadingComponents, error: errorComponents, data: dataComponents} = useQuery(GET_COMPONENTS, {
+        onCompleted: () => {
+            setBuilds(dataComponents?.components);
+        }
+    });
+    const {loading: loadingBuilds, error: errorBuilds, data: dataBuilds} = useQuery(GET_BUILDS, {
+        onCompleted: () => {
+            setBuilds(dataBuilds?.builds);
+        }
+    });
     const {loading: loadingSeller, error: errorSeller, data: dataSeller} = useQuery(GET_SELLERS);
     const [compType, setCompType] = useState<Array<string>>([]);
     const [selectedCompType, setSelectedCompType] = useState("All");
@@ -101,9 +113,7 @@ const Home = () => {
     const [locura, setLocura] = useState(false)
 
     useEffect(() => {
-        setUsers(dataUsers?.users || []);
         setComponents(dataComponents?.components || []);
-        setBuilds(dataBuilds?.builds || []);
         if (Array.isArray(components)) {
             let auxCompType: any[] = [];
             let priceData = {
@@ -266,7 +276,7 @@ const Home = () => {
             <Container fluid>
                 <Row className="d-flex justify-content-around mt-3"
                      style={{marginBottom: "2%"}}>
-                    <Col md={3}>
+                    <Col md={3} className={"mb-md-2"}>
                         <Card data-bs-theme={(darkMode) ? "dark" : "light"}>
                             <Card.Body>
                                 <Card.Title>Total Users</Card.Title>
@@ -276,7 +286,7 @@ const Home = () => {
                             </Card.Body>
                         </Card>
                     </Col>
-                    <Col md={3}>
+                    <Col md={3} className={"mb-md-2"}>
                         <Card data-bs-theme={(darkMode) ? "dark" : "light"}>
                             <Card.Body>
                                 <Card.Title>Total Builds</Card.Title>
@@ -286,7 +296,7 @@ const Home = () => {
                             </Card.Body>
                         </Card>
                     </Col>
-                    <Col md={3}>
+                    <Col md={3} className={"mb-md-2"}>
                         <Card data-bs-theme={(darkMode) ? "dark" : "light"}>
                             <Card.Body>
                                 <Card.Title>Total Components</Card.Title>
@@ -297,15 +307,15 @@ const Home = () => {
                         </Card>
                     </Col>
                 </Row>
-                <Row className="gx-0 mb-2">
-                    <Col md={9} className="p-0">
+                <Row className="mb-2">
+                    <Col md={9} className={"mb-2"}>
                         <Bar data={dataLine} options={{maintainAspectRatio: true, responsive: true}} data-bs-theme={(darkMode) ? "dark" : "light"}/>
                     </Col>
-                    <Col md={3} className="p-0" style={{marginBottom: "2%", position: "sticky"}}>
+                    <Col md={3} className={"mb-2"}>
                         <Doughnut data={sellersData} options={{maintainAspectRatio: true, responsive: true}} data-bs-theme={(darkMode) ? "dark" : "light"}/>
                     </Col>
                 </Row>
-                <Row className="gx-0 mb-2">
+                <Row className="mb-2">
                     <Col>
                         <Button variant={(selectedCompType === "All") ? "success" : (darkMode) ? "outline-light" : "outline-dark"} style={{width: '60%'}} onClick={() => {
                             changeGraphics(null);

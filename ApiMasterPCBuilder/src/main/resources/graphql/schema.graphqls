@@ -141,6 +141,7 @@ type Build {
     userNick: String
     totalPrice: Float
     buildsComponents: [BuildComponent]
+    deleted: Boolean
 }
 
 input BuildDTO {

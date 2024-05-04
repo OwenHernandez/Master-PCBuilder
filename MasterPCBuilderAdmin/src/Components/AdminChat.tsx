@@ -1,10 +1,10 @@
 import React, {useEffect, useRef, useState} from 'react'
-import {Button, Col, Row} from "react-bootstrap";
+import {Button, Col, Container, Row, Form} from "react-bootstrap";
 import {useAppContext} from "../Context/AppContextProvider";
 import {useQuery} from "@apollo/client";
 import {GET_MESSAGES_BY_RECEIVER_AND_AUTHOR} from "../Querys/Querys";
 import * as encoding from 'text-encoding';
-import {useLocation, useParams} from "react-router-dom";
+import {useLocation} from "react-router-dom";
 import {Client} from "@stomp/stompjs";
 import {Globals} from "../Type/Globals";
 import {IoMdSend} from "react-icons/io";
@@ -32,7 +32,7 @@ export interface IUserType {
 }
 
 const AdminChat = (props: Props) => {
-    const {token} = useAppContext();
+    const {token, darkMode} = useAppContext();
     const location = useLocation();
     const {userSelected} = location.state;
     const {
@@ -208,70 +208,118 @@ const AdminChat = (props: Props) => {
     }
 
     return (
-        <div style={{width: "100rem", height: "10rem"}}>
-            <Row style={{margin: "4%", marginBottom: "2%"}}>
-                <h1>{userSelected.nick}</h1>
-            </Row>
-            <Row style={{margin: "2%"}}>
-                <Col style={{
-                    width: "100%",
-                    height: "70vh",
-                    overflow: "auto",
-                    margin: "1%"
-                }}>
-                    {
-                        msgs.map((msg: IMsgType, index) => {
-                            if (msg.content === undefined) {
-                                return;
+        <Col>
+            <Container fluid>
+                <Row className="m-4 mb-1">
+                    <Col style={{
+                        color: (darkMode) ? "white" : "black"
+                    }}>
+                        <h1>{userSelected.nick}</h1>
+                    </Col>
+                </Row>
+                <Row className={"m-2"}>
+                    <Col style={{
+                        height: "70vh",
+                        overflow: "auto",
+                        margin: "1%"
+                    }}>
+                        <Container fluid>
+                            {
+                                msgs.map((msg: IMsgType, index) => {
+                                    if (msg.content === undefined) {
+                                        return;
+                                    }
+                                    if (msg.author === "admins") {
+                                        return (
+                                            <Row key={index}>
+                                                <Col xs={12} style={{
+                                                    color: "white",
+                                                    width: "100%",
+                                                    textAlign: "right"
+                                                }}>
+                                                        <p style={{color: "gray"}}>
+                                                            {msg.date}
+                                                        </p>
+                                                </Col>
+                                                <Col xs={12} style={{
+                                                    color: "white",
+                                                    display: "flex",
+                                                    justifyContent: "flex-end"
+                                                }}>
+                                                        <p style={{
+                                                            backgroundColor: "#ca2613",
+                                                            padding: "0.5%",
+                                                            width: "fit-content",
+                                                            maxWidth: "80%",
+                                                            borderRadius: "5px",
+                                                            wordWrap: "break-word"
+                                                        }}>
+                                                            {msg.content}
+                                                        </p>
+                                                </Col>
+                                            </Row>
+                                        );
+                                    } else {
+                                        return (
+                                            <Row key={index}>
+                                                <Col xs={12} style={{
+                                                    color: "white",
+                                                    width: "100%",
+                                                    textAlign: "left"
+                                                }}>
+                                                    <p style={{color: "gray"}}>
+                                                        {msg.date}
+                                                    </p>
+                                                </Col>
+                                                <Col xs={12} style={{
+                                                    color: "white",
+                                                    display: "flex",
+                                                    justifyContent: "flex-start"
+                                                }}>
+                                                    <p style={{
+                                                        backgroundColor: "#676767",
+                                                        padding: "0.5%",
+                                                        width: "fit-content",
+                                                        borderRadius: "5px",
+                                                        wordWrap: "break-word"
+                                                    }}>
+                                                        {msg.content}
+                                                    </p>
+                                                </Col>
+                                            </Row>
+                                        );
+                                    }
+                                })
                             }
-                            return (
-                                <div>
-                                    <div style={{
-                                        display: "flex",
-                                        flexDirection: "row",
-                                        justifyContent: (msg.author !== "admins") ? "flex-start" : "flex-end"
-                                    }}>
-                                        <div style={{
-                                            display: "flex",
-                                            flexDirection: "column",
-                                            alignItems: (msg.author !== "admins") ? "flex-start" : "flex-end"
-                                        }}>
-                                            <div style={{color: "gray", margin: "5px"}}>
-                                                {msg.date}
-                                            </div>
-                                            <div style={{
-                                                backgroundColor: (msg.author === "admins") ? "#ca2613" : "#676767",
-                                                color: "white",
-                                                width: "fit-content",
-                                                padding: "0.5rem",
-                                                margin: "0.5rem"
-                                            }}>
-                                                {msg.content}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            );
-                        })
-                    }
-                    <div ref={endOfMessagesRef}/>
-                </Col>
-                <div>
-                    <input
-                        type="text"
-                        value={message}
-                        onChange={(e) => setMessage(e.target.value)}
-                        style={{width: "95%", height: "3rem", borderWidth: "0.3rem", borderColor: "#ca2613", fontSize: "1.2rem", padding: "1%"}}
-                    />
-                    <button
-                        style={{width: "5%", height: "3rem", backgroundColor: "white", borderWidth: 0}}
-                        onClick={sendToUser}
-                    >
-                        <IoMdSend/>
-                    </button>
-                </div>
-            </Row>
-        </div>
+                            <Row ref={endOfMessagesRef}/>
+                        </Container>
+                    </Col>
+                </Row>
+                <Row className={"m-4"}>
+                    <Col xs={11} style={{
+                        width: "95%"
+                    }}>
+                        <Form.Control
+                            type="text"
+                            value={message}
+                            onChange={(e) => setMessage(e.target.value)}
+                            data-bs-theme={(darkMode) ? "dark" : "light"}
+                        />
+                    </Col>
+                    <Col style={{
+                        width: "5%",
+                        textAlign: "center"
+                    }}>
+                        <Button
+                            variant={(!darkMode) ? "light" : "dark"}
+                            onClick={sendToUser}
+                        >
+                            <IoMdSend/>
+                        </Button>
+                    </Col>
+                </Row>
+            </Container>
+        </Col>
     )
 }
 export default AdminChat;

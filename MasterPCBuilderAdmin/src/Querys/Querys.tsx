@@ -81,6 +81,7 @@ export const GET_BUILDS = gql`
     notes
     totalPrice
     userNick
+    deleted
     buildsComponents {
       dateCreated
       priceAtTheTime
@@ -95,6 +96,7 @@ export const GET_BUILDS = gql`
         sellerName
         type
         userNick
+        deleted
         priceHistory {
           amazonPrice
           date

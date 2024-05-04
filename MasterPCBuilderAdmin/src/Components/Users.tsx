@@ -5,10 +5,11 @@ import {UserType} from "../Type/User";
 import {useMutation, useQuery} from "@apollo/client";
 import {DELETE_USER, GET_USERS, SAVE_USER, UPDATE_USER} from "../Querys/Querys";
 import ImgViewer from "./ImgViewer";
+import {useNavigate} from "react-router-dom";
 
 type Props = {}
 
-const User = (props: Props) => {
+const Users = (props: Props) => {
     const {token, darkMode} = useAppContext();
     const {loading, error, data: dataUsers, refetch} = useQuery(GET_USERS, {
         onCompleted: () => {
@@ -29,6 +30,7 @@ const User = (props: Props) => {
     const [showAdd, setShowAdd] = useState(false);
     const [nickname, setNickname] = useState("");
     const [email, setEmail] = useState("");
+    const navigate = useNavigate();
 
     useEffect(() => {
         refetch();
@@ -93,10 +95,6 @@ const User = (props: Props) => {
         event.preventDefault();
         if (nickname === "" || password === "" || email === "" || role === "" || photoBase64 === "") {
             alert("All fields are required");
-            return;
-        }
-        if (role === "Choose Role") {
-            alert("Choose a role");
             return;
         }
         if (!(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/).test(email)) {
@@ -199,6 +197,14 @@ const User = (props: Props) => {
                                                                         handleShowEdit();
                                                                     }}>
                                                                         Edit
+                                                                    </Button>
+                                                                </Col>
+                                                                <Col>
+                                                                    <Button style={{width: "10vw", marginTop: "3%"}}
+                                                                            variant="success" onClick={() => {
+                                                                        navigate("/chat", { state: {userSelected: user}});
+                                                                    }}>
+                                                                        Chat
                                                                     </Button>
                                                                 </Col>
                                                             </Row>
@@ -327,6 +333,7 @@ const User = (props: Props) => {
                                 <Form.Control
                                     type="text"
                                     name="email"
+                                    inputMode={"email"}
                                     placeholder="Insert the email"
                                     value={email}
                                     onChange={(event) => setEmail(event.target.value)}
@@ -380,4 +387,4 @@ const User = (props: Props) => {
         </Col>
     )
 }
-export default User;
+export default Users;

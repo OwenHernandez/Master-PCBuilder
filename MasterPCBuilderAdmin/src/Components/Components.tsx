@@ -4,10 +4,8 @@ import {Form, Button, Container, Row, Col, Accordion, Modal, Image, Dropdown} fr
 import {useMutation, useQuery} from "@apollo/client";
 import {
     DELETE_COMPONENT,
-    GET_BUILDS,
     GET_COMPONENTS,
     GET_SELLERS,
-    SAVE_COMPONENT,
     UPDATE_COMPONENT
 } from "../Querys/Querys";
 import IComponentInput from "../Type/ComponentInput";
@@ -32,7 +30,6 @@ export interface ISellerType {
     id: number;
     name: string;
     image: string;
-
 }
 
 const Components = (props: Props) => {
@@ -47,13 +44,11 @@ const Components = (props: Props) => {
             setSellers(dataSeller.sellers);
         }
     });
-    const [saveComponentG] = useMutation(SAVE_COMPONENT);
     const [updateComponentG] = useMutation(UPDATE_COMPONENT);
     const [deleteComponentG] = useMutation(DELETE_COMPONENT);
     const [components, setComponents] = useState([] as any[]);
     const [sellers, setSellers] = useState<Array<ISellerType>>([]);
     const [componentSelected, setComponentSelected] = useState<IComponentType>();
-    const [showAdd, setShowAdd] = useState(false)
     const [showEdit, setShowEdit] = useState(false);
     const [showDelete, setShowDelete] = useState(false);
     const [filename, setFilename] = useState("");
@@ -61,9 +56,6 @@ const Components = (props: Props) => {
     const [description, setDescription] = useState("");
     const [price, setPrice] = useState("");
     const [sellerName, setSellerName] = useState("");
-    const [amazon_price, setAmazon_price] = useState("");
-    const [ebay_price, setEbay_price] = useState("");
-    const [name, setName] = useState("");
     const [type, setType] = useState("");
 
     useEffect(() => {
@@ -79,19 +71,6 @@ const Components = (props: Props) => {
 
     function handleShowDelete() {
         setShowDelete(!showDelete);
-    }
-
-    function handleShowAdd() {
-        setName("");
-        setDescription("");
-        setPrice("");
-        setAmazon_price("");
-        setEbay_price("");
-        setType("");
-        setSellerName("");
-        setFilename("");
-        setPhotoBase64("");
-        setShowAdd(!showAdd);
     }
 
     async function updateComponent(event: React.FormEvent<HTMLFormElement>) {
@@ -143,41 +122,6 @@ const Components = (props: Props) => {
             console.log(error);
         }
         handleShowEdit();
-    }
-
-    async function addComponent(event: React.FormEvent<HTMLFormElement>) {
-        event.preventDefault();
-        const cleanBase64 = photoBase64.replace(/^data:.+;base64,/, "");
-
-        if (name === "" || description === "" || price === "" || amazon_price === "" || ebay_price === "" || type === "" || sellerName === "" || filename === "") {
-            alert("All fields must be filled");
-            return;
-        }
-
-        if (isNaN(parseFloat(price)) || isNaN(parseFloat(amazon_price)) || isNaN(parseFloat(ebay_price))) {
-            alert("The prices must be a number");
-            return;
-        }
-
-        let newComponent = {
-            description: description,
-            image: filename,
-            image64: cleanBase64,
-            name: name,
-            type: type,
-            price: parseFloat(price),
-            amazon_price: parseFloat(amazon_price),
-            ebay_price: parseFloat(ebay_price),
-            sellerName: sellerName
-        }
-        try {
-            await saveComponentG({variables: {component: newComponent}});
-            newComponent.image = name + "_" + filename;
-            setComponents([...components, newComponent]);
-        } catch (error) {
-            console.log(error)
-        }
-        handleShowAdd();
     }
 
     async function deleteComponent() {
@@ -316,13 +260,6 @@ const Components = (props: Props) => {
                         }
                     </Accordion>
                 </Row>
-                <Row>
-                    <Col>
-                        <Button style={{width: "10vw", marginLeft: "6%"}} variant={"success"} onClick={handleShowAdd}>
-                            Add Component
-                        </Button>
-                    </Col>
-                </Row>
 
                 <Modal show={showEdit} onHide={handleShowEdit} data-bs-theme={(darkMode) ? "dark" : "light"}>
                     <Modal.Header closeButton>
@@ -371,7 +308,7 @@ const Components = (props: Props) => {
                                     aria-label="Seller" value={sellerName} onChange={(event) => {
                                     setSellerName(event.target.value)
                                 }}>
-                                    <option>Choose Role</option>
+                                    <option>Choose Seller</option>
                                     {
                                         sellers.map((seller, index) => {
                                             return (
@@ -430,125 +367,6 @@ const Components = (props: Props) => {
                             Delete Component
                         </Button>
                     </Modal.Footer>
-                </Modal>
-                <Modal show={showAdd} onHide={handleShowAdd} data-bs-theme={(darkMode) ? "dark" : "light"}>
-                    <Form onSubmit={addComponent}>
-
-                        <Modal.Header closeButton>
-                            <Modal.Title style={{color: (darkMode) ? "white" : "black"}}>Add a Component</Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
-                            <Form.Group className={"mb-4"}>
-                                <Form.Control
-                                    type="text"
-                                    name="name"
-                                    placeholder="Insert the name"
-                                    value={name}
-                                    onChange={(event) => setName(event.target.value)}
-                                />
-                            </Form.Group>
-                            <Form.Group className={"mb-4"}>
-                                <Form.Control
-                                    type="text"
-                                    name="description"
-                                    placeholder="Insert the description"
-                                    value={description}
-                                    onChange={(event) => setDescription(event.target.value)}
-                                />
-                            </Form.Group>
-                            <Form.Group className={"mb-4"}>
-                                <Form.Control
-                                    type="number"
-                                    name="price"
-                                    placeholder="Insert the price"
-                                    value={price}
-                                    onChange={(event) => setPrice(event.target.value)}
-                                />
-                            </Form.Group>
-                            <Form.Group className={"mb-4"}>
-                                <Form.Control
-                                    type="number"
-                                    name="amazon_price"
-                                    placeholder="Insert the price from amazon"
-                                    value={amazon_price}
-                                    onChange={(event) => setAmazon_price(event.target.value)}
-                                />
-                            </Form.Group>
-                            <Form.Group className={"mb-4"}>
-                                <Form.Control
-                                    type="number"
-                                    name="ebay_price"
-                                    placeholder="Insert the price from ebay"
-                                    value={ebay_price}
-                                    onChange={(event) => setEbay_price(event.target.value)}
-                                />
-                            </Form.Group>
-                            <Form.Group className={"mb-4"}>
-                                <Form.Select
-                                    defaultValue={""}
-                                    aria-label="Type" value={type} onChange={(event) => {
-                                    setType(event.target.value)
-                                }}>
-                                    <option>Choose Type</option>
-                                    {
-                                        typeList.map((type, index) => {
-                                            return (
-                                                <option value={type.value}>{type.label}</option>
-                                            )
-                                        })
-                                    }
-                                </Form.Select>
-                            </Form.Group>
-                            <Form.Group className={"mb-4"}>
-                                <Form.Select
-                                    defaultValue={""}
-                                    aria-label="Seller" value={sellerName} onChange={(event) => {
-                                    setSellerName(event.target.value)
-                                }}>
-                                    <option>Choose Role</option>
-                                    {
-                                        sellers.map((seller, index) => {
-                                            return (
-                                                <option value={seller.name}>{seller.name}</option>
-                                            )
-                                        })
-                                    }
-                                </Form.Select>
-                            </Form.Group>
-                            <Form.Group>
-                                <Form.Control type="file" onChange={(event) => {
-                                    const inputElement = event.target as HTMLInputElement;
-                                    if (inputElement.files && inputElement.files.length > 0) {
-                                        const file = inputElement.files[0];
-                                        const fileReader = new FileReader();
-                                        fileReader.readAsDataURL(file);
-                                        fileReader.onload = () => {
-                                            setFilename(file.name);
-                                            setPhotoBase64(fileReader.result as string);
-                                        };
-                                    }
-                                }}/>
-                            </Form.Group>
-                            {
-                                (photoBase64 !== "") &&
-                                <Container fluid>
-                                    <Row>
-                                        <Col>
-                                            <Image src={photoBase64} thumbnail fluid className={"mt-4"}/>
-                                        </Col>
-                                    </Row>
-                                </Container>
-                            }
-                        </Modal.Body>
-                        <Modal.Footer>
-                            <Button variant="outline-secondary" onClick={handleShowAdd} style={{borderRadius: "0"}}>
-                                Close
-                            </Button>
-                            <Button variant="success" type="submit" style={{borderRadius: "0"}}>
-                                Add Component
-                            </Button>
-                        </Modal.Footer>
-                    </Form>
                 </Modal>
             </Container>
         </Col>

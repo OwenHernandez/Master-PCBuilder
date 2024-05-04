@@ -29,7 +29,7 @@ public class BuildDTOMapper {
         buildOutputDTO.setNotes(build.getNotes());
         buildOutputDTO.setCategory(build.getCategory());
         buildOutputDTO.setTotalPrice(build.getTotalPrice());
-        buildOutputDTO.setDeleted(build.getDeleted());
+        buildOutputDTO.setDeleted(build.getDeleted() == 1);
         if (build.getBuildsComponents() != null) {
             List<BuildComponentDTO> bcDTOList = new ArrayList<>();
             for (BuildComponent bc : build.getBuildsComponents()) {
