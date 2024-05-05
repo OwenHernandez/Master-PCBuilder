@@ -6,7 +6,7 @@ import {GET_MESSAGES_BY_RECEIVER_AND_AUTHOR} from "../Querys/Querys";
 import * as encoding from 'text-encoding';
 import {useLocation} from "react-router-dom";
 import {Client} from "@stomp/stompjs";
-import {Globals} from "../Type/Globals";
+import {Globals} from "./Globals";
 import {IoMdSend} from "react-icons/io";
 
 type Props = {}

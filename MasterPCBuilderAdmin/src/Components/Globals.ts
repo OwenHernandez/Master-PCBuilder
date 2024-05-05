@@ -8,9 +8,10 @@ export class Globals {
     static IP_HTTP: string = "http://" + this.IP_CASA_OWEN;
     static IP_WEBSOCKET: string = "ws://" + this.IP_CASA_OWEN;
 
-
-
     static NOT_ACTIVE: string = "not active";
     static INC_PASS_USR: string = "Users/Pass incorrect";
     static IMG_NOT_FOUND: string = "The file does not exist";
+    static CATEGORY_GAMING: string = "Gaming";
+    static CATEGORY_BUDGET: string = "Budget";
+    static CATEGORY_WORK: string = "Work";
 }

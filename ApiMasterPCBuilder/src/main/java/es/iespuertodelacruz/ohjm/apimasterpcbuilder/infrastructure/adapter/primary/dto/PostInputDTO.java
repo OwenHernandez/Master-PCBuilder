@@ -12,6 +12,8 @@ public class PostInputDTO {
 
     private long buildId;
 
+    private boolean deleted;
+
     public PostInputDTO() {}
 
     public String getDescription() {
@@ -52,5 +54,13 @@ public class PostInputDTO {
 
     public void setImage64(String image64) {
         this.image64 = image64;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

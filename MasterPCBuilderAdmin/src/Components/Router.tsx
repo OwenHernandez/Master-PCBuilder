@@ -16,6 +16,8 @@ import {FaComputer, FaRegSun} from "react-icons/fa6";
 import AdminChat from "./AdminChat";
 import {Button, Col, Container, Offcanvas, Row} from "react-bootstrap";
 import {IoMoonOutline} from "react-icons/io5";
+import {PiChatCenteredDots, PiChatCenteredDotsFill} from "react-icons/pi";
+import Posts from "./Posts";
 
 type Props = {}
 
@@ -47,6 +49,7 @@ const Router = (props: Props) => {
                         <Route path='/components' element={<Protector isLoged={isLoged}><Components/></Protector>}/>
                         <Route path='/builds' element={<Protector isLoged={isLoged}><Builds/></Protector>}/>
                         <Route path='/chat' element={<Protector isLoged={isLoged}><AdminChat/></Protector>}/>
+                        <Route path='/posts' element={<Protector isLoged={isLoged}><Posts/></Protector>}/>
                     </Routes>
                 </Row>
             </Container>
@@ -102,6 +105,38 @@ function CustomNavbar() {
 function CustomNav() {
     const {darkMode, setIsLoged} = useAppContext();
     const navigate = useNavigate();
+    const buttonList = [
+        {
+            name: "Dashboard",
+            icon: <FaChartPie/>,
+            path: "/home",
+            top: true
+        },
+        {
+            name: "Users",
+            icon: <FaUsers/>,
+            path: "/users",
+            top: true
+        },
+        {
+            name: "Components",
+            icon: <FaAmazon/>,
+            path: "/components",
+            top: false
+        },
+        {
+            name: "Builds",
+            icon: <FaComputer/>,
+            path: "/builds",
+            top: false
+        },
+        {
+            name: "Posts",
+            icon: <PiChatCenteredDotsFill/>,
+            path: "/posts",
+            top: false
+        }
+    ];
     return (
         <Container fluid>
             <Row>
@@ -110,42 +145,21 @@ function CustomNav() {
                 </Col>
             </Row>
             <Row>
-                <Col xs={6} className={"mb-3 mt-3"}>
-                    <Button variant={(!darkMode) ? "light" : "dark"} style={{
-                        width: "100%",
-                        textAlign: "center",
-                        color: (darkMode) ? "white" : "black"
-                    }} onClick={() => navigate("/home")}>
-                        <FaChartPie/> Dashboard
-                    </Button>
-                </Col>
-                <Col xs={6} className={"mb-3 mt-3"}>
-                    <Button variant={(!darkMode) ? "light" : "dark"} style={{
-                        width: "100%",
-                        textAlign: "center",
-                        color: (darkMode) ? "white" : "black"
-                    }} onClick={() => navigate("/users")}>
-                        <FaUser/> Users
-                    </Button>
-                </Col>
-                <Col xs={6} className={"mb-3"}>
-                    <Button variant={(!darkMode) ? "light" : "dark"} style={{
-                        width: "100%",
-                        textAlign: "center",
-                        color: (darkMode) ? "white" : "black"
-                    }} onClick={() => navigate("/components")}>
-                        <FaAmazon/> Components
-                    </Button>
-                </Col>
-                <Col xs={6} className={"mb-3"}>
-                    <Button variant={(!darkMode) ? "light" : "dark"} style={{
-                        width: "100%",
-                        textAlign: "center",
-                        color: (darkMode) ? "white" : "black"
-                    }} onClick={() => navigate("/builds")}>
-                        <FaComputer/> Builds
-                    </Button>
-                </Col>
+                {
+                    buttonList.map((button, index) => {
+                        return (
+                            <Col xs={6} className={(button.top) ? "mb-3 mt-3" : "mb-3"}>
+                                <Button variant={(!darkMode) ? "light" : "dark"} style={{
+                                    width: "100%",
+                                    textAlign: "center",
+                                    color: (darkMode) ? "white" : "black"
+                                }} onClick={() => navigate(button.path)}>
+                                    {button.icon} {button.name}
+                                </Button>
+                            </Col>
+                        );
+                    })
+                }
                 <Col xs={12}>
                     <Button variant={"outline-danger"} onClick={() => {
                         localStorage.removeItem('authToken');

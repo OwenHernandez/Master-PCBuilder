@@ -23,7 +23,7 @@ export interface IComponentType {
     image: string;
     description: string;
     sellerName: string;
-    deleted: number;
+    deleted: boolean;
 }
 
 export interface ISellerType {
@@ -221,7 +221,7 @@ const Components = (props: Props) => {
                                                         <p>{(comp.deleted) && "Deleted"}</p>
                                                     </Col>
                                                     <Col xs={3}>
-                                                        <ImgViewer filename={comp.image}/>
+                                                        <ImgViewer filename={comp.image} category={""}/>
                                                     </Col>
                                                     <Col xs={3}>
                                                         <Container fluid>

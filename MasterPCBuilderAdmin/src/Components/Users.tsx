@@ -175,7 +175,7 @@ const Users = (props: Props) => {
                                                         <p>{(user.deleted) && "Deleted"}</p>
                                                     </Col>
                                                     <Col xs={3}>
-                                                        <ImgViewer filename={user.picture}/>
+                                                        <ImgViewer filename={user.picture} category={""}/>
                                                     </Col>
                                                     <Col xs={3}>
                                                         <Container fluid>

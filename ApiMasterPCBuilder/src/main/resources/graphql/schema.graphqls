@@ -198,6 +198,7 @@ type Post {
     user: User
     build: Build
     usersWhoLiked: [User]
+    deleted: Boolean
 }
 
 input PostDTO {
@@ -206,6 +207,7 @@ input PostDTO {
     image: String
     image64: String
     buildId: Int
+    deleted: Boolean
 }
 
 # GroupChat

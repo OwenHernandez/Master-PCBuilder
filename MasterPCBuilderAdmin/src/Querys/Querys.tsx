@@ -109,6 +109,67 @@ export const GET_BUILDS = gql`
   }
 }
 `;
+
+export const GET_POSTS = gql`
+    query GetPosts {
+    posts {
+        description
+        image
+        id
+        title
+        deleted
+        user {
+            id
+            nick
+            email
+            role
+            picture
+            active
+        }
+        build {
+            id
+            name
+            category
+            notes
+            totalPrice
+            userNick
+            deleted
+            buildsComponents {
+                dateCreated
+                priceAtTheTime
+                component {
+                    amazon_price
+                    description
+                    ebay_price
+                    id
+                    image
+                    name
+                    price
+                    sellerName
+                    type
+                    userNick
+                    deleted
+                    priceHistory {
+                        amazonPrice
+                        date
+                        ebayPrice
+                        id
+                        price
+                    }
+                }
+            }
+        }
+        usersWhoLiked {
+            id
+            nick
+            email
+            role
+            picture
+            active
+        }
+    }
+}
+`;
 //USERS MUTATIONS
 export const SAVE_USER = gql`
   mutation SaveUser($user: UserSaveDTO!) {
@@ -227,3 +288,54 @@ export const UPDATE_BUILD = gql`
   }
 }
 `;
+//POSTS MUTATIONS
+export const UPDATE_POST = gql`
+    mutation UpdatePost($id: Int!, $post: PostDTO!) {
+        updatePost(id: $id, post: $post) {
+            id
+            title
+            description
+            image
+            user {
+            id
+            nick
+            email
+            role
+            picture
+            active
+            }
+            build {
+            id
+            name
+            category
+            notes
+            totalPrice
+            userNick
+            deleted
+            buildsComponents {
+                dateCreated
+                priceAtTheTime
+                component {
+                id
+                name
+                type
+                price
+                sellerName
+                }
+            }
+            }
+            usersWhoLiked {
+            id
+            nick
+            email
+            role
+            picture
+            active
+            }
+        }
+    }`;
+
+export const DELETE_POST = gql`
+    mutation DeletePost($id: Int!) {
+        deletePost(id: $id)
+    }`;

@@ -300,7 +300,7 @@ const Builds = (props: Props) => {
                                                                                     <Row>
                                                                                         <Col>
                                                                                             <ImgViewer
-                                                                                                filename={buildComponent.component.image}/>
+                                                                                                filename={buildComponent.component.image} category={""}/>
                                                                                         </Col>
                                                                                         <Col>
                                                                                             <h4>{buildComponent.component.name}</h4>
