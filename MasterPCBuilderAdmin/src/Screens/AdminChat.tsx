@@ -1,12 +1,12 @@
 import React, {useEffect, useRef, useState} from 'react'
 import {Button, Col, Container, Row, Form} from "react-bootstrap";
-import {useAppContext} from "../Context/AppContextProvider";
+import {useAppContext} from "../Contexts/AppContextProvider";
 import {useQuery} from "@apollo/client";
 import {GET_MESSAGES_BY_RECEIVER_AND_AUTHOR} from "../Querys/Querys";
 import * as encoding from 'text-encoding';
 import {useLocation} from "react-router-dom";
 import {Client} from "@stomp/stompjs";
-import {Globals} from "./Globals";
+import {Globals} from "../Components/Globals";
 import {IoMdSend} from "react-icons/io";
 
 type Props = {}

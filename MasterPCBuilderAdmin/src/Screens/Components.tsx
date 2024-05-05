@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import {useAppContext} from '../Context/AppContextProvider';
+import {useAppContext} from '../Contexts/AppContextProvider';
 import {Form, Button, Container, Row, Col, Accordion, Modal, Image, Dropdown} from 'react-bootstrap';
 import {useMutation, useQuery} from "@apollo/client";
 import {
@@ -8,8 +8,8 @@ import {
     GET_SELLERS,
     UPDATE_COMPONENT
 } from "../Querys/Querys";
-import IComponentInput from "../Type/ComponentInput";
-import ImgViewer from "./ImgViewer";
+import IComponentInput from "../Types/ComponentInput";
+import ImgViewer from "../Components/ImgViewer";
 
 type Props = {}
 

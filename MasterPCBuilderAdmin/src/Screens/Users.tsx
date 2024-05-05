@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react'
 import {Accordion, Button, Col, Container, Form, Image, Modal, Row} from "react-bootstrap";
-import {useAppContext} from "../Context/AppContextProvider";
-import {UserType} from "../Type/User";
+import {useAppContext} from "../Contexts/AppContextProvider";
+import {UserType} from "../Types/User";
 import {useMutation, useQuery} from "@apollo/client";
 import {DELETE_USER, GET_USERS, SAVE_USER, UPDATE_USER} from "../Querys/Querys";
-import ImgViewer from "./ImgViewer";
+import ImgViewer from "../Components/ImgViewer";
 import {useNavigate} from "react-router-dom";
 
 type Props = {}
@@ -134,6 +134,7 @@ const Users = (props: Props) => {
                 return user;
             })]);
         } catch (e) {
+            alert("Cannot delete user, check if it has any posts, builds, components or is admin of any group");
             console.error('Error deleting user:', e);
         }
         handleShowDelete()

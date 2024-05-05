@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import {useAppContext} from '../Context/AppContextProvider';
+import {useAppContext} from '../Contexts/AppContextProvider';
 import {Form, Button, Container, Row, Col, Accordion, Modal, Image, Dropdown} from 'react-bootstrap';
 import {useMutation, useQuery} from "@apollo/client";
 import {
@@ -7,9 +7,9 @@ import {
     GET_POSTS,
     UPDATE_POST
 } from "../Querys/Querys";
-import ImgViewer from "./ImgViewer";
-import {IBuild} from "./Home";
+import ImgViewer from "../Components/ImgViewer";
 import {IUserType} from "./AdminChat";
+import {IBuild} from "./Home";
 
 type Props = {}
 
@@ -24,7 +24,7 @@ export interface IPostType {
     deleted: boolean;
 }
 
-const Components = (props: Props) => {
+const Posts = (props: Props) => {
     const {token, darkMode} = useAppContext();
     const {loading, error, data: dataPosts, refetch: refetchPosts} = useQuery(GET_POSTS,{
         onCompleted: () => {
@@ -81,7 +81,7 @@ const Components = (props: Props) => {
                             newPost.description = description;
                         }
                         if (filename !== "") {
-                            newPost.image = post.title + "_" + filename;
+                            newPost.image = title + "_" + filename;
                         }
                         newPost.deleted = false;
                         return newPost;
@@ -97,11 +97,11 @@ const Components = (props: Props) => {
     async function deletePost() {
         try {
             await deletePostG({variables: {id: postSelected?.id}});
-            setPosts([...posts.map((comp) => {
-                if (comp.id === postSelected?.id) {
-                    return {...comp, deleted: true};
+            setPosts([...posts.map((post) => {
+                if (post.id === postSelected?.id) {
+                    return {...post, deleted: true};
                 }
-                return comp;
+                return post;
             })]);
         } catch (error) {
             console.log(error)
@@ -266,4 +266,4 @@ const Components = (props: Props) => {
         </Col>
     );
 }
-export default Components;
+export default Posts;

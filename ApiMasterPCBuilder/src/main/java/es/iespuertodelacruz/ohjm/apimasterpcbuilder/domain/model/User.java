@@ -21,6 +21,8 @@ public class User {
 
     private String role;
 
+    private List<Build> builds;
+
     private List<User> friends;
 
     private List<User> blockedUsers;
@@ -32,6 +34,8 @@ public class User {
     private List<Post> likedPosts;
 
     private List<Component> componentsWanted;
+
+    private List<GroupChat> groupChatsAdmin;
 
     public User() {}
 
@@ -115,6 +119,14 @@ public class User {
         this.role = role;
     }
 
+    public List<Build> getBuilds() {
+        return builds;
+    }
+
+    public void setBuilds(List<Build> builds) {
+        this.builds = builds;
+    }
+
     public List<User> getFriends() {
         return friends;
     }
@@ -161,6 +173,14 @@ public class User {
 
     public void setComponentsWanted(List<Component> componentsWanted) {
         this.componentsWanted = componentsWanted;
+    }
+
+    public List<GroupChat> getGroupChatsAdmin() {
+        return groupChatsAdmin;
+    }
+
+    public void setGroupChatsAdmin(List<GroupChat> groupChatsAdmin) {
+        this.groupChatsAdmin = groupChatsAdmin;
     }
 
     @Override

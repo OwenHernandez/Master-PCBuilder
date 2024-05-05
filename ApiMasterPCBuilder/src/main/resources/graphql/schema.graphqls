@@ -219,6 +219,7 @@ type GroupChat {
     dateOfCreation: String
     admin: User
     users: [User]
+    deleted: Boolean
 }
 
 input GroupChatDTO {
@@ -226,6 +227,7 @@ input GroupChatDTO {
     description: String
     picture: String
     pictureBase64: String
+    deleted: Boolean
 }
 
 # Message

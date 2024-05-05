@@ -123,10 +123,13 @@ public class UserControllerV3 {
         if (byId == null) {
             throw new GraphQLErrorException("User not found", HttpStatus.NOT_FOUND);
         }
+        if (!byId.getComponentsCreated().isEmpty() || !byId.getPostsMade().isEmpty() || !byId.getBuilds().isEmpty() || !byId.getGroupChatsAdmin().isEmpty()) {
+            throw new GraphQLErrorException("User cannot be deleted", HttpStatus.BAD_REQUEST);
+        }
         byId.setDeleted((byte) 1);
         try {
             User save = userService.save(byId);
-            if (save.getDeleted()==1) {
+            if (save.getDeleted() == 1) {
                 return true;
             }
         } catch (Exception e) {

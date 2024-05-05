@@ -4,9 +4,9 @@ import {Chart, ArcElement, Tooltip, Legend, CategoryScale, BarElement, LinearSca
 import {Card, Col, Row, Button, Container} from 'react-bootstrap';
 import CountUp from 'react-countup';
 import axios from 'axios';
-import {useAppContext} from '../Context/AppContextProvider';
+import {useAppContext} from '../Contexts/AppContextProvider';
 import {gql, useQuery} from "@apollo/client";
-import {UserType} from "../Type/User";
+import {UserType} from "../Types/User";
 import {GET_BUILDS, GET_COMPONENTS, GET_SELLERS, GET_USERS} from "../Querys/Querys";
 
 Chart.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend); // Registra BarElement en lugar de LineElement

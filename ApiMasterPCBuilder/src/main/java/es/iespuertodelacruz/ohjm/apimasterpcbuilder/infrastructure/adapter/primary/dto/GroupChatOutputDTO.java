@@ -11,6 +11,7 @@ public class GroupChatOutputDTO {
     private String dateOfCreation;
     private UserDTO admin;
     private List<UserDTO> users;
+    private boolean deleted;
 
     public GroupChatOutputDTO() {}
 
@@ -68,5 +69,13 @@ public class GroupChatOutputDTO {
 
     public void setUsers(List<UserDTO> users) {
         this.users = users;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

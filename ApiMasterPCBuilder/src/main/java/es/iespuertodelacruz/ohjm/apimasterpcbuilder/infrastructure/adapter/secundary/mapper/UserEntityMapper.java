@@ -45,9 +45,13 @@ public class UserEntityMapper {
         res.setEmail(userEntity.getEmail());
         res.setPicture(userEntity.getPicture());
         res.setHash(userEntity.getHash());
+
         if (userEntity.getComponentsCreated() != null && !userEntity.getComponentsCreated().isEmpty()) {
             res.setComponentsCreated(new ArrayList<>());
             for (ComponentEntity ce : userEntity.getComponentsCreated()) {
+                if (ce.getDeleted() == 1) {
+                    continue;
+                }
                 Component c = compMapper.toDomain(ce);
                 c.setUserWhoCreated(res);
                 res.getComponentsCreated().add(c);
@@ -116,7 +120,7 @@ public class UserEntityMapper {
         res.setComponentsCreated(new ArrayList<>());
         if (user.getComponentsCreated() != null && !user.getComponentsCreated().isEmpty()) {
             for (Component c : user.getComponentsCreated()) {
-                if (c == null) {
+                if (c == null || c.getDeleted() == 1) {
                     continue;
                 }
                 ComponentEntity ce = compMapper.toPersistence(c);
@@ -128,7 +132,7 @@ public class UserEntityMapper {
         res.setComponentsWanted(new ArrayList<>());
         if (user.getComponentsWanted() != null) {
             for (Component c : user.getComponentsWanted()) {
-                if (c == null) {
+                if (c == null || c.getDeleted() == 1) {
                     continue;
                 }
                 ComponentEntity ce = compMapper.toPersistence(c);

@@ -1,23 +1,25 @@
 import {BrowserRouter, Route, Routes, useNavigate} from 'react-router-dom'
-import {useAppContext} from '../Context/AppContextProvider'
-import Home from './Home'
-import Login from './Login'
+import {useAppContext} from '../Contexts/AppContextProvider'
+import Home from '../Screens/Home'
+import Login from '../Screens/Login'
 import '../Styles/Router.css'
 import Protector from './Protector'
 import Navbar from 'react-bootstrap/Navbar';
-import logoLight from '../img/logo_light.png'
-import logoDark from '../img/logo_dark.png'
+import logoLight from '../Imgs/logo_light.png'
+import logoDark from '../Imgs/logo_dark.png'
 import {FaUsers, FaChartPie, FaUser, FaSignOutAlt, FaAmazon} from 'react-icons/fa';
 import React, {useState} from "react";
-import Users from "./Users";
-import Components from "./Components";
-import Builds from "./Builds";
+import Users from "../Screens/Users";
+import Components from "../Screens/Components";
+import Builds from "../Screens/Builds";
 import {FaComputer, FaRegSun} from "react-icons/fa6";
-import AdminChat from "./AdminChat";
+import AdminChat from "../Screens/AdminChat";
 import {Button, Col, Container, Offcanvas, Row} from "react-bootstrap";
 import {IoMoonOutline} from "react-icons/io5";
 import {PiChatCenteredDots, PiChatCenteredDotsFill} from "react-icons/pi";
-import Posts from "./Posts";
+import Posts from "../Screens/Posts";
+import {MdGroups} from "react-icons/md";
+import GroupChats from "../Screens/GroupChats";
 
 type Props = {}
 
@@ -50,6 +52,7 @@ const Router = (props: Props) => {
                         <Route path='/builds' element={<Protector isLoged={isLoged}><Builds/></Protector>}/>
                         <Route path='/chat' element={<Protector isLoged={isLoged}><AdminChat/></Protector>}/>
                         <Route path='/posts' element={<Protector isLoged={isLoged}><Posts/></Protector>}/>
+                        <Route path='/groupChats' element={<Protector isLoged={isLoged}><GroupChats/></Protector>}/>
                     </Routes>
                 </Row>
             </Container>
@@ -134,6 +137,12 @@ function CustomNav() {
             name: "Posts",
             icon: <PiChatCenteredDotsFill/>,
             path: "/posts",
+            top: false
+        },
+        {
+            name: "Group Chats",
+            icon: <MdGroups />,
+            path: "/groupChats",
             top: false
         }
     ];

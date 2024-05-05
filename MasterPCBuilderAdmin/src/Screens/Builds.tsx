@@ -1,4 +1,4 @@
-import {useAppContext} from "../Context/AppContextProvider";
+import {useAppContext} from "../Contexts/AppContextProvider";
 import {useMutation, useQuery} from "@apollo/client";
 import {
     DELETE_BUILD,
@@ -8,7 +8,7 @@ import {
 import React, {useEffect, useState} from "react";
 import {Accordion, Button, Col, Container, Form, Modal, Row} from "react-bootstrap";
 import {IBuild, IBuildComponent} from "./Home";
-import ImgViewer from "./ImgViewer";
+import ImgViewer from "../Components/ImgViewer";
 
 type Props = {}
 
@@ -527,7 +527,7 @@ const Builds = (props: Props) => {
                            />
                        </Form.Group>
                        <Form.Group>
-                           <Form.Label>Type</Form.Label>
+                           <Form.Label>Types</Form.Label>
                            <Form.Control
                                type="text"
                                name="price"

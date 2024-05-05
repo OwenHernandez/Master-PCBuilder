@@ -30,6 +30,8 @@ public class GroupChatEntityMapper {
         for (UserEntity ue : entity.getUsers()) {
             groupChat.getUsers().add(userEntityMapper.toDomain(ue, new HashSet<>(), new HashSet<>(), "groupChat"));
         }
+        groupChat.setDeleted(entity.getDeleted());
+
         return groupChat;
     }
 
@@ -46,6 +48,8 @@ public class GroupChatEntityMapper {
         for (User u : groupChat.getUsers()) {
             entity.getUsers().add(userEntityMapper.toPersistence(u, new HashSet<>(), new HashSet<>(), "groupChat"));
         }
+        entity.setDeleted(groupChat.getDeleted());
+
         return entity;
     }
 }

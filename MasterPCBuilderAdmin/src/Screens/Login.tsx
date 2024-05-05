@@ -1,11 +1,11 @@
 import React, {useState} from 'react'
 import {Link, useNavigate} from 'react-router-dom'
-import logo from '../img/logo_transparent.png'
+import logo from '../Imgs/logo_transparent.png'
 import axios from 'axios'
-import {Globals} from './Globals';
-import {useAppContext} from '../Context/AppContextProvider';
+import {Globals} from '../Components/Globals';
+import {useAppContext} from '../Contexts/AppContextProvider';
 import {Form, Button, Container, Row, Col} from 'react-bootstrap';
-import {UserType} from '../Type/User';
+import {UserType} from '../Types/User';
 
 type Props = {}
 

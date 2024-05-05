@@ -27,6 +27,7 @@ query MyQuery {
     name
   }
 }`;
+
 export const GET_USERS = gql`
   query GetUsers {
   users {
@@ -46,8 +47,8 @@ export const GET_USERS = gql`
       role
     }
   }
-}
-  `;
+}`;
+
 export const GET_COMPONENTS = gql`
   query GetComponents {
   components {
@@ -125,6 +126,7 @@ export const GET_POSTS = gql`
             role
             picture
             active
+            deleted
         }
         build {
             id
@@ -170,6 +172,36 @@ export const GET_POSTS = gql`
     }
 }
 `;
+
+export const GET_GROUPS = gql`
+    query GetGroups {
+        groupChats {
+            id
+            name
+            description
+            picture
+            admin {
+                id
+                nick
+                email
+                role
+                picture
+                active
+                deleted
+            }
+            dateOfCreation            
+            users {
+                id
+                nick
+                email
+                role
+                picture
+                active
+                deleted
+            }
+            deleted
+        }
+    }`;
 //USERS MUTATIONS
 export const SAVE_USER = gql`
   mutation SaveUser($user: UserSaveDTO!) {
@@ -297,32 +329,33 @@ export const UPDATE_POST = gql`
             description
             image
             user {
-            id
-            nick
-            email
-            role
-            picture
-            active
+                id
+                nick
+                email
+                role
+                picture
+                active
+                deleted
             }
             build {
-            id
-            name
-            category
-            notes
-            totalPrice
-            userNick
-            deleted
-            buildsComponents {
-                dateCreated
-                priceAtTheTime
-                component {
                 id
                 name
-                type
-                price
-                sellerName
+                category
+                notes
+                totalPrice
+                userNick
+                deleted
+                buildsComponents {
+                    dateCreated
+                    priceAtTheTime
+                    component {
+                        id
+                        name
+                        type
+                        price
+                        sellerName
+                    }
                 }
-            }
             }
             usersWhoLiked {
             id
@@ -338,4 +371,100 @@ export const UPDATE_POST = gql`
 export const DELETE_POST = gql`
     mutation DeletePost($id: Int!) {
         deletePost(id: $id)
+    }`;
+
+//GROUPS MUTATIONS
+export const UPDATE_GROUP = gql`
+    mutation UpdateGroup($id: Int!, $groupChat: GroupChatDTO!) {
+        updateGroupChat(id: $id, groupChat: $groupChat) {
+            id
+            name
+            description
+            picture
+            admin {
+                id
+                nick
+                email
+                role
+                picture
+                active
+                deleted
+            }
+            dateOfCreation
+            users {
+                id
+                nick
+                email
+                role
+                picture
+                active
+                deleted
+            }
+            deleted
+        }
+    }`;
+
+export const DELETE_GROUP = gql`
+    mutation DeleteGroup($id: Int!) {
+        deleteGroupChat(id: $id)
+    }`;
+
+export const ADD_REMOVE_USER_GROUP = gql`
+    mutation AddRemoveUserGroup($groupId: Int!, $userId: Int!) {
+        addRemoveUserGroupChat(groupId: $groupId, userId: $userId) {
+            id
+            name
+            description
+            picture
+            admin {
+                id
+                nick
+                email
+                role
+                picture
+                active
+                deleted
+            }
+            dateOfCreation
+            users {
+                id
+                nick
+                email
+                role
+                picture
+                active
+                deleted
+            }
+            deleted
+        }
+    }`;
+
+export const ADD_REMOVE_ADMIN_GROUP = gql`
+    mutation AddRemoveAdminGroup($groupId: Int!, $userId: Int!) {
+        addRemoveAdminGroupChat(groupId: $groupId, userId: $userId) {
+            id
+            name
+            description
+            picture
+            admin {
+                id
+                nick
+                email
+                role
+                picture
+                active
+                deleted
+            }
+            dateOfCreation
+            users {
+                id
+                nick
+                email
+                role
+                picture
+                active
+                deleted
+            }
+            deleted
+        }
     }`;

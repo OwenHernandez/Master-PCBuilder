@@ -1,6 +1,6 @@
 import {useQuery} from "@apollo/client";
 import {GET_FILE} from "../Querys/Querys";
-import {useAppContext} from "../Context/AppContextProvider";
+import {useAppContext} from "../Contexts/AppContextProvider";
 import {useEffect, useState} from "react";
 import {Globals} from "./Globals";
 
@@ -50,6 +50,9 @@ const ImgViewer = (props: Props) => {
                         className="image-style" alt={"default-profilePic"}/>;
         } else if (category === Globals.CATEGORY_WORK) {
             return <img src={"https://www.pcspecialist.co.uk/images/cases/12030/h.png?1602846384"}
+                        className="image-style" alt={"default-profilePic"}/>;
+        } else if (category === "groupChat") {
+            return <img src={"https://www.tenniscall.com/images/chat.jpg"}
                         className="image-style" alt={"default-profilePic"}/>;
         } else {
             return <img src={"https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png?x=480&quality=40"}

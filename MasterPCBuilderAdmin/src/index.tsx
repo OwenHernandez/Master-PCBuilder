@@ -4,7 +4,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import Router from "./Components/Router";
-import AppContextProvider from './Context/AppContextProvider';
+import AppContextProvider from './Contexts/AppContextProvider';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {ApolloClient, InMemoryCache, ApolloProvider, ApolloLink, createHttpLink} from '@apollo/client';
 
