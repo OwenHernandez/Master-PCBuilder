@@ -1,17 +1,13 @@
 package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto;
 
-public class SellerDTO {
+public class SellerInputDTO {
 
-    private Long id;
     private String image;
     private String name;
+    private String image64;
     private boolean deleted;
 
-    public SellerDTO() {
-    }
-
-    public Long getId() {
-        return id;
+    public SellerInputDTO() {
     }
 
     public String getImage() {
@@ -22,16 +18,20 @@ public class SellerDTO {
         return name;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public void setImage(String image) {
         this.image = image;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getImage64() {
+        return image64;
+    }
+
+    public void setImage64(String image64) {
+        this.image64 = image64;
     }
 
     public boolean isDeleted() {

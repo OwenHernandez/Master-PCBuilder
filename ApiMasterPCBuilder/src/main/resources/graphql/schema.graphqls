@@ -80,11 +80,14 @@ type Seller {
     id: Int
     name: String
     image: String
+    deleted: Boolean
 }
 
 input SellerDTO {
     name: String
     image: String
+    image64: String
+    deleted: Boolean
 }
 
 # PriceHistory

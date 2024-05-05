@@ -18,8 +18,9 @@ import {Button, Col, Container, Offcanvas, Row} from "react-bootstrap";
 import {IoMoonOutline} from "react-icons/io5";
 import {PiChatCenteredDots, PiChatCenteredDotsFill} from "react-icons/pi";
 import Posts from "../Screens/Posts";
-import {MdGroups} from "react-icons/md";
+import {MdGroups, MdSell} from "react-icons/md";
 import GroupChats from "../Screens/GroupChats";
+import Sellers from "../Screens/Sellers";
 
 type Props = {}
 
@@ -48,6 +49,7 @@ const Router = (props: Props) => {
                         <Route path='/login' element={<Login/>}/>
                         <Route path='/home' element={<Protector isLoged={isLoged}><Home/></Protector>}/>
                         <Route path='/users' element={<Protector isLoged={isLoged}><Users/></Protector>}/>
+                        <Route path='/sellers' element={<Protector isLoged={isLoged}><Sellers/></Protector>}/>
                         <Route path='/components' element={<Protector isLoged={isLoged}><Components/></Protector>}/>
                         <Route path='/builds' element={<Protector isLoged={isLoged}><Builds/></Protector>}/>
                         <Route path='/chat' element={<Protector isLoged={isLoged}><AdminChat/></Protector>}/>
@@ -120,6 +122,12 @@ function CustomNav() {
             icon: <FaUsers/>,
             path: "/users",
             top: true
+        },
+        {
+            name: "Sellers",
+            icon: <MdSell />,
+            path: "/sellers",
+            top: false
         },
         {
             name: "Components",

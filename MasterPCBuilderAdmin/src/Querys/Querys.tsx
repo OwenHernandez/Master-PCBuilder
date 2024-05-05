@@ -25,6 +25,7 @@ query MyQuery {
     id
     image
     name
+    deleted
   }
 }`;
 
@@ -232,6 +233,32 @@ export const DELETE_USER = gql`
     deleteUser(id: $id)
   }
 `;
+
+//SELLERS MUTATIONS
+export const SAVE_SELLER = gql`
+  mutation SaveSeller($seller: SellerDTO!) {
+    saveSeller(seller: $seller) {
+      id
+      image
+      name
+    }
+  }`;
+
+export const UPDATE_SELLER = gql`
+    mutation UpdateSeller($id: Int!, $seller: SellerDTO!) {
+        updateSeller(id: $id, seller: $seller) {
+            id
+            image
+            name
+            deleted
+        }
+    }`;
+
+export const DELETE_SELLER = gql`
+    mutation DeleteSeller($id: Int!) {
+        deleteSeller(id: $id)
+    }`;
+
 //COMPONENTS MUTATIONS
 export const SAVE_COMPONENT = gql`
   mutation SaveComponent($component: ComponentDTO!) {

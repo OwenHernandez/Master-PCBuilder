@@ -11,6 +11,7 @@ public class SellerEntityMapper {
         res.setId(sellerEntity.getId());
         res.setName(sellerEntity.getName());
         res.setImage(sellerEntity.getImage());
+        res.setDeleted(sellerEntity.getDeleted());
 
         return res;
     }
@@ -21,6 +22,7 @@ public class SellerEntityMapper {
         res.setId(seller.getId());
         res.setName(seller.getName());
         res.setImage(seller.getImage());
+        res.setDeleted(seller.getDeleted());
 
         return res;
     }

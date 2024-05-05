@@ -30,6 +30,7 @@ export interface ISellerType {
     id: number;
     name: string;
     image: string;
+    deleted: boolean;
 }
 
 const Components = (props: Props) => {
