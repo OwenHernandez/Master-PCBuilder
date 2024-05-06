@@ -198,7 +198,7 @@ const AdminChat = (props: Props) => {
                                             margin: "2%",
                                             maxWidth: "90%"
                                         }}>
-                                            <Text style={{fontSize: getFontSize(15), color: "white"}}>{msg.item.msg}</Text>
+                                            <Text style={{fontSize: getFontSize(15), color: "white"}}>{msg.item.content}</Text>
                                         </View>
                                     </View>
                                 </View>
@@ -218,7 +218,7 @@ const AdminChat = (props: Props) => {
                                             margin: "2%",
                                             maxWidth: "90%"
                                         }}>
-                                            <Text style={{fontSize: getFontSize(15), color: "white"}}>{msg.item.msg}</Text>
+                                            <Text style={{fontSize: getFontSize(15), color: "white"}}>{msg.item.content}</Text>
                                         </View>
                                     </View>
                                 </View>

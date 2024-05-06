@@ -1,7 +1,9 @@
 package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.config;
 
+import com.mongodb.client.MongoClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoClientDatabaseFactory;
 

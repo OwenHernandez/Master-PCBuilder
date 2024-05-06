@@ -41,6 +41,7 @@ public class UserEntityMapper {
         res.setPassword(userEntity.getPassword());
         res.setRole(userEntity.getRole());
         res.setActive(userEntity.getActive());
+        res.setDeleted(userEntity.getDeleted());
         res.setEmail(userEntity.getEmail());
         res.setPicture(userEntity.getPicture());
         res.setHash(userEntity.getHash());
@@ -53,7 +54,7 @@ public class UserEntityMapper {
             }
         }
 
-        if (userEntity.getComponentsWanted() != null) {
+        if (userEntity.getComponentsWanted() != null && !userEntity.getComponentsWanted().isEmpty()) {
             List<Component> componentsWanted = new ArrayList<>();
             for (ComponentEntity ce : userEntity.getComponentsWanted()) {
                 Component c = compMapper.toDomain(ce);
@@ -108,45 +109,54 @@ public class UserEntityMapper {
         res.setRole(user.getRole());
         res.setEmail(user.getEmail());
         res.setActive(user.getActive());
+        res.setDeleted(user.getDeleted());
         res.setHash(user.getHash());
         res.setPicture(user.getPicture());
+
+        res.setComponentsCreated(new ArrayList<>());
         if (user.getComponentsCreated() != null && !user.getComponentsCreated().isEmpty()) {
-            res.setComponentsCreated(new ArrayList<>());
             for (Component c : user.getComponentsCreated()) {
+                if (c == null) {
+                    continue;
+                }
                 ComponentEntity ce = compMapper.toPersistence(c);
                 ce.setUser(res);
                 res.getComponentsCreated().add(ce);
             }
         }
 
+        res.setComponentsWanted(new ArrayList<>());
         if (user.getComponentsWanted() != null) {
-            res.setComponentsWanted(new ArrayList<>());
             for (Component c : user.getComponentsWanted()) {
+                if (c == null) {
+                    continue;
+                }
                 ComponentEntity ce = compMapper.toPersistence(c);
                 ce.setUser(res);
                 res.getComponentsWanted().add(ce);
             }
-        }else{
-            res.setComponentsWanted(new ArrayList<>());
-
         }
 
+        res.setFriends(new ArrayList<>());
         if (user.getFriends() != null && !user.getFriends().isEmpty()) {
-            res.setFriends(new ArrayList<>());
             for (User u : user.getFriends()) {
+                if (u == null) {
+                    continue;
+                }
                 UserEntity ue = toPersistence(u, new HashSet<>(processedFriendsIds), new HashSet<>(processedBlockedUsersIds), "friends");
                 res.getFriends().add(ue);
             }
         }
 
+        res.setBlockedUsers(new ArrayList<>());
         if (user.getBlockedUsers() != null && !user.getBlockedUsers().isEmpty()) {
-            res.setBlockedUsers(new ArrayList<>());
             for (User u : user.getBlockedUsers()) {
+                if (u == null) {
+                    continue;
+                }
                 UserEntity ue = toPersistence(u, new HashSet<>(processedFriendsIds), new HashSet<>(processedBlockedUsersIds), "blockedUsers");
                 res.getBlockedUsers().add(ue);
             }
-        }else{
-            res.setBlockedUsers(new ArrayList<>());
         }
 
         return res;

@@ -1,7 +1,7 @@
 package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto;
 
 public class ProductAmazonDTO {
-    private String tile;
+    private String title;
     private String url;
     private String price;
     private String rating;
@@ -12,7 +12,7 @@ public class ProductAmazonDTO {
     }
 
     public ProductAmazonDTO(String tile, String url, String price, String rating, String reviews, String search_url) {
-        this.tile = tile;
+        this.title = tile;
         this.url = url;
         this.price = price;
         this.rating = rating;
@@ -20,12 +20,12 @@ public class ProductAmazonDTO {
         this.search_url = search_url;
     }
 
-    public String getTile() {
-        return tile;
+    public String getTitle() {
+        return title;
     }
 
-    public void setTile(String tile) {
-        this.tile = tile;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getUrl() {
@@ -66,5 +66,17 @@ public class ProductAmazonDTO {
 
     public void setSearch_url(String search_url) {
         this.search_url = search_url;
+    }
+
+    @Override
+    public String toString() {
+        return "ProductAmazonDTO{" +
+                "title='" + title + '\'' +
+                ", url='" + url + '\'' +
+                ", price='" + price + '\'' +
+                ", rating='" + rating + '\'' +
+                ", reviews='" + reviews + '\'' +
+                ", search_url='" + search_url + '\'' +
+                '}';
     }
 }

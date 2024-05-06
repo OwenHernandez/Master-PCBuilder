@@ -88,22 +88,25 @@ const CreateComponent = (props: Props) => {
 
     async function createComponent() {
         if (!isNaN(Number(price))) {
+            let amazonPrice = 0;
+            let ebayPrice = 0;
             async function getAmazonPrice(){
                 try {
-                    const response = await axios.get(Globals.IP_HTTP + "/api/v2/components/searchAmazon/" + name);
-                    console.log(response.data[0].amazon_price)
-                    setAmazon_price(parseFloat(response.data[0].amazon_price));
-                    console.log(amazon_price)
+                    const response = await axios.get(Globals.IP_HTTP + "/api/v2/components/amazon/" + name);
+                    let stringAmazon:string= response.data[0].price;
+
+                    stringAmazon=stringAmazon.replace("$","");
+                    amazonPrice = parseFloat(stringAmazon);
                 } catch (err) {
                     console.log(err);
                 }
             }
             async function getEbayPrice(){
                 try {
-                    const response = await axios.get(Globals.IP_HTTP + "/api/v2/components/searchEbay/" + name);
-                    console.log(response.data[1].ebay_price)
-                    setEbay_price(parseFloat(response.data[1].ebay_price));
-                    console.log(ebay_price)
+                    const response = await axios.get(Globals.IP_HTTP + "/api/v2/components/ebay/" + name);
+                    let stringEbay:string= response.data[1].price;
+                    stringEbay=stringEbay.replace("$","");
+                    ebayPrice = parseFloat(stringEbay);
                 } catch (err) {
                     console.log(err);
                 }
@@ -166,11 +169,12 @@ const CreateComponent = (props: Props) => {
         <View style={{flex: 1, backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"}}>
             <HeaderScreen name={route.name} navigation={navigation} profile={false} drawer={true} />
                 <ScrollView style={{flex:1}} contentContainerStyle={{ flexGrow: 1 }}>
-                    <View style={{flex:1}}>
-                        <View style={{flex:1,flexDirection:"row",}}>
+                    <View style={{flex:1,}}>
+                        <View style={{flex:2,flexDirection:"row",}}>
                             <View style={{flex: 1,flexDirection:"column",}}>
                                 <View style={{
-                                    flex:1, marginLeft:4,paddingRight:4
+                                    flex:1,
+                                    marginRight:"5%",
                                 }}>
                                     <TextInput
                                         placeholder='Name'
@@ -179,14 +183,13 @@ const CreateComponent = (props: Props) => {
                                             flex:1,
                                             borderWidth: 2,
                                             borderColor: "#ca2613",
-                                            borderRadius: 20,
                                             paddingHorizontal: 5,
                                             width: "100%",
                                             fontSize: getFontSize(20),
                                             color: (darkMode) ? "white" : "black",
                                             textAlign: 'center',
-                                            marginBottom: 8,
-                                            marginTop:8
+                                            marginBottom: "5%",
+                                            marginTop:"5%",
                                         }}
                                         placeholderTextColor={"#a3a3a3"}
                                         onChangeText={(text) => setName(text)}
@@ -198,13 +201,12 @@ const CreateComponent = (props: Props) => {
                                             flex:4,
                                             borderWidth: 2,
                                             borderColor: "#ca2613",
-                                            borderRadius: 20,
                                             paddingHorizontal: 5,
                                             width: "100%",
                                             fontSize: getFontSize(15),
                                             color: (darkMode) ? "white" : "black",
                                             textAlign: 'center',
-                                            marginBottom: 8
+                                            marginBottom: "5%",
                                         }}
                                         placeholderTextColor={"#a3a3a3"}
                                         numberOfLines={3}
@@ -218,13 +220,12 @@ const CreateComponent = (props: Props) => {
                                             flex:1,
                                             borderWidth: 2,
                                             borderColor: "#ca2613",
-                                            borderRadius: 20,
                                             paddingHorizontal: 5,
                                             width: "100%",
                                             fontSize: getFontSize(20),
                                             color: (darkMode) ? "white" : "black",
                                             textAlign: 'center',
-                                            marginBottom: 8
+                                            marginBottom: "5%",
                                         }}
                                         keyboardType={"numeric"}
                                         placeholderTextColor={"#a3a3a3"}
@@ -232,7 +233,7 @@ const CreateComponent = (props: Props) => {
                                     ></TextInput>
                                 </View>
                             </View>
-                            <View style={{flex:1,margin:10}}>
+                            <View style={{flex:1,}}>
                                 <Dropdown
                                     data={sellers}
                                     labelField={"label"}
@@ -247,7 +248,9 @@ const CreateComponent = (props: Props) => {
                                         //borderRadius: 20,
                                         width: "100%",
                                         borderWidth: 2,
-                                        marginBottom: 8,
+                                        marginBottom: "5%",
+                                        marginTop:"5%",
+
                                         flex:1
                                     }}
                                     placeholderStyle={{
@@ -322,25 +325,43 @@ const CreateComponent = (props: Props) => {
                                         textAlign: 'center'
                                     }}
                                 />
+                                <View style={{justifyContent:"flex-end"}}>
+                                    <TouchableOpacity style={{
+                                        flex:1,
+                                        borderWidth: 2,
+                                        borderColor: "#ca2613",
+                                        width: "100%",
+                                        marginBottom: "5%",
+                                        padding:"5%"
+                                    }} onPress={openGallery}>
+                                        <Text style={{
+                                            fontSize: getFontSize(20),
+                                            textAlign: 'center',
+                                            color: (darkMode) ? "white" : "black"
+                                        }}>{(image === "") ? "Select a picture for the component" : image}</Text>
+                                    </TouchableOpacity>
+                                </View>
+
                             </View>
                         </View>
-                        <View style={{flex:1}}>
-                            <TouchableOpacity style={{...Styles.touchable}} onPress={openGallery}>
-                                <Text style={{
-                                    fontSize: getFontSize(20),
-                                    textAlign: 'center',
-                                    color: (darkMode) ? "white" : "black"
-                                }}>{(image === "") ? "Select a picture for the component" : image}</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={{...Styles.touchable}} onPress={createComponent}>
-                                <Text
-                                    style={{
-                                        fontSize: getFontSize(20),
-                                        color: (darkMode) ? "white" : "black",
-                                        textAlign: 'center'
-                                    }}>Create
-                                    Component</Text>
-                            </TouchableOpacity>
+                        <View style={{justifyContent:"flex-end",flexDirection:"row",height:"10%",}}>
+                            <View style={{flex:1,}}>
+                                <TouchableOpacity style={{
+                                    flex:1,
+                                    borderWidth: 2,
+                                    borderColor: "#ca2613",
+                                    width: "100%",
+                                    justifyContent:"center",
+                                    marginBottom: 8}} onPress={createComponent}>
+                                    <Text
+                                        style={{
+                                            fontSize: getFontSize(20),
+                                            color: (darkMode) ? "white" : "black",
+                                            textAlign: 'center'
+                                        }}>Create
+                                        Component</Text>
+                                </TouchableOpacity>
+                            </View>
                         </View>
                     </View>
                 </ScrollView>

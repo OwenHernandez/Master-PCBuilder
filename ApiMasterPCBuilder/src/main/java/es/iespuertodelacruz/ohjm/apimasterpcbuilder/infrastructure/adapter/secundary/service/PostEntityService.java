@@ -35,7 +35,7 @@ public class PostEntityService implements IPostRepository {
     public Post save(Post post) {
         try {
             return mapper.toDomain(repo.save(mapper.toPersistence(post)));
-        } catch (RuntimeException | ParseException e) {
+        } catch (ParseException e) {
             return null;
         }
     }
@@ -50,15 +50,11 @@ public class PostEntityService implements IPostRepository {
     @Override
     @Transactional
     public boolean deleteById(long id) {
-        try {
-            if (!repo.existsById(id)) {
-                return false;
-            }
-            repo.deleteById(id);
-            return true;
-        } catch (RuntimeException e) {
+        if (!repo.existsById(id)) {
             return false;
         }
+        repo.deleteById(id);
+        return true;
     }
 
     @Override
@@ -70,7 +66,7 @@ public class PostEntityService implements IPostRepository {
             }
             repo.save(mapper.toPersistence(post));
             return true;
-        } catch (RuntimeException | ParseException e) {
+        } catch (ParseException e) {
             return false;
         }
     }

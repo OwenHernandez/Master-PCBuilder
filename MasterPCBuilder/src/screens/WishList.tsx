@@ -31,22 +31,24 @@ const WishList = (props: Props) => {
         try {
             setWishList([]);
             for (const comp of user.componentsWanted) {
-                const compImgResponse = await RNFetchBlob.fetch(
-                    'GET',
-                    Globals.IP_HTTP + '/api/v2/components/img/' + comp.id + '/' + comp.image,
-                    {Authorization: `Bearer ${token}`}
-                );
-                let picture = ""
-                if (compImgResponse.data !== Globals.IMG_NOT_FOUND) {
-                    picture = await compImgResponse.base64();
-                }
-                comp.image = picture;
-                comp.wished = false;
-                user.componentsWanted?.forEach((compWished) => {
-                    if (comp.id === compWished.id) {
-                        comp.wished = true;
+                if (comp.image.length < 200) {
+                    const compImgResponse = await RNFetchBlob.fetch(
+                        'GET',
+                        Globals.IP_HTTP + '/api/v2/components/img/' + comp.id + '/' + comp.image,
+                        {Authorization: `Bearer ${token}`}
+                    );
+                    let picture = ""
+                    if (compImgResponse.data !== Globals.IMG_NOT_FOUND) {
+                        picture = await compImgResponse.base64();
                     }
-                });
+                    comp.image = picture;
+                    comp.wished = false;
+                    user.componentsWanted?.forEach((compWished) => {
+                        if (comp.id === compWished.id) {
+                            comp.wished = true;
+                        }
+                    });
+                }
                 setWishList(prevWishList => [...prevWishList, comp]);
             }
         } catch (err) {
@@ -57,18 +59,36 @@ const WishList = (props: Props) => {
     return (
         <View>
             <HeaderScreen name={"Wish List"} navigation={navigation} profile={false} drawer={false}/>
-            <View style={{height: "90%"}}>
+            <View style={{height: "90%", width: "100%"}}>
                 {
                     wishList !== undefined &&
                     <FlatList
                         data={wishList}
                         numColumns={2}
+                        contentContainerStyle={{alignItems: "center", width: "100%"}}
                         renderItem={(comp) => {
                             if (comp.item.id !== undefined) {
+                                comp.item.wished = false;
+                                user.componentsWanted?.forEach((compWished) => {
+                                    if (comp.item.id === compWished.id) {
+                                        comp.item.wished = true;
+                                    }
+                                });
                                 return (
                                     <TouchableOpacity
-                                        style={{...Styles.touchable, width: "40%"}}
-                                        onPress={() => navigation.navigate("ComponentScreen", {comp: comp.item})}>
+                                        style={{
+                                            ...Styles.touchable,
+                                            margin: "3%",
+                                            height: getIconSize(600),
+                                            width: getIconSize(450),
+                                            justifyContent: "center",
+                                            alignItems: "center"
+                                        }}
+                                        onPress={() => {
+                                            navigation.navigate("ComponentScreen", {comp: comp.item})
+                                        }
+
+                                        }>
                                         <Component comp={comp.item}/>
                                     </TouchableOpacity>
                                 )

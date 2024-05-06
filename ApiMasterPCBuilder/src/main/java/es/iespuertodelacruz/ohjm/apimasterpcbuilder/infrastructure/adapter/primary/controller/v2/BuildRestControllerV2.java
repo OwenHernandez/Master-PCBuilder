@@ -7,12 +7,9 @@ import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.User;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.IBuildService;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.IComponentService;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.IUserService;
-import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.BuildComponentDTO;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.BuildInputDTO;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.BuildOutputDTO;
-import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.mapper.BuildInputDTOMapper;
-import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.mapper.BuildOutputDTOMapper;
-import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.mapper.BuildComponentEntityMapper;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.mapper.BuildDTOMapper;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,13 +18,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
-import java.util.logging.Logger;
 
 @RestController
 @CrossOrigin
@@ -43,9 +37,7 @@ public class BuildRestControllerV2 {
     @Autowired
     IComponentService componentService;
 
-    BuildOutputDTOMapper outputDTOMapper = new BuildOutputDTOMapper();
-
-    BuildInputDTOMapper inputDTOMapper = new BuildInputDTOMapper();
+    BuildDTOMapper mapper = new BuildDTOMapper();
 
     @Transactional
     @GetMapping
@@ -59,7 +51,7 @@ public class BuildRestControllerV2 {
             if (byUserId != null) {
                 List<BuildOutputDTO> res = new ArrayList<>();
                 for (Build b : byUserId) {
-                    BuildOutputDTO bdto = outputDTOMapper.toDTO(b);
+                    BuildOutputDTO bdto = mapper.toDTO(b);
                     res.add(bdto);
                 }
                 return ResponseEntity.ok(res);
@@ -83,7 +75,7 @@ public class BuildRestControllerV2 {
                 if (!buildInputDTO.getCategory().equals("Gaming") && !buildInputDTO.getCategory().equals("Work") && !buildInputDTO.getCategory().equals("Budget")) {
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The category must be Gaming, Work or Budget");
                 }
-                Build build = inputDTOMapper.toDomain(buildInputDTO);
+                Build build = mapper.toDomain(buildInputDTO);
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 Date date = new Date();
                 String dateStr = sdf.format(date);
@@ -109,7 +101,7 @@ public class BuildRestControllerV2 {
 
                 Build save = buildService.save(build);
                 if (save != null) {
-                    BuildOutputDTO outputDTO = outputDTOMapper.toDTO(save);
+                    BuildOutputDTO outputDTO = mapper.toDTO(save);
                     return ResponseEntity.ok(outputDTO);
                 } else {
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong");
@@ -141,11 +133,12 @@ public class BuildRestControllerV2 {
                         } else {
                             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong");
                         }
+                    } else {
+                        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("That is not your build");
                     }
                 } else {
                     return ResponseEntity.status(HttpStatus.NOT_FOUND).body("build not found");
                 }
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The build with the provided id was not found");
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You should not be here");
             }
@@ -169,7 +162,7 @@ public class BuildRestControllerV2 {
                         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The category must be Gaming, Work or Budget");
                     }
                     if (buildById.getUser().getId() == userByNick.getId()) {
-                        Build build = inputDTOMapper.toDomain(buildInputDTO);
+                        Build build = mapper.toDomain(buildInputDTO);
                         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                         Date date = new Date();
                         String dateStr = sdf.format(date);

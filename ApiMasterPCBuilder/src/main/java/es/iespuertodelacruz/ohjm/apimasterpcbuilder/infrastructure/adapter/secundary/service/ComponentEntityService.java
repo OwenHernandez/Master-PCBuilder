@@ -242,16 +242,12 @@ public class ComponentEntityService implements IComponentRepository {
                 price = price.replace(",", "");
                 price = price.replaceAll("\\s*to.*", "");
                 String[] parts = price.split(" ");
-                Logger log = Logger.getLogger("ebay");
-                log.info("PRECIO: " + parts[0]);
 
                 try {
                     double parsedPrice = Double.parseDouble(parts[0]);
                     component.setEbay_price(parsedPrice);
-                    log.info("COMPONENTE: " + component.getAmazon_price());
                     productEbayDTOS.add(component);
                 } catch (NumberFormatException e) {
-                    log.severe("Failed to parse price: " + parts[0]);
                     // Handle the parsing error or ignore this component
                 }
             }
@@ -263,25 +259,22 @@ public class ComponentEntityService implements IComponentRepository {
 
 
     public List<Component> searchAmazon(String name){
-        log=Logger.getLogger("amazon");
-        log.info("API Key: " + apiKey);
         name = name.replace(" ", "+");
         Mono<List<ProductAmazonDTO>> responseMono = this.webClient.get()
-                .uri("/" + name)
+                .uri("http://127.0.0.1:8000/" + name)
                 .header("access_token", apiKey)
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<List<ProductAmazonDTO>>() {});
         List<ProductAmazonDTO> block = responseMono.block();
         List<Component> components= new ArrayList<>();
         for (ProductAmazonDTO productAmazonDTO : block) {
-            if (productAmazonDTO.getPrice()!=null){
+            if (productAmazonDTO.getPrice()!=null && productAmazonDTO.getTitle().contains(name)){
                 Component component=new Component();
-                component.setName(productAmazonDTO.getTile());
+                component.setName(productAmazonDTO.getTitle());
                 String price = productAmazonDTO.getPrice();
 
                 price=price.replace("$","");
                 price=price.replace(",","");
-                log=Logger.getLogger("amazon");
                 component.setAmazon_price(Double.parseDouble(price));
                 components.add(component);
             }

@@ -30,6 +30,7 @@ public class ComponentEntityMapper {
         res.setEbay_price(componentEntity.getEbay_price());
         res.setType(componentEntity.getType());
         res.setImage(componentEntity.getImage());
+        res.setIsDeleted(componentEntity.getDeleted() );
         res.setSeller(sellerMapper.toDomain(componentEntity.getSeller()));
 
 
@@ -64,6 +65,7 @@ public class ComponentEntityMapper {
         res.setEbay_price(component.getEbay_price());
         res.setImage(component.getImage());
         res.setSeller(sellerMapper.toPersistence(component.getSeller()));
+        res.setDeleted((byte) (component.getIsDeleted()==1 ? 1 : 0));
         ///res.setUser(userMapper.toPersistance(component.getUserWhoCreated()));
         if (component.getBuildsComponents() != null) {
 

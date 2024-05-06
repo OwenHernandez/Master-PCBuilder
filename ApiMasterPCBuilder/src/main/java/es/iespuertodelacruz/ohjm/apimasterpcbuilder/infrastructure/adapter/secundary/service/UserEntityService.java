@@ -1,9 +1,11 @@
 package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.service;
 
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.User;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.IMessageRepository;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.secundary.IUserRepository;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.mapper.UserEntityMapper;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.UserEntity;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.repository.IMessageDocumentRepository;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.repository.IUserEntityRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,9 @@ public class UserEntityService implements IUserRepository {
 
     @Autowired
     private IUserEntityRepository repo;
+
+    @Autowired
+    private IMessageDocumentRepository messageRepo;
 
     private final UserEntityMapper mapper = new UserEntityMapper();
 
@@ -68,8 +73,10 @@ public class UserEntityService implements IUserRepository {
         List<User> users = new ArrayList<>();
         Iterable<UserEntity> repoAll = repo.findAll();
         for (UserEntity ue : repoAll) {
-            User domain = mapper.toDomain(ue, new HashSet<Long>(), new HashSet<Long>(), "findAll");
-            users.add(domain);
+            if (ue.getDeleted()==0) {
+                User domain = mapper.toDomain(ue, new HashSet<Long>(), new HashSet<Long>(), "findAll");
+                users.add(domain);
+            }
         }
 
         return users;
@@ -85,7 +92,7 @@ public class UserEntityService implements IUserRepository {
                 UserEntity save = repo.save(ue);
 
                 res = mapper.toDomain(save, new HashSet<Long>(), new HashSet<Long>(), "save");
-            } catch (RuntimeException | ParseException e) {
+            } catch (ParseException e) {
                 return null;
             }
         }
@@ -93,6 +100,42 @@ public class UserEntityService implements IUserRepository {
     }
 
     @Override
+    @Transactional
+    public boolean delete(Long id) {
+        if (id != null) {
+            Optional<UserEntity> byId = repo.findById(id);
+            if (byId.isEmpty()) {
+                return false;
+            }
+            UserEntity userEntity = byId.get();
+            if (userEntity.getBuilds() != null && !userEntity.getBuilds().isEmpty()) {
+                return false;
+            }
+            if (userEntity.getPostsMade() != null && !userEntity.getPostsMade().isEmpty()) {
+                return false;
+            }
+            if (userEntity.getComponentsCreated() != null && !userEntity.getComponentsCreated().isEmpty()) {
+                return false;
+            }
+            if (userEntity.getGroupChatsAdmin() != null && !userEntity.getGroupChatsAdmin().isEmpty()) {
+                return false;
+            }
+            messageRepo.deleteByAuthor(userEntity.getNick());
+            messageRepo.deleteByReceiver(userEntity.getNick());
+            repo.deleteBlocked(id);
+            repo.deleteFriends(id);
+            repo.deleteLikes(id);
+            repo.deleteWishlist(id);
+            repo.deleteGroupChatsUsers(id);
+
+            repo.deleteById(id);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    @Transactional
     public List<User> findByRole(String role) {
         List<User> users = new ArrayList<>();
         List<UserEntity> repoByRole = this.repo.findByRole(role);

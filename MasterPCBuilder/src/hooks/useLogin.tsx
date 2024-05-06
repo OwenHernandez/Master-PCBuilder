@@ -9,7 +9,6 @@ import {Globals} from '../components/Globals';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import RNFetchBlob from "rn-fetch-blob";
 import Toast from "react-native-toast-message";
-import {throws} from "node:assert";
 
 const useLogin = () => {
     const {setUser, setToken, token} = usePrimaryContext();
@@ -19,7 +18,6 @@ const useLogin = () => {
     const [errorMsg, setErrorMsg] = useState("");
     const fontScale = PixelRatio.getFontScale();
     const getFontSize = (size: number) => size / fontScale;
-    // En useLogin hook
     const [loading, setLoading] = useState(false);
 
     function changeNick(newNick: string) {

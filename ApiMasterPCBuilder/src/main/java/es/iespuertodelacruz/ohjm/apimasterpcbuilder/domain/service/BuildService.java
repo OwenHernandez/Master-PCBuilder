@@ -58,15 +58,6 @@ public class BuildService implements IBuildService {
     }
 
     @Override
-    public List<Build> findByTotalPrice(double totalPrice) {
-
-        if (totalPrice == 0) {
-            return null;
-        }
-        return repo.findByTotalPrice(totalPrice);
-    }
-
-    @Override
     public List<Build> findByUserId(Long userId) {
         return repo.findByUserId(userId);
     }

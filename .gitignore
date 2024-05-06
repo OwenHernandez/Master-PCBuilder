@@ -1,5 +1,5 @@
 .ApiMasterPCBuilder/img/*
-
+.MasterPCBuilderAdmin/dist/*
 # Xcode
 !**/*.xcodeproj
 !**/*.pbxproj

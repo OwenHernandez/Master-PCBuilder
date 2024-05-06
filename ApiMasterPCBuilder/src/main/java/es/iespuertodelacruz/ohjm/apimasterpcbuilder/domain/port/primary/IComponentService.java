@@ -9,7 +9,7 @@ public interface IComponentService {
 
     List<Component> findAll();
 
-    Component save(Component build);
+    Component save(Component component);
 
     Component findById(Long id);
 
