@@ -121,35 +121,48 @@ const Social = (props: Props) => {
             <HeaderScreen name={route.name} navigation={navigation} profile={false} drawer={true}/>
             <View style={{height: "90%"}}>
                 <View style={{
-                    flexDirection: "row",
-                    justifyContent: "space-around",
-                    margin: "10%",
-                    alignItems: "center"
+                    flexDirection:"row",
+                    margin: "5%",
                 }}>
-                    <TextInput
-                        placeholder='Search a post by title'
-                        placeholderTextColor={"#a3a3a3"}
-                        style={{
-                            borderWidth: 2,
-                            borderColor: "#ca2613",
-                            borderRadius: 20,
-                            paddingHorizontal: "5%",
-                            width: "80%",
-                            fontSize: getFontSize(15),
-                            color: (darkMode) ? "white" : "black"
-                        }}
-                        onChangeText={(text) => {
-                            if (text === "")
-                                setPostsFiltered(postsList);
-                            else
-                                setPostsFiltered(postsList.filter((post) => post.title.toLowerCase().includes(text)))
-                        }}
-                    ></TextInput>
-                    <FontAwesome5Icon
-                        name="search"
-                        size={getIconSize(80)}
-                        color={(darkMode) ? "white" : "black"}
-                    />
+                    <View style={{flex:4}}>
+                        <TextInput
+                            placeholder='Search a post by title'
+                            placeholderTextColor={"#a3a3a3"}
+                            style={{
+                                alignItems:"flex-start",
+                                borderWidth: 2,
+                                borderColor: "#ca2613",
+                                borderRadius: 20,
+                                paddingHorizontal: "5%",
+                                width: "100%",
+                                fontSize: getFontSize(15),
+                                color: (darkMode) ? "white" : "black"
+
+                            }}
+                            onChangeText={(text) => {
+                                if (text === "")
+                                    setPostsFiltered(postsList);
+                                else
+                                    setPostsFiltered(postsList.filter((post) => post.title.toLowerCase().includes(text)))
+                            }}
+                        ></TextInput>
+                    </View>
+                    <View style={{
+                        flex:1,
+                        alignItems:"center",
+                        justifyContent:"center"
+                    }}>
+                        <FontAwesome5Icon
+                            style={{
+
+                            }}
+                            name="search"
+                            size={getIconSize(80)}
+                            color={(darkMode) ? "white" : "black"}
+                        />
+                    </View>
+
+
                 </View>
                 <View style={{flexDirection: "row"}}>
                     <View style={{marginLeft: "2%"}}>
@@ -161,7 +174,7 @@ const Social = (props: Props) => {
                                 borderColor: "#ca2613",
                                 padding: 10
                             }}
-                            onPress={() => {
+                            onPress={() =>  {
                                 toggleModal();
                             }}
                         >
@@ -248,7 +261,7 @@ const Social = (props: Props) => {
                         </Modal>
                     </View>
                     <FlatList
-                        style={{marginHorizontal: 10}}
+                        style={{}}
                         data={arrayCategoriaBuilder}
                         horizontal={true}
                         renderItem={(categoria) => {

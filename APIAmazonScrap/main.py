@@ -1,9 +1,17 @@
 import random
+import time
 
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
+from seleniumbase import Driver
 from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.security import APIKeyHeader
 from selectorlib import Extractor
 import requests
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from time import sleep
+from twocaptcha import TwoCaptcha
 
 app = FastAPI()
 
@@ -27,15 +35,15 @@ async def get_api_key(api_key_header: str = Depends(api_key_header)):
 async def root(search: str, api_key: str = Depends(get_api_key)):
     # product_data = []
     amazon_url = "https://www.amazon.com/s?k=" + search
-    proxies_list = open("rotating_ip.txt", "r").read().strip().split("\n")
-    data = scrape(amazon_url, )
+    data = scrape(amazon_url)
     products = []
     if data:
         for product in data['products']:
-            print("Product: %s" % product['title'])
             product['search_url'] = amazon_url
+            print(product)
             products.append(product)
         return products
+
 
 
 @app.get("/hola/{texto}")
@@ -43,7 +51,7 @@ def root(texto: str):
     print(texto)
 
 
-def scrape(url, proxy):
+def scrape(url):
     headers = {
         'dnt': '1',
         'upgrade-insecure-requests': '1',

@@ -80,7 +80,7 @@ function Side() {
 
                     </Nav>
                     <Nav.Item className="mt-auto p-3 ">
-                        <Nav.Link href="#logout" className="text-danger">
+                        <Nav.Link className="text-danger">
                             <FaSignOutAlt/> Logout
                         </Nav.Link>
                     </Nav.Item>
