@@ -28,9 +28,7 @@ const data = {
 };
 
 const DonutChart = () => (
-    <>
         <Doughnut data={data} />
-    </>
 );
 
 export default DonutChart;

@@ -34,10 +34,12 @@ import java.util.logging.Logger;
 public class ComponentEntityService implements IComponentRepository {
     private final WebClient webClient;
     Logger log;
+
     @Autowired
     public ComponentEntityService(WebClient.Builder webClientBuilder) {
         this.webClient = webClientBuilder.baseUrl("http://fastapi:8000").build();
     }
+
     @Value("${fastapi.apikey}")
     private String apiKey;
 
@@ -79,8 +81,8 @@ public class ComponentEntityService implements IComponentRepository {
                 res.setUserWhoCreated(userMapper.toDomain(ce.getUser(), new HashSet<Long>(), new HashSet<Long>(), "comp"));
             }
             return res;
-        } catch (RuntimeException | ParseException e) {
-            return null;
+        } catch (ParseException e) {
+            throw new RuntimeException("Error while parsing the component");
         }
     }
 
@@ -104,7 +106,7 @@ public class ComponentEntityService implements IComponentRepository {
     public List<Component> findByUserId(Long userId) {
         List<Component> res = null;
         if (userId != null) {
-            res= new ArrayList<>();
+            res = new ArrayList<>();
             List<ComponentEntity> list = repo.findByUserId(userId);
             if (list != null) {
                 for (ComponentEntity ce : list) {
@@ -120,25 +122,21 @@ public class ComponentEntityService implements IComponentRepository {
     @Override
     @Transactional
     public boolean deleteById(long id) {
-        try {
-            Optional<ComponentEntity> byId = repo.findById(id);
+        Optional<ComponentEntity> byId = repo.findById(id);
 
-            if (byId.isPresent()) {
-                ComponentEntity comp = byId.get();
-                if (comp.getBuildsComponents() != null) {
-                    for (BuildComponentEntity bce : comp.getBuildsComponents()) {
-                        bceRepo.delete(bce);
-                    }
+        if (byId.isPresent()) {
+            ComponentEntity comp = byId.get();
+            if (comp.getBuildsComponents() != null) {
+                for (BuildComponentEntity bce : comp.getBuildsComponents()) {
+                    bceRepo.delete(bce);
                 }
-                if (comp.getUsersWhoWants() != null && !comp.getUsersWhoWants().isEmpty()) {
-                    comp.getUsersWhoWants().clear();
-                }
-                repo.delete(comp);
-                return true;
-            } else {
-                return false;
             }
-        } catch (RuntimeException e) {
+            if (comp.getUsersWhoWants() != null && !comp.getUsersWhoWants().isEmpty()) {
+                comp.getUsersWhoWants().clear();
+            }
+            repo.delete(comp);
+            return true;
+        } else {
             return false;
         }
     }
@@ -162,8 +160,8 @@ public class ComponentEntityService implements IComponentRepository {
             } else {
                 return false;
             }
-        } catch (RuntimeException | ParseException e) {
-            return false;
+        } catch (ParseException e) {
+            throw new RuntimeException("Error while parsing the component");
         }
     }
 
@@ -172,7 +170,7 @@ public class ComponentEntityService implements IComponentRepository {
     public List<Component> findByName(String name) {
         List<Component> res = null;
         if (name != null) {
-            res= new ArrayList<>();
+            res = new ArrayList<>();
             List<ComponentEntity> list = repo.findByName(name);
             if (list != null) {
                 for (ComponentEntity ce : list) {
@@ -216,9 +214,10 @@ public class ComponentEntityService implements IComponentRepository {
         }
         return res;
     }
+
     public List<Component> searchEbay(String name) {
         name = name.replace(" ", "+");
-        String url = "https://www.ebay.com/sch/i.html?_nkw="+name;
+        String url = "https://www.ebay.com/sch/i.html?_nkw=" + name;
         String userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36";
 
         Document doc = null;
@@ -230,7 +229,7 @@ public class ComponentEntityService implements IComponentRepository {
             throw new RuntimeException("There Was a Problem with the Request");
         }
         Elements listings = doc.select("div.s-item__info");
-        List<Component> productEbayDTOS= new ArrayList<>();
+        List<Component> productEbayDTOS = new ArrayList<>();
         for (Element listing : listings) {
             String title = listing.select("div.s-item__title").text();
             String price = listing.select("span.s-item__price").text();
@@ -257,42 +256,42 @@ public class ComponentEntityService implements IComponentRepository {
     }
 
 
-
-    public List<Component> searchAmazon(String name){
+    public List<Component> searchAmazon(String name) {
+        log = Logger.getLogger("amazon");
+        log.info("API Key: " + apiKey);
         name = name.replace(" ", "+");
         Mono<List<ProductAmazonDTO>> responseMono = this.webClient.get()
                 .uri("http://127.0.0.1:8000/" + name)
                 .header("access_token", apiKey)
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<List<ProductAmazonDTO>>() {});
+                .bodyToMono(new ParameterizedTypeReference<List<ProductAmazonDTO>>() {
+                });
         List<ProductAmazonDTO> block = responseMono.block();
-        List<Component> components= new ArrayList<>();
+        List<Component> components = new ArrayList<>();
         for (ProductAmazonDTO productAmazonDTO : block) {
-            if (productAmazonDTO.getPrice()!=null && productAmazonDTO.getTitle().contains(name)){
-                Component component=new Component();
-                component.setName(productAmazonDTO.getTitle());
+            if (productAmazonDTO.getPrice() != null) {
+                Component component = new Component();
+                component.setName(productAmazonDTO.getTile());
                 String price = productAmazonDTO.getPrice();
 
-                price=price.replace("$","");
-                price=price.replace(",","");
+                price = price.replace("$", "");
+                price = price.replace(",", "");
+                log = Logger.getLogger("amazon");
                 component.setAmazon_price(Double.parseDouble(price));
                 components.add(component);
             }
         }
         return components;
     }
+
     @Override
     @Transactional
     public void updatePrices(Long id, double amazonPrice, double ebayPrice) {
-        try {
-            Optional<ComponentEntity> byId = repo.findById(id);
-            if (byId.isPresent()) {
-                repo.updatePrices(id, amazonPrice, ebayPrice);
-            } else {
-                throw new RuntimeException("Component Not Found");
-            }
-        } catch (RuntimeException e) {
-            log.info(e.getMessage());
+        Optional<ComponentEntity> byId = repo.findById(id);
+        if (byId.isPresent()) {
+            repo.updatePrices(id, amazonPrice, ebayPrice);
+        } else {
+            throw new RuntimeException("Component Not Found");
         }
     }
 }

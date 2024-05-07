@@ -30,22 +30,26 @@ const AdminChat = (props: Props) => {
 
     const [message, setMessage] = useState("");
     const flatListRef = useRef();
+    const msgsRef = useRef([{}] as IMsgType[]);
 
     useEffect(() => {
         connect();
     }, [user]);
 
-    function sendPrivate() {
+    function sendToAdmin() {
         let stompClient = stompRef.current;
         let messageTo = {
             author: user.nick,
             receiver: admin.nick,
-            content: message
+            content: message,
+            date: getFormattedDate()
         };
-        stompClient.publish({destination: "/app/private", body: JSON.stringify(messageTo)});
+        stompClient.publish({destination: "/app/message/admins", body: JSON.stringify(messageTo)});
         console.log("enviado privado");
 
-        setAdminMsgs( prevMsgs => [{content: messageTo.content, author: messageTo.author, receiver: messageTo.receiver, date: getFormattedDate()}, ...prevMsgs]);
+        msgsRef.current.unshift({content: messageTo.content, author: messageTo.author, receiver: messageTo.receiver, date: messageTo.date});
+
+        setAdminMsgs( [...msgsRef.current]);
         setMessage("");
         // @ts-ignore
         flatListRef.current.scrollToOffset({ animated: true });
@@ -54,47 +58,50 @@ const AdminChat = (props: Props) => {
     function getFormattedDate() {
         const date = new Date();
 
-        const year = date.getFullYear();
-        const month = (date.getMonth() + 1).toString().padStart(2, '0'); // +1 porque los meses empiezan en 0
-        const day = date.getDate().toString().padStart(2, '0');
+        // Usar toLocaleString() para obtener la fecha formateada según la zona horaria
+        const dateString = date.toLocaleString('en-GB', {
+            timeZone: 'Europe/London',
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false // Usar formato de 24 horas
+        }).replace(/,/g, '');
 
-        const hours = date.getHours().toString().padStart(2, '0');
-        const minutes = date.getMinutes().toString().padStart(2, '0');
-        const seconds = date.getSeconds().toString().padStart(2, '0');
+        // Desglosar la fecha en componentes para reordenarlos
+        const parts = dateString.split('/');
+        const timePart = parts[2].split(' ')[1];
 
-        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        // Reordenar los componentes para ajustar al formato deseado
+        const year = parts[2].split(' ')[0];
+        const month = parts[1];
+        const day = parts[0];
+
+        // Reconstruir la fecha en el formato aaaa-mm-dd hh:mm:ss
+        return `${year}-${month}-${day} ${timePart}`;
     }
 
-    function onPublicMessageReceived(datos: any) {
-        console.log("data: " + datos);
+    function onAdminMessageReceived(datos: any) {
+        console.log("datos: " + datos);
         //setRecibido(datos.body);
         let nuevoMensaje = JSON.parse(datos.body);
         console.log(nuevoMensaje);
-        let arr = adminMsgs;
-        arr.push({content: nuevoMensaje.content, author: nuevoMensaje.author, receiver: nuevoMensaje.receiver, date: nuevoMensaje.date});
-        setAdminMsgs([...arr]);
-    }
-
-    function onPrivateMessageReceived(datos: any) {
-        console.log("data: " + datos);
-        //setRecibido(datos.body);
-        let nuevoMensaje = JSON.parse(datos.body);
-        console.log(nuevoMensaje);
-        let arr = adminMsgs;
-        arr.push({content: nuevoMensaje.content, author: nuevoMensaje.author, receiver: nuevoMensaje.receiver, date: nuevoMensaje.date});
-        setAdminMsgs([...arr]);
+        msgsRef.current.unshift({content: nuevoMensaje.content, author: nuevoMensaje.author, receiver: nuevoMensaje.receiver, date: nuevoMensaje.date});
+        setAdminMsgs([...msgsRef.current]);
     }
 
 
     function connect() {
 
-        function getPrivateMessages() {
+        function getAdminMessages() {
+            msgsRef.current = [];
             setAdminMsgs([]);
-            getUserAuthorMsgs();
-            getUserReceiverMsgs();
-            setAdminMsgs(adminMsgs.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()));
+            getMsgs();
         }
-        async function getUserAuthorMsgs() {
+
+        async function getMsgs() {
             let userAuthor = await axios.get(
                 Globals.IP_HTTP + "/api/v2/messages?receiver=" + admin.nick + "&author=" + user.nick,
                 {
@@ -112,12 +119,9 @@ const AdminChat = (props: Props) => {
                     content: msg.content,
                     date: msg.date
                 }
-                setAdminMsgs((msgs) => [newMsg, ...msgs]);
+                msgsRef.current.push(newMsg);
             });
 
-        }
-
-        async function getUserReceiverMsgs() {
             let userReceiver = await axios.get(
                 Globals.IP_HTTP + "/api/v2/messages?receiver=" + user.nick + "&author=" + admin.nick,
                 {
@@ -134,11 +138,15 @@ const AdminChat = (props: Props) => {
                     content: msg.content,
                     date: msg.date
                 }
-                setAdminMsgs((msgs) => [newMsg, ...msgs]);
+                msgsRef.current.push(newMsg);
             });
+
+            msgsRef.current.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+            setAdminMsgs([...msgsRef.current]);
         }
 
-        getPrivateMessages();
+        getAdminMessages();
 
         stompRef.current = new Client({
             brokerURL: Globals.IP_WEBSOCKET + '/websocket',
@@ -161,9 +169,7 @@ const AdminChat = (props: Props) => {
         function connectOK() {
             console.log("entra en conectarOK");
             let stompClient = stompRef.current;
-            //stompClient.subscribe('/topic/general', onPublicMessageReceived);
-            stompClient.subscribe('/users/queue/messages', onPrivateMessageReceived);
-            stompClient.subscribe('/users/queue/replies-' + user.nick, onPrivateMessageReceived);
+            stompClient.subscribe('/topic/admins/' + user.nick, onAdminMessageReceived);
         }
 
         stompRef.current.activate();
@@ -187,15 +193,16 @@ const AdminChat = (props: Props) => {
                             return (
                                 <View>
                                     <View style={{flexDirection: "row", justifyContent: "flex-end"}}>
-                                        <Text style={{fontSize: getFontSize(15), color: "#a3a3a3", fontStyle: "italic"}}>{msg.item.date}</Text>
+                                        <Text style={{fontSize: getFontSize(15), color: "#a3a3a3", fontStyle: "italic", marginRight: "2%"}}>{msg.item.date}</Text>
                                     </View>
                                     <View style={{flexDirection: "row", justifyContent: "flex-end"}}>
                                         <View style={{
                                             backgroundColor: "#ca2613",
-                                            borderRadius: 20,
+                                            //borderRadius: 20,
                                             padding: "1%",
                                             paddingHorizontal: "3%",
                                             margin: "2%",
+                                            marginRight: "3%",
                                             maxWidth: "90%"
                                         }}>
                                             <Text style={{fontSize: getFontSize(15), color: "white"}}>{msg.item.content}</Text>
@@ -206,16 +213,17 @@ const AdminChat = (props: Props) => {
                         } else if (msg.item?.author === admin.nick) {
                             return (
                                 <View>
-                                    <View style={{flexDirection: "row", justifyContent: "flex-end"}}>
-                                        <Text style={{fontSize: getFontSize(15), color: "#a3a3a3", fontStyle: "italic"}}>{msg.item.date}</Text>
+                                    <View style={{flexDirection: "row", justifyContent: "flex-start"}}>
+                                        <Text style={{fontSize: getFontSize(15), color: "#a3a3a3", fontStyle: "italic", marginLeft: "2%"}}>{msg.item.date}</Text>
                                     </View>
-                                    <View style={{flexDirection: "row", justifyContent: "flex-end"}}>
+                                    <View style={{flexDirection: "row", justifyContent: "flex-start"}}>
                                         <View style={{
-                                            backgroundColor: "#ca2613",
-                                            borderRadius: 20,
+                                            backgroundColor: "#676767",
+                                            //borderRadius: 20,
                                             padding: "1%",
                                             paddingHorizontal: "3%",
                                             margin: "2%",
+                                            marginLeft: "3%",
                                             maxWidth: "90%"
                                         }}>
                                             <Text style={{fontSize: getFontSize(15), color: "white"}}>{msg.item.content}</Text>
@@ -229,8 +237,22 @@ const AdminChat = (props: Props) => {
                 />
             </View>
             <View style={{ flexDirection: "row", justifyContent: "space-around", alignItems: "center", marginBottom: "3%" }}>
-                <TextInput placeholder='Ask a question to an Admin' placeholderTextColor={"#a3a3a3"} style={{ borderWidth: 2, borderColor: "#ca2613", borderRadius: 20, paddingHorizontal: "5%", width: "80%", fontSize: getFontSize(15), color: (darkMode) ? "white" : "black" }}></TextInput>
-                <TouchableOpacity onPress={() => Alert.alert("enviaria el mensaje")}>
+                <TextInput
+                    placeholder='Ask something to an admin'
+                    defaultValue={message}
+                    placeholderTextColor="#a3a3a3"
+                    style={{
+                        borderWidth: 2,
+                        borderColor: "#ca2613",
+                        //borderRadius: 20,
+                        paddingHorizontal: "5%",
+                        width: "80%",
+                        fontSize: getFontSize(15),
+                        color: (darkMode) ? "white" : "black"
+                    }}
+                    onChangeText={(text) => setMessage(text)}
+                ></TextInput>
+                <TouchableOpacity onPress={sendToAdmin}>
                     <Material name="send" size={getIconSize(80)} color={(!darkMode) ? "black" : "white"}></Material>
                 </TouchableOpacity>
             </View>

@@ -43,6 +43,7 @@ public class UserEntity implements Serializable {
 	private String picture;
 
 	private String role;
+
 	private byte deleted;
 
 	//bi-directional many-to-many association to UserEntity

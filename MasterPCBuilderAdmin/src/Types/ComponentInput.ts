@@ -8,6 +8,7 @@ interface IComponentInput {
     amazon_price: number;
     ebay_price: number;
     sellerName: string;
+    deleted: boolean;
 }
 
 export default IComponentInput;

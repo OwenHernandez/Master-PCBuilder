@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.security.Principal;
+import java.text.ParseException;
 import java.util.Date;
 
 class MessageTo {
@@ -103,10 +104,8 @@ public class WebsocketController {
         simpMessagingTemplate.convertAndSend("/topic/" + topic, chatMessage);
     }
 
-    //Este metodo sera para enviar mensajes a los usuarios de los administradores se tiene que usar en la app admin
-    @MessageMapping("/admin/message/{userId}")
-    public void sendResponseToUserFromAdmin(@DestinationVariable String userNick, MessageTo response, Principal user) {
-        // Aquí puedes incluir la lógica para procesar el mensaje y posiblemente reenviarlo al usuario
+    @MessageMapping("/admin/message/{userNick}")
+    public void sendToUserFromAdmin(@DestinationVariable String userNick, @Payload MessageTo response, Principal user) {
         User byNick = userService.findByNick(userNick);
         if (byNick == null) {
             return;
@@ -116,19 +115,18 @@ public class WebsocketController {
         if (byNickPrincipal == null) {
             return;
         }
-        if (!byNickPrincipal.equals(byNick)) {
+        if (byNickPrincipal.equals(byNick)) {
             return;
         }
         Message message = Message.newPrivate("admins", userNick, response.getContent());
         messageService.save(message);
 
-        simpMessagingTemplate.convertAndSend("/queue/replies-" + userNick, response);
+        //El user se suscribe a "/queue/{userNick}" para recibir mensajes
+        simpMessagingTemplate.convertAndSend("/topic/admins/" + userNick, response);
     }
 
-    //Este metodo sera para enviar mensajes a los administradores se tiene que usar en la app rn
     @MessageMapping("/message/admins")
-    public void sendResponseToAdmin(@Payload MessageTo chatMessage, Principal user) {
-        // Aquí puedes incluir la lógica para procesar el mensaje y posiblemente reenviarlo a los administradores
+    public void sendToAdmin(@Payload MessageTo chatMessage, Principal user, @Header("simpSessionId") String sessionId) {
         User byNick = userService.findByNick(chatMessage.getAuthor());
         if (byNick == null) {
             return;
@@ -144,6 +142,7 @@ public class WebsocketController {
         Message message = Message.newPrivate(chatMessage.getAuthor(), "admins", chatMessage.getContent());
         messageService.save(message);
 
+        //Los administradores se suscriben a "/topic/admins" para recibir mensajes
         simpMessagingTemplate.convertAndSend("/topic/admins", chatMessage);
     }
 

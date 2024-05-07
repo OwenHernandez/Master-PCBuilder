@@ -2,6 +2,7 @@ package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.primary.mapp
 
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Seller;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.SellerDTO;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.SellerInputDTO;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.mapper.SellerDTOMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,7 +19,7 @@ class SellerDTOMapperTest {
 
     @Test
     void toDomain_ValidSellerDTO_ReturnsSeller() {
-        SellerDTO sellerDTO = new SellerDTO();
+        SellerInputDTO sellerDTO = new SellerInputDTO();
         sellerDTO.setName("Example Seller");
         sellerDTO.setImage("image_url");
 
@@ -43,7 +44,7 @@ class SellerDTOMapperTest {
     // Nuevo: Pruebas para campos opcionales o condiciones de borde
     @Test
     void toDomain_WhenMissingOptionalFields_ShouldHandleGracefully() {
-        SellerDTO sellerDTO = new SellerDTO();
+        SellerInputDTO sellerDTO = new SellerInputDTO();
         // Omite el campo 'image' intencionalmente
         sellerDTO.setName("Seller Without Image");
 
