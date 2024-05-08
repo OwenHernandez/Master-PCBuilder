@@ -18,6 +18,8 @@ import {Globals} from "../components/Globals";
 import IComponentType from "../interfaces/IComponentType";
 import Component from "../components/Component";
 import RNFetchBlob from "rn-fetch-blob";
+import {ComponentRepository} from "../data/Database";
+import IPriceHistoryType from "../interfaces/IPriceHistoryType";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Components List'>;
 
@@ -57,9 +59,47 @@ const ComponentsList = (props: Props) => {
             }
             setComponentsByName(auxComps);
             setComponentsList(auxComps);
-
+            let compsOffline =await ComponentRepository.find();
+            let compsNotInserted = getCompsResponse.data.filter(onlineComp => {
+                    return !compsOffline.some(offlineComp => offlineComp.id === onlineComp.id);
+                }
+            );
+            for(const comp of compsNotInserted){
+                let insertResult = await ComponentRepository.insert(comp);
+            }
         } catch (e) {
-            console.log(e);
+            let auxCompsOffline:Array<IComponentType>=[];
+            let compsOffline = await ComponentRepository.find();
+            for (const comp of compsOffline) {
+                let pricehistories:IPriceHistoryType[] =[];
+                comp.priceHistories.map((priceHistory) => {
+                    pricehistories.push({
+                        amazonPrice: priceHistory.amazonPrice,
+                        ebayPrice: priceHistory.ebayPrice,
+                        id: priceHistory.id,
+                        date: priceHistory.date.toString(),
+                        price: priceHistory.price
+                    });
+                });
+                let newComp:IComponentType = {
+                    id: comp.id,
+                    name: comp.name,
+                    type: comp.type,
+                    price: comp.price,
+                    image: comp.image,
+                    wished: false,
+                    amazon_price: comp.amazonPrice,
+                    ebay_price: comp.ebayPrice,
+                    description: comp.description,
+                    sellerName: comp.seller.name,
+                    userNick: comp.user.nick,
+                    priceHistory: pricehistories
+                }
+                auxCompsOffline.push(newComp);
+            }
+            setComponentsByName(auxCompsOffline);
+            setComponentsList(auxCompsOffline);
+            console.log(auxCompsOffline)
         }
     }
 

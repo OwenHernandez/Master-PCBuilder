@@ -22,6 +22,7 @@ import * as ImagePicker from "react-native-image-picker";
 import {ImagePickerResponse} from "react-native-image-picker";
 import RNFetchBlob from "rn-fetch-blob";
 import Toast from "react-native-toast-message";
+import {ComponentRepository, SellerRepository} from "../data/Database";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'CreateComponent'>;
 
@@ -61,8 +62,23 @@ const CreateComponent = (props: Props) => {
                 }
                 setSellers(prevItems => [...prevItems, item]);
             });
+            let sellersOffline =await SellerRepository.find();
+            let sellersNotInserted = response.data.filter(onlineSeller => {
+                    return !sellersOffline.some(offlineSeller => offlineSeller.id === onlineSeller.id);
+                }
+            );
+            for(const seller of sellersNotInserted){
+                let insertResult = await SellerRepository.insert(seller);
+            }
         } catch (e) {
-            console.log(e);
+            let sellersOffline = await SellerRepository.find();
+            sellersOffline.forEach((seller) => {
+                let item = {
+                    label: seller.name,
+                    value: seller.name
+                }
+                setSellers(prevItems => [...prevItems, item]);
+            });
         }
     }
 
@@ -130,6 +146,7 @@ const CreateComponent = (props: Props) => {
                 setPrice("");
                 setImage("");
                 setImage64("");
+                let insertResultPromise = await ComponentRepository.insert(response.data);
                 navigation.navigate("Components List", {components: []});
             } catch (e) {
                 console.log(e);

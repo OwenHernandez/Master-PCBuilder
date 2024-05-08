@@ -20,6 +20,7 @@ import axios from "axios";
 import * as ImagePicker from "react-native-image-picker";
 import {ImagePickerResponse} from "react-native-image-picker";
 import RNFetchBlob from "rn-fetch-blob";
+import {GroupChatRepository} from "../data/Database";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'CreatePost'>;
 
@@ -79,7 +80,7 @@ const CreateGroup = (props: Props) => {
                 <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
                     <View style={{
                         padding: "10%",
-                        
+
                         alignItems: "center",
                         marginHorizontal: "10%",
                         marginBottom: "2%"
@@ -89,7 +90,7 @@ const CreateGroup = (props: Props) => {
                             style={{
                                 borderWidth: 2,
                                 borderColor: "#ca2613",
-                                
+
                                 paddingHorizontal: "5%",
                                 marginBottom: "20%",
                                 width: getIconSize(800),
@@ -105,7 +106,7 @@ const CreateGroup = (props: Props) => {
                             style={{
                                 borderWidth: 2,
                                 borderColor: "#ca2613",
-                                
+
                                 paddingHorizontal: "5%",
                                 width: getIconSize(800),
                                 fontSize: getFontSize(15),
