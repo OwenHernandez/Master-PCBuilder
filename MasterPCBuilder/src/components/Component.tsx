@@ -32,7 +32,7 @@ const Component = (props: Props) => {
 
     return (
         <SafeAreaView style={{flex: 1, width: "100%"}}>
-            <View style={{flex: 1, borderRadius: 20, overflow: 'hidden', width: "100%"}}>
+            <View style={{flex: 1,  overflow: 'hidden', width: "100%"}}>
                 <ImageBackground
                     source={{
                         uri: "data:image/jpeg;base64," + comp?.image

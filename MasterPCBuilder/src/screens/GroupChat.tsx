@@ -221,7 +221,7 @@ const GroupChat = (props: Props) => {
                                         <View style={{flexDirection: "row", justifyContent: "flex-end"}}>
                                             <View style={{
                                                 backgroundColor: "#ca2613",
-                                                //borderRadius: 20,
+                                                //
                                                 padding: "1%",
                                                 paddingHorizontal: "3%",
                                                 margin: "2%",
@@ -243,7 +243,7 @@ const GroupChat = (props: Props) => {
                                         <View style={{flexDirection: "row", justifyContent: "flex-start"}}>
                                             <View style={{
                                                 backgroundColor: "#676767",
-                                                //borderRadius: 20,
+                                                //
                                                 padding: "1%",
                                                 paddingHorizontal: "3%",
                                                 margin: "2%",
@@ -273,7 +273,7 @@ const GroupChat = (props: Props) => {
                     style={{
                         borderWidth: 2,
                         borderColor: "#ca2613",
-                        borderRadius: 20,
+                        
                         paddingHorizontal: "5%",
                         width: "80%",
                         fontSize: getFontSize(15),

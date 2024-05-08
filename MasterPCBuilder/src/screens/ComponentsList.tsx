@@ -70,30 +70,34 @@ const ComponentsList = (props: Props) => {
                 <View style={{
                     flexDirection: "row",
                     justifyContent: "space-around",
-                    margin: "10%",
+                    margin:"5%",
                     alignItems: "center"
                 }}>
-                    <TextInput
-                        placeholder='Search a component by name'
-                        placeholderTextColor={"#a3a3a3"}
-                        style={{
-                            borderWidth: 2,
-                            borderColor: "#ca2613",
-                            borderRadius: 20,
-                            paddingHorizontal: "5%",
-                            width: "80%",
-                            fontSize: getFontSize(15),
-                            color: (darkMode) ? "white" : "black"
-                        }}
-                        onChangeText={(text) => {
-                            if (text === "")
-                                setComponentsByName(componentsList);
-                            else
-                                setComponentsByName(componentsList.filter((comp) => comp.name.toLowerCase().includes(text)));
-                        }}
-                    ></TextInput>
-                    <FontAwesome5Icon name="search" size={getIconSize(80)}
-                                      color={(darkMode) ? "white" : "black"}/>
+                    <View style={{flex:7}}>
+                        <TextInput
+                            placeholder='Search a component by name'
+                            placeholderTextColor={"#a3a3a3"}
+                            style={{
+                                borderWidth: 2,
+                                borderColor: "#ca2613",
+
+                                paddingHorizontal: "5%",
+                                width: "100%",
+                                fontSize: getFontSize(15),
+                                color: (darkMode) ? "white" : "black"
+                            }}
+                            onChangeText={(text) => {
+                                if (text === "")
+                                    setComponentsByName(componentsList);
+                                else
+                                    setComponentsByName(componentsList.filter((comp) => comp.name.toLowerCase().includes(text)));
+                            }}
+                        ></TextInput>
+                    </View>
+                    <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
+                        <FontAwesome5Icon style={{}} name="search" size={getIconSize(80)}
+                                          color={(darkMode) ? "white" : "black"}/>
+                    </View>
                 </View>
                 <View style={{justifyContent:"center", alignItems:"center", marginBottom:"35%", marginLeft:"2%"}}>
                     <FlatList

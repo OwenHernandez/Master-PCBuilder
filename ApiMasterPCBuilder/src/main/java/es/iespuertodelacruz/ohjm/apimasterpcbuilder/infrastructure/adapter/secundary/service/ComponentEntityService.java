@@ -271,7 +271,7 @@ public class ComponentEntityService implements IComponentRepository {
         for (ProductAmazonDTO productAmazonDTO : block) {
             if (productAmazonDTO.getPrice() != null) {
                 Component component = new Component();
-                component.setName(productAmazonDTO.getTile());
+                component.setName(productAmazonDTO.getTitle());
                 String price = productAmazonDTO.getPrice();
 
                 price = price.replace("$", "");

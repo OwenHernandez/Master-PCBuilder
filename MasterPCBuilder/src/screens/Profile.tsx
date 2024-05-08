@@ -101,7 +101,7 @@ const Profile = (props: Props) => {
                             //<Text style={{ fontSize: getFontSize(20), color: (darkMode) ? "white" : "black" }}>You have no friends</Text>
                     }
                 </View>
-                <View style={{flexDirection:"row",justifyContent:"space-around",marginHorizontal:"5%"}}>
+                <View style={{flexDirection:"row",justifyContent:"space-around",marginHorizontal:"4%"}}>
                     <TouchableOpacity style={{ ...Styles.touchable,width:"45%",margin:"2%", marginBottom: "3%", padding: "6%" }} onPress={() => navigation.navigate("UserBuildsList")}>
                         <Text style={{ fontSize: getFontSize(20), textAlign: 'center', color: (darkMode) ? "white" : "black" }}>Your Builds</Text>
                     </TouchableOpacity>
@@ -110,7 +110,7 @@ const Profile = (props: Props) => {
                     </TouchableOpacity>
                 </View>
 
-                <TouchableOpacity style={{ ...Styles.touchable, marginBottom: "3%", padding: "6%", borderColor: "violet" }} onPress={() => logout(navigation)}>
+                <TouchableOpacity style={{ ...Styles.touchable, marginHorizontal:"6%",marginBottom: "3%", padding: "6%", borderColor: "violet" }} onPress={() => logout(navigation)}>
                     <Text style={{ fontSize: getFontSize(20), textAlign: 'center', color: (darkMode) ? "white" : "black" }}>Logout</Text>
                 </TouchableOpacity>
 

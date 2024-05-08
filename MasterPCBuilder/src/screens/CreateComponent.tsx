@@ -245,7 +245,7 @@ const CreateComponent = (props: Props) => {
                                         height: getIconSize(130),
                                         backgroundColor: (darkMode) ? "#242121" : "#F5F5F5",
                                         borderColor: "#ca2613",
-                                        //borderRadius: 20,
+                                        //
                                         width: "100%",
                                         borderWidth: 2,
                                         marginBottom: "5%",
@@ -266,7 +266,7 @@ const CreateComponent = (props: Props) => {
                                     containerStyle={{
                                         backgroundColor: (darkMode) ? "#242121" : "#F5F5F5",
                                         borderColor: "#ca2613",
-                                        borderWidth: 2/*, borderRadius: 20*/
+                                        borderWidth: 2/*, */
                                     }}
                                     itemTextStyle={{
                                         fontSize: getFontSize(20),
@@ -292,7 +292,7 @@ const CreateComponent = (props: Props) => {
                                         height: getIconSize(130),
                                         backgroundColor: (darkMode) ? "#242121" : "#F5F5F5",
                                         borderColor: "#ca2613",
-                                        //borderRadius: 20,
+                                        //
                                         width: "100%",
                                         borderWidth: 2,
                                         marginBottom: 8,
@@ -311,7 +311,7 @@ const CreateComponent = (props: Props) => {
                                     containerStyle={{
                                         backgroundColor: (darkMode) ? "#242121" : "#F5F5F5",
                                         borderColor: "#ca2613",
-                                        borderWidth: 2/*, borderRadius: 20*/
+                                        borderWidth: 2/*, */
                                     }}
                                     itemTextStyle={{
                                         fontSize: getFontSize(20),

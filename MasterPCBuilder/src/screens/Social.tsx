@@ -1,4 +1,4 @@
-import {View, Text, TouchableOpacity, FlatList, Image, PixelRatio, TextInput, Modal} from 'react-native'
+import {View, Text, TouchableOpacity, FlatList, Image, PixelRatio, TextInput, Modal, LogBox} from 'react-native'
 import React, {useEffect, useState} from 'react'
 import {Styles} from '../themes/Styles';
 import {usePrimaryContext} from '../contexts/PrimaryContext';
@@ -30,7 +30,7 @@ const Social = (props: Props) => {
     const [categoryToFilter, setCategoryToFilter] = useState(Globals.CATEGORY_ALL);
     const [modalvisible, setModalvisible] = useState<boolean>(false);
     const [byPrice, setByPrice] = useState<boolean>(false);
-
+    LogBox.ignoreAllLogs();
     useEffect(() => {
         setPostsList([]);
         setPostsFiltered([]);
@@ -132,7 +132,7 @@ const Social = (props: Props) => {
                                 alignItems:"flex-start",
                                 borderWidth: 2,
                                 borderColor: "#ca2613",
-                                borderRadius: 20,
+
                                 paddingHorizontal: "5%",
                                 width: "100%",
                                 fontSize: getFontSize(15),
@@ -169,7 +169,7 @@ const Social = (props: Props) => {
                         <TouchableOpacity
                             style={{
                                 margin: 10,
-                                borderRadius: 20,
+
                                 borderWidth: 2,
                                 borderColor: "#ca2613",
                                 padding: 10
@@ -269,7 +269,7 @@ const Social = (props: Props) => {
                                 <TouchableOpacity
                                     style={{
                                         margin: 10,
-                                        borderRadius: 20,
+
                                         borderWidth: 2,
                                         borderColor: (categoryToFilter === categoria.item) ? "violet" : "#ca2613",
                                         padding: 10,
@@ -409,7 +409,7 @@ const Social = (props: Props) => {
                                                 style={{
                                                     width: getIconSize(900),
                                                     height: getIconSize(900),
-                                                    borderRadius: 20
+
                                                 }}
                                             />
                                         </View>
