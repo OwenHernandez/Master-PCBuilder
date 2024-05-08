@@ -28,6 +28,8 @@ import IBuildComponentType from "../interfaces/IBuildComponentType";
 import HeaderScreen from "../components/HeaderScreen";
 import RNFetchBlob from "rn-fetch-blob";
 import {Dropdown} from "react-native-element-dropdown";
+import {BuildRepository, ComponentRepository} from "../data/Database";
+import IPriceHistoryType from "../interfaces/IPriceHistoryType";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Builder'>;
 
@@ -181,8 +183,46 @@ const Builder = (props: Props) => {
                 });
                 setComponents(prevComps => [...prevComps, comp]);
             }
+
+            let compsOffline =await ComponentRepository.find();
+            let compsNotInserted = getComp.data.filter(onlineComp => {
+                    return !compsOffline.some(offlineComp => offlineComp.id === onlineComp.id);
+                }
+            );
+            for(const comp of compsNotInserted){
+                let insertResult = await ComponentRepository.insert(comp);
+                console.log(insertResult);
+            }
         }catch (error){
-            console.log(error);
+            let compsOffline = await ComponentRepository.find();
+            for (const comp of compsOffline) {
+                let pricehistories:IPriceHistoryType[] =[];
+                comp.priceHistories.map((priceHistory) => {
+                    pricehistories.push({
+                        amazonPrice: priceHistory.amazonPrice,
+                        ebayPrice: priceHistory.ebayPrice,
+                        id: priceHistory.id,
+                        date: priceHistory.date.toString(),
+                        price: priceHistory.price
+                    });
+                });
+                let newComp:IComponentType = {
+                    id: comp.id,
+                    name: comp.name,
+                    type: comp.type,
+                    price: comp.price,
+                    image: comp.image,
+                    wished: false,
+                    amazon_price: comp.amazonPrice,
+                    ebay_price: comp.ebayPrice,
+                    description: comp.description,
+                    sellerName: comp.seller.name,
+                    userNick: comp.user.nick,
+                    priceHistory: pricehistories
+                }
+                setComponents([...components, newComp]);
+            }
+            console.log(components)
         }
 
     }
@@ -219,6 +259,7 @@ const Builder = (props: Props) => {
                 {headers: {"Authorization": "Bearer " + token}}
             );
             if (response.status === 200) {
+                await BuildRepository.insert(response.data);
                 setBuildsTemp(undefined);
                 navigation.navigate("UserBuildsList");
             } else {
@@ -241,6 +282,15 @@ const Builder = (props: Props) => {
             {headers: {"Authorization": "Bearer " + token}}
         );
         if (response.status === 200) {
+            let updateBuild:IBuildType={
+                id: buildTemp.id,
+                totalPrice: totalPrice,
+                userNick: user.nick,
+                name: buildTemp.name,
+                notes: buildTemp.notes,
+                category: buildTemp.category,
+                buildsComponents: componentsSelected};
+            await BuildRepository.update(buildTemp.id,updateBuild);
             setBuildsTemp(undefined);
             navigation.navigate("UserBuildsList");
         } else {
