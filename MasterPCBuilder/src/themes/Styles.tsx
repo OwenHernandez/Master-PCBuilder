@@ -14,14 +14,14 @@ export const Styles = StyleSheet.create({
         textAlign: 'center'
     },
     textInput: {
-        borderRadius: 20,
+        
         backgroundColor: 'white',
         color: "black",
         textAlign: 'center'
     },
     touchable: {
         margin: "5%",
-        borderRadius: 20,
+        
         borderWidth: 2,
         borderColor: "#ca2613",
         padding: "3%"

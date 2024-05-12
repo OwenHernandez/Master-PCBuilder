@@ -160,7 +160,7 @@ const EditComponent = (props: Props) => {
                 <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
                     <View style={{
                         padding: "5%",
-                        borderRadius: 20,
+                        
                         alignItems: "center",
                         marginHorizontal: "10%",
                         marginBottom: "2%"
@@ -171,7 +171,7 @@ const EditComponent = (props: Props) => {
                             style={{
                                 borderWidth: 2,
                                 borderColor: "#ca2613",
-                                borderRadius: 20,
+                                
                                 paddingHorizontal: "5%",
                                 marginBottom: "10%",
                                 width: getIconSize(800),
@@ -188,7 +188,7 @@ const EditComponent = (props: Props) => {
                             style={{
                                 borderWidth: 2,
                                 borderColor: "#ca2613",
-                                borderRadius: 20,
+                                
                                 paddingHorizontal: "5%",
                                 marginBottom: "10%",
                                 width: getIconSize(800),
@@ -207,7 +207,7 @@ const EditComponent = (props: Props) => {
                             style={{
                                 borderWidth: 2,
                                 borderColor: "#ca2613",
-                                borderRadius: 20,
+                                
                                 paddingHorizontal: "5%",
                                 width: getIconSize(800),
                                 fontSize: getFontSize(20),
@@ -230,7 +230,7 @@ const EditComponent = (props: Props) => {
                             height: getIconSize(130),
                             backgroundColor: (darkMode) ? "#242121" : "#F5F5F5",
                             borderColor: "#ca2613",
-                            //borderRadius: 20,
+                            //
                             width: getIconSize(800),
                             borderWidth: 2,
                             marginBottom: "8%",
@@ -248,7 +248,7 @@ const EditComponent = (props: Props) => {
                         containerStyle={{
                             backgroundColor: (darkMode) ? "#242121" : "#F5F5F5",
                             borderColor: "#ca2613",
-                            borderWidth: 2/*, borderRadius: 20*/
+                            borderWidth: 2/*, */
                         }}
                         itemTextStyle={{
                             fontSize: getFontSize(20),
@@ -274,7 +274,7 @@ const EditComponent = (props: Props) => {
                             height: getIconSize(130),
                             backgroundColor: (darkMode) ? "#242121" : "#F5F5F5",
                             borderColor: "#ca2613",
-                            //borderRadius: 20,
+                            //
                             width: getIconSize(800),
                             borderWidth: 2,
                             marginBottom: "4%",
@@ -292,7 +292,7 @@ const EditComponent = (props: Props) => {
                         containerStyle={{
                             backgroundColor: (darkMode) ? "#242121" : "#F5F5F5",
                             borderColor: "#ca2613",
-                            borderWidth: 2/*, borderRadius: 20*/
+                            borderWidth: 2/*, */
                         }}
                         itemTextStyle={{
                             fontSize: getFontSize(20),

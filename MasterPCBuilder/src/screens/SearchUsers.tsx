@@ -80,30 +80,34 @@ const SearchUsers = (props: Props) => {
                 <View style={{
                     flexDirection: "row",
                     justifyContent: "space-around",
-                    margin: "10%",
+                    margin: "5%",
                     alignItems: "center"
                 }}>
-                    <TextInput
-                        placeholder='Search a friend by name'
-                        placeholderTextColor={"#a3a3a3"}
-                        style={{
-                            borderWidth: 2,
-                            borderColor: "#ca2613",
-                            borderRadius: 20,
-                            paddingHorizontal: "5%",
-                            width: "80%",
-                            fontSize: getFontSize(15),
-                            color: (darkMode) ? "white" : "black"
-                        }}
-                        onChangeText={(text) => {
-                            if (text === "")
-                                setUsersByNick(userList);
-                            else
-                                setUsersByNick(userList.filter((u) => u.nick.toLowerCase().includes(text)))
-                        }}
-                    ></TextInput>
-                    <FontAwesome5Icon name="search" size={getIconSize(80)}
-                                      color={(darkMode) ? "white" : "black"}/>
+                    <View style={{flex:7}}>
+                        <TextInput
+                            placeholder='Search a friend by name'
+                            placeholderTextColor={"#a3a3a3"}
+                            style={{
+                                borderWidth: 2,
+                                borderColor: "#ca2613",
+
+                                paddingHorizontal: "5%",
+                                width: "100%",
+                                fontSize: getFontSize(15),
+                                color: (darkMode) ? "white" : "black"
+                            }}
+                            onChangeText={(text) => {
+                                if (text === "")
+                                    setUsersByNick(userList);
+                                else
+                                    setUsersByNick(userList.filter((u) => u.nick.toLowerCase().includes(text)))
+                            }}
+                        ></TextInput>
+                    </View>
+                    <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
+                        <FontAwesome5Icon name="search" size={getIconSize(80)}
+                                          color={(darkMode) ? "white" : "black"}/>
+                    </View>
                 </View>
                 <FlatList
                     data={usersByNick}
@@ -114,7 +118,7 @@ const SearchUsers = (props: Props) => {
                                                   ...Styles.touchable,
                                                   flexDirection: "row",
                                                   alignItems: "center",
-                                                  margin: "3%",
+                                                  margin: "5%",
                                                   opacity: (!isBlocked(u.item)) ? 1 : 0.5
                                               }}>
                                 <Image

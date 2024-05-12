@@ -1,13 +1,10 @@
-import { PixelRatio, StyleSheet, Text, View } from 'react-native'
+import { PixelRatio, StyleSheet } from 'react-native'
 import React, { useState } from 'react'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigations/StackNavigator';
-import IUserType from '../interfaces/IUserType';
 import axios from 'axios';
 import { Globals } from '../components/Globals';
 import Toast from 'react-native-toast-message';
-
-type Props = {}
 
 const useRegister = () => {
     const [nick, setNick] = useState("");

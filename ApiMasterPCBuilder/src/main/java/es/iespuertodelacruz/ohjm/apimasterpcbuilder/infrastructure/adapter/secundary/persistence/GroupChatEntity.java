@@ -34,6 +34,8 @@ public class GroupChatEntity {
     )
     private List<UserEntity> users;
 
+    private byte deleted;
+
     public GroupChatEntity() {
     }
 
@@ -91,5 +93,13 @@ public class GroupChatEntity {
 
     public void setUsers(List<UserEntity> users) {
         this.users = users;
+    }
+
+    public byte getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(byte deleted) {
+        this.deleted = deleted;
     }
 }

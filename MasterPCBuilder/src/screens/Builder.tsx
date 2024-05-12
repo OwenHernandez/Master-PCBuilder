@@ -56,7 +56,7 @@ const Builder = (props: Props) => {
     const [componentsSelected, setComponentsSelected] = useState([] as IBuildComponentType[]);
     const [compByType, setCompByType] = useState([{}] as IComponentType[]);
     const [categories, setCategories] = useState([]);
-    const [selectedCategory, setSelectedCategory] = useState({} as Select);
+    const [selectedCategory, setSelectedCategory] = useState("Gaming");
 
     const fontScale = PixelRatio.getFontScale();
     const getFontSize = (size: number) => size / fontScale;
@@ -196,11 +196,17 @@ const Builder = (props: Props) => {
             id: null,
             name: buildTemp.name,
             notes: buildTemp.notes,
-            category: buildTemp.category,
+            category: selectedCategory,
             buildsComponents: componentsSelected,
             totalPrice: totalPrice,
             userNick: user.nick
         }
+        console.log({
+            name: buildTemp.name,
+            notes: buildTemp.notes ?? null,
+            componentsIds: compIdArray,
+            category: selectedCategory
+        })
         try {
             const response = await axios.post(
                 Globals.IP_HTTP + "/api/v2/builds",
@@ -208,7 +214,7 @@ const Builder = (props: Props) => {
                     name: buildTemp.name,
                     notes: buildTemp.notes ?? null,
                     componentsIds: compIdArray,
-                    category: buildTemp.category
+                    category: selectedCategory
                 },
                 {headers: {"Authorization": "Bearer " + token}}
             );
@@ -531,7 +537,7 @@ const Builder = (props: Props) => {
                             style={{
                                 borderWidth: 2,
                                 borderColor: "#ca2613",
-                                borderRadius: 20,
+
                                 paddingLeft: "5%",
                                 width: "100%",
                                 fontSize: getFontSize(20),
@@ -554,7 +560,7 @@ const Builder = (props: Props) => {
                             style={{
                                 borderWidth: 2,
                                 borderColor: "#ca2613",
-                                borderRadius: 20,
+
                                 paddingLeft: 20,
                                 width: "100%",
                                 fontSize: getFontSize(20),
@@ -581,7 +587,7 @@ const Builder = (props: Props) => {
                                 height: getIconSize(130),
                                 backgroundColor: (darkMode) ? "#242121" : "#F5F5F5",
                                 borderColor: "#ca2613",
-                                //borderRadius: 20,
+                                //
                                 width: getIconSize(800),
                                 borderWidth: 2,
                                 marginBottom: "8%",
@@ -599,7 +605,7 @@ const Builder = (props: Props) => {
                             containerStyle={{
                                 backgroundColor: (darkMode) ? "#242121" : "#F5F5F5",
                                 borderColor: "#ca2613",
-                                borderWidth: 2/*, borderRadius: 20*/
+                                borderWidth: 2/*, */
                             }}
                             itemTextStyle={{
                                 fontSize: getFontSize(20),

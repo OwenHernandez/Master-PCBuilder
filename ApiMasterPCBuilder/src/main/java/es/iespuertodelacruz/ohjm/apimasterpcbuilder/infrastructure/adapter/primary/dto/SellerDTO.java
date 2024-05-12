@@ -5,6 +5,7 @@ public class SellerDTO {
     private Long id;
     private String image;
     private String name;
+    private boolean deleted;
 
     public SellerDTO() {
     }
@@ -31,5 +32,13 @@ public class SellerDTO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

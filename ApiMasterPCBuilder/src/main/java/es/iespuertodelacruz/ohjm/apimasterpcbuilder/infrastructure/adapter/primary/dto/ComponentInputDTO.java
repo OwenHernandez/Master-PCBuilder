@@ -15,16 +15,16 @@ public class ComponentInputDTO {
     private double amazon_price;
     private double ebay_price;
     private String sellerName;
-    private byte deleted;
+    private boolean deleted;
 
     public ComponentInputDTO() {
     }
 
-    public byte getDeleted() {
+    public boolean getDeleted() {
         return deleted;
     }
 
-    public void setDeleted(byte deleted) {
+    public void setDeleted(boolean deleted) {
         this.deleted = deleted;
     }
 

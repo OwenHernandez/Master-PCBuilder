@@ -80,7 +80,7 @@ const Post = (props: Props) => {
                                             :
                                             ""
                         }}
-                        style={{height: getIconSize(800), borderRadius: 20}}
+                        style={{height: getIconSize(800), }}
                     >
                         <LinearGradient
                             colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0)', '#3e423f', (darkMode) ? "#242121" : "#F5F5F5"]}

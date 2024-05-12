@@ -49,7 +49,7 @@ const Register = (props: Props) => {
                             value={nick}
                             style={{
                                 textAlign: "center",
-                                borderRadius: 20,
+                                
                                 backgroundColor: (darkMode) ? "#121212" : "white",
                                 marginBottom: "9%",
                                 width: getIconSize(900),
@@ -61,7 +61,7 @@ const Register = (props: Props) => {
                             value={email}
                             style={{
                                 textAlign: "center",
-                                borderRadius: 20,
+                                
                                 backgroundColor: (darkMode) ? "#121212" : "white",
                                 marginBottom: "9%",
                                 width: getIconSize(900),
@@ -74,7 +74,7 @@ const Register = (props: Props) => {
                             value={password}
                             style={{
                                 textAlign: "center",
-                                borderRadius: 20,
+                                
                                 backgroundColor: (darkMode) ? "#121212" : "white",
                                 marginBottom: "9%",
                                 width: getIconSize(900),
@@ -87,7 +87,7 @@ const Register = (props: Props) => {
                             value={confPassword}
                             style={{
                                 textAlign: "center",
-                                borderRadius: 20,
+                                
                                 backgroundColor: (darkMode) ? "#121212" : "white",
                                 marginBottom: "5%",
                                 width: getIconSize(900),

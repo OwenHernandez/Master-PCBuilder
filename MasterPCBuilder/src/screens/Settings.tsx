@@ -144,7 +144,7 @@ const Settings = (props: Props) => {
                             style={{
                                 borderWidth: 2,
                                 borderColor: "#ca2613",
-                                borderRadius: 20,
+                                
                                 paddingHorizontal: "5%",
                                 marginHorizontal: "5%",
                                 fontSize: getFontSize(15),
@@ -157,7 +157,7 @@ const Settings = (props: Props) => {
                                 ...Styles.touchable,
                                 margin: "5%",
                                 padding: "5%",
-                                borderRadius: 20
+                                
                             }}
                             onPress={changePassword}
                         >

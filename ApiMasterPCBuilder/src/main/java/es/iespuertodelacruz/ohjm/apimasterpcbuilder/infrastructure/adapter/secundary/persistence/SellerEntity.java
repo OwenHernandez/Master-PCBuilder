@@ -30,6 +30,8 @@ public class SellerEntity implements Serializable {
 	@OneToMany(mappedBy="seller")
 	private List<ComponentEntity> components;
 
+	private byte deleted;
+
 	public SellerEntity() {
 	}
 
@@ -79,4 +81,11 @@ public class SellerEntity implements Serializable {
 		return component;
 	}
 
+	public byte getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(byte deleted) {
+		this.deleted = deleted;
+	}
 }

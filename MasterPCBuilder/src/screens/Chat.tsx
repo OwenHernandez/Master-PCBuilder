@@ -71,15 +71,29 @@ const Chat = (props: Props) => {
     function getFormattedDate() {
         const date = new Date();
 
-        const year = date.getFullYear();
-        const month = (date.getMonth() + 1).toString().padStart(2, '0'); // +1 porque los meses empiezan en 0
-        const day = date.getDate().toString().padStart(2, '0');
+        // Usar toLocaleString() para obtener la fecha formateada según la zona horaria
+        const dateString = date.toLocaleString('en-GB', {
+            timeZone: 'Europe/London',
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false // Usar formato de 24 horas
+        }).replace(/,/g, '');
 
-        const hours = date.getHours().toString().padStart(2, '0');
-        const minutes = date.getMinutes().toString().padStart(2, '0');
-        const seconds = date.getSeconds().toString().padStart(2, '0');
+        // Desglosar la fecha en componentes para reordenarlos
+        const parts = dateString.split('/');
+        const timePart = parts[2].split(' ')[1];
 
-        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        // Reordenar los componentes para ajustar al formato deseado
+        const year = parts[2].split(' ')[0];
+        const month = parts[1];
+        const day = parts[0];
+
+        // Reconstruir la fecha en el formato aaaa-mm-dd hh:mm:ss
+        return `${year}-${month}-${day} ${timePart}`;
     }
 /*
     function onPublicMessageReceived(datos: any) {
@@ -154,11 +168,6 @@ const Chat = (props: Props) => {
 
             setMsgs([...msgsRef.current]);
         }
-
-        async function getUserReceiverMsgs() {
-
-        }
-
 
         getPrivateMessages();
 
@@ -271,7 +280,7 @@ const Chat = (props: Props) => {
                                     <View style={{flexDirection: "row", justifyContent: "flex-end"}}>
                                         <View style={{
                                             backgroundColor: "#ca2613",
-                                            //borderRadius: 20,
+                                            //
                                             padding: "1%",
                                             paddingHorizontal: "3%",
                                             margin: "2%",
@@ -292,7 +301,7 @@ const Chat = (props: Props) => {
                                     <View style={{flexDirection: "row", justifyContent: "flex-start"}}>
                                         <View style={{
                                             backgroundColor: "#676767",
-                                            //borderRadius: 20,
+                                            //
                                             padding: "1%",
                                             paddingHorizontal: "3%",
                                             margin: "2%",
@@ -330,7 +339,7 @@ const Chat = (props: Props) => {
                     style={{
                         borderWidth: 2,
                         borderColor: "#ca2613",
-                        //borderRadius: 20,
+                        //
                         paddingHorizontal: "5%",
                         width: "80%",
                         fontSize: getFontSize(15),

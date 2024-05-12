@@ -51,7 +51,7 @@ const Login = (props: Props) => {
                             value={nick}
                             style={{
                                 textAlign: "center",
-                                borderRadius: 20,
+                                
                                 backgroundColor: (darkMode) ? "#121212" : "white",
                                 marginBottom: "10%",
                                 width: getIconSize(900),
@@ -65,7 +65,7 @@ const Login = (props: Props) => {
                             value={password}
                             style={{
                                 textAlign: "center",
-                                borderRadius: 20,
+                                
                                 backgroundColor: (darkMode) ? "#121212" : "white",
                                 width: getIconSize(900),
                                 color: "white"

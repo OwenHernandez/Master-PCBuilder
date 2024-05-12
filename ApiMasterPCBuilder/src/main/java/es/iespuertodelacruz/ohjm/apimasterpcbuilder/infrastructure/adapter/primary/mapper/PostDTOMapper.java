@@ -19,6 +19,7 @@ public class PostDTOMapper {
         Post post = new Post();
         post.setDescription(inputDTO.getDescription());
         post.setTitle(inputDTO.getTitle());
+        post.setDeleted((byte) (inputDTO.isDeleted() ? 1 : 0));
         return post;
     }
 
@@ -30,6 +31,7 @@ public class PostDTOMapper {
         outputDTO.setTitle(post.getTitle());
         outputDTO.setBuild(buildMapper.toDTO(post.getBuild()));
         outputDTO.setUser(userDTOMapper.toDTO(post.getUser()));
+        outputDTO.setDeleted(post.getDeleted() == 1);
         if (post.getUsersWhoLiked() != null) {
             List<UserDTO> usersWhoLiked = new ArrayList<>();
             for (User user : post.getUsersWhoLiked()) {

@@ -58,7 +58,7 @@ const UserBuildsList = (props: Props) => {
                                 <TouchableOpacity
                                     style={{
                                         margin: 10,
-                                        borderRadius: 20,
+                                        
                                         borderWidth: 2,
                                         borderColor: (categoryToFilter === categoria.item) ? "violet" : "#ca2613",
                                         padding: 10,

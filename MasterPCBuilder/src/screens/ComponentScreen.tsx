@@ -161,7 +161,7 @@ const ComponentScreen = (props: Props) => {
                                     <MenuOptions
                                         optionsContainerStyle={{
                                             backgroundColor: (darkMode) ? "#242121" : "#F5F5F5",
-                                            borderRadius: 20,
+                                            
                                             width: getIconSize(500),
                                             borderColor: "#ca2613",
                                             borderWidth: 2,
@@ -194,7 +194,7 @@ const ComponentScreen = (props: Props) => {
                                     <MenuOptions
                                         optionsContainerStyle={{
                                             backgroundColor: (darkMode) ? "#242121" : "#F5F5F5",
-                                            borderRadius: 20,
+                                            
                                             width: getIconSize(500),
                                             borderColor: "#ca2613",
                                             borderWidth: 2,

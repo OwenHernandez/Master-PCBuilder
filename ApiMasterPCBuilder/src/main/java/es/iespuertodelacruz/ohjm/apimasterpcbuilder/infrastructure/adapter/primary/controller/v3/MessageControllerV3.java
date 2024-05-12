@@ -35,7 +35,7 @@ public class MessageControllerV3 {
     }
 
     @SchemaMapping(typeName = "Query", field = "byReceiverAndAuthor")
-    public List<Message> getByReceiverAndAuthor(@Argument String author, @Argument String receiver) {
+    public List<Message> getByReceiverAndAuthor(@Argument String receiver, @Argument String author) {
         return messageService.findByReceiverAndAuthor(receiver, author);
     }
 
