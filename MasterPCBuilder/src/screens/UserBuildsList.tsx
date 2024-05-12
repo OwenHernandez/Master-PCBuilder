@@ -1,4 +1,4 @@
-import {Dimensions, FlatList, PixelRatio, Text, TouchableOpacity, View} from 'react-native'
+import {Alert, Dimensions, FlatList, PixelRatio, Text, TouchableOpacity, View} from 'react-native'
 import React, {useEffect, useState} from 'react'
 import {RootStackParamList} from '../navigations/StackNavigator';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -42,25 +42,18 @@ const UserBuildsList = (props: Props) => {
         <View>
             <HeaderScreen name={"Your Builds"} navigation={navigation} profile={false} drawer={false}/>
             <View style={{height: "90%"}}>
-                <View style={{flexDirection: "row", justifyContent: "space-between", marginHorizontal: 10, alignItems: "center"}}>
-                    <Text style={{
-                        fontSize: getFontSize(20),
-                        color: (darkMode) ? "white" : "black",
-                        marginHorizontal: 10,
-                        textAlign: "center"
-                    }}>Category:</Text>
+                <View style={{flexDirection: "row", justifyContent: "space-between", alignItems: "center"}}>
                     <FlatList
-                        style={{marginHorizontal: 10}}
                         data={arrayCategoriaBuilder}
                         horizontal={true}
                         renderItem={(categoria) => {
                             return (
                                 <TouchableOpacity
                                     style={{
-                                        margin: 10,
-                                        
+                                        margin: getIconSize(30),
                                         borderWidth: 2,
-                                        borderColor: (categoryToFilter === categoria.item) ? "violet" : "#ca2613",
+                                        borderColor: "#ca2613",
+                                        backgroundColor: (categoryToFilter === categoria.item) ? "#676767" : (darkMode) ? "#242121" : "#F5F5F5",
                                         padding: 10,
                                         width: 100
                                     }}

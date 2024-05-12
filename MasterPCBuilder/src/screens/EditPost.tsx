@@ -22,11 +22,12 @@ import * as ImagePicker from "react-native-image-picker";
 import {ImagePickerResponse} from "react-native-image-picker";
 import RNFetchBlob from "rn-fetch-blob";
 
-type Props = NativeStackScreenProps<RootStackParamList, 'CreatePost'>;
+type Props = NativeStackScreenProps<RootStackParamList, 'EditPost'>;
 
 const CreatePost = (props: Props) => {
     const {user, darkMode, token} = usePrimaryContext();
     const {navigation, route} = props;
+    const postSelected = route.params.postSelected;
     const fontScale = PixelRatio.getFontScale();
     const getFontSize = (size: number) => size / fontScale;
     const fullScreen = Dimensions.get("window").scale;
@@ -45,6 +46,10 @@ const CreatePost = (props: Props) => {
 
     useEffect(() => {
         setItems([]);
+        setSelectedValue(postSelected?.build?.id + "");
+        setTitle(postSelected?.title);
+        setDescription(postSelected?.description);
+        setImage64(postSelected?.image);
         getBuilds();
     }, []);
 
@@ -63,9 +68,9 @@ const CreatePost = (props: Props) => {
         }
     }
 
-    async function createPost() {
+    async function editPost() {
         try {
-            const response = await axios.post(Globals.IP_HTTP + "/api/v2/posts", {
+            const response = await axios.put(Globals.IP_HTTP + "/api/v2/posts/" + postSelected?.id, {
                 title,
                 description,
                 buildId: Number(selectedValue),
@@ -112,6 +117,7 @@ const CreatePost = (props: Props) => {
                     }}>
                         <TextInput
                             placeholder='Title'
+                            defaultValue={title}
                             style={{
                                 borderWidth: 2,
                                 borderColor: "#ca2613",
@@ -199,6 +205,7 @@ const CreatePost = (props: Props) => {
                         <View style={{flex:1.5}}>
                             <TextInput
                                 placeholder='Description'
+                                defaultValue={description}
                                 maxLength={100}
                                 style={{
                                     justifyContent:"flex-start",
@@ -219,13 +226,13 @@ const CreatePost = (props: Props) => {
                         </View>
                     </View>
 
-                    <TouchableOpacity style={{...Styles.touchable,borderRadius:0}} onPress={createPost}>
+                    <TouchableOpacity style={{...Styles.touchable,borderRadius:0}} onPress={editPost}>
                         <Text
                             style={{
                                 fontSize: getFontSize(20),
                                 color: (darkMode) ? "white" : "black",
                                 textAlign: 'center'
-                            }}>Create
+                            }}>Edit
                             Post</Text>
                     </TouchableOpacity>
 

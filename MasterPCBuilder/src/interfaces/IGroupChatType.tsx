@@ -7,5 +7,6 @@ export default interface IGroupChatType {
     picture: string,
     dateOfCreation: string,
     admin: IUserType,
-    users: IUserType[]
+    users: IUserType[],
+    deleted: boolean
 }

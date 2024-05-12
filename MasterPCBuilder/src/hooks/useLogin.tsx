@@ -67,7 +67,8 @@ const useLogin = () => {
                 picture: picture,
                 friends: byNickResponse.data.friends,
                 blockedUsers: byNickResponse.data.blockedUsers,
-                componentsWanted: byNickResponse.data.componentsWanted
+                componentsWanted: byNickResponse.data.componentsWanted,
+                deleted: byNickResponse.data.deleted
             }
             if (newUser.friends !== null) {
                 for (const friend of newUser.friends) {
@@ -86,7 +87,6 @@ const useLogin = () => {
             setUser(newUser);
             navigation.navigate("DrawerNavigator");
         } catch (err) {
-            console.log("LOCURA")
             console.log(err);
             Toast.show({
                 position: 'bottom',

@@ -37,6 +37,7 @@ public class UserDTOMapper {
         userDTO.setEmail(user.getEmail());
         userDTO.setPicture(user.getPicture());
         userDTO.setRole(user.getRole());
+        userDTO.setDeleted(user.getDeleted() == 1);
         if (user.getComponentsWanted() != null && !user.getComponentsWanted().isEmpty()) {
             List<ComponentOutputDTO> componentsWanted = new ArrayList<>();
             for (Component c : user.getComponentsWanted()) {

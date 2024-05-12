@@ -115,7 +115,6 @@ const GroupChatDetails = (props: Props) => {
                 );
                 picture = ""
                 if (userPicResponse.data !== Globals.IMG_NOT_FOUND) {
-                    console.log("coso4");
                     picture = userPicResponse.base64();
                 }
                 member.picture = picture;

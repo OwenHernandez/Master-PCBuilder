@@ -121,15 +121,109 @@ const Social = (props: Props) => {
             <HeaderScreen name={route.name} navigation={navigation} profile={false} drawer={true}/>
             <View style={{height: "90%"}}>
                 <View style={{
-                    flexDirection:"row",
-                    margin: "5%",
+                    flexDirection: "row",
+                    justifyContent: "space-between"
                 }}>
-                    <View style={{flex:4}}>
+                    <TouchableOpacity
+                        style={{
+                            ...Styles.touchable,
+                            borderWidth: 2,
+                            borderColor: "#ca2613",
+                            justifyContent: "center",
+                        }}
+                        onPress={() => {
+                            toggleModal();
+                        }}
+                    >
+                        <View style={{alignItems: "center"}}>
+                            <Text style={{
+                                fontSize: getFontSize(20),
+                                color: (darkMode) ? "white" : "black"
+                            }}>Filters</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <Modal
+                        animationType="slide"
+                        transparent={true}
+                        visible={modalvisible}
+                        onRequestClose={() => setModalvisible(!modalvisible)}
+                    >
+                        <View style={{
+                            ...Styles.modalContainer,
+                            flex: 1,
+                            backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"
+                        }}>
+                            <View style={{
+                                flexDirection: "row",
+                                justifyContent: "flex-end",
+                                backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"
+                            }}>
+                                <TouchableOpacity
+
+                                    onPress={() => setModalvisible(!modalvisible)}>
+                                    <Material style={{marginTop: "5%", margin: "2%"}} name='close-box'
+                                              size={getIconSize(100)}
+                                              color={(darkMode) ? "white" : "black"}></Material>
+                                </TouchableOpacity>
+                            </View>
+                            <View style={{
+                                justifyContent: "center",
+                                backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"
+                            }}>
+                                <TouchableOpacity
+                                    style={Styles.touchable}
+                                    onPress={() => {
+                                        setModalvisible(!modalvisible);
+                                        setPostsFiltered(postsList.sort((a, b) => {
+                                            switch (byPrice) {
+                                                case true:
+                                                    if (a.build.totalPrice < b.build.totalPrice) {
+                                                        return 1;
+                                                    }
+
+                                                    if (a.build.totalPrice > b.build.totalPrice) {
+                                                        return -1;
+                                                    }
+
+                                                    return 0;
+                                                case false:
+                                                    if (a.build.totalPrice > b.build.totalPrice) {
+                                                        return 1;
+                                                    }
+
+                                                    if (a.build.totalPrice < b.build.totalPrice) {
+                                                        return -1;
+                                                    }
+                                                    return 0;
+                                            }
+                                        }));
+                                        setByPrice(!byPrice);
+                                    }}>
+                                    <View style={{flexDirection: "row"}}>
+                                        <FontAwesome
+                                            name={(byPrice) ? 'long-arrow-down' : "long-arrow-up"}
+                                            size={getIconSize(80)}
+                                            color={(darkMode) ? "white" : "black"}></FontAwesome>
+                                        <Text style={{
+                                            marginLeft: "5%",
+                                            fontSize: getFontSize(20),
+                                            color: (darkMode) ? "white" : "black"
+                                        }}>By Price</Text>
+                                    </View>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </Modal>
+                    <View style={{
+                        flex: 3,
+                        alignItems: "center",
+                        justifyContent: "center"
+                    }}>
                         <TextInput
                             placeholder='Search a post by title'
                             placeholderTextColor={"#a3a3a3"}
                             style={{
-                                alignItems:"flex-start",
+                                alignItems: "flex-start",
                                 borderWidth: 2,
                                 borderColor: "#ca2613",
 
@@ -137,7 +231,6 @@ const Social = (props: Props) => {
                                 width: "100%",
                                 fontSize: getFontSize(15),
                                 color: (darkMode) ? "white" : "black"
-
                             }}
                             onChangeText={(text) => {
                                 if (text === "")
@@ -148,130 +241,29 @@ const Social = (props: Props) => {
                         ></TextInput>
                     </View>
                     <View style={{
-                        flex:1,
-                        alignItems:"center",
-                        justifyContent:"center"
+                        flex: 1,
+                        alignItems: "center",
+                        justifyContent: "center"
                     }}>
                         <FontAwesome5Icon
-                            style={{
-
-                            }}
                             name="search"
                             size={getIconSize(80)}
                             color={(darkMode) ? "white" : "black"}
                         />
                     </View>
-
-
                 </View>
-                <View style={{flexDirection: "row"}}>
-                    <View style={{marginLeft: "2%"}}>
-                        <TouchableOpacity
-                            style={{
-                                margin: 10,
-
-                                borderWidth: 2,
-                                borderColor: "#ca2613",
-                                padding: 10
-                            }}
-                            onPress={() =>  {
-                                toggleModal();
-                            }}
-                        >
-                            <View style={{alignItems: "center"}}>
-                                <Text style={{
-                                    fontSize: getFontSize(20),
-                                    color: (darkMode) ? "white" : "black"
-                                }}>Filters</Text>
-                            </View>
-                        </TouchableOpacity>
-                        <Modal
-                            style={{height: "70%"}}
-                            animationType="slide"
-                            transparent={true}
-
-                            visible={modalvisible}
-                            onRequestClose={() => setModalvisible(!modalvisible)}
-                        >
-                            <View style={{
-                                ...Styles.modalContainer,
-                                flex: 1,
-                                backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"
-                            }}>
-                                <View style={{
-                                    flexDirection: "row",
-                                    justifyContent: "flex-end",
-                                    backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"
-                                }}>
-                                    <TouchableOpacity
-
-                                        onPress={() => setModalvisible(!modalvisible)}>
-                                        <Material style={{marginTop: "5%", margin: "2%"}} name='close-box'
-                                                  size={getIconSize(100)}
-                                                  color={(darkMode) ? "white" : "black"}></Material>
-                                    </TouchableOpacity>
-                                </View>
-                                <View style={{
-                                    justifyContent: "center",
-                                    backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"
-                                }}>
-                                    <TouchableOpacity
-                                        style={Styles.touchable}
-                                        onPress={() => {
-                                            setModalvisible(!modalvisible);
-                                            setPostsFiltered(postsList.sort((a, b) => {
-                                                switch (byPrice) {
-                                                    case true:
-                                                        if (a.build.totalPrice < b.build.totalPrice) {
-                                                            return 1;
-                                                        }
-
-                                                        if (a.build.totalPrice > b.build.totalPrice) {
-                                                            return -1;
-                                                        }
-
-                                                        return 0;
-                                                    case false:
-                                                        if (a.build.totalPrice > b.build.totalPrice) {
-                                                            return 1;
-                                                        }
-
-                                                        if (a.build.totalPrice < b.build.totalPrice) {
-                                                            return -1;
-                                                        }
-                                                        return 0;
-                                                }
-                                            }));
-                                            setByPrice(!byPrice);
-                                        }}>
-                                        <View style={{flexDirection: "row"}}>
-                                            <FontAwesome
-                                                name={(byPrice) ? 'long-arrow-down' : "long-arrow-up"}
-                                                size={getIconSize(80)}
-                                                color={(darkMode) ? "white" : "black"}></FontAwesome>
-                                            <Text style={{
-                                                marginLeft: "5%",
-                                                fontSize: getFontSize(20),
-                                                color: (darkMode) ? "white" : "black"
-                                            }}>By Price</Text>
-                                        </View>
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-                        </Modal>
-                    </View>
+                <View style={{flexDirection: "row", marginHorizontal: "2%", marginRight: "5%"}}>
                     <FlatList
-                        style={{}}
                         data={arrayCategoriaBuilder}
                         horizontal={true}
                         renderItem={(categoria) => {
                             return (
                                 <TouchableOpacity
                                     style={{
-                                        margin: 10,
-
+                                        margin: getIconSize(40),
                                         borderWidth: 2,
-                                        borderColor: (categoryToFilter === categoria.item) ? "violet" : "#ca2613",
+                                        borderColor: "#ca2613",
+                                        backgroundColor: (categoryToFilter === categoria.item) ? "#676767" : (darkMode) ? "#242121" : "#F5F5F5",
                                         padding: 10,
                                         width: 100
                                     }}
@@ -326,7 +318,7 @@ const Social = (props: Props) => {
                 <FlatList
                     data={postsFiltered}
                     renderItem={(post) => {
-                        if (post.item.user && !isBlocked(post.item.user)) {
+                        if (post.item.user && !isBlocked(post.item.user) && !post.item.deleted) {
                             return (
                                 <TouchableOpacity
                                     style={Styles.touchable}
@@ -341,7 +333,7 @@ const Social = (props: Props) => {
                                             }}>
                                                 <TouchableOpacity
                                                     style={{alignItems: "center", flexDirection: "row"}}
-                                                    onPress={() => (post.item.user?.id !== user.id) ? navigation.navigate("OtherUserProfile", {userSelected: post.item.user}): navigation.navigate("Profile")}>
+                                                    onPress={() => (post.item.user?.id !== user.id) ? navigation.navigate("OtherUserProfile", {userSelected: post.item.user}) : navigation.navigate("Profile")}>
                                                     <Image
                                                         source={{
                                                             uri: (post.item.user?.picture !== "") ? "data:image/jpeg;base64," + post.item.user?.picture : "https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png?x=480&quality=40",

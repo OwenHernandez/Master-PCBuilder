@@ -43,7 +43,8 @@ const HeaderScreen = (props: Props) => {
             <Text style={{
                 ...Styles.headerText,
                 color: (darkMode) ? "white" : "black",
-                fontSize: getFontSize(20)
+                fontSize: getFontSize(20),
+                maxWidth: "70%"
             }}>{name}</Text>
             {(!drawer) ?
                 <TouchableOpacity onPress={() => navigation.goBack()}>

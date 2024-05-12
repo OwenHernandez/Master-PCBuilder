@@ -1,4 +1,5 @@
 import {
+    Alert,
     Dimensions,
     FlatList,
     ImageBackground,
@@ -20,6 +21,9 @@ import LinearGradient from "react-native-linear-gradient";
 import {Globals} from "../components/Globals";
 import RNFetchBlob from "rn-fetch-blob";
 import IPostType from "../interfaces/IPostType";
+import {Menu, MenuOption, MenuOptions, MenuTrigger} from "react-native-popup-menu";
+import Entypo from "react-native-vector-icons/Entypo";
+import axios from "axios";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Post'>;
 
@@ -61,9 +65,27 @@ const Post = (props: Props) => {
         setPostSelected(post);
     }
 
+    function editPost() {
+        navigation.navigate("EditPost", {postSelected: postSelected});
+    }
+
+    async function deletePost() {
+        try {
+            const response = await axios.delete(
+                Globals.IP_HTTP + '/api/v2/posts/' + postSelected.id,
+                {
+                    headers: {Authorization: `Bearer ${token}`}
+                }
+            );
+            navigation.navigate("Posts", {posts: []});
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
     return (
         <SafeAreaView style={{flex: 1}}>
-            <HeaderScreen name={route.name} navigation={navigation} profile={false} drawer={false}/>
+            <HeaderScreen name={postSelected.title} navigation={navigation} profile={false} drawer={false}/>
             <View style={{height: "100%"}}>
                 <View>
                     <ImageBackground
@@ -80,8 +102,44 @@ const Post = (props: Props) => {
                                             :
                                             ""
                         }}
-                        style={{height: getIconSize(800), }}
+                        style={{height: getIconSize(800),}}
                     >
+                        {
+                            postSelected?.user?.nick === user.nick &&
+                            <View style={{flex: 1, margin: "5%", justifyContent: "flex-start", alignItems: "flex-end"}}>
+                                <Menu>
+                                    <MenuTrigger>
+                                        <Entypo name={"dots-three-vertical"} size={getIconSize(60)}
+                                                color={(darkMode) ? "white" : "black"}/>
+                                    </MenuTrigger>
+                                    <MenuOptions
+                                        optionsContainerStyle={{
+                                            backgroundColor: (darkMode) ? "#242121" : "#F5F5F5",
+
+                                            width: getIconSize(500),
+                                            borderColor: "#ca2613",
+                                            borderWidth: 2,
+                                            padding: "2%"
+                                        }}
+                                    >
+                                        <MenuOption
+                                            onSelect={() => editPost()}
+                                            text='Edit Component'
+                                            customStyles={{
+                                                optionText: {color: (darkMode) ? "white" : "black"}
+                                            }}
+                                        />
+                                        <MenuOption
+                                            onSelect={() => deletePost()}
+                                            text='Delete Component'
+                                            customStyles={{
+                                                optionText: {color: (darkMode) ? "white" : "black"}
+                                            }}
+                                        />
+                                    </MenuOptions>
+                                </Menu>
+                            </View>
+                        }
                         <LinearGradient
                             colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0)', '#3e423f', (darkMode) ? "#242121" : "#F5F5F5"]}
                             style={{flex: 1, justifyContent: "flex-end", alignItems: "baseline"}}>
@@ -106,15 +164,17 @@ const Post = (props: Props) => {
                         contentContainerStyle={{alignItems: "center", width: "100%"}}
                         renderItem={(buildComponent) => {
                             return (
-                                <TouchableOpacity style={{
-                                    ...Styles.touchable,
-                                    width: getIconSize(450),
-                                    height: getIconSize(600),
-                                    margin: "5%",
-                                    justifyContent: "center",
-                                    alignItems: "center"
-                                }}
-                                                  onPress={() => navigation.navigate("ComponentScreen", {comp: buildComponent.item.component})}>
+                                <TouchableOpacity
+                                    style={{
+                                        ...Styles.touchable,
+                                        width: getIconSize(450),
+                                        height: getIconSize(600),
+                                        margin: "5%",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        opacity: (!buildComponent.item.component.deleted) ? 1 : 0.5
+                                    }}
+                                    onPress={() => (buildComponent.item.component.deleted) ? Alert.alert("This component is no longer available") : navigation.navigate("ComponentScreen", {comp: buildComponent.item.component})}>
                                     <Component comp={buildComponent.item.component}/>
                                 </TouchableOpacity>
                             );
