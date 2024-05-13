@@ -1,5 +1,6 @@
 import { DataSource } from "typeorm";
 import {
+    Blocked,
     Build,
     BuildComponent,
     Component,
@@ -28,6 +29,7 @@ export const dataSource = new DataSource({
         GroupChatsUsers,
         Friend,
         Like,
+        Blocked,
         Post,
         PriceHistory,
         Wishlist

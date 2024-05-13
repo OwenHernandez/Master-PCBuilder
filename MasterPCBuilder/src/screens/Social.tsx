@@ -14,6 +14,11 @@ import {Globals} from "../components/Globals";
 import RNFetchBlob from "rn-fetch-blob";
 import Material from "react-native-vector-icons/MaterialCommunityIcons";
 import IUserType from "../interfaces/IUserType";
+import {ComponentRepository, PostRepository} from "../data/Database";
+import IComponentType from "../interfaces/IComponentType";
+import IPriceHistoryType from "../interfaces/IPriceHistoryType";
+import IBuildType from "../interfaces/IBuildType";
+import IBuildComponentType from "../interfaces/IBuildComponentType";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Posts'>;
 
@@ -69,9 +74,94 @@ const Social = (props: Props) => {
                 post.amountOfLikes = post.usersWhoLiked.length;
                 setPostsList(prevPosts => [...prevPosts, post]);
                 setPostsFiltered(prevPosts => [...prevPosts, post]);
+
+            }
+            let postOffline =await PostRepository.find();
+            let postNotInserted = response.data.filter(onlinePost => {
+                    return !postOffline.some(offlinePost => offlinePost.id === onlinePost.id);
+                }
+            );
+            for(const post of postNotInserted){
+                let insertResult = await PostRepository.insert(post);
             }
         } catch (e) {
             console.log(e);
+            let auxPostOffline:Array<IPostType>=[];
+            let postOffline = await PostRepository.find();
+            for (const post of postOffline) {
+                let usersWhoLiked:IUserType[] =[];
+                for (const like of post.likes) {
+                    let newLikeUser:IUserType ={
+                        id: like.user.id,
+                        nick: like.user.nick,
+                        picture: like.user.picture,
+                        blockedUsers: [],
+                        componentsWanted:[] ,
+                        friends: [],
+                        email: like.user.email,
+                    }
+                    usersWhoLiked.push(newLikeUser);
+                }
+                let newUser:IUserType ={
+                    id: post.user.id,
+                    nick: post.user.nick,
+                    picture: post.user.picture,
+                    blockedUsers: [],
+                    componentsWanted:[] ,
+                    friends: [],
+                    email: post.user.email,
+                }
+                let auxBuildComponents:IBuildComponentType[] =[];
+                for (const build of post.build.buildComponents){
+                    let newComponent:IComponentType ={
+                        id: build.component.id,
+                        name: build.component.name,
+                        type: build.component.type,
+                        price: build.component.price,
+                        image: build.component.image,
+                        wished: false,
+                        amazon_price: build.component.amazonPrice,
+                        ebay_price: build.component.ebayPrice,
+                        description: build.component.description,
+                        sellerName: build.component.seller.name,
+                        userNick: build.component.user.nick,
+                        priceHistory: [],
+                    }
+                    let newBuildComponent:IBuildComponentType ={
+                        component: newComponent,
+                        dateCreated: build.dateCreated+"",
+                        priceAtTheTime: build.priceAtTheTime,
+                    }
+                    auxBuildComponents.push(newBuildComponent);
+                }
+                let newBuild:IBuildType={
+                    id: post.build.id,
+                    category: post.build.category,
+                    totalPrice: post.build.totalPrice,
+                    buildsComponents: auxBuildComponents,
+                    name: post.build.name,
+                    notes: post.build.notes,
+                    userNick: post.build.user.nick,
+                }
+                let newPost:IPostType = {
+                    id: post.id,
+                    title: post.title,
+                    image: post.image,
+                    build: newBuild,
+                    user: newUser,
+                    liked: false,
+                    amountOfLikes:post.likes.length,
+                    usersWhoLiked: usersWhoLiked,
+                    description: post.description,
+                    priceRange:newBuild.totalPrice+""
+
+
+                }
+                auxPostOffline.push(newPost);
+            }
+            setPostsList(auxPostOffline);
+            setPostsFiltered(auxPostOffline);
+            console.log(auxPostOffline)
         }
     }
 

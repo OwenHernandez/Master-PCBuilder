@@ -68,6 +68,7 @@ const ComponentsList = (props: Props) => {
                 let insertResult = await ComponentRepository.insert(comp);
             }
         } catch (e) {
+            console.log(e);
             let auxCompsOffline:Array<IComponentType>=[];
             let compsOffline = await ComponentRepository.find();
             for (const comp of compsOffline) {

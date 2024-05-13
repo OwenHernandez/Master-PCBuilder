@@ -1,4 +1,5 @@
 import 'react-native-gesture-handler';
+import 'reflect-metadata';
 /**
  * Sample React Native App
  * https://github.com/facebook/react-native

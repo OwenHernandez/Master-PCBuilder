@@ -24,6 +24,7 @@ import {GroupChatRepository} from "../data/Database";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'CreatePost'>;
 
+
 const CreateGroup = (props: Props) => {
     const {user, darkMode, token} = usePrimaryContext();
     const {navigation, route} = props;
@@ -35,7 +36,6 @@ const CreateGroup = (props: Props) => {
     const [description, setDescription] = useState("");
     const [picture, setPicture] = useState("");
     const [pictureBase64, setPictureBase64] = useState("");
-
     async function createGroup() {
         try {
             const response = await axios.post(Globals.IP_HTTP + "/api/v2/groups", {
@@ -80,7 +80,6 @@ const CreateGroup = (props: Props) => {
                 <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
                     <View style={{
                         padding: "10%",
-
                         alignItems: "center",
                         marginHorizontal: "10%",
                         marginBottom: "2%"

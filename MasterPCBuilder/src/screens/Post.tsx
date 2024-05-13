@@ -54,6 +54,7 @@ const Post = (props: Props) => {
                 } else {
                     comp.image = "";
                 }
+
             } catch (e) {
                 console.log(e);
             }

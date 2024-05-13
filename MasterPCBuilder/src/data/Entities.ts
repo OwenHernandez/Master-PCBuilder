@@ -4,28 +4,28 @@ export class User {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ length: 30 })
+    @Column({ type: 'varchar', length: 30 })
     nick: string;
 
-    @Column()
+    @Column({ type: 'varchar' })
     email: string;
 
-    @Column()
+    @Column({ type: 'varchar' })
     password: string;
 
-    @Column({ nullable: true })
-    picture: string;
+    @Column({ type: 'varchar', nullable: true })
+    picture: string | null;
 
-    @Column()
+    @Column({ type: 'boolean' })
     active: boolean;
 
-    @Column()
+    @Column({ type: 'varchar' })
     hash: string;
 
-    @Column({ length: 30 })
+    @Column({ type: 'varchar', length: 30 })
     role: string;
 
-    @Column()
+    @Column({ type: 'boolean' })
     deleted: boolean;
 
     @OneToMany(() => Build, build => build.user)
@@ -61,30 +61,31 @@ export class User {
     @OneToMany(() => Wishlist, wishlist => wishlist.user)
     wishlists: Wishlist[];
 }
+
 @Entity()
 export class Build {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ length: 20, default: 'nameless' })
+    @Column({ type: 'varchar', length: 20, default: 'nameless' })
     name: string;
 
-    @Column({ type: "varchar", length: 255, nullable: true })
-    notes: string;
+    @Column({ type: 'varchar', length: 255, nullable: true })
+    notes: string | null;
 
-    @Column({ type: "decimal", precision: 10, scale: 2 })
+    @Column({ type: 'decimal', precision: 10, scale: 2 })
     totalPrice: number;
 
     @ManyToOne(() => User, user => user.builds)
     user: User;
 
-    @Column({ length: 50, nullable: true })
-    category: string;
+    @Column({ type: 'varchar', length: 50, nullable: true })
+    category: string | null;
 
-    @Column("bigint")
+    @Column({ type: 'bigint' })
     dateOfCreation: number;
 
-    @Column()
+    @Column({ type: 'boolean' })
     deleted: boolean;
 
     @OneToMany(() => BuildComponent, buildComponent => buildComponent.build)
@@ -93,6 +94,7 @@ export class Build {
     @OneToMany(() => Post, post => post.build)
     posts: Post[];
 }
+
 @Entity()
 export class BuildComponent {
     @PrimaryGeneratedColumn()
@@ -106,10 +108,10 @@ export class BuildComponent {
     @JoinColumn({ name: "component_id" })
     component: Component;
 
-    @Column("decimal", { precision: 10, scale: 2 })
+    @Column({ type: 'decimal', precision: 10, scale: 2 })
     priceAtTheTime: number;
 
-    @Column("bigint")
+    @Column({ type: 'bigint' })
     dateCreated: number;
 }
 @Entity()
@@ -117,25 +119,25 @@ export class Component {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ length: 100 })
+    @Column({ type: 'varchar', length: 100 })
     name: string;
 
-    @Column({ length: 50 })
+    @Column({ type: 'varchar', length: 50 })
     type: string;
 
-    @Column({ nullable: true })
-    image: string;
+    @Column({ type: 'varchar', nullable: true })
+    image: string | null;
 
-    @Column({ type: "varchar", length: 100, nullable: true })
-    description: string;
+    @Column({ type: 'varchar', length: 100, nullable: true })
+    description: string | null;
 
-    @Column({ type: "decimal", precision: 10, scale: 2 })
+    @Column({ type: 'decimal', precision: 10, scale: 2 })
     price: number;
 
-    @Column({ type: "decimal", precision: 10, scale: 0 })
+    @Column({ type: 'decimal', precision: 10, scale: 0 })
     amazonPrice: number;
 
-    @Column({ type: "decimal", precision: 10, scale: 0 })
+    @Column({ type: 'decimal', precision: 10, scale: 0 })
     ebayPrice: number;
 
     @ManyToOne(() => Seller, seller => seller.components)
@@ -144,7 +146,7 @@ export class Component {
     @ManyToOne(() => User, user => user.components)
     user: User;
 
-    @Column()
+    @Column({ type: 'boolean' })
     deleted: boolean;
 
     @OneToMany(() => BuildComponent, buildComponent => buildComponent.component)
@@ -159,6 +161,7 @@ export class Component {
     @OneToMany(() => Wishlist, wishlist => wishlist.component)
     wishlists: Wishlist[];
 }
+
 @Entity()
 export class Blocked {
     @PrimaryGeneratedColumn()
@@ -172,6 +175,7 @@ export class Blocked {
     @JoinColumn({ name: "user_blocked_id" })
     userBlocked: User;
 }
+
 @Entity()
 export class Friend {
     @PrimaryGeneratedColumn()
@@ -185,6 +189,7 @@ export class Friend {
     @JoinColumn({ name: "user_id2" })
     user2: User;
 }
+
 @Entity()
 export class Like {
     @PrimaryGeneratedColumn()
@@ -197,19 +202,20 @@ export class Like {
     @JoinColumn({ name: "post_id" })
     post: Post;
 }
+
 @Entity()
 export class Post {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ length: 50 })
+    @Column({ type: 'varchar', length: 50 })
     title: string;
 
-    @Column({ nullable: true })
-    image: string;
+    @Column({ type: 'varchar', nullable: true })
+    image: string | null;
 
-    @Column({ type: "varchar", length: 100, nullable: true })
-    description: string;
+    @Column({ type: 'varchar', length: 100, nullable: true })
+    description: string | null;
 
     @ManyToOne(() => Build, build => build.posts)
     build: Build;
@@ -217,7 +223,7 @@ export class Post {
     @ManyToOne(() => User, user => user.posts)
     user: User;
 
-    @Column()
+    @Column({ type: 'boolean' })
     deleted: boolean;
 
     @OneToMany(() => Like, like => like.post)
@@ -228,19 +234,19 @@ export class GroupChat {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ length: 50 })
+    @Column({type:"varchar", length: 50 })
     name: string;
 
     @Column({ type: "varchar", length: 100 })
     description: string;
 
-    @Column("bigint")
+    @Column({type:"bigint"})
     dateOfCreation: number;
 
-    @Column()
+    @Column( {type:"varchar", nullable: true})
     picture: string;
 
-    @Column()
+    @Column( {type:"boolean"})
     deleted: boolean;
 
     @OneToMany(() => GroupChatsUsers, groupChatsUsers => groupChatsUsers.groupChat)
@@ -259,6 +265,7 @@ export class GroupChatsUsers {
     @JoinColumn({ name: "user_id" })
     user: User;
 }
+
 @Entity()
 export class PriceAlert {
     @PrimaryGeneratedColumn()
@@ -271,33 +278,35 @@ export class PriceAlert {
     @JoinColumn({ name: "component_id" })
     component: Component;
 
-    @Column("decimal", { precision: 10, scale: 2 })
+    @Column({ type: 'decimal', precision: 10, scale: 2 })
     targetPrice: number;
 
-    @Column()
+    @Column({ type: 'boolean' })
     alertActive: boolean;
 }
+
 @Entity()
 export class PriceHistory {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ type: "decimal", precision: 10, scale: 0 })
+    @Column({ type: 'decimal', precision: 10, scale: 0 })
     ebayPrice: number;
 
-    @Column({ type: "decimal", precision: 10, scale: 0 })
+    @Column({ type: 'decimal', precision: 10, scale: 0 })
     amazonPrice: number;
 
-    @Column({ type: "decimal", precision: 10, scale: 0 })
+    @Column({ type: 'decimal', precision: 10, scale: 0 })
     price: number;
 
-    @Column("bigint")
+    @Column({ type: 'bigint' })
     date: number;
 
     @ManyToOne(() => Component, component => component.priceHistories)
     @JoinColumn({ name: "component_id" })
     component: Component;
 }
+
 @Entity()
 export class Wishlist {
     @PrimaryGeneratedColumn()
@@ -309,18 +318,19 @@ export class Wishlist {
     @ManyToOne(() => Component, component => component.wishlists)
     component: Component;
 }
+
 @Entity()
 export class Seller {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ length: 100 })
+    @Column({ type: 'varchar', length: 100 })
     name: string;
 
-    @Column({ nullable: true })
-    image: string;
+    @Column({ type: 'varchar', nullable: true })
+    image: string | null;
 
-    @Column()
+    @Column({ type: 'boolean' })
     deleted: boolean;
 
     @OneToMany(() => Component, component => component.seller)
