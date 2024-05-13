@@ -36,6 +36,7 @@ const CreateGroup = (props: Props) => {
     const [description, setDescription] = useState("");
     const [picture, setPicture] = useState("");
     const [pictureBase64, setPictureBase64] = useState("");
+
     async function createGroup() {
         try {
             const response = await axios.post(Globals.IP_HTTP + "/api/v2/groups", {
