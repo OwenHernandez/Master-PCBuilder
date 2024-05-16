@@ -363,18 +363,34 @@ const Social = (props: Props) => {
                                                 <TouchableOpacity
                                                     style={{alignItems: "center", flexDirection: "row"}}
                                                     onPress={() => (post.item.user?.id !== user.id) ? navigation.navigate("OtherUserProfile", {userSelected: post.item.user}) : navigation.navigate("Profile")}>
-                                                    <Image
-                                                        source={{
-                                                            uri: (post.item.user?.picture !== "") ? "data:image/jpeg;base64," + post.item.user?.picture : "https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png?x=480&quality=40",
-                                                        }}
-                                                        style={{
-                                                            ...Styles.imageStyle,
-                                                            borderColor: (darkMode) ? "white" : "black",
-                                                            borderWidth: 1,
-                                                            width: getIconSize(110),
-                                                            height: getIconSize(110)
-                                                        }}
-                                                    />
+                                                    {
+                                                        (post.item.user?.picture === "") ?
+                                                            <Image
+                                                                source={
+                                                                    require("../../img/defaultProfilePic.png")
+                                                                }
+                                                                style={{
+                                                                    ...Styles.imageStyle,
+                                                                    borderColor: (darkMode) ? "white" : "black",
+                                                                    borderWidth: 1,
+                                                                    width: getIconSize(100),
+                                                                    height: getIconSize(100)
+                                                                }}
+                                                            />
+                                                            :
+                                                            <Image
+                                                                source={{
+                                                                    uri: "data:image/jpeg;base64," + post.item.user?.picture
+                                                                }}
+                                                                style={{
+                                                                    ...Styles.imageStyle,
+                                                                    borderColor: (darkMode) ? "white" : "black",
+                                                                    borderWidth: 1,
+                                                                    width: getIconSize(100),
+                                                                    height: getIconSize(100)
+                                                                }}
+                                                            />
+                                                    }
                                                     <Text style={{
                                                         fontSize: getFontSize(15),
                                                         color: (darkMode) ? "white" : "black",
@@ -413,26 +429,57 @@ const Social = (props: Props) => {
                                             </View>
                                         </View>
                                         <View style={{alignItems: "center"}}>
-                                            <Image
-                                                source={{
-                                                    uri: (post.item.image !== "") ? "data:image/jpeg;base64," + post.item.image :
-                                                        (post.item.build?.category === Globals.CATEGORY_GAMING) ?
-                                                            "https://regeneration.co.nz/cdn/shop/files/ullr-gaming-pc-regen-computers.webp?v=1696907011"
-                                                            :
-                                                            (post.item.build?.category === Globals.CATEGORY_BUDGET) ?
-                                                                "https://pcbuildsonabudget.com/wp-content/uploads/2022/10/1200-Dollar-PC-Build-Case.jpg"
-                                                                :
-                                                                (post.item.build?.category === Globals.CATEGORY_WORK) ?
-                                                                    "https://www.pcspecialist.co.uk/images/cases/12030/h.png?1602846384"
-                                                                    :
-                                                                    ""
-                                                }}
-                                                style={{
-                                                    width: getIconSize(900),
-                                                    height: getIconSize(900),
+                                            {
+                                                post.item.image !== "" ?
+                                                    <Image
+                                                        source={{
+                                                            uri: "data:image/jpeg;base64," + post.item.image
+                                                        }}
+                                                        style={{
+                                                            width: getIconSize(900),
+                                                            height: getIconSize(900),
 
-                                                }}
-                                            />
+                                                        }}
+                                                    />
+                                                    :
+                                                    (post.item.build?.category === Globals.CATEGORY_GAMING) ?
+                                                        <Image
+                                                            source={
+                                                                require("../../img/defaultGamingPostImg.png")
+                                                            }
+                                                            style={{
+                                                                width: getIconSize(900),
+                                                                height: getIconSize(900),
+
+                                                            }}
+                                                        />
+                                                        :
+                                                        (post.item.build?.category === Globals.CATEGORY_BUDGET) ?
+                                                            <Image
+                                                                source={
+                                                                    require("../../img/defaultBudgetPostImg.jpg")
+                                                                }
+                                                                style={{
+                                                                    width: getIconSize(900),
+                                                                    height: getIconSize(900),
+
+                                                                }}
+                                                            />
+                                                            :
+                                                            (post.item.build?.category === Globals.CATEGORY_WORK) ?
+                                                                <Image
+                                                                    source={
+                                                                        require("../../img/defaultWorkPostImg.png")
+                                                                    }
+                                                                    style={{
+                                                                        width: getIconSize(900),
+                                                                        height: getIconSize(900),
+
+                                                                    }}
+                                                                />
+                                                                :
+                                                                <Text>No foto</Text>
+                                            }
                                         </View>
                                     </View>
                                 </TouchableOpacity>

@@ -87,18 +87,34 @@ const FriendsList = (props: Props) => {
                                                   }}>
                                     <TouchableOpacity
                                         onPress={() => navigation.navigate("OtherUserProfile", {userSelected: friend.item})}>
-                                        <Image
-                                            source={{
-                                                uri: (friend.item.picture !== "") ? "data:image/jpeg;base64," + friend.item.picture : "https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png?x=480&quality=40",
-                                            }}
-                                            style={{
-                                                ...Styles.imageStyle,
-                                                borderColor: (darkMode) ? "white" : "black",
-                                                borderWidth: 1,
-                                                width: getIconSize(110),
-                                                height: getIconSize(110)
-                                            }}
-                                        />
+                                        {
+                                            (friend.item.picture !== "") ?
+                                                <Image
+                                                    source={{
+                                                        uri: "data:image/jpeg;base64," + friend.item.picture,
+                                                        width: getIconSize(110),
+                                                        height: getIconSize(110)
+                                                    }}
+                                                    style={{
+                                                        ...Styles.imageStyle,
+                                                        borderColor: (darkMode) ? "white" : "black",
+                                                        borderWidth: 1
+                                                    }}
+                                                />
+                                                :
+                                                <Image
+                                                    source={
+                                                        require("../../img/defaultProfilePic.png")
+                                                    }
+                                                    style={{
+                                                        ...Styles.imageStyle,
+                                                        borderColor: (darkMode) ? "white" : "black",
+                                                        borderWidth: 1,
+                                                        width: getIconSize(110),
+                                                        height: getIconSize(110)
+                                                    }}
+                                                />
+                                        }
                                     </TouchableOpacity>
                                     <Text style={{
                                         color: (darkMode) ? "white" : "black",

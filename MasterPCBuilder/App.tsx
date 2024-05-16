@@ -10,7 +10,7 @@ import 'reflect-metadata';
 import React, {useEffect, useState} from 'react';
 import type {PropsWithChildren} from 'react';
 import {
-    Button,
+    Button, LogBox,
     SafeAreaView,
     ScrollView,
     StatusBar,
@@ -41,7 +41,7 @@ type SectionProps = PropsWithChildren<{
 }>;
 
 function App(): JSX.Element {
-
+    LogBox.ignoreAllLogs();
     useEffect(() => {
         async function startDDBB() {
             await dataSource.initialize();

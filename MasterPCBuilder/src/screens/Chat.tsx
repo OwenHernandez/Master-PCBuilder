@@ -241,18 +241,30 @@ const Chat = (props: Props) => {
         <SafeAreaView style={{flex: 1}}>
             <View style={Styles.headerView}>
                 <TouchableOpacity onPress={() => navigation.navigate("OtherUserProfile", {userSelected})}>
-                    <Image
-                        source={{
-                            uri: (userSelected?.picture !== "") ? "data:image/jpeg;base64," + userSelected?.picture : "https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png?x=480&quality=40"
-                        }}
-                        style={{
-                            ...Styles.imageStyle,
-                            borderColor: (darkMode) ? "white" : "black",
-                            borderWidth: 1,
-                            width: getIconSize(110),
-                            height: getIconSize(110)
-                        }}
-                    />
+                    {
+                        (userSelected?.picture !== "") ?
+                            <Image
+                                source={{
+                                    uri: "data:image/jpeg;base64," + userSelected?.picture,
+                                    width: getIconSize(100),
+                                    height: getIconSize(100)
+                                }}
+                                style={{...Styles.imageStyle, borderColor: (darkMode) ? "white" : "black", borderWidth: 1}}
+                            />
+                            :
+                            <Image
+                                source={
+                                    require("../../img/defaultProfilePic.png")
+                                }
+                                style={{
+                                    ...Styles.imageStyle,
+                                    borderColor: (darkMode) ? "white" : "black",
+                                    borderWidth: 1,
+                                    width: getIconSize(110),
+                                    height: getIconSize(110)
+                                }}
+                            />
+                    }
                 </TouchableOpacity>
                 <Text style={{
                     ...Styles.headerText,

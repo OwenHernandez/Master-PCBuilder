@@ -187,29 +187,56 @@ const GroupChatDetails = (props: Props) => {
             <ScrollView style={{flex: 1}}>
                 <View style={{flex: 1}}>
                     <View style={{alignItems: 'center', flex: 1}}>
-                        <ImageBackground
-                            source={{
-                                uri: (groupTemp?.picture !== "") ? "data:image/jpeg;base64," + groupTemp?.picture : "https://www.tenniscall.com/images/chat.jpg"
-                            }}
-                            style={{...Styles.imageStyle, width: "100%", height: getIconSize(650)}}
-                        >
-                            <LinearGradient
-                                colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0)', '#3e423f', (darkMode) ? "#242121" : "#F5F5F5"]}
-                                style={{flex: 1, justifyContent: "flex-end", alignItems: "center"}}>
-                                <View style={{justifyContent: 'space-between'}}>
-                                    <Text style={{
-                                        fontSize: getFontSize(40),
-                                        color: (darkMode) ? "white" : "black",
-                                        textAlign: "center"
-                                    }}>{groupTemp?.name}</Text>
-                                    <Text style={{
-                                        fontSize: getFontSize(20),
-                                        color: (darkMode) ? "white" : "black",
-                                        textAlign: "center"
-                                    }}>{size} members</Text>
-                                </View>
-                            </LinearGradient>
-                        </ImageBackground>
+                        {
+                            (groupTemp?.picture !== "") ?
+                                <ImageBackground
+                                    source={{
+                                        uri: "data:image/jpeg;base64," + groupTemp?.picture
+                                    }}
+                                    style={{...Styles.imageStyle, width: "100%", height: getIconSize(650)}}
+                                >
+                                    <LinearGradient
+                                        colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0)', '#3e423f', (darkMode) ? "#242121" : "#F5F5F5"]}
+                                        style={{flex: 1, justifyContent: "flex-end", alignItems: "center"}}>
+                                        <View style={{justifyContent: 'space-between'}}>
+                                            <Text style={{
+                                                fontSize: getFontSize(40),
+                                                color: (darkMode) ? "white" : "black",
+                                                textAlign: "center"
+                                            }}>{groupTemp?.name}</Text>
+                                            <Text style={{
+                                                fontSize: getFontSize(20),
+                                                color: (darkMode) ? "white" : "black",
+                                                textAlign: "center"
+                                            }}>{size} members</Text>
+                                        </View>
+                                    </LinearGradient>
+                                </ImageBackground>
+                                :
+                                <ImageBackground
+                                    source={
+                                        require("../../img/defaultChatPic.jpg")
+                                    }
+                                    style={{...Styles.imageStyle, width: "100%", height: getIconSize(650)}}
+                                >
+                                    <LinearGradient
+                                        colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0)', '#3e423f', (darkMode) ? "#242121" : "#F5F5F5"]}
+                                        style={{flex: 1, justifyContent: "flex-end", alignItems: "center"}}>
+                                        <View style={{justifyContent: 'space-between'}}>
+                                            <Text style={{
+                                                fontSize: getFontSize(40),
+                                                color: (darkMode) ? "white" : "black",
+                                                textAlign: "center"
+                                            }}>{groupTemp?.name}</Text>
+                                            <Text style={{
+                                                fontSize: getFontSize(20),
+                                                color: (darkMode) ? "white" : "black",
+                                                textAlign: "center"
+                                            }}>{size} members</Text>
+                                        </View>
+                                    </LinearGradient>
+                                </ImageBackground>
+                        }
                     </View>
                     <View style={{margin: "5%", alignItems: "center"}}>
                         <Text style={{

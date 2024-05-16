@@ -139,18 +139,24 @@ const GroupList = (props: Props) => {
                                                   }}>
                                     <TouchableOpacity
                                         onPress={() => navigation.navigate("GroupChatDetails", {groupSelected: group.item})}>
-                                        <Image
-                                            source={{
-                                                uri: (group.item.picture !== "") ? "data:image/jpeg;base64," + group.item.picture : "https://www.tenniscall.com/images/chat.jpg",
-                                            }}
-                                            style={{
-                                                ...Styles.imageStyle,
-                                                borderColor: (darkMode) ? "white" : "black",
-                                                borderWidth: 1,
-                                                width: getIconSize(110),
-                                                height: getIconSize(110)
-                                            }}
-                                        />
+                                        {
+                                            (group.item.picture !== "") ?
+                                                <Image
+                                                    source={{
+                                                        uri: "data:image/jpeg;base64," + group.item.picture,
+                                                        width: getIconSize(100),
+                                                        height: getIconSize(100)
+                                                    }}
+                                                    style={{...Styles.imageStyle, borderColor: (darkMode) ? "white" : "black", borderWidth: 1}}
+                                                />
+                                                :
+                                                <Image
+                                                    source={
+                                                        require("../../img/defaultChatPic.jpg")
+                                                    }
+                                                    style={{...Styles.imageStyle, borderColor: (darkMode) ? "white" : "black", borderWidth: 1, width: getIconSize(110), height: getIconSize(110)}}
+                                                />
+                                        }
                                     </TouchableOpacity>
                                     <Text style={{
                                         color: (darkMode) ? "white" : "black",
