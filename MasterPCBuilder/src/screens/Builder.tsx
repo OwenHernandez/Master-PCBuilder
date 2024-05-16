@@ -30,6 +30,9 @@ import RNFetchBlob from "rn-fetch-blob";
 import {Dropdown} from "react-native-element-dropdown";
 import {BuildRepository, ComponentRepository} from "../data/Database";
 import IPriceHistoryType from "../interfaces/IPriceHistoryType";
+import {ComponentDTO} from "../data/dtos/ComponentDTO";
+import {transformBuildDTOToEntity} from "../data/transformers/BuildTransformer";
+import {transformComponentDTOToEntity, transformComponentToDTO} from "../data/transformers/ComponentTransformer";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Builder'>;
 
@@ -48,7 +51,7 @@ const Builder = (props: Props) => {
     const [buildUpt, setBuildUpt] = useState({} as IBuildType);
     const [buildsTemp, setBuildsTemp] = useState({} as IBuildType[]);
     const [modalCompType, setModalCompType] = useState("");
-    const [components, setComponents] = useState([{}] as IComponentType[]);
+    const [components, setComponents] = useState([{}] as any[]);
     const [totalPrice, setTotalPrice] = useState(0);
     const [modalVisible, setModalVisible] = useState(false);
     const [modalMainVisible, setModalMainVisible] = useState(false);
@@ -56,7 +59,7 @@ const Builder = (props: Props) => {
     const [mainVisible, setMainVisible] = useState(false);
     const [periVisible, setPeriVisible] = useState(false);
     const [componentsSelected, setComponentsSelected] = useState([] as IBuildComponentType[]);
-    const [compByType, setCompByType] = useState([{}] as IComponentType[]);
+    const [compByType, setCompByType] = useState([{}] as any[]);
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState("Gaming");
 
@@ -132,7 +135,7 @@ const Builder = (props: Props) => {
 
     const toggleModal = (modalType: string) => {
         setModalCompType(modalType);
-        setCompByType(components.filter(comp => comp.type === modalType));
+        setCompByType(components.filter(comp => comp.type === modalType && !comp.deleted));
         setModalVisible(!modalVisible);
     };
     const toggleModalMainCategories = () => {
@@ -178,9 +181,9 @@ const Builder = (props: Props) => {
             priceAtTheTime: comp.price,
             component: comp
         };
-        if (buildTemp !== undefined && buildTemp !== null) {
+        if (buildTemp !== undefined && buildTemp !== null && buildTemp.buildsComponents !== null && buildTemp.buildsComponents !== undefined) {
             let prevBuildComp = buildTemp.buildsComponents;
-
+            console.warn(prevBuildComp)
             setBuildTemp((prevBuild) => ({...prevBuild, buildsComponents: [...prevBuildComp, newBuildComp]}));
         } else {
             setBuildTemp((prevBuild) => ({...prevBuild, buildsComponents: [newBuildComp]}));
@@ -194,6 +197,12 @@ const Builder = (props: Props) => {
         try {
             const getComp = await axios.get(Globals.IP_HTTP + "/api/v2/components", {headers: {"Authorization": "Bearer " + token}});
             for (const comp of getComp.data) {
+                try {
+                    let newComp = await transformComponentDTOToEntity(comp);
+                    await ComponentRepository.save(newComp);
+                } catch (error) {
+                    console.log("Error while trying to save components: " + error);
+                }
                 const compImgResponse = await RNFetchBlob.fetch(
                     'GET',
                     Globals.IP_HTTP + '/api/v2/components/img/' + comp.id + '/' + comp.image,
@@ -212,47 +221,13 @@ const Builder = (props: Props) => {
                 });
                 setComponents(prevComps => [...prevComps, comp]);
             }
-
-            let compsOffline =await ComponentRepository.find();
-            let compsNotInserted = getComp.data.filter(onlineComp => {
-                    return !compsOffline.some(offlineComp => offlineComp.id === onlineComp.id);
-                }
-            );
-            for(const comp of compsNotInserted){
-                let insertResult = await ComponentRepository.insert(comp);
-                console.log(insertResult);
-            }
         }catch (error){
+            console.error("Error while trying to get components: " + error);
             let compsOffline = await ComponentRepository.find();
             for (const comp of compsOffline) {
-                let pricehistories:IPriceHistoryType[] =[];
-                comp.priceHistories.map((priceHistory) => {
-                    pricehistories.push({
-                        amazonPrice: priceHistory.amazonPrice,
-                        ebayPrice: priceHistory.ebayPrice,
-                        id: priceHistory.id,
-                        date: priceHistory.date.toString(),
-                        price: priceHistory.price
-                    });
-                });
-                let newComp:IComponentType = {
-                    id: comp.id,
-                    name: comp.name,
-                    type: comp.type,
-                    price: comp.price,
-                    image: comp.image,
-                    wished: false,
-                    amazon_price: comp.amazonPrice,
-                    ebay_price: comp.ebayPrice,
-                    description: comp.description,
-                    sellerName: comp.seller.name,
-                    userNick: comp.user.nick,
-                    priceHistory: pricehistories,
-                    deleted: comp.deleted
-                }
-                setComponents([...components, newComp]);
+                let newComp = transformComponentToDTO(comp);
+                setComponents(prevComps => [...prevComps, newComp]);
             }
-            console.log(components)
         }
 
     }
@@ -284,7 +259,8 @@ const Builder = (props: Props) => {
                 {headers: {"Authorization": "Bearer " + token}}
             );
             if (response.status === 200) {
-                await BuildRepository.insert(response.data);
+                let newBuild = await transformBuildDTOToEntity(response.data);
+                await BuildRepository.save(newBuild);
                 setBuildsTemp(undefined);
                 navigation.navigate("UserBuildsList");
             } else {
@@ -317,7 +293,8 @@ const Builder = (props: Props) => {
                 buildsComponents: componentsSelected,
                 deleted: false
             };
-            await BuildRepository.update(buildTemp.id,updateBuild);
+            let newBuild = await transformBuildDTOToEntity(response.data);
+            await BuildRepository.save(newBuild);
             setBuildsTemp(undefined);
             navigation.navigate("UserBuildsList");
         } else {
@@ -751,7 +728,8 @@ const Builder = (props: Props) => {
                                     numColumns={2}
                                     contentContainerStyle={{marginHorizontal: "2%"}}
                                     renderItem={(comp) => {
-                                        if (comp.item.type === modalCompType && !comp.item.deleted) {
+                                        console.log(comp.item.name);
+                                        if (comp.item !== undefined && comp.item !== null && comp.item.type === modalCompType && !comp.item.deleted) {
                                             return (
                                                 <TouchableOpacity style={{
                                                     ...Styles.touchable,

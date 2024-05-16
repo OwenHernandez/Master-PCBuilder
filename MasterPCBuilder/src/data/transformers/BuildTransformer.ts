@@ -30,6 +30,7 @@ export async function transformBuildDTOToEntity(dto: BuildDTO) {
     let newUser: Users;
     UserRepository.findOneBy({nick: dto.userNick}).then(user => newUser = user);
     build.user = newUser;
+    build.buildsComponents = [];
     if (dto.buildsComponents) {
         dto.buildsComponents.map(async buildComponent => {
             build.buildsComponents.push(await transformBuildComponentDTOToEntity(buildComponent));
