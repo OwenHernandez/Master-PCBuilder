@@ -94,7 +94,8 @@ const ComponentsList = (props: Props) => {
                     description: comp.description,
                     sellerName: comp.seller.name,
                     userNick: comp.user.nick,
-                    priceHistory: pricehistories
+                    priceHistory: pricehistories,
+                    deleted: comp.deleted
                 }
                 auxCompsOffline.push(newComp);
             }

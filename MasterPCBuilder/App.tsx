@@ -32,6 +32,8 @@ import StackNavigator from './src/navigations/StackNavigator';
 import PrimaryContextProvider, {PrimaryContext} from './src/contexts/PrimaryContext';
 import DrawerNavigator from './src/navigations/DrawerNavigator';
 import {MenuProvider} from "react-native-popup-menu";
+import {dataSource} from "./src/data/Database";
+import {getConnection} from "typeorm";
 
 
 type SectionProps = PropsWithChildren<{
@@ -39,6 +41,15 @@ type SectionProps = PropsWithChildren<{
 }>;
 
 function App(): JSX.Element {
+
+    useEffect(() => {
+        async function startDDBB() {
+            await dataSource.initialize();
+            //await dataSource.dropDatabase();
+        }
+        startDDBB();
+    }, []);
+
     return (
         <MenuProvider>
             <NavigationContainer>

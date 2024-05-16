@@ -73,7 +73,8 @@ const ComponentScreen = (props: Props) => {
                 description: comp.description,
                 sellerName: comp.sellerName,
                 userNick: comp.userNick,
-                priceHistory: comp.priceHistory
+                priceHistory: comp.priceHistory,
+                deleted: comp.deleted
             }
             await ComponentRepository.update(component?.id, newComp);
             Toast.show({
@@ -113,16 +114,18 @@ const ComponentScreen = (props: Props) => {
         let auxPrecios = [];
         let auxPreciosAmazon = [];
         let auxPreciosEbay = [];
+        if (comp.priceHistory) {
+            comp.priceHistory.map((comp) => {
+                let date = new Date(comp.date);
+                let month = date.toLocaleString('default', {day: "numeric", month: 'numeric'})
 
-        comp.priceHistory.map((comp) => {
-            let date = new Date(comp.date);
-            let month = date.toLocaleString('default', {day: "numeric", month: 'numeric'})
+                auxMeses.push(month);
+                auxPrecios.push(comp.price);
+                auxPreciosAmazon.push(comp.amazonPrice);
+                auxPreciosEbay.push(comp.ebayPrice);
+            });
+        }
 
-            auxMeses.push(month);
-            auxPrecios.push(comp.price);
-            auxPreciosAmazon.push(comp.amazonPrice);
-            auxPreciosEbay.push(comp.ebayPrice);
-        });
         setMeses(auxMeses);
         setPrecios(auxPrecios);
         setPreciosAmazon(auxPreciosAmazon);

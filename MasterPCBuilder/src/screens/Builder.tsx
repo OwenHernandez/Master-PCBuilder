@@ -247,7 +247,8 @@ const Builder = (props: Props) => {
                     description: comp.description,
                     sellerName: comp.seller.name,
                     userNick: comp.user.nick,
-                    priceHistory: pricehistories
+                    priceHistory: pricehistories,
+                    deleted: comp.deleted
                 }
                 setComponents([...components, newComp]);
             }
@@ -313,7 +314,9 @@ const Builder = (props: Props) => {
                 name: buildTemp.name,
                 notes: buildTemp.notes,
                 category: buildTemp.category,
-                buildsComponents: componentsSelected};
+                buildsComponents: componentsSelected,
+                deleted: false
+            };
             await BuildRepository.update(buildTemp.id,updateBuild);
             setBuildsTemp(undefined);
             navigation.navigate("UserBuildsList");
