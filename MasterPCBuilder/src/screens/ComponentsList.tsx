@@ -20,6 +20,8 @@ import Component from "../components/Component";
 import RNFetchBlob from "rn-fetch-blob";
 import {ComponentRepository} from "../data/Database";
 import IPriceHistoryType from "../interfaces/IPriceHistoryType";
+import {ComponentDTO} from "../data/dtos/ComponentDTO";
+import {transformComponentDTOToEntity, transformComponentToDTO} from "../data/transformers/ComponentTransformer";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Components List'>;
 
@@ -31,8 +33,8 @@ const ComponentsList = (props: Props) => {
     const getFontSize = (size: number) => size / fontScale;
     const fullScreen = Dimensions.get("window").scale;
     const getIconSize = (size: number) => size / fullScreen;
-    const [componentsList, setComponentsList] = useState<Array<IComponentType>>([]);
-    const [componentsByName, setComponentsByName] = useState<Array<IComponentType>>([]);
+    const [componentsList, setComponentsList] = useState<Array<any>>([]);
+    const [componentsByName, setComponentsByName] = useState<Array<any>>([]);
 
     useEffect(() => {
         setComponentsList([]);
@@ -45,6 +47,12 @@ const ComponentsList = (props: Props) => {
         try {
             const getCompsResponse = await axios.get(Globals.IP_HTTP + "/api/v2/components", {headers: {"Authorization": "Bearer " + token}});
             for (let comp of getCompsResponse.data) {
+                try {
+                    let newComp = await transformComponentDTOToEntity(comp);
+                    await ComponentRepository.save(newComp);
+                } catch (e) {
+                    console.log("Error while trying to save component: " + e);
+                }
                 const getImgResponse = await RNFetchBlob.fetch(
                     'GET',
                     Globals.IP_HTTP + '/api/v2/components/img/' + comp.id + '/' + comp.image,
@@ -59,49 +67,14 @@ const ComponentsList = (props: Props) => {
             }
             setComponentsByName(auxComps);
             setComponentsList(auxComps);
-            let compsOffline =await ComponentRepository.find();
-            let compsNotInserted = getCompsResponse.data.filter(onlineComp => {
-                    return !compsOffline.some(offlineComp => offlineComp.id === onlineComp.id);
-                }
-            );
-            for(const comp of compsNotInserted){
-                let insertResult = await ComponentRepository.insert(comp);
-            }
         } catch (e) {
             console.log(e);
-            let auxCompsOffline:Array<IComponentType>=[];
             let compsOffline = await ComponentRepository.find();
             for (const comp of compsOffline) {
-                let pricehistories:IPriceHistoryType[] =[];
-                comp.priceHistories.map((priceHistory) => {
-                    pricehistories.push({
-                        amazonPrice: priceHistory.amazonPrice,
-                        ebayPrice: priceHistory.ebayPrice,
-                        id: priceHistory.id,
-                        date: priceHistory.date.toString(),
-                        price: priceHistory.price
-                    });
-                });
-                let newComp:IComponentType = {
-                    id: comp.id,
-                    name: comp.name,
-                    type: comp.type,
-                    price: comp.price,
-                    image: comp.image,
-                    wished: false,
-                    amazon_price: comp.amazonPrice,
-                    ebay_price: comp.ebayPrice,
-                    description: comp.description,
-                    sellerName: comp.seller.name,
-                    userNick: comp.user.nick,
-                    priceHistory: pricehistories,
-                    deleted: comp.deleted
-                }
-                auxCompsOffline.push(newComp);
+                let newComp = transformComponentToDTO(comp);
+                setComponentsList( prevComps => [...prevComps, newComp]);
+                setComponentsByName( prevComps => [...prevComps, newComp]);
             }
-            setComponentsByName(auxCompsOffline);
-            setComponentsList(auxCompsOffline);
-            console.log(auxCompsOffline)
         }
     }
 

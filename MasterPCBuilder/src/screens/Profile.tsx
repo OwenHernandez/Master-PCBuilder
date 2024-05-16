@@ -16,13 +16,8 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { usePrimaryContext } from '../contexts/PrimaryContext';
 import useLogout from '../hooks/useLogout';
 import { Styles } from '../themes/Styles';
-import Octicon from 'react-native-vector-icons/Octicons';
-import { DrawerActions } from '@react-navigation/native';
-import axios from "axios";
-import {Globals} from "../components/Globals";
 import HeaderScreen from "../components/HeaderScreen";
 import LinearGradient from 'react-native-linear-gradient';
-import {FAB} from "react-native-elements";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Profile'>;
 

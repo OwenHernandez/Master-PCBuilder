@@ -49,10 +49,9 @@ const Social = (props: Props) => {
             for (const post of response.data) {
                 try {
                     let newPost = await transformPostDTOToEntity(post);
-                    let save = await PostRepository.save(newPost);
-                    console.log("Post guardado: ", save);
+                    await PostRepository.save(newPost);
                 } catch (error) {
-                    console.log("Error al guardar el post:", error.message);
+                    console.log("Error while trying to save post: ", error.message);
                 }
                 const getPostFile = await RNFetchBlob.fetch(
                     'GET',
