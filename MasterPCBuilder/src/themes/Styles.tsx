@@ -21,7 +21,6 @@ export const Styles = StyleSheet.create({
     },
     touchable: {
         margin: "5%",
-        
         borderWidth: 2,
         borderColor: "#ca2613",
         padding: "3%"
@@ -32,8 +31,9 @@ export const Styles = StyleSheet.create({
     modalContainer: {
         flex: 1,
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        marginTop: "40%",
-        borderWidth: 2
+        marginTop: "45%",
+        borderTopWidth: 2,
+        borderColor: "#ca2613"
     },
     loadingContainer: {
         position: 'absolute', // Posicionamiento absoluto

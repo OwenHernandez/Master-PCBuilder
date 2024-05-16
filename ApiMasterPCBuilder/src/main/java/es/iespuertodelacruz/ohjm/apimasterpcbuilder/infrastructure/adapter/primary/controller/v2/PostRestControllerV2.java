@@ -87,7 +87,7 @@ public class PostRestControllerV2 {
                     }
                     String codedPicture = inputDTO.getImage64();
                     byte[] photoBytes = Base64.getDecoder().decode(codedPicture);
-                    String newFileName = storageService.save(byNick.getNick() + "_" + inputDTO.getImage(), photoBytes);
+                    String newFileName = storageService.save(inputDTO.getTitle() + "_" + inputDTO.getImage(), photoBytes);
                     post.setImage(newFileName);
                     post.setBuild(build);
                     Post save = service.save(post);
@@ -215,6 +215,14 @@ public class PostRestControllerV2 {
                                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("That is not your build");
                             }
                             post.setBuild(build);
+                            if (postInputDTO.getImage().isEmpty()) {
+                                String codedPicture = postInputDTO.getImage64();
+                                byte[] photoBytes = Base64.getDecoder().decode(codedPicture);
+                                String newFileName = storageService.save(postInputDTO.getTitle() + "_" + postInputDTO.getImage(), photoBytes);
+                                post.setImage(newFileName);
+                            } else {
+                                post.setImage(postById.getImage());
+                            }
                             boolean ok = service.update(post);
 
                             if (ok) {

@@ -7,7 +7,7 @@ import {
     Dimensions,
     TextInput,
     Alert,
-    ScrollView, KeyboardAvoidingView, Platform
+    ScrollView, KeyboardAvoidingView, Platform, Image
 } from 'react-native'
 import React, {useEffect, useState} from 'react'
 import {usePrimaryContext} from '../contexts/PrimaryContext';
@@ -200,7 +200,7 @@ const CreateComponent = (props: Props) => {
                                             flex:1,
                                             borderWidth: 2,
                                             borderColor: "#ca2613",
-                                            paddingHorizontal: 5,
+                                            paddingHorizontal: "10%",
                                             width: "100%",
                                             fontSize: getFontSize(20),
                                             color: (darkMode) ? "white" : "black",
@@ -208,6 +208,9 @@ const CreateComponent = (props: Props) => {
                                             marginBottom: "5%",
                                             marginTop:"5%",
                                         }}
+                                        numberOfLines={5}
+                                        multiline={true}
+                                        maxLength={100}
                                         placeholderTextColor={"#a3a3a3"}
                                         onChangeText={(text) => setName(text)}
                                     ></TextInput>
@@ -218,7 +221,7 @@ const CreateComponent = (props: Props) => {
                                             flex:4,
                                             borderWidth: 2,
                                             borderColor: "#ca2613",
-                                            paddingHorizontal: 5,
+                                            paddingHorizontal: "10%",
                                             width: "100%",
                                             fontSize: getFontSize(15),
                                             color: (darkMode) ? "white" : "black",
@@ -226,8 +229,9 @@ const CreateComponent = (props: Props) => {
                                             marginBottom: "5%",
                                         }}
                                         placeholderTextColor={"#a3a3a3"}
-                                        numberOfLines={3}
+                                        numberOfLines={5}
                                         multiline={true}
+                                        maxLength={100}
                                         onChangeText={(text) => setDescription(text)}
                                     ></TextInput>
                                     <TextInput
@@ -342,20 +346,25 @@ const CreateComponent = (props: Props) => {
                                         textAlign: 'center'
                                     }}
                                 />
-                                <View style={{justifyContent:"flex-end"}}>
-                                    <TouchableOpacity style={{
-                                        flex:1,
-                                        borderWidth: 2,
-                                        borderColor: "#ca2613",
-                                        width: "100%",
-                                        marginBottom: "5%",
-                                        padding:"5%"
-                                    }} onPress={openGallery}>
-                                        <Text style={{
-                                            fontSize: getFontSize(20),
-                                            textAlign: 'center',
-                                            color: (darkMode) ? "white" : "black"
-                                        }}>{(image === "") ? "Select a picture for the component" : image}</Text>
+                                <View style={{flex: 1, marginBottom: "4.5%"}}>
+                                    <TouchableOpacity style={{borderWidth: 2,borderColor: "#ca2613", height: "100%",justifyContent:"center", alignItems: "center"}} onPress={openGallery}>
+                                        {
+                                            (image64 !== "") ?
+                                                <Image
+                                                    source={{
+                                                        uri: "data:image/jpeg;base64," + image64,
+                                                        width: getIconSize(400),
+                                                        height: getIconSize(400)
+                                                    }}
+                                                    style={{ ...Styles.imageStyle, borderColor: (darkMode) ? "white" : "black", borderWidth: 1, borderRadius: 10 }}
+                                                />
+                                                :
+                                                <Text style={{
+                                                    fontSize: getFontSize(20),
+                                                    textAlign: 'center',
+                                                    color: (darkMode) ? "white" : "black"
+                                                }}>Select a picture for the Post</Text>
+                                        }
                                     </TouchableOpacity>
                                 </View>
 

@@ -1,4 +1,4 @@
-import {View, Text, Image} from 'react-native'
+import {View, Text, Image, PixelRatio, Dimensions} from 'react-native'
 import React from 'react'
 import { DrawerContentComponentProps, DrawerContentScrollView, DrawerItem, createDrawerNavigator } from '@react-navigation/drawer';
 import StackNavigator from './StackNavigator';
@@ -12,6 +12,7 @@ import FriendsTabs from './FriendsTabs';
 import IBuildType from '../interfaces/IBuildType';
 import Icon from "react-native-vector-icons/Octicons";
 import ComponentsTabs from "./ComponentsTabs";
+import Ionicon from "react-native-vector-icons/Ionicons";
 
 type Props = {}
 
@@ -29,6 +30,10 @@ const Drawer = createDrawerNavigator();
 
 const DrawerNavigator = (props: Props) => {
     const {darkMode} = usePrimaryContext();
+    const fontScale = PixelRatio.getFontScale();
+    const getFontSize = (size: number) => size / fontScale;
+    const fullScreen = Dimensions.get("window").scale;
+    const getIconSize = (size: number) => size / fullScreen;
 
     return (
         <Drawer.Navigator
@@ -68,37 +73,37 @@ const DrawerNavigator = (props: Props) => {
                         <View style={{flex:1}}>
                             <DrawerItem
                                 labelStyle={{color: (darkMode) ? "white" : "black"}}
-                                icon={() => <Icon name="device-desktop" color={darkMode ? 'white' : 'black'} />}
+                                icon={() => <Icon name="device-desktop" color={darkMode ? 'white' : 'black'} size={getIconSize(45)} />}
                                 label="Social"
                                 onPress={() => navigation.navigate("Social")}
                             />
                             <DrawerItem
                                 labelStyle={{color: (darkMode) ? "white" : "black"}}
-                                icon={() => <Icon name="gear" color={darkMode ? 'white' : 'black'} />}
+                                icon={() => <Ionicon name="hardware-chip-outline" color={darkMode ? 'white' : 'black'} size={getIconSize(45)} />}
                                 label="Components"
                                 onPress={() => navigation.navigate("Components")}
                             />
                             <DrawerItem
                                 labelStyle={{color: (darkMode) ? "white" : "black"}}
-                                icon={() => <Icon name="person" color={darkMode ? 'white' : 'black'} />}
+                                icon={() => <Icon name="person" color={darkMode ? 'white' : 'black'} size={getIconSize(45)} />}
                                 label="Friends"
                                 onPress={() => navigation.navigate("Friends")}
                             />
                             <DrawerItem
                                 labelStyle={{color: (darkMode) ? "white" : "black"}}
-                                icon={() => <Icon name="codespaces" color={darkMode ? 'white' : 'black'} />}
+                                icon={() => <Icon name="codespaces" color={darkMode ? 'white' : 'black'} size={getIconSize(45)} />}
                                 label="Builder"
                                 onPress={() => navigation.navigate("Builder")}
                             />
                             <DrawerItem
                                 labelStyle={{color: (darkMode) ? "white" : "black"}}
-                                icon={() => <Icon name="home" color={darkMode ? 'white' : 'black'} />}
+                                icon={() => <Icon name="home" color={darkMode ? 'white' : 'black'} size={getIconSize(45)} />}
                                 label="Profile"
                                 onPress={() => navigation.navigate("Profile")}
                             />
                             <DrawerItem
                                 labelStyle={{color: (darkMode) ? "white" : "black"}}
-                                icon={() => <Icon name="gear" color={darkMode ? 'white' : 'black'} />}
+                                icon={() => <Icon name="gear" color={darkMode ? 'white' : 'black'} size={getIconSize(45)} />}
                                 label="Settings"
                                 onPress={() => navigation.navigate("Settings")}
                             />
@@ -106,7 +111,7 @@ const DrawerNavigator = (props: Props) => {
                     <View style={{flex: 1, justifyContent: 'flex-end'}}>
                         <DrawerItem
                             labelStyle={{color: (darkMode) ? "white" : "black"}}
-                            icon={() => <Icon name="sign-out" color={darkMode ? 'white' : 'black'}/>}
+                            icon={() => <Icon name="sign-out" color={darkMode ? 'white' : 'black'} size={getIconSize(45)} />}
                             label="Logout"
                             onPress={() => navigation.navigate("Login")}
                         />

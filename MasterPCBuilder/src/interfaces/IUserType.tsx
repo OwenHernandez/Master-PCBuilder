@@ -8,4 +8,5 @@ export default interface IUserType {
     friends: IUserType[];
     blockedUsers: IUserType[];
     componentsWanted: IComponentType[];
+    deleted: boolean;
 }

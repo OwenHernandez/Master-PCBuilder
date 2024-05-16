@@ -9,7 +9,7 @@ import {
     PixelRatio,
     Dimensions,
     TextInput,
-    ScrollView
+    ScrollView, Alert
 } from 'react-native';
 import React, {useEffect, useState} from 'react'
 import {Styles} from '../themes/Styles';
@@ -67,11 +67,15 @@ const Builder = (props: Props) => {
 
     useEffect(() => {
         if (build !== null) {
-            setBuildTemp(build);
             if (build !== undefined && build.buildsComponents !== null) {
-                setBuildUpt(build);
-
-                setTotalPrice(build.totalPrice);
+                let totalPrice = 0;
+                build.buildsComponents.some((buildComp) => buildComp.component.deleted === true) && Alert.alert("Some components have been deleted");
+                build.buildsComponents = build.buildsComponents.filter((buildComp) => buildComp.component.deleted === false);
+                build.buildsComponents.forEach((buildComp) => {
+                    totalPrice += buildComp.component.price;
+                });
+                setTotalPrice(totalPrice);
+                setBuild();
             } else {
                 setBuildUpt(undefined);
             }
@@ -84,6 +88,31 @@ const Builder = (props: Props) => {
         getComponents();
         getCategories();
     }, [build]);
+
+    async function setBuild() {
+        let buildAux = build;
+
+        for (const buildComp of buildAux.buildsComponents) {
+            const compImgResponse = await RNFetchBlob.fetch(
+                'GET',
+                Globals.IP_HTTP + '/api/v2/components/img/' + buildComp.component.id + '/' + buildComp.component.image,
+                {Authorization: `Bearer ${token}`}
+            );
+            let picture = ""
+            if (compImgResponse.data !== Globals.IMG_NOT_FOUND) {
+                picture = await compImgResponse.base64();
+            }
+            buildComp.component.image = picture;
+            buildComp.component.wished = false;
+            user.componentsWanted.forEach((compWished) => {
+                if (compWished.id === buildComp.component.id) {
+                    buildComp.component.wished = true;
+                }
+            });
+        }
+        setBuildUpt(buildAux);
+        setBuildTemp(buildAux);
+    }
 
     function getCategories() {
         setCategories([
@@ -239,14 +268,9 @@ const Builder = (props: Props) => {
             category: selectedCategory,
             buildsComponents: componentsSelected,
             totalPrice: totalPrice,
-            userNick: user.nick
+            userNick: user.nick,
+            deleted: false
         }
-        console.log({
-            name: buildTemp.name,
-            notes: buildTemp.notes ?? null,
-            componentsIds: compIdArray,
-            category: selectedCategory
-        })
         try {
             const response = await axios.post(
                 Globals.IP_HTTP + "/api/v2/builds",
@@ -610,7 +634,6 @@ const Builder = (props: Props) => {
                             style={{
                                 borderWidth: 2,
                                 borderColor: "#ca2613",
-
                                 paddingLeft: 20,
                                 width: "100%",
                                 fontSize: getFontSize(20),
@@ -671,31 +694,29 @@ const Builder = (props: Props) => {
                         />
                     </View>
                     <View style={{backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"}}>
+                        <Text style={{
+                            color: (darkMode) ? "white" : "black",
+                            marginHorizontal: "5%",
+                            fontSize: getFontSize(20),
+                            textAlign: "center"
+                        }}>Selected components (touch any to remove it from build)</Text>
                         {
                             (buildTemp !== null && buildTemp !== undefined) &&
                             <FlatList numColumns={2} data={buildTemp.buildsComponents}
                                       contentContainerStyle={{alignItems: "center", width: "100%"}}
                                       renderItem={(buildComp) => {
-                                          return <TouchableOpacity
-                                              style={{...Styles.touchable, width: getIconSize(450), height: getIconSize(600), margin: "2%"}}>
-                                              {
-                                                  buildComp.item !== null &&
-                                                  <TouchableOpacity
-                                                      style={{
-                                                          ...Styles.touchable,
-                                                          width: getIconSize(450),
-                                                          height: getIconSize(600),
-                                                          margin: "5%",
-                                                          justifyContent: "center",
-                                                          alignItems: "center"
-                                                      }}
-                                                      onPress={() => removeFromBuild(buildComp.item.component)}>
-                                                      <Material name='close-box' size={getIconSize(100)}
-                                                                color={(darkMode) ? "white" : "black"}></Material>
-                                                      <Component comp={buildComp.item.component}/>
-                                                  </TouchableOpacity>
-                                              }
-                                          </TouchableOpacity>
+                                              return <TouchableOpacity
+                                                  style={{
+                                                      ...Styles.touchable,
+                                                      width: getIconSize(450),
+                                                      height: getIconSize(500),
+                                                      justifyContent: "center",
+                                                      alignItems: "center"
+                                                  }}
+                                                  onPress={() => removeFromBuild(buildComp.item.component)}
+                                              >
+                                                  <Component comp={buildComp.item.component}/>
+                                              </TouchableOpacity>
                                       }}
                             />
                         }
@@ -727,9 +748,13 @@ const Builder = (props: Props) => {
                                     numColumns={2}
                                     contentContainerStyle={{marginHorizontal: "2%"}}
                                     renderItem={(comp) => {
-                                        if (comp.item.type === modalCompType) {
+                                        if (comp.item.type === modalCompType && !comp.item.deleted) {
                                             return (
-                                                <TouchableOpacity style={{...Styles.touchable, width: getIconSize(450)}} onPress={() => {
+                                                <TouchableOpacity style={{
+                                                    ...Styles.touchable,
+                                                    width: getIconSize(450),
+                                                    height: getIconSize(500)
+                                                }} onPress={() => {
                                                     let newBuildComp: IBuildComponentType = {
                                                         dateCreated: new Date().toISOString().slice(0, 10),
                                                         priceAtTheTime: comp.item.price,

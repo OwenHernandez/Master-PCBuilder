@@ -107,7 +107,7 @@ const ComponentsList = (props: Props) => {
     return (
         <View style={{flex:1,backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"}}>
             <HeaderScreen name={"Components List"} navigation={navigation} profile={false} drawer={true}/>
-            <View style={{height: "89%"}}>
+            <View style={{height: "95%"}}>
                 <View style={{
                     flexDirection: "row",
                     justifyContent: "space-around",

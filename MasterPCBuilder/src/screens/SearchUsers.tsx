@@ -112,34 +112,37 @@ const SearchUsers = (props: Props) => {
                 <FlatList
                     data={usersByNick}
                     renderItem={(u) => {
-                        return (
-                            <TouchableOpacity onPress={() => navigation.navigate("OtherUserProfile", {userSelected: u.item})}
-                                              style={{
-                                                  ...Styles.touchable,
-                                                  flexDirection: "row",
-                                                  alignItems: "center",
-                                                  margin: "5%",
-                                                  opacity: (!isBlocked(u.item)) ? 1 : 0.5
-                                              }}>
-                                <Image
-                                    source={{
-                                        uri: (u.item.picture !== "") ? "data:image/jpeg;base64," + u.item.picture : "https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png?x=480&quality=40",
-                                    }}
+                        if (!u.item.deleted) {
+                            return (
+                                <TouchableOpacity
+                                    onPress={() => navigation.navigate("OtherUserProfile", {userSelected: u.item})}
                                     style={{
-                                        ...Styles.imageStyle,
-                                        borderColor: (darkMode) ? "white" : "black",
-                                        borderWidth: 1,
-                                        width: getIconSize(110),
-                                        height: getIconSize(110)
-                                    }}
-                                />
-                                <Text style={{
-                                    color: (darkMode) ? "white" : "black",
-                                    marginLeft: "5%",
-                                    marginRight: "13%"
-                                }}>{u.item.nick}</Text>
-                            </TouchableOpacity>
-                        )
+                                        ...Styles.touchable,
+                                        flexDirection: "row",
+                                        alignItems: "center",
+                                        margin: "5%",
+                                        opacity: (!isBlocked(u.item)) ? 1 : 0.5
+                                    }}>
+                                    <Image
+                                        source={{
+                                            uri: (u.item.picture !== "") ? "data:image/jpeg;base64," + u.item.picture : "https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png?x=480&quality=40",
+                                        }}
+                                        style={{
+                                            ...Styles.imageStyle,
+                                            borderColor: (darkMode) ? "white" : "black",
+                                            borderWidth: 1,
+                                            width: getIconSize(110),
+                                            height: getIconSize(110)
+                                        }}
+                                    />
+                                    <Text style={{
+                                        color: (darkMode) ? "white" : "black",
+                                        marginLeft: "5%",
+                                        marginRight: "13%"
+                                    }}>{u.item.nick}</Text>
+                                </TouchableOpacity>
+                            )
+                        }
                     }}
                     keyExtractor={(comp, index) => index + ""}
                 />
