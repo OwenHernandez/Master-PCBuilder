@@ -8,15 +8,16 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-
     services:
       mongo:
         image: mongo:latest
         ports:
           - 27017:27017
+        options: > 
+          --health-cmd="mongo --eval 'db.runCommand(\"ping\").ok'" 
+          --health-interval=10s 
+          --health-timeout=5s 
+          --health-retries=5
 
     steps:
     - uses: actions/checkout@v3
@@ -29,8 +30,8 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
-        server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
-        settings-path: ${{ github.workspace }}/ApiMasterPCBuilder # location for the settings.xml file
+        server-id: github
+        settings-path: ${{ github.workspace }}/ApiMasterPCBuilder
 
     - name: Cache Maven packages
       uses: actions/cache@v2
