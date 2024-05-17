@@ -156,183 +156,210 @@ const EditComponent = (props: Props) => {
     return (
         <SafeAreaView style={{flex: 1, backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"}}>
             <HeaderScreen name={route.name} navigation={navigation} profile={false} drawer={true}/>
-            <ScrollView>
-                <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-                    <View style={{
-                        padding: "5%",
-                        borderRadius: 20,
-                        alignItems: "center",
-                        marginHorizontal: "10%",
-                        marginBottom: "2%"
-                    }}>
-                        <TextInput
-                            placeholder='Name'
-                            defaultValue={name}
-                            style={{
-                                borderWidth: 2,
-                                borderColor: "#ca2613",
-                                borderRadius: 20,
-                                paddingHorizontal: "5%",
-                                marginBottom: "10%",
-                                width: getIconSize(800),
-                                fontSize: getFontSize(20),
-                                color: (darkMode) ? "white" : "black",
-                                textAlign: 'center'
-                            }}
-                            placeholderTextColor={"#a3a3a3"}
-                            onChangeText={(text) => setName(text)}
-                        ></TextInput>
-                        <TextInput
-                            placeholder='Description'
-                            defaultValue={description}
-                            style={{
-                                borderWidth: 2,
-                                borderColor: "#ca2613",
-                                borderRadius: 20,
-                                paddingHorizontal: "5%",
-                                marginBottom: "10%",
-                                width: getIconSize(800),
-                                fontSize: getFontSize(15),
-                                color: (darkMode) ? "white" : "black",
-                                textAlign: 'center'
-                            }}
-                            placeholderTextColor={"#a3a3a3"}
-                            numberOfLines={3}
-                            multiline={true}
-                            onChangeText={(text) => setDescription(text)}
-                        ></TextInput>
-                        <TextInput
-                            placeholder='Price in €'
-                            defaultValue={price.toString()}
-                            style={{
-                                borderWidth: 2,
-                                borderColor: "#ca2613",
-                                borderRadius: 20,
-                                paddingHorizontal: "5%",
-                                width: getIconSize(800),
-                                fontSize: getFontSize(20),
-                                color: (darkMode) ? "white" : "black",
-                                textAlign: 'center'
-                            }}
-                            keyboardType={"numeric"}
-                            placeholderTextColor={"#a3a3a3"}
-                            onChangeText={(text) => setPrice(text)}
-                        ></TextInput>
-                    </View>
-                    <Dropdown
-                        data={sellers}
-                        labelField={"label"}
-                        valueField={"value"}
-                        value={selectedSeller}
-                        placeholder={"Select a seller"}
-                        onChange={(newValue) => setSelectedSeller(newValue.value)}
-                        style={{
-                            height: getIconSize(130),
-                            backgroundColor: (darkMode) ? "#242121" : "#F5F5F5",
-                            borderColor: "#ca2613",
-                            //borderRadius: 20,
-                            width: getIconSize(800),
-                            borderWidth: 2,
-                            marginBottom: "8%",
-                        }}
-                        placeholderStyle={{
-                            fontSize: getFontSize(20),
-                            color: (darkMode) ? "white" : "black",
-                            textAlign: 'center'
-                        }}
-                        iconStyle={{
-                            tintColor: '#ca2613',
-                            width: getIconSize(100),
-                            height: getIconSize(100)
-                        }}
-                        containerStyle={{
-                            backgroundColor: (darkMode) ? "#242121" : "#F5F5F5",
-                            borderColor: "#ca2613",
-                            borderWidth: 2/*, borderRadius: 20*/
-                        }}
-                        itemTextStyle={{
-                            fontSize: getFontSize(20),
-                            color: (darkMode) ? "white" : "black",
-                            textAlign: 'center'
-                        }}
-                        activeColor={"#ca2613"}
-                        selectedTextStyle={{
-                            fontSize: getFontSize(20),
-                            color: (darkMode) ? "white" : "black",
-                            textAlign: 'center'
-                        }}
-                    />
-
-                    <Dropdown
-                        data={types}
-                        labelField={"label"}
-                        valueField={"value"}
-                        value={selectedType}
-                        placeholder={"Select a type"}
-                        onChange={(newValue) => setSelectedType(newValue.value)}
-                        style={{
-                            height: getIconSize(130),
-                            backgroundColor: (darkMode) ? "#242121" : "#F5F5F5",
-                            borderColor: "#ca2613",
-                            //borderRadius: 20,
-                            width: getIconSize(800),
-                            borderWidth: 2,
-                            marginBottom: "4%",
-                        }}
-                        placeholderStyle={{
-                            fontSize: getFontSize(20),
-                            color: (darkMode) ? "white" : "black",
-                            textAlign: 'center'
-                        }}
-                        iconStyle={{
-                            tintColor: '#ca2613',
-                            width: getIconSize(100),
-                            height: getIconSize(100)
-                        }}
-                        containerStyle={{
-                            backgroundColor: (darkMode) ? "#242121" : "#F5F5F5",
-                            borderColor: "#ca2613",
-                            borderWidth: 2/*, borderRadius: 20*/
-                        }}
-                        itemTextStyle={{
-                            fontSize: getFontSize(20),
-                            color: (darkMode) ? "white" : "black",
-                            textAlign: 'center'
-                        }}
-                        activeColor={"#ca2613"}
-                        selectedTextStyle={{
-                            fontSize: getFontSize(20),
-                            color: (darkMode) ? "white" : "black",
-                            textAlign: 'center'
-                        }}
-                    />
-                    <TouchableOpacity style={{...Styles.touchable}} onPress={openGallery}>
-                        {
-                            (image64 !== "") ?
-                                <Image
-                                    source={{
-                                        uri: "data:image/jpeg;base64," + image64,
-                                        width: getIconSize(300),
-                                        height: getIconSize(300)
+            <ScrollView style={{flex:1}} contentContainerStyle={{ flexGrow: 1 }}>
+                <View style={{flex:1,}}>
+                    <View style={{flex:2,flexDirection:"row",}}>
+                        <View style={{flex: 1,flexDirection:"column",}}>
+                            <View style={{
+                                flex:1,
+                                marginRight:"5%",
+                            }}>
+                                <TextInput
+                                    placeholder='Name'
+                                    value={name}
+                                    style={{
+                                        flex:1,
+                                        borderWidth: 2,
+                                        borderColor: "#ca2613",
+                                        paddingHorizontal: "10%",
+                                        width: "100%",
+                                        fontSize: getFontSize(20),
+                                        color: (darkMode) ? "white" : "black",
+                                        textAlign: 'center',
+                                        marginBottom: "5%",
+                                        marginTop:"5%",
                                     }}
-                                    style={{ ...Styles.imageStyle, borderColor: (darkMode) ? "white" : "black", borderWidth: 1, borderRadius: 10 }}
-                                />
-                                :
-                                <Text style={{
+                                    numberOfLines={5}
+                                    multiline={true}
+                                    maxLength={100}
+                                    placeholderTextColor={"#a3a3a3"}
+                                    onChangeText={(text) => setName(text)}
+                                ></TextInput>
+                                <TextInput
+                                    placeholder='Description'
+                                    value={description}
+                                    style={{
+                                        flex:4,
+                                        borderWidth: 2,
+                                        borderColor: "#ca2613",
+                                        paddingHorizontal: "10%",
+                                        width: "100%",
+                                        fontSize: getFontSize(15),
+                                        color: (darkMode) ? "white" : "black",
+                                        textAlign: 'center',
+                                        marginBottom: "5%",
+                                    }}
+                                    placeholderTextColor={"#a3a3a3"}
+                                    numberOfLines={5}
+                                    multiline={true}
+                                    maxLength={100}
+                                    onChangeText={(text) => setDescription(text)}
+                                ></TextInput>
+                                <TextInput
+                                    placeholder='Price'
+                                    value={price}
+                                    style={{
+                                        flex:1,
+                                        borderWidth: 2,
+                                        borderColor: "#ca2613",
+                                        paddingHorizontal: 5,
+                                        width: "100%",
+                                        fontSize: getFontSize(20),
+                                        color: (darkMode) ? "white" : "black",
+                                        textAlign: 'center',
+                                        marginBottom: "5%",
+                                    }}
+                                    keyboardType={"numeric"}
+                                    placeholderTextColor={"#a3a3a3"}
+                                    onChangeText={(text) => setPrice(text)}
+                                ></TextInput>
+                            </View>
+                        </View>
+                        <View style={{flex:1,}}>
+                            <Dropdown
+                                data={sellers}
+                                labelField={"label"}
+                                valueField={"value"}
+                                value={selectedSeller}
+                                placeholder={"Select a seller"}
+                                onChange={(newValue) => setSelectedSeller(newValue.value)}
+                                style={{
+                                    height: getIconSize(130),
+                                    backgroundColor: (darkMode) ? "#242121" : "#F5F5F5",
+                                    borderColor: "#ca2613",
+                                    //
+                                    width: "100%",
+                                    borderWidth: 2,
+                                    marginBottom: "5%",
+                                    marginTop:"5%",
+
+                                    flex:1
+                                }}
+                                placeholderStyle={{
                                     fontSize: getFontSize(20),
-                                    textAlign: 'center',
-                                    color: (darkMode) ? "white" : "black"
-                                }}>Select a picture for the Component</Text>
-                        }
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{...Styles.touchable}} onPress={editComponent}>
-                        <Text
-                            style={{
-                                fontSize: getFontSize(20),
-                                color: (darkMode) ? "white" : "black",
-                                textAlign: 'center'
-                            }}>Edit Component</Text>
-                    </TouchableOpacity>
+                                    color: (darkMode) ? "white" : "black",
+                                    textAlign: 'center'
+                                }}
+                                iconStyle={{
+                                    tintColor: '#ca2613',
+                                    width: getIconSize(100),
+                                    height: getIconSize(100)
+                                }}
+                                containerStyle={{
+                                    backgroundColor: (darkMode) ? "#242121" : "#F5F5F5",
+                                    borderColor: "#ca2613",
+                                    borderWidth: 2/*, */
+                                }}
+                                itemTextStyle={{
+                                    fontSize: getFontSize(20),
+                                    color: (darkMode) ? "white" : "black",
+                                    textAlign: 'center'
+                                }}
+                                activeColor={"#ca2613"}
+                                selectedTextStyle={{
+                                    fontSize: getFontSize(20),
+                                    color: (darkMode) ? "white" : "black",
+                                    textAlign: 'center'
+                                }}
+                            />
+
+                            <Dropdown
+                                data={types}
+                                labelField={"label"}
+                                valueField={"value"}
+                                value={selectedType}
+                                placeholder={"Select a type"}
+                                onChange={(newValue) => setSelectedType(newValue.value)}
+                                style={{
+                                    height: getIconSize(130),
+                                    backgroundColor: (darkMode) ? "#242121" : "#F5F5F5",
+                                    borderColor: "#ca2613",
+                                    //
+                                    width: "100%",
+                                    borderWidth: 2,
+                                    marginBottom: 8,
+                                    flex:1
+                                }}
+                                placeholderStyle={{
+                                    fontSize: getFontSize(20),
+                                    color: (darkMode) ? "white" : "black",
+                                    textAlign: 'center'
+                                }}
+                                iconStyle={{
+                                    tintColor: '#ca2613',
+                                    width: getIconSize(100),
+                                    height: getIconSize(100)
+                                }}
+                                containerStyle={{
+                                    backgroundColor: (darkMode) ? "#242121" : "#F5F5F5",
+                                    borderColor: "#ca2613",
+                                    borderWidth: 2/*, */
+                                }}
+                                itemTextStyle={{
+                                    fontSize: getFontSize(20),
+                                    color: (darkMode) ? "white" : "black",
+                                    textAlign: 'center'
+                                }}
+                                activeColor={"#ca2613"}
+                                selectedTextStyle={{
+                                    fontSize: getFontSize(20),
+                                    color: (darkMode) ? "white" : "black",
+                                    textAlign: 'center'
+                                }}
+                            />
+                            <View style={{flex: 1, marginBottom: "4.5%"}}>
+                                <TouchableOpacity style={{borderWidth: 2,borderColor: "#ca2613", height: "100%",justifyContent:"center", alignItems: "center"}} onPress={openGallery}>
+                                    {
+                                        (image64 !== "") ?
+                                            <Image
+                                                source={{
+                                                    uri: "data:image/jpeg;base64," + image64,
+                                                    width: getIconSize(400),
+                                                    height: getIconSize(400)
+                                                }}
+                                                style={{ ...Styles.imageStyle, borderColor: (darkMode) ? "white" : "black", borderWidth: 1, borderRadius: 10 }}
+                                            />
+                                            :
+                                            <Text style={{
+                                                fontSize: getFontSize(20),
+                                                textAlign: 'center',
+                                                color: (darkMode) ? "white" : "black"
+                                            }}>Select a picture for the Post</Text>
+                                    }
+                                </TouchableOpacity>
+                            </View>
+
+                        </View>
+                    </View>
+                    <View style={{justifyContent:"flex-end",flexDirection:"row",height:"10%",}}>
+                        <View style={{flex:1,}}>
+                            <TouchableOpacity style={{
+                                flex:1,
+                                borderWidth: 2,
+                                borderColor: "#ca2613",
+                                width: "100%",
+                                justifyContent:"center",
+                                marginBottom: 8}} onPress={editComponent}>
+                                <Text
+                                    style={{
+                                        fontSize: getFontSize(20),
+                                        color: (darkMode) ? "white" : "black",
+                                        textAlign: 'center'
+                                    }}>Edit
+                                    Component</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
                 </View>
             </ScrollView>
             <Toast />

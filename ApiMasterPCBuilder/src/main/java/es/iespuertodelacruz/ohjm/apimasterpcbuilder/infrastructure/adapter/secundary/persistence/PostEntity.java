@@ -44,6 +44,8 @@ public class PostEntity implements Serializable {
 	)
 	private List<UserEntity> usersWhoLiked;
 
+	private byte deleted;
+
 	public PostEntity() {
 	}
 
@@ -103,4 +105,11 @@ public class PostEntity implements Serializable {
 		this.usersWhoLiked = usersWhoLiked;
 	}
 
+	public byte getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(byte deleted) {
+		this.deleted = deleted;
+	}
 }

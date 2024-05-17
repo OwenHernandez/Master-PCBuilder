@@ -83,7 +83,12 @@ public class PostControllerV3 {
 
     @SchemaMapping(typeName = "Mutation", field = "deletePost")
     public boolean delete(@Argument Long id) {
-        return postService.deleteById(id);
+        Post byId = postService.findById(id);
+        if (byId == null) {
+            throw new GraphQLErrorException("Post not found", HttpStatus.NOT_FOUND);
+        }
+        byId.setDeleted((byte) 1);
+        return postService.update(byId);
     }
 
     @SchemaMapping(typeName = "Mutation", field = "updatePost")
@@ -93,10 +98,13 @@ public class PostControllerV3 {
             throw new GraphQLErrorException("Post not found", HttpStatus.NOT_FOUND);
         }
 
-        postToUpdate.setDescription(post.getDescription());
-        postToUpdate.setTitle(post.getTitle());
-
-        if (post.getImage64() != null) {
+        if (!post.getDescription().isEmpty()) {
+            postToUpdate.setDescription(post.getDescription());
+        }
+        if (!post.getTitle().isEmpty()) {
+            postToUpdate.setTitle(post.getTitle());
+        }
+        if (post.getImage64() != null && !post.getImage64().isEmpty()) {
             byte[] photoBytes = Base64.getDecoder().decode(post.getImage64());
             String newFileName = storageService.save(post.getTitle() + "_" + post.getImage(), photoBytes);
             postToUpdate.setImage(newFileName);
@@ -107,6 +115,7 @@ public class PostControllerV3 {
             throw new GraphQLErrorException("Build not found", HttpStatus.NOT_FOUND);
         }
         postToUpdate.setBuild(build);
+        postToUpdate.setDeleted((byte) 0);
 
         return postDTOMapper.toDTO(postService.save(postToUpdate));
     }

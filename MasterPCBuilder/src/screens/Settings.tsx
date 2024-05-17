@@ -35,6 +35,22 @@ const Settings = (props: Props) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [newPassword, setNewPassword] = useState("");
 
+    /**
+     * Function to open the image gallery and allow the user to select a photo.
+     *
+     * This function does the following:
+     * 1. Calls the `launchImageLibrary` function from the `ImagePicker` module with the `mediaType` option set to 'photo'.
+     * 2. If the user cancels the image picker, it logs a message.
+     * 3. If there is an error while trying to open the gallery, it logs the error message.
+     * 4. If the user selects a photo, it reads the file as a base64 string.
+     * 5. Sends a PUT request to the server to update the user's profile picture.
+     * 6. The request body contains the filename of the selected photo, the base64 string of the photo, and an empty password field.
+     * 7. The request headers contain the authorization token.
+     * 8. If the request is successful, it updates the `user` state with the new profile picture.
+     *
+     * @function
+     * @throws Will log any error that occurs during the execution of the function.
+     */
     function openGallery() {
         ImagePicker.launchImageLibrary({mediaType: 'photo'}, async (response: ImagePickerResponse) => {
             if (response.didCancel) {
@@ -57,6 +73,20 @@ const Settings = (props: Props) => {
         });
     }
 
+    /**
+     * Asynchronous function to change the user's password.
+     *
+     * This function does the following:
+     * 1. Toggles the `modalVisible` state.
+     * 2. Sends a PUT request to the server to update the user's password.
+     * 3. The request body contains an empty `picture` and `pictureBase64` fields, and the new password.
+     * 4. The request headers contain the authorization token.
+     * 5. If the request is successful, it updates the `user` state without changing its other properties.
+     *
+     * @async
+     * @function
+     * @throws Will log any error that occurs during the execution of the function.
+     */
     async function changePassword() {
         setModalVisible(!modalVisible);
         try {
@@ -70,6 +100,18 @@ const Settings = (props: Props) => {
         }
     }
 
+    /**
+     * Asynchronous function to change the application's theme mode.
+     *
+     * This function does the following:
+     * 1. Toggles the `darkMode` state.
+     * 2. If the `darkMode` state is true, it stores the string "false" in the local storage under the key "darkMode".
+     * 3. If the `darkMode` state is false, it stores the string "true" in the local storage under the key "darkMode".
+     *
+     * @async
+     * @function
+     * @throws Will throw an error if there is an issue with AsyncStorage.
+     */
     async function changeDarkMode() {
         setDarkMode(!darkMode);
         if (darkMode) {
@@ -144,7 +186,7 @@ const Settings = (props: Props) => {
                             style={{
                                 borderWidth: 2,
                                 borderColor: "#ca2613",
-                                borderRadius: 20,
+                                
                                 paddingHorizontal: "5%",
                                 marginHorizontal: "5%",
                                 fontSize: getFontSize(15),
@@ -157,7 +199,7 @@ const Settings = (props: Props) => {
                                 ...Styles.touchable,
                                 margin: "5%",
                                 padding: "5%",
-                                borderRadius: 20
+                                
                             }}
                             onPress={changePassword}
                         >

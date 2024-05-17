@@ -1,13 +1,13 @@
 import {
-    View,
-    Text,
-    SafeAreaView,
-    TouchableOpacity,
-    PixelRatio,
     Dimensions,
+    FlatList,
     Image,
+    PixelRatio,
+    SafeAreaView,
+    Text,
     TextInput,
-    FlatList
+    TouchableOpacity,
+    View
 } from 'react-native'
 import React, {useEffect, useRef, useState} from 'react'
 import * as encoding from 'text-encoding';
@@ -68,15 +68,29 @@ const GroupChat = (props: Props) => {
     function getFormattedDate() {
         const date = new Date();
 
-        const year = date.getFullYear();
-        const month = (date.getMonth() + 1).toString().padStart(2, '0'); // +1 porque los meses empiezan en 0
-        const day = date.getDate().toString().padStart(2, '0');
+        // Usar toLocaleString() para obtener la fecha formateada según la zona horaria
+        const dateString = date.toLocaleString('en-GB', {
+            timeZone: 'Europe/London',
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false // Usar formato de 24 horas
+        }).replace(/,/g, '');
 
-        const hours = date.getHours().toString().padStart(2, '0');
-        const minutes = date.getMinutes().toString().padStart(2, '0');
-        const seconds = date.getSeconds().toString().padStart(2, '0');
+        // Desglosar la fecha en componentes para reordenarlos
+        const parts = dateString.split('/');
+        const timePart = parts[2].split(' ')[1];
 
-        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        // Reordenar los componentes para ajustar al formato deseado
+        const year = parts[2].split(' ')[0];
+        const month = parts[1];
+        const day = parts[0];
+
+        // Reconstruir la fecha en el formato aaaa-mm-dd hh:mm:ss
+        return `${year}-${month}-${day} ${timePart}`;
     }
 
     function onPublicMessageReceived(datos: any) {
@@ -85,8 +99,9 @@ const GroupChat = (props: Props) => {
         let msg = JSON.parse(datos.body);
         console.log(msg);
         console.log("msgs: " + msgs.length);
-        msgsRef.current.push({content: msg.content, author: msg.author, date: getFormattedDate()});
-        setMsgs(msgsRef.current.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
+        msgsRef.current.unshift({content: msg.content, author: msg.author, date: getFormattedDate()});
+        msgsRef.current.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+        setMsgs([...msgsRef.current]);
         //setMsgs( prevMsgs => [{content: msg.content, author: msg.author, date: getFormattedDate()}, ...prevMsgs]);
         //setMsgs(msgs.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
     }
@@ -94,6 +109,8 @@ const GroupChat = (props: Props) => {
     function connect() {
 
         function getPublicMessages() {
+            setMsgs([]);
+            msgsRef.current = [];
             getTopicMsgs();
             setMsgs(msgs.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
         }
@@ -164,18 +181,34 @@ const GroupChat = (props: Props) => {
         <SafeAreaView style={{flex: 1}}>
             <View style={Styles.headerView}>
                 <TouchableOpacity onPress={() => navigation.navigate("GroupChatDetails", {groupSelected: groupSelected})}>
-                    <Image
-                        source={{
-                            uri: (groupSelected?.picture !== "") ? "data:image/jpeg;base64," + groupSelected?.picture : "https://www.tenniscall.com/images/chat.jpg"
-                        }}
-                        style={{
-                            ...Styles.imageStyle,
-                            borderColor: (darkMode) ? "white" : "black",
-                            borderWidth: 1,
-                            width: getIconSize(110),
-                            height: getIconSize(110)
-                        }}
-                    />
+                    {
+                        (groupSelected?.picture !== "") ?
+                            <Image
+                                source={{
+                                    uri: "data:image/jpeg;base64," + groupSelected?.picture
+                                }}
+                                style={{
+                                    ...Styles.imageStyle,
+                                    borderColor: (darkMode) ? "white" : "black",
+                                    borderWidth: 1,
+                                    width: getIconSize(110),
+                                    height: getIconSize(110)
+                                }}
+                            />
+                            :
+                            <Image
+                                source={
+                                    require("../../img/defaultChatPic.jpg")
+                                }
+                                style={{
+                                    ...Styles.imageStyle,
+                                    borderColor: (darkMode) ? "white" : "black",
+                                    borderWidth: 1,
+                                    width: getIconSize(110),
+                                    height: getIconSize(110)
+                                }}
+                            />
+                    }
                 </TouchableOpacity>
                 <Text style={{
                     ...Styles.headerText,
@@ -198,66 +231,46 @@ const GroupChat = (props: Props) => {
                                 return (
                                     <View>
                                         <View style={{flexDirection: "row", justifyContent: "flex-end"}}>
-                                            <Text style={{
-                                                fontSize: getFontSize(15),
-                                                color: (darkMode) ? "white" : "black"
-                                            }}>You,{"  "}</Text><Text style={{
-                                            fontSize: getFontSize(15),
-                                            color: "#a3a3a3",
-                                            fontStyle: "italic"
-                                        }}>{msg.item.date}</Text>
+                                            <Text style={{color: "white"}}>You, </Text>
+                                            <Text style={{fontSize: getFontSize(15), color: "#a3a3a3", fontStyle: "italic", marginRight: "2%"}}>{msg.item.date}</Text>
                                         </View>
                                         <View style={{flexDirection: "row", justifyContent: "flex-end"}}>
                                             <View style={{
                                                 backgroundColor: "#ca2613",
-                                                borderRadius: 20,
+                                                //
                                                 padding: "1%",
                                                 paddingHorizontal: "3%",
                                                 margin: "2%",
+                                                marginRight: "3%",
                                                 maxWidth: "90%"
                                             }}>
-                                                <Text style={{
-                                                    fontSize: getFontSize(15),
-                                                    color: "white"
-                                                }}>{msg.item.content}</Text>
+                                                <Text style={{fontSize: getFontSize(15), color: "white"}}>{msg.item.content}</Text>
                                             </View>
                                         </View>
                                     </View>
                                 );
-                            } else {
-                                if (!isBlocked(msg.item.author)) {
-                                    return (
-                                        <View>
-                                            <View style={{flexDirection: "row", justifyContent: "flex-end"}}>
-                                                <Text
-                                                    style={{
-                                                        fontSize: getFontSize(15),
-                                                        color: (darkMode) ? "white" : "black"
-                                                    }}>{msg.item.author},{"  "}</Text><Text
-                                                style={{
-                                                    fontSize: getFontSize(15),
-                                                    color: "#a3a3a3",
-                                                    fontStyle: "italic"
-                                                }}>{msg.item.date}</Text>
-                                            </View>
-                                            <View style={{flexDirection: "row", justifyContent: "flex-end"}}>
-                                                <View style={{
-                                                    backgroundColor: "#ca2613",
-                                                    borderRadius: 20,
-                                                    padding: "1%",
-                                                    paddingHorizontal: "3%",
-                                                    margin: "2%",
-                                                    maxWidth: "90%"
-                                                }}>
-                                                    <Text style={{
-                                                        fontSize: getFontSize(15),
-                                                        color: "white"
-                                                    }}>{msg.item.content}</Text>
-                                                </View>
+                            } else if (msg.item?.author !== user.nick) {
+                                return (
+                                    <View>
+                                        <View style={{flexDirection: "row", justifyContent: "flex-start"}}>
+                                            <Text style={{color: "white", marginLeft: "2%"}}>{msg.item.author}, </Text>
+                                            <Text style={{fontSize: getFontSize(15), color: "#a3a3a3", fontStyle: "italic"}}>{msg.item.date}</Text>
+                                        </View>
+                                        <View style={{flexDirection: "row", justifyContent: "flex-start"}}>
+                                            <View style={{
+                                                backgroundColor: "#676767",
+                                                //
+                                                padding: "1%",
+                                                paddingHorizontal: "3%",
+                                                margin: "2%",
+                                                marginLeft: "3%",
+                                                maxWidth: "90%"
+                                            }}>
+                                                <Text style={{fontSize: getFontSize(15), color: "white"}}>{msg.item.content}</Text>
                                             </View>
                                         </View>
-                                    );
-                                }
+                                    </View>
+                                );
                             }
                         }
                     }}
@@ -276,7 +289,7 @@ const GroupChat = (props: Props) => {
                     style={{
                         borderWidth: 2,
                         borderColor: "#ca2613",
-                        borderRadius: 20,
+                        
                         paddingHorizontal: "5%",
                         width: "80%",
                         fontSize: getFontSize(15),

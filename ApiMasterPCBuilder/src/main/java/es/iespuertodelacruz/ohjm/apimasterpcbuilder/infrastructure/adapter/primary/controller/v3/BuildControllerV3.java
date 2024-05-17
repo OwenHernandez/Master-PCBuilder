@@ -44,7 +44,8 @@ public class BuildControllerV3 {
 
     @SchemaMapping(typeName = "Query", field = "builds")
     public List<BuildOutputDTO> getBuilds() {
-        return buildService.findAll().stream().map(buildDTOMapper::toDTO).collect(Collectors.toList());
+        List<BuildOutputDTO> collect = buildService.findAll().stream().map(buildDTOMapper::toDTO).collect(Collectors.toList());
+        return collect;
     }
 
     @SchemaMapping(typeName = "Query", field = "build")
@@ -109,13 +110,18 @@ public class BuildControllerV3 {
             throw new GraphQLErrorException("Invalid category", HttpStatus.BAD_REQUEST);
         }
 
-        Build domain = buildDTOMapper.toDomain(build);
-        domain.setId(id);
+        if (!build.getName().isEmpty()) {
+            byId.setName(build.getName());
+        }
+        if (!build.getNotes().isEmpty()) {
+            byId.setNotes(build.getNotes());
+        }
+
+        byId.setBuildsComponents(new ArrayList<>());
+
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date();
         String dateStr = sdf.format(date);
-        domain.setDateOfCreation(dateStr);
-        domain.setBuildsComponents(new ArrayList<>());
         double totalPrice = 0;
         for (Long compId : build.getComponentsIds()) {
             Component compById = componentService.findById(compId);
@@ -129,16 +135,14 @@ public class BuildControllerV3 {
             bc.setDateCreated(dateStr);
 
             bc.setComponent(compById);
-            domain.getBuildsComponents().add(bc);
+            byId.getBuildsComponents().add(bc);
         }
-        domain.setTotalPrice(totalPrice);
-        domain.setUser(byId.getUser());
-        domain.setName(byId.getName());
-        boolean update = buildService.update(domain);
+        byId.setTotalPrice(totalPrice);
+        boolean update = buildService.update(byId);
         if (!update) {
             throw new GraphQLErrorException("Error updating build", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return buildDTOMapper.toDTO(domain);
+        return buildDTOMapper.toDTO(byId);
     }
 
     @SchemaMapping(typeName = "Mutation", field = "deleteBuild")

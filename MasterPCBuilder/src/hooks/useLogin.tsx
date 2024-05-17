@@ -9,6 +9,8 @@ import {Globals} from '../components/Globals';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import RNFetchBlob from "rn-fetch-blob";
 import Toast from "react-native-toast-message";
+import {UserRepository} from "../data/Database";
+import {transformUserDTOToEntity} from "../data/transformers/UserTransformer";
 
 const useLogin = () => {
     const {setUser, setToken, token} = usePrimaryContext();
@@ -65,9 +67,11 @@ const useLogin = () => {
                 nick: byNickResponse.data.nick,
                 email: byNickResponse.data.email,
                 picture: picture,
+                role: byNickResponse.data.role,
                 friends: byNickResponse.data.friends,
                 blockedUsers: byNickResponse.data.blockedUsers,
-                componentsWanted: byNickResponse.data.componentsWanted
+                componentsWanted: byNickResponse.data.componentsWanted,
+                deleted: byNickResponse.data.deleted
             }
             if (newUser.friends !== null) {
                 for (const friend of newUser.friends) {
@@ -83,22 +87,70 @@ const useLogin = () => {
                     friend.picture = picture;
                 }
             }
+            console.log("wepa")
+            let userSave = transformUserDTOToEntity(newUser);
+            userSave.password = password;
+            await UserRepository.save(userSave);
             setUser(newUser);
             navigation.navigate("DrawerNavigator");
         } catch (err) {
-            console.log("LOCURA")
-            console.log(err);
-            Toast.show({
-                position: 'bottom',
-                type: 'error',
-                text1: "The user or password are incorrect",
-                text1Style: {fontSize: getFontSize(15)},
-                visibilityTime: 3000
-            });
+            console.log("Error", err);
+            setLoading(false);
+
+            if (err.response) {
+                // El servidor respondió con un código de estado fuera del rango 2xx
+                console.log("Error data:", err.response.data);
+                console.log("Error status:", err.response.status);
+                Toast.show({
+                    position: 'bottom',
+                    type: 'error',
+                    text1: "The user or password are incorrect",
+                    text1Style: {fontSize: getFontSize(15)},
+                    visibilityTime: 3000
+                });
+            } else if (err.request) {
+                let userDDBB = await UserRepository.findOneBy({nick: nick, password: password});
+                if (userDDBB === null) {
+                    // La solicitud fue hecha pero no se recibió respuesta
+                    console.log("error user not found: " + userDDBB);
+                    Toast.show({
+                        position: 'bottom',
+                        type: 'error',
+                        text1: "The user or password are incorrect",
+                        text1Style: {fontSize: getFontSize(15)},
+                        visibilityTime: 3000
+                    });
+                } else {
+                    let userOffLine: IUserType = {
+                        id: userDDBB.id,
+                        nick: userDDBB.nick,
+                        email: userDDBB.email,
+                        picture: "",
+                        role: userDDBB.role,
+                        friends: [],
+                        blockedUsers: [],
+                        componentsWanted: [],
+                        deleted: userDDBB.deleted
+                    }
+                    setUser(userOffLine);
+                    navigation.navigate("DrawerNavigator");
+                }
+            } else {
+                // Algo más causó el error
+                console.log("Error", err.message);
+                Toast.show({
+                    position: 'bottom',
+                    type: 'error',
+                    text1: "Login failed",
+                    text1Style: {fontSize: getFontSize(15)},
+                    visibilityTime: 3000
+                });
+            }
+
             setPassword("");
             setNick("");
         } finally {
-            setLoading(false); // Desactivar el indicador de carga independientemente del resultado
+            setLoading(false); // Asegúrate de desactivar el indicador de carga
         }
     }
 

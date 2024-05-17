@@ -13,4 +13,5 @@ export default interface IPostType {
     usersWhoLiked: IUserType[];
     liked: boolean;
     amountOfLikes: number;
+    deleted: boolean;
 }

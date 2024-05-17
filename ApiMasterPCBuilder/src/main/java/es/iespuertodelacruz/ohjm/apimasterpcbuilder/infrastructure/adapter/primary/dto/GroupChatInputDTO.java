@@ -8,6 +8,7 @@ public class GroupChatInputDTO {
     private String description;
     private String picture;
     private String pictureBase64;
+    private boolean deleted;
 
     public GroupChatInputDTO() {}
 
@@ -41,5 +42,13 @@ public class GroupChatInputDTO {
 
     public void setPictureBase64(String pictureBase64) {
         this.pictureBase64 = pictureBase64;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

@@ -24,6 +24,7 @@ public class PostEntityMapper {
         res.setImage(postEntity.getImage());
         res.setBuild(buildMapper.toDomain(postEntity.getBuild()));
         res.setUser(userMapper.toDomain(postEntity.getUser(), new HashSet<Long>(), new HashSet<Long>(), "posts"));
+        res.setDeleted(postEntity.getDeleted());
         if (postEntity.getUsersWhoLiked() != null) {
             res.setUsersWhoLiked(new ArrayList<>());
             for (UserEntity userEntity : postEntity.getUsersWhoLiked()) {
@@ -43,6 +44,7 @@ public class PostEntityMapper {
         res.setImage(post.getImage());
         res.setBuild(buildMapper.toPersistence(post.getBuild()));
         res.setUser(userMapper.toPersistence(post.getUser(), new HashSet<>(), new HashSet<>(), "posts"));
+        res.setDeleted(post.getDeleted());
         if (post.getUsersWhoLiked() != null) {
             res.setUsersWhoLiked(new ArrayList<>());
             for (User user : post.getUsersWhoLiked()) {

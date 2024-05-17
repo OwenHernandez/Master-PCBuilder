@@ -75,7 +75,9 @@ public class GroupChatControllerV3 {
         if (byId == null) {
             throw new GraphQLErrorException("GroupChat not found", HttpStatus.NOT_FOUND);
         }
-        return groupChatService.deleteById(id);
+        byId.setDeleted((byte) 1);
+
+        return groupChatService.update(byId);
     }
 
     @SchemaMapping(typeName = "Mutation", field = "updateGroupChat")
@@ -84,14 +86,19 @@ public class GroupChatControllerV3 {
         if (byId == null) {
             throw new GraphQLErrorException("GroupChat not found", HttpStatus.NOT_FOUND);
         }
-        if (groupChat.getPictureBase64() != null) {
+        if (groupChat.getPictureBase64() != null && !groupChat.getPictureBase64().isEmpty()) {
             String codedPicture = groupChat.getPictureBase64();
             byte[] photoBytes = Base64.getDecoder().decode(codedPicture);
             String newFileName = storageService.save(groupChat.getName() + "_" + groupChat.getPicture(), photoBytes);
             byId.setPicture(newFileName);
         }
-        byId.setName(groupChat.getName());
-        byId.setDescription(groupChat.getDescription());
+        if (!groupChat.getName().isEmpty()) {
+            byId.setName(groupChat.getName());
+        }
+        if (!groupChat.getDescription().isEmpty()) {
+            byId.setDescription(groupChat.getDescription());
+        }
+        byId.setDeleted((byte) 0);
 
         boolean update = groupChatService.update(byId);
         if (!update) {

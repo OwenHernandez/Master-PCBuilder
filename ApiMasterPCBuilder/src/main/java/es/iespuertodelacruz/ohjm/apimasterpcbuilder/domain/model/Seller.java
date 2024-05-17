@@ -12,6 +12,8 @@ public class Seller {
 
     private List<Component> components;
 
+    private byte deleted;
+
     public Seller() {
     }
 
@@ -45,5 +47,13 @@ public class Seller {
 
     public void setComponents(List<Component> components) {
         this.components = components;
+    }
+
+    public byte getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(byte deleted) {
+        this.deleted = deleted;
     }
 }
