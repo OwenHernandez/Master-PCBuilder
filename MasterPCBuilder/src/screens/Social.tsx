@@ -31,16 +31,45 @@ const Social = (props: Props) => {
     const [modalvisible, setModalvisible] = useState<boolean>(false);
     const [byPrice, setByPrice] = useState<boolean>(false);
     LogBox.ignoreAllLogs();
+
+    /**
+     * useEffect hook that runs when the `posts` or `user` state changes.
+     *
+     * This hook does the following:
+     * 1. Resets the `postsList` and `postsFiltered` states to an empty array.
+     * 2. Calls the `getPosts` function to fetch and set the posts data.
+     */
     useEffect(() => {
         setPostsList([]);
         setPostsFiltered([]);
         getPosts();
     }, [posts, user]);
 
+    /**
+     * Function to toggle the visibility of the modal.
+     * It inverses the current state of `modalvisible`.
+     * If `modalvisible` is true, it will be set to false and vice versa.
+     */
     const toggleModal = () => {
         setModalvisible(!modalvisible);
     }
 
+    /**
+     * Asynchronous function to fetch posts from the server.
+     *
+     * This function does the following:
+     * 1. Sends a GET request to the server to fetch all posts.
+     * 2. Iterates over each post in the response data.
+     * 3. For each post, it fetches the post's image and the user's profile picture.
+     * 4. If the fetched image is not found, it sets the image to an empty string.
+     * 5. Checks if the post is liked by the current user.
+     * 6. Counts the total number of likes for the post.
+     * 7. Adds the post to the `postsList` and `postsFiltered` states.
+     *
+     * @async
+     * @function
+     * @throws Will log any error that occurs during the execution of the function.
+     */
     async function getPosts() {
         try {
             const response = await axios.get(Globals.IP_HTTP + "/api/v2/posts", {headers: {"Authorization": "Bearer " + token}});
@@ -75,6 +104,21 @@ const Social = (props: Props) => {
         }
     }
 
+    /**
+     * Asynchronous function to add or remove a like from a post.
+     *
+     * This function does the following:
+     * 1. Sends a PUT request to the server to add or remove a like from the post.
+     * 2. If the request is successful, it toggles the `liked` state of the post.
+     * 3. If the post is liked, it increments the `amountOfLikes` by 1.
+     * 4. If the post is not liked, it decrements the `amountOfLikes` by 1.
+     * 5. Updates the `postsFiltered` state with the updated post.
+     *
+     * @async
+     * @function
+     * @param {IPostType} post - The post to add or remove a like from.
+     * @throws Will log any error that occurs during the execution of the function.
+     */
     async function addRemoveLike(post: IPostType) {
         try {
             const response = await axios.put(
@@ -97,6 +141,18 @@ const Social = (props: Props) => {
 
     const arrayCategoriaBuilder: Array<string> = [Globals.CATEGORY_ALL, Globals.CATEGORY_GAMING, Globals.CATEGORY_BUDGET, Globals.CATEGORY_WORK];
 
+    /**
+     * Function to check if a user is blocked.
+     *
+     * This function iterates over the `blockedUsers` array of the current user.
+     * For each blocked user, it checks if the blocked user's id matches the selected user's id.
+     * If a match is found, it returns true, indicating that the selected user is blocked.
+     * If no match is found after iterating over the entire array, it returns false.
+     *
+     * @function
+     * @param {IUserType} userSelected - The user to check if they are blocked.
+     * @returns {boolean} - Returns true if the selected user is blocked, false otherwise.
+     */
     function isBlocked(userSelected: IUserType): boolean {
         for (const blockedUser of user.blockedUsers) {
             if (blockedUser.id === userSelected.id) {
@@ -106,6 +162,18 @@ const Social = (props: Props) => {
         return false;
     }
 
+    /**
+     * Function to check if a post is liked by the current user.
+     *
+     * This function iterates over the `usersWhoLiked` array of the selected post.
+     * For each user in the array, it checks if the user's id matches the current user's id.
+     * If a match is found, it returns true, indicating that the current user has liked the post.
+     * If no match is found after iterating over the entire array, it returns false.
+     *
+     * @function
+     * @param {IPostType} postSelected - The post to check if it is liked by the current user.
+     * @returns {boolean} - Returns true if the current user has liked the selected post, false otherwise.
+     */
     function isLiked(postSelected: IPostType): boolean {
         for (const userSelected of postSelected.usersWhoLiked) {
             if (userSelected.id === user.id) {

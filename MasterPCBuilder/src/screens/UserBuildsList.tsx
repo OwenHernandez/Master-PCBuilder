@@ -23,11 +23,27 @@ const UserBuildsList = (props: Props) => {
     const [categoryToFilter, setCategoryToFilter] = useState(Globals.CATEGORY_ALL);
 
     const arrayCategoriaBuilder: Array<string> = [Globals.CATEGORY_ALL, Globals.CATEGORY_GAMING, Globals.CATEGORY_BUDGET, Globals.CATEGORY_WORK];
-
+    /**
+     * `useEffect` hook that is executed when the component mounts.
+     *
+     * This hook calls the `getUserBuilds` function to fetch the user's builds from the server.
+     * As the dependency array is empty, this hook will only run once, when the component mounts.
+     */
     useEffect(() => {
         getUserBuilds();
     }, []);
 
+    /**
+     * Asynchronous function to fetch user's builds from the server.
+     *
+     * This function does the following:
+     * 1. Sends a GET request to the server to fetch all builds associated with the user.
+     * 2. Sets the fetched builds to the `buildsList` and `buildsFilteredList` states.
+     *
+     * @async
+     * @function
+     * @throws Will log any error that occurs during the execution of the function.
+     */
     async function getUserBuilds() {
         try {
             const response = await axios.get(Globals.IP_HTTP + "/api/v2/builds", {headers: {"Authorization": "Bearer " + token}});

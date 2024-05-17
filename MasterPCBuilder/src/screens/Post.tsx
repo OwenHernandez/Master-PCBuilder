@@ -33,10 +33,30 @@ const Post = (props: Props) => {
     const getIconSize = (size: number) => size / fullScreen;
     const [postSelected, setPostSelected] = useState({} as IPostType);
 
+    /**
+     * `useEffect` hook that is executed once after the component mounts.
+     *
+     * This hook calls the `getImg` function to fetch the images for the components of the post.
+     * As the dependency array is empty, this hook will only run once after the component mounts.
+     */
     useEffect(() => {
         getImg();
     }, []);
 
+    /**
+     * Asynchronous function to fetch the images for the components of the post.
+     *
+     * This function does the following:
+     * 1. Iterates over the `buildsComponents` array of the `post` object.
+     * 2. For each `buildComponent`, it checks if the length of the `image` property of the `component` object is greater than 200. If it is, it skips to the next iteration.
+     * 3. Sends a GET request to the server to fetch the image of the component. The request headers contain the authorization token.
+     * 4. If the response data is not equal to `Globals.IMG_NOT_FOUND`, it converts the response data to base64 and assigns it to the `image` property of the `component` object. Otherwise, it assigns an empty string to the `image` property of the `component` object.
+     * 5. After iterating over the entire array, it updates the `postSelected` state with the `post` object.
+     *
+     * @async
+     * @function
+     * @throws Will log any error that occurs during the execution of the function.
+     */
     async function getImg() {
         for (const buildComp of post.build.buildsComponents) {
             try {

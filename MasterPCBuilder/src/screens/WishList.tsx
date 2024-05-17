@@ -23,10 +23,32 @@ const WishList = (props: Props) => {
     const getIconSize = (size: number) => size / fullScreen;
     const [wishList, setWishList] = useState([{}] as IComponentType[]);
 
+    /**
+     * `useEffect` hook that is executed when the `user` state changes.
+     *
+     * This hook calls the `getImgComponents` function to fetch the image components associated with the user.
+     * As the dependency array contains `user`, this hook will run whenever the `user` state changes.
+     */
     useEffect(() => {
         getImgComponents();
     }, [user]);
 
+    /**
+     * Asynchronous function to fetch image components associated with the user.
+     *
+     * This function does the following:
+     * 1. Initializes the `wishList` state to an empty array.
+     * 2. Iterates over the `componentsWanted` array of the `user` state.
+     * 3. For each component, if the length of the `image` property is less than 200, it sends a GET request to the server to fetch the image.
+     * 4. If the response data is not equal to `Globals.IMG_NOT_FOUND`, it converts the response data to base64 and assigns it to the `image` property of the component.
+     * 5. Sets the `wished` property of the component to false.
+     * 6. Iterates over the `componentsWanted` array of the `user` state again. If the id of the component matches the id of the component in the array, it sets the `wished` property of the component to true.
+     * 7. Adds the component to the `wishList` state.
+     *
+     * @async
+     * @function
+     * @throws Will log any error that occurs during the execution of the function.
+     */
     async function getImgComponents() {
         try {
             setWishList([]);

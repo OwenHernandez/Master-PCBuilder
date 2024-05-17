@@ -32,10 +32,31 @@ const SearchUsers = (props: Props) => {
     const [userList, setUserList] = useState([{}] as IUserType[]);
     const [usersByNick, setUsersByNick] = useState([{}] as IUserType[]);
 
+    /**
+     * `useEffect` hook that is executed when the `user` state changes.
+     *
+     * This hook calls the `getUsers` function to fetch the list of users.
+     * As the dependency array contains `user`, this hook will run whenever the `user` state changes.
+     */
     useEffect(() => {
         getUsers();
     }, [user]);
 
+    /**
+     * Asynchronous function to fetch the list of users from the server.
+     *
+     * This function does the following:
+     * 1. Initializes the `userList` and `usersByNick` states to empty arrays.
+     * 2. Sends a GET request to the server to fetch the list of users. The request headers contain the authorization token.
+     * 3. Iterates over the response data, which is an array of users.
+     * 4. For each user, if the user's nickname is not the same as the current user's nickname and the user is not a friend of the current user, it sends a GET request to the server to fetch the user's profile picture.
+     * 5. If the response data is not equal to `Globals.IMG_NOT_FOUND`, it converts the response data to base64 and assigns it to the `picture` property of the user.
+     * 6. Adds the user to the `userList` and `usersByNick` states.
+     *
+     * @async
+     * @function
+     * @throws Will log any error that occurs during the execution of the function.
+     */
     async function getUsers() {
         try {
             setUserList([]);
@@ -64,6 +85,18 @@ const SearchUsers = (props: Props) => {
         }
     }
 
+    /**
+     * Function to check if a user is blocked.
+     *
+     * This function iterates over the `blockedUsers` array of the current user.
+     * For each blocked user, it checks if the blocked user's id is the same as the selected user's id.
+     * If it finds a match, it returns true, indicating that the selected user is blocked.
+     * If it doesn't find a match after iterating over the entire array, it returns false, indicating that the selected user is not blocked.
+     *
+     * @function
+     * @param {IUserType} userSelected - The user to check if they are blocked.
+     * @returns {boolean} - Returns true if the selected user is blocked, false otherwise.
+     */
     function isBlocked(userSelected: IUserType): boolean {
         for (const blockedUser of user.blockedUsers) {
             if (blockedUser.id === userSelected.id) {
