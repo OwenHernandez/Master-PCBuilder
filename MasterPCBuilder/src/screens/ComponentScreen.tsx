@@ -109,6 +109,7 @@ const ComponentScreen = (props: Props) => {
     }
 
     useEffect(() => {
+        console.log(comp.priceHistory);
         setComponent(comp);
         let auxMeses = [];
         let auxPrecios = [];
@@ -116,7 +117,8 @@ const ComponentScreen = (props: Props) => {
         let auxPreciosEbay = [];
         if (comp.priceHistory) {
             comp.priceHistory.map((comp) => {
-                let date = new Date(comp.date);
+                console.log(comp.date);
+                let date = new Date(1000* parseInt(comp.date)  );
                 let month = date.toLocaleString('default', {day: "numeric", month: 'numeric'})
 
                 auxMeses.push(month);
