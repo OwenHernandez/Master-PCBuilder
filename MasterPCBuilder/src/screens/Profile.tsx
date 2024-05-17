@@ -24,7 +24,6 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Profile'>;
 const Profile = (props: Props) => {
     const {user, darkMode, token} = usePrimaryContext();
     const {navigation, route} = props;
-    const [img, setImg] = useState<any>();
     const fontScale = PixelRatio.getFontScale();
     const getFontSize = (size: number) => size / fontScale;
     const fullScreen = Dimensions.get("window").scale;
@@ -94,55 +93,58 @@ const Profile = (props: Props) => {
                 <View style={{margin: "5%",}}>
                     <Text style={{fontSize: getFontSize(40), color: (darkMode) ? "white" : "black"}}>Friends</Text>
                     {
-                        user.friends !== null ?
+                        user.friends !== null &&
                             <FlatList style={{}} horizontal={true} data={user.friends} renderItem={(friend) => {
-                                return <View style={{width: 100, margin: 3}}>
-                                    <TouchableOpacity onPress={() => navigation.navigate("Chat", {friend: friend.item})}
-                                                      style={{
-                                                          ...Styles.touchable,
-                                                          flexDirection: "row",
-                                                          alignItems: "center",
-                                                          margin: 3
-                                                      }}>
+                                if (!friend.item.deleted) {
+                                    return <View style={{width: 100, margin: 3}}>
                                         <TouchableOpacity
-                                            onPress={() => navigation.navigate("OtherUserProfile", {userSelected: friend.item})}>
-                                            {
-                                                (friend.item.picture !== "") ?
-                                                    <Image
-                                                        source={{
-                                                            uri: "data:image/jpeg;base64," + friend.item.picture
-                                                        }}
-                                                        style={{
-                                                            ...Styles.imageStyle,
-                                                            borderColor: (darkMode) ? "white" : "black",
-                                                            borderWidth: 1,
-                                                            width: getIconSize(85),
-                                                            height: getIconSize(85)
-                                                        }}
-                                                    />
-                                                    :
-                                                    <Image
-                                                        source={
-                                                            require("../../img/defaultProfilePic.png")
-                                                        }
-                                                        style={{
-                                                            ...Styles.imageStyle,
-                                                            borderColor: (darkMode) ? "white" : "black",
-                                                            borderWidth: 1,
-                                                            width: getIconSize(85),
-                                                            height: getIconSize(85)
-                                                        }}
-                                                    />
-                                            }
+                                            onPress={() => navigation.navigate("Chat", {friend: friend.item})}
+                                            style={{
+                                                ...Styles.touchable,
+                                                flexDirection: "row",
+                                                alignItems: "center",
+                                                margin: 3
+                                            }}>
+                                            <TouchableOpacity
+                                                onPress={() => navigation.navigate("OtherUserProfile", {userSelected: friend.item})}>
+                                                {
+                                                    (friend.item.picture !== "") ?
+                                                        <Image
+                                                            source={{
+                                                                uri: "data:image/jpeg;base64," + friend.item.picture
+                                                            }}
+                                                            style={{
+                                                                ...Styles.imageStyle,
+                                                                borderColor: (darkMode) ? "white" : "black",
+                                                                borderWidth: 1,
+                                                                width: getIconSize(85),
+                                                                height: getIconSize(85)
+                                                            }}
+                                                        />
+                                                        :
+                                                        <Image
+                                                            source={
+                                                                require("../../img/defaultProfilePic.png")
+                                                            }
+                                                            style={{
+                                                                ...Styles.imageStyle,
+                                                                borderColor: (darkMode) ? "white" : "black",
+                                                                borderWidth: 1,
+                                                                width: getIconSize(85),
+                                                                height: getIconSize(85)
+                                                            }}
+                                                        />
+                                                }
+                                            </TouchableOpacity>
+                                            <Text style={{
+                                                color: (darkMode) ? "white" : "black",
+                                                marginLeft: 5,
+                                                marginRight: 13
+                                            }}>{friend.item.nick}</Text>
                                         </TouchableOpacity>
-                                        <Text style={{
-                                            color: (darkMode) ? "white" : "black",
-                                            marginLeft: 5,
-                                            marginRight: 13
-                                        }}>{friend.item.nick}</Text>
-                                    </TouchableOpacity>
-                                </View>
-                            }}/> : <></>
+                                    </View>
+                                }
+                            }}/>
                         //<Text style={{ fontSize: getFontSize(20), color: (darkMode) ? "white" : "black" }}>You have no friends</Text>
                     }
                 </View>

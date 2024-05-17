@@ -19,8 +19,6 @@ import IComponentType from "../interfaces/IComponentType";
 import Component from "../components/Component";
 import RNFetchBlob from "rn-fetch-blob";
 import {ComponentRepository} from "../data/Database";
-import IPriceHistoryType from "../interfaces/IPriceHistoryType";
-import {ComponentDTO} from "../data/dtos/ComponentDTO";
 import {transformComponentDTOToEntity, transformComponentToDTO} from "../data/transformers/ComponentTransformer";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Components List'>;
@@ -47,23 +45,25 @@ const ComponentsList = (props: Props) => {
         try {
             const getCompsResponse = await axios.get(Globals.IP_HTTP + "/api/v2/components", {headers: {"Authorization": "Bearer " + token}});
             for (let comp of getCompsResponse.data) {
-                try {
-                    let newComp = await transformComponentDTOToEntity(comp);
-                    await ComponentRepository.save(newComp);
-                } catch (e) {
-                    console.log("Error while trying to save component: " + e);
+                if (!comp.deleted) {
+                    try {
+                        let newComp = await transformComponentDTOToEntity(comp);
+                        await ComponentRepository.save(newComp);
+                    } catch (e) {
+                        console.log("Error while trying to save component: " + e);
+                    }
+                    const getImgResponse = await RNFetchBlob.fetch(
+                        'GET',
+                        Globals.IP_HTTP + '/api/v2/components/img/' + comp.id + '/' + comp.image,
+                        {Authorization: `Bearer ${token}`}
+                    );
+                    let picture = ""
+                    if (getImgResponse.data !== Globals.IMG_NOT_FOUND) {
+                        picture = getImgResponse.base64();
+                    }
+                    comp.image = picture;
+                    auxComps.push(comp);
                 }
-                const getImgResponse = await RNFetchBlob.fetch(
-                    'GET',
-                    Globals.IP_HTTP + '/api/v2/components/img/' + comp.id + '/' + comp.image,
-                    {Authorization: `Bearer ${token}`}
-                );
-                let picture = ""
-                if (getImgResponse.data !== Globals.IMG_NOT_FOUND) {
-                    picture = getImgResponse.base64();
-                }
-                comp.image = picture;
-                auxComps.push(comp);
             }
             setComponentsByName(auxComps);
             setComponentsList(auxComps);

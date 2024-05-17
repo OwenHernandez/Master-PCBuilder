@@ -76,7 +76,6 @@ const ComponentScreen = (props: Props) => {
                 priceHistory: comp.priceHistory,
                 deleted: comp.deleted
             }
-            await ComponentRepository.update(component?.id, newComp);
             Toast.show({
                 position: 'bottom',
                 type: 'error',
