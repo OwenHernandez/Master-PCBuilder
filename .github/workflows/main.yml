@@ -13,7 +13,7 @@ jobs:
         image: mongo:latest
         ports:
           - 27017:27017
-        options: > 
+        options: >
           --health-cmd="mongo --eval 'db.runCommand(\"ping\").ok'" 
           --health-interval=10s 
           --health-timeout=5s 
