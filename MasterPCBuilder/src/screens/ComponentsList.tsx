@@ -18,6 +18,10 @@ import {Globals} from "../components/Globals";
 import IComponentType from "../interfaces/IComponentType";
 import Component from "../components/Component";
 import RNFetchBlob from "rn-fetch-blob";
+import {ComponentRepository} from "../data/Database";
+import IPriceHistoryType from "../interfaces/IPriceHistoryType";
+import {ComponentDTO} from "../data/dtos/ComponentDTO";
+import {transformComponentDTOToEntity, transformComponentToDTO} from "../data/transformers/ComponentTransformer";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Components List'>;
 
@@ -29,8 +33,8 @@ const ComponentsList = (props: Props) => {
     const getFontSize = (size: number) => size / fontScale;
     const fullScreen = Dimensions.get("window").scale;
     const getIconSize = (size: number) => size / fullScreen;
-    const [componentsList, setComponentsList] = useState<Array<IComponentType>>([]);
-    const [componentsByName, setComponentsByName] = useState<Array<IComponentType>>([]);
+    const [componentsList, setComponentsList] = useState<Array<any>>([]);
+    const [componentsByName, setComponentsByName] = useState<Array<any>>([]);
 
     useEffect(() => {
         setComponentsList([]);
@@ -43,6 +47,12 @@ const ComponentsList = (props: Props) => {
         try {
             const getCompsResponse = await axios.get(Globals.IP_HTTP + "/api/v2/components", {headers: {"Authorization": "Bearer " + token}});
             for (let comp of getCompsResponse.data) {
+                try {
+                    let newComp = await transformComponentDTOToEntity(comp);
+                    await ComponentRepository.save(newComp);
+                } catch (e) {
+                    console.log("Error while trying to save component: " + e);
+                }
                 const getImgResponse = await RNFetchBlob.fetch(
                     'GET',
                     Globals.IP_HTTP + '/api/v2/components/img/' + comp.id + '/' + comp.image,
@@ -57,16 +67,21 @@ const ComponentsList = (props: Props) => {
             }
             setComponentsByName(auxComps);
             setComponentsList(auxComps);
-
         } catch (e) {
             console.log(e);
+            let compsOffline = await ComponentRepository.find();
+            for (const comp of compsOffline) {
+                let newComp = transformComponentToDTO(comp);
+                setComponentsList( prevComps => [...prevComps, newComp]);
+                setComponentsByName( prevComps => [...prevComps, newComp]);
+            }
         }
     }
 
     return (
         <View style={{flex:1,backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"}}>
             <HeaderScreen name={"Components List"} navigation={navigation} profile={false} drawer={true}/>
-            <View style={{height: "89%"}}>
+            <View style={{height: "95%"}}>
                 <View style={{
                     flexDirection: "row",
                     justifyContent: "space-around",

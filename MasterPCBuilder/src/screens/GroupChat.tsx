@@ -181,18 +181,34 @@ const GroupChat = (props: Props) => {
         <SafeAreaView style={{flex: 1}}>
             <View style={Styles.headerView}>
                 <TouchableOpacity onPress={() => navigation.navigate("GroupChatDetails", {groupSelected: groupSelected})}>
-                    <Image
-                        source={{
-                            uri: (groupSelected?.picture !== "") ? "data:image/jpeg;base64," + groupSelected?.picture : "https://www.tenniscall.com/images/chat.jpg"
-                        }}
-                        style={{
-                            ...Styles.imageStyle,
-                            borderColor: (darkMode) ? "white" : "black",
-                            borderWidth: 1,
-                            width: getIconSize(110),
-                            height: getIconSize(110)
-                        }}
-                    />
+                    {
+                        (groupSelected?.picture !== "") ?
+                            <Image
+                                source={{
+                                    uri: "data:image/jpeg;base64," + groupSelected?.picture
+                                }}
+                                style={{
+                                    ...Styles.imageStyle,
+                                    borderColor: (darkMode) ? "white" : "black",
+                                    borderWidth: 1,
+                                    width: getIconSize(110),
+                                    height: getIconSize(110)
+                                }}
+                            />
+                            :
+                            <Image
+                                source={
+                                    require("../../img/defaultChatPic.jpg")
+                                }
+                                style={{
+                                    ...Styles.imageStyle,
+                                    borderColor: (darkMode) ? "white" : "black",
+                                    borderWidth: 1,
+                                    width: getIconSize(110),
+                                    height: getIconSize(110)
+                                }}
+                            />
+                    }
                 </TouchableOpacity>
                 <Text style={{
                     ...Styles.headerText,

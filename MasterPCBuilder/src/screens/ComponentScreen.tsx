@@ -25,6 +25,7 @@ import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import {Menu, MenuOption, MenuOptions, MenuTrigger} from "react-native-popup-menu";
 import Entypo from "react-native-vector-icons/Entypo";
 import Toast from "react-native-toast-message";
+import {ComponentRepository} from "../data/Database";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ComponentScreen'>;
 
@@ -60,6 +61,22 @@ const ComponentScreen = (props: Props) => {
                 null,
                 {headers: {Authorization: "Bearer " + token}}
             );
+            let newComp:IComponentType = {
+                id: comp.id,
+                name: comp.name,
+                type: comp.type,
+                price: comp.price,
+                image: comp.image,
+                wished: !comp.wished,
+                amazon_price: comp.amazon_price,
+                ebay_price: comp.ebay_price,
+                description: comp.description,
+                sellerName: comp.sellerName,
+                userNick: comp.userNick,
+                priceHistory: comp.priceHistory,
+                deleted: comp.deleted
+            }
+            await ComponentRepository.update(component?.id, newComp);
             Toast.show({
                 position: 'bottom',
                 type: 'error',
@@ -79,6 +96,7 @@ const ComponentScreen = (props: Props) => {
                 Globals.IP_HTTP + "/api/v2/components/" + component?.id,
                 {headers: {Authorization: "Bearer " + token}}
             );
+            await ComponentRepository.delete(component?.id);
             const responseComponents = await axios.get(Globals.IP_HTTP + "/api/v2/components", {headers: {"Authorization": "Bearer " + token}});
             navigation.navigate("Components List", {components: responseComponents.data});
         } catch (err) {
@@ -96,23 +114,22 @@ const ComponentScreen = (props: Props) => {
         let auxPrecios = [];
         let auxPreciosAmazon = [];
         let auxPreciosEbay = [];
+        if (comp.priceHistory) {
+            comp.priceHistory.map((comp) => {
+                let date = new Date(comp.date);
+                let month = date.toLocaleString('default', {day: "numeric", month: 'numeric'})
 
-        comp.priceHistory.map((comp) => {
-            let date = new Date(comp.date);
-            let month = date.toLocaleString('default', {day: "numeric", month: 'numeric'})
-            console.log(month)
-            auxMeses.push(month);
-            auxPrecios.push(comp.price);
-            auxPreciosAmazon.push(comp.amazonPrice);
-            auxPreciosEbay.push(comp.ebayPrice);
-        });
+                auxMeses.push(month);
+                auxPrecios.push(comp.price);
+                auxPreciosAmazon.push(comp.amazonPrice);
+                auxPreciosEbay.push(comp.ebayPrice);
+            });
+        }
+
         setMeses(auxMeses);
         setPrecios(auxPrecios);
         setPreciosAmazon(auxPreciosAmazon);
         setPreciosEbay(auxPreciosEbay);
-        console.log(precios)
-        console.log(preciosAmazon)
-        console.log(preciosEbay)
     }, []);
 
     const data = {
@@ -161,7 +178,7 @@ const ComponentScreen = (props: Props) => {
                                     <MenuOptions
                                         optionsContainerStyle={{
                                             backgroundColor: (darkMode) ? "#242121" : "#F5F5F5",
-                                            
+
                                             width: getIconSize(500),
                                             borderColor: "#ca2613",
                                             borderWidth: 2,
@@ -194,7 +211,7 @@ const ComponentScreen = (props: Props) => {
                                     <MenuOptions
                                         optionsContainerStyle={{
                                             backgroundColor: (darkMode) ? "#242121" : "#F5F5F5",
-                                            
+
                                             width: getIconSize(500),
                                             borderColor: "#ca2613",
                                             borderWidth: 2,

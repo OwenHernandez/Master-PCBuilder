@@ -21,6 +21,7 @@ import {Globals} from "../components/Globals";
 import IGroupChatType from "../interfaces/IGroupChatType";
 import RNFetchBlob from "rn-fetch-blob";
 import {FAB} from "react-native-elements";
+import FontAwesome6Icon from "react-native-vector-icons/FontAwesome6";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Group List'>;
 
@@ -89,7 +90,7 @@ const GroupList = (props: Props) => {
     return (
         <View style={{backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"}}>
             <HeaderScreen name={"Groups"} navigation={navigation} profile={false} drawer={true}/>
-            <View style={{height: "90%"}}>
+            <View style={{height: "89%"}}>
                 <View style={{
                     flexDirection: "row",
                     justifyContent: "space-around",
@@ -113,7 +114,7 @@ const GroupList = (props: Props) => {
                                 if (text === "")
                                     setGroupsByName(groupList);
                                 else
-                                    setGroupsByName(groupList.filter((group) => group.name.toLowerCase().includes(text.toLowerCase())))
+                                    setGroupsByName(groupList.filter((group) => group.name.toLowerCase().includes(text)))
                             }}
                         ></TextInput>
                     </View>
@@ -121,57 +122,71 @@ const GroupList = (props: Props) => {
                         <FontAwesome5Icon name="search" size={getIconSize(80)}
                                           color={(darkMode) ? "white" : "black"}/>
                     </View>
+
+
                 </View>
                 <FlatList
                     data={groupsByName}
                     renderItem={(group) => {
-                        return (
-                            <TouchableOpacity onPress={() => navigation.navigate("GroupChat", {group: group.item})}
-                                              style={{
-                                                  ...Styles.touchable,
-                                                  flexDirection: "row",
-                                                  alignItems: "center",
-                                                  margin: "5%"
-                                              }}>
-                                <TouchableOpacity onPress={() => navigation.navigate("GroupChatDetails", {groupSelected: group.item})}>
-                                    <Image
-                                        source={{
-                                            uri: (group.item.picture !== "") ? "data:image/jpeg;base64," + group.item.picture : "https://www.tenniscall.com/images/chat.jpg"
-                                        }}
-                                        style={{
-                                            ...Styles.imageStyle,
-                                            borderColor: (darkMode) ? "white" : "black",
-                                            borderWidth: 1,
-                                            width: getIconSize(110),
-                                            height: getIconSize(110)
-                                        }}
-                                    />
+                        if (!group.item.deleted) {
+                            return (
+                                <TouchableOpacity onPress={() => navigation.navigate("GroupChat", {group: group.item})}
+                                                  style={{
+                                                      ...Styles.touchable,
+                                                      flexDirection: "row",
+                                                      alignItems: "center",
+                                                      margin: "5%"
+                                                  }}>
+                                    <TouchableOpacity
+                                        onPress={() => navigation.navigate("GroupChatDetails", {groupSelected: group.item})}>
+                                        {
+                                            (group.item.picture !== "") ?
+                                                <Image
+                                                    source={{
+                                                        uri: "data:image/jpeg;base64," + group.item.picture,
+                                                        width: getIconSize(100),
+                                                        height: getIconSize(100)
+                                                    }}
+                                                    style={{...Styles.imageStyle, borderColor: (darkMode) ? "white" : "black", borderWidth: 1}}
+                                                />
+                                                :
+                                                <Image
+                                                    source={
+                                                        require("../../img/defaultChatPic.jpg")
+                                                    }
+                                                    style={{...Styles.imageStyle, borderColor: (darkMode) ? "white" : "black", borderWidth: 1, width: getIconSize(110), height: getIconSize(110)}}
+                                                />
+                                        }
+                                    </TouchableOpacity>
+                                    <Text style={{
+                                        color: (darkMode) ? "white" : "black",
+                                        marginLeft: "5%",
+                                        marginRight: "13%"
+                                    }}>{group.item.name}</Text>
                                 </TouchableOpacity>
-                                <Text style={{
-                                    color: (darkMode) ? "white" : "black",
-                                    marginLeft: "5%",
-                                    marginRight: "13%"
-                                }}>{group.item.name}</Text>
-                            </TouchableOpacity>
 
-                        )
+                            )
+                        }
                     }}
                     keyExtractor={(comp, index) => index + ""}
                 />
-                <View style={{
-                    position: "absolute",
-                    bottom: 0,
-                    right: 0,
-                    marginBottom: "3%"
-                }}>
-                    <FAB
-                        title="+"
-                        placement="right"
-                        titleStyle={{ fontSize: getFontSize(20), color: (darkMode) ? "white" : "black" }}
-                        color={(darkMode) ? "#242121" : "#F5F5F5"}
-                        style={{ borderColor: "#ca2613", borderWidth: 2, height: getIconSize(170), width: getIconSize(170)}}
+                <View style={{justifyContent: "flex-end", alignItems: "flex-end", position: "absolute", height: "100%", width: "100%"}}>
+                    <TouchableOpacity
+                        style={{
+                            ...Styles.touchable,
+                            justifyContent: "center",
+                            alignItems: "center",
+                            margin: "5%",
+                            borderRadius: 100,
+                            padding: "4%",
+                            paddingHorizontal: "5%",
+                            backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"
+                        }}
                         onPress={() => navigation.navigate("CreateGroup")}
-                    />
+                    >
+                        <FontAwesome6Icon name={"plus"} size={getIconSize(50)}
+                                          color={(darkMode) ? "white" : "black"}></FontAwesome6Icon>
+                    </TouchableOpacity>
                 </View>
             </View>
         </View>

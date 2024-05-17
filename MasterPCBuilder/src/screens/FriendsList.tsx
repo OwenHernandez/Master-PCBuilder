@@ -76,36 +76,55 @@ const FriendsList = (props: Props) => {
                 <FlatList
                     data={friendsByName}
                     renderItem={(friend) => {
-                        return (
-                            <TouchableOpacity onPress={() => navigation.navigate("Chat", {friend: friend.item})}
-                                              style={{
-                                                  ...Styles.touchable,
-                                                  flexDirection: "row",
-                                                  alignItems: "center",
-                                                  margin: "5%"
-                                              }}>
-                                <TouchableOpacity onPress={() => navigation.navigate("OtherUserProfile", {userSelected: friend.item})}>
-                                    <Image
-                                        source={{
-                                            uri: (friend.item.picture !== "") ? "data:image/jpeg;base64," + friend.item.picture : "https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png?x=480&quality=40",
-                                        }}
-                                        style={{
-                                            ...Styles.imageStyle,
-                                            borderColor: (darkMode) ? "white" : "black",
-                                            borderWidth: 1,
-                                            width: getIconSize(110),
-                                            height: getIconSize(110)
-                                        }}
-                                    />
+                        if (!friend.item.deleted) {
+                            return (
+                                <TouchableOpacity onPress={() => navigation.navigate("Chat", {friend: friend.item})}
+                                                  style={{
+                                                      ...Styles.touchable,
+                                                      flexDirection: "row",
+                                                      alignItems: "center",
+                                                      margin: "5%"
+                                                  }}>
+                                    <TouchableOpacity
+                                        onPress={() => navigation.navigate("OtherUserProfile", {userSelected: friend.item})}>
+                                        {
+                                            (friend.item.picture !== "") ?
+                                                <Image
+                                                    source={{
+                                                        uri: "data:image/jpeg;base64," + friend.item.picture,
+                                                        width: getIconSize(110),
+                                                        height: getIconSize(110)
+                                                    }}
+                                                    style={{
+                                                        ...Styles.imageStyle,
+                                                        borderColor: (darkMode) ? "white" : "black",
+                                                        borderWidth: 1
+                                                    }}
+                                                />
+                                                :
+                                                <Image
+                                                    source={
+                                                        require("../../img/defaultProfilePic.png")
+                                                    }
+                                                    style={{
+                                                        ...Styles.imageStyle,
+                                                        borderColor: (darkMode) ? "white" : "black",
+                                                        borderWidth: 1,
+                                                        width: getIconSize(110),
+                                                        height: getIconSize(110)
+                                                    }}
+                                                />
+                                        }
+                                    </TouchableOpacity>
+                                    <Text style={{
+                                        color: (darkMode) ? "white" : "black",
+                                        marginLeft: "5%",
+                                        marginRight: "13%"
+                                    }}>{friend.item.nick}</Text>
                                 </TouchableOpacity>
-                                <Text style={{
-                                    color: (darkMode) ? "white" : "black",
-                                    marginLeft: "5%",
-                                    marginRight: "13%"
-                                }}>{friend.item.nick}</Text>
-                            </TouchableOpacity>
 
-                        )
+                            )
+                        }
                     }}
                     keyExtractor={(comp, index) => index + ""}
                 />

@@ -198,7 +198,6 @@ const AdminChat = (props: Props) => {
                                     <View style={{flexDirection: "row", justifyContent: "flex-end"}}>
                                         <View style={{
                                             backgroundColor: "#ca2613",
-                                            //
                                             padding: "1%",
                                             paddingHorizontal: "3%",
                                             margin: "2%",
@@ -219,7 +218,6 @@ const AdminChat = (props: Props) => {
                                     <View style={{flexDirection: "row", justifyContent: "flex-start"}}>
                                         <View style={{
                                             backgroundColor: "#676767",
-                                            //
                                             padding: "1%",
                                             paddingHorizontal: "3%",
                                             margin: "2%",

@@ -1,4 +1,4 @@
-import {Dimensions, FlatList, PixelRatio, Text, TouchableOpacity, View} from 'react-native'
+import {Alert, Dimensions, FlatList, PixelRatio, Text, TouchableOpacity, View} from 'react-native'
 import React, {useEffect, useState} from 'react'
 import {RootStackParamList} from '../navigations/StackNavigator';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -8,6 +8,8 @@ import {usePrimaryContext} from '../contexts/PrimaryContext';
 import axios from 'axios';
 import {Globals} from '../components/Globals';
 import HeaderScreen from "../components/HeaderScreen";
+import {BuildRepository} from "../data/Database";
+import {transformBuildDTOToEntity, transformBuildToDTO} from "../data/transformers/BuildTransformer";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'UserBuildsList'>;
 
@@ -18,8 +20,8 @@ const UserBuildsList = (props: Props) => {
     const getFontSize = (size: number) => size / fontScale;
     const fullScreen = Dimensions.get("window").scale;
     const getIconSize = (size: number) => size / fullScreen;
-    const [buildsList, setBuildsList] = useState([{}] as IBuildType[]);
-    const [buildsFilteredList, setBuildsFilteredList] = useState([{}] as IBuildType[]);
+    const [buildsList, setBuildsList] = useState([{}] as any[]);
+    const [buildsFilteredList, setBuildsFilteredList] = useState([{}] as any[]);
     const [categoryToFilter, setCategoryToFilter] = useState(Globals.CATEGORY_ALL);
 
     const arrayCategoriaBuilder: Array<string> = [Globals.CATEGORY_ALL, Globals.CATEGORY_GAMING, Globals.CATEGORY_BUDGET, Globals.CATEGORY_WORK];
@@ -30,6 +32,8 @@ const UserBuildsList = (props: Props) => {
      * As the dependency array is empty, this hook will only run once, when the component mounts.
      */
     useEffect(() => {
+        setBuildsList([]);
+        setBuildsFilteredList([]);
         getUserBuilds();
     }, []);
 
@@ -49,8 +53,30 @@ const UserBuildsList = (props: Props) => {
             const response = await axios.get(Globals.IP_HTTP + "/api/v2/builds", {headers: {"Authorization": "Bearer " + token}});
             setBuildsList(response.data);
             setBuildsFilteredList(response.data);
+            try {
+                for (const build of response.data) {
+                    let newBuild = await transformBuildDTOToEntity(build);
+                    await BuildRepository.save(newBuild);
+                }
+            } catch (err) {
+                console.log("Error while trying to save build: " + err);
+            }
         } catch (err) {
             console.log(err);
+            let buildsOffline = await BuildRepository.find({
+                relations: {
+                    buildsComponents: {
+                        component: {
+                            seller: true
+                        }
+                    }
+                }
+            });
+            for (const build of buildsOffline) {
+                let newBuild = transformBuildToDTO(build);
+                setBuildsList(prevBuilds => [...prevBuilds, newBuild]);
+                setBuildsFilteredList(prevBuilds => [...prevBuilds, newBuild]);
+            }
         }
     }
 
@@ -58,25 +84,18 @@ const UserBuildsList = (props: Props) => {
         <View>
             <HeaderScreen name={"Your Builds"} navigation={navigation} profile={false} drawer={false}/>
             <View style={{height: "90%"}}>
-                <View style={{flexDirection: "row", justifyContent: "space-between", marginHorizontal: 10, alignItems: "center"}}>
-                    <Text style={{
-                        fontSize: getFontSize(20),
-                        color: (darkMode) ? "white" : "black",
-                        marginHorizontal: 10,
-                        textAlign: "center"
-                    }}>Category:</Text>
+                <View style={{flexDirection: "row", justifyContent: "space-between", alignItems: "center"}}>
                     <FlatList
-                        style={{marginHorizontal: 10}}
                         data={arrayCategoriaBuilder}
                         horizontal={true}
                         renderItem={(categoria) => {
                             return (
                                 <TouchableOpacity
                                     style={{
-                                        margin: 10,
-                                        
+                                        margin: getIconSize(30),
                                         borderWidth: 2,
-                                        borderColor: (categoryToFilter === categoria.item) ? "violet" : "#ca2613",
+                                        borderColor: "#ca2613",
+                                        backgroundColor: (categoryToFilter === categoria.item) ? "#676767" : (darkMode) ? "#242121" : "#F5F5F5",
                                         padding: 10,
                                         width: 100
                                     }}

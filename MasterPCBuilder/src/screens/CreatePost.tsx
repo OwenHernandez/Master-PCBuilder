@@ -7,7 +7,7 @@ import {
     Dimensions,
     TextInput,
     Alert,
-    ScrollView
+    ScrollView, Image
 } from 'react-native'
 import React, {useEffect, useState} from 'react'
 import {usePrimaryContext} from '../contexts/PrimaryContext';
@@ -121,6 +121,9 @@ const CreatePost = (props: Props) => {
                                 color: (darkMode) ? "white" : "black",
                                 textAlign: 'center'
                             }}
+                            numberOfLines={5}
+                            multiline={true}
+                            maxLength={50}
                             placeholderTextColor={"#a3a3a3"}
                             onChangeText={(text) => setTitle(text)}
                         ></TextInput>
@@ -173,12 +176,24 @@ const CreatePost = (props: Props) => {
                                     textAlign: 'center'
                                 }}
                             />
-                            <TouchableOpacity style={{borderWidth: 2,borderColor: "#ca2613",height:"47.5%",justifyContent:"center"}} onPress={openGallery}>
-                                <Text style={{
-                                    fontSize: getFontSize(20),
-                                    textAlign: 'center',
-                                    color: (darkMode) ? "white" : "black"
-                                }}>Select a picture for the post</Text>
+                            <TouchableOpacity style={{borderWidth: 2,borderColor: "#ca2613",height:"47.5%",justifyContent:"center", alignItems: "center"}} onPress={openGallery}>
+                                {
+                                    (image64 !== "") ?
+                                        <Image
+                                            source={{
+                                                uri: "data:image/jpeg;base64," + image64,
+                                                width: getIconSize(300),
+                                                height: getIconSize(300)
+                                            }}
+                                            style={{ ...Styles.imageStyle, borderColor: (darkMode) ? "white" : "black", borderWidth: 1, borderRadius: 10 }}
+                                        />
+                                        :
+                                        <Text style={{
+                                            fontSize: getFontSize(20),
+                                            textAlign: 'center',
+                                            color: (darkMode) ? "white" : "black"
+                                        }}>Select a picture for the Post</Text>
+                                }
                             </TouchableOpacity>
                         </View>
                         <View style={{flex:1.5}}>
@@ -197,7 +212,7 @@ const CreatePost = (props: Props) => {
                                     color: (darkMode) ? "white" : "black",
                                 }}
                                 placeholderTextColor={"#a3a3a3"}
-                                numberOfLines={3}
+                                numberOfLines={5}
                                 multiline={true}
                                 onChangeText={(text) => setDescription(text)}
                             ></TextInput>

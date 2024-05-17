@@ -188,18 +188,34 @@ const OtherUserProfile = (props: Props) => {
             <HeaderScreen name={userSelected.nick + "'s Profile"} navigation={navigation} profile={false}
                           drawer={false}/>
             <View style={{alignItems: 'center', margin: "5%"}}>
-                <Image
-                    source={{
-                        uri: (userSelected.picture !== "") ? "data:image/jpeg;base64," + userSelected.picture : "https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png?x=480&quality=40"
-                    }}
-                    style={{
-                        ...Styles.imageStyle,
-                        borderColor: (darkMode) ? "white" : "black",
-                        borderWidth: 1,
-                        width: getIconSize(300),
-                        height: getIconSize(300)
-                    }}
-                />
+                {
+                    (userSelected.picture !== "") ?
+                        <Image
+                            source={{
+                                uri: "data:image/jpeg;base64," + userSelected.picture
+                            }}
+                            style={{
+                                ...Styles.imageStyle,
+                                borderColor: (darkMode) ? "white" : "black",
+                                borderWidth: 1,
+                                width: getIconSize(300),
+                                height: getIconSize(300)
+                            }}
+                        />
+                        :
+                        <Image
+                            source={
+                                require("../../img/defaultProfilePic.png")
+                            }
+                            style={{
+                                ...Styles.imageStyle,
+                                borderColor: (darkMode) ? "white" : "black",
+                                borderWidth: 1,
+                                width: getIconSize(300),
+                                height: getIconSize(300)
+                            }}
+                        />
+                }
                 <Text style={{fontSize: 40, color: (darkMode) ? "white" : "black"}}>{userSelected.nick}</Text>
                 <Text style={{fontSize: 20, color: (darkMode) ? "white" : "black"}}>{userSelected.email}</Text>
             </View>

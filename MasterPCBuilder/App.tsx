@@ -1,4 +1,5 @@
 import 'react-native-gesture-handler';
+import 'reflect-metadata';
 /**
  * Sample React Native App
  * https://github.com/facebook/react-native
@@ -9,7 +10,7 @@ import 'react-native-gesture-handler';
 import React, {useEffect, useState} from 'react';
 import type {PropsWithChildren} from 'react';
 import {
-    Button,
+    Button, LogBox,
     SafeAreaView,
     ScrollView,
     StatusBar,
@@ -31,6 +32,8 @@ import StackNavigator from './src/navigations/StackNavigator';
 import PrimaryContextProvider, {PrimaryContext} from './src/contexts/PrimaryContext';
 import DrawerNavigator from './src/navigations/DrawerNavigator';
 import {MenuProvider} from "react-native-popup-menu";
+import {dataSource} from "./src/data/Database";
+import {getConnection} from "typeorm";
 
 
 type SectionProps = PropsWithChildren<{
@@ -38,6 +41,15 @@ type SectionProps = PropsWithChildren<{
 }>;
 
 function App(): JSX.Element {
+    LogBox.ignoreAllLogs();
+    useEffect(() => {
+        async function startDDBB() {
+            await dataSource.initialize();
+            //await dataSource.dropDatabase();
+        }
+        startDDBB();
+    }, []);
+
     return (
         <MenuProvider>
             <NavigationContainer>
