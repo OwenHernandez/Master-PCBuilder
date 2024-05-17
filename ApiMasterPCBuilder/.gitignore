@@ -1,20 +1,29 @@
+### General ###
 HELP.md
+
+### Maven ###
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
 
-### STS ###
+### Gradle ###
+.gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### Eclipse/STS ###
 .apt_generated
 .classpath
 .factorypath
 .project
-.settings
+.settings/
 .springBeans
 .sts4-cache
 
 ### IntelliJ IDEA ###
-.idea
+.idea/
 *.iws
 *.iml
 *.ipr
@@ -25,11 +34,81 @@ target/
 /dist/
 /nbdist/
 /.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
 
 ### VS Code ###
 .vscode/
+
+### Log Files ###
+*.log
+
+### OS-Specific ###
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Linux
+*~
+
+### Images ###
 /img/*
-/img/
+
+### Other ###
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Python
+*.py[cod]
+__pycache__/
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Compiled files
+*.class
+*.war
+*.ear
+*.jar
+*.exe
+*.dll
+*.so
+*.dylib
+*.pyc
+*.pyo
+
+# Rust
+/target/
+**/*.rs.bk
+
+# C/C++
+*.out
+*.obj
+*.o
+*.a
+*.lib
+*.d
+
+# C#
+bin/
+obj/
