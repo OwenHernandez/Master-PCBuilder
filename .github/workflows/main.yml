@@ -1,8 +1,10 @@
 name: Maven Package
+
 on:
   push:
     branches:
       - main
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -10,8 +12,18 @@ jobs:
       contents: read
       packages: write
 
+    services:
+      mongo:
+        image: mongo:latest
+        ports:
+          - 27017:27017
+
     steps:
     - uses: actions/checkout@v3
+
+    - name: Set timezone
+      run: sudo timedatectl set-timezone Europe/Madrid
+
     - name: Set up JDK 17
       uses: actions/setup-java@v3
       with:
@@ -20,26 +32,19 @@ jobs:
         server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
         settings-path: ${{ github.workspace }}/ApiMasterPCBuilder # location for the settings.xml file
 
+    - name: Cache Maven packages
+      uses: actions/cache@v2
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-maven
+
     - name: Build with Maven
       run: mvn -B clean package --file ApiMasterPCBuilder/pom.xml
 
-   # - name: subir fichero
-   #   uses: actions/upload-artifact@v4
-    #  with:
-    #    name: allartifacts
-   #     path: ApiMasterPCBuilder/target/*
+    - name: Run tests with detailed logging
+      run: mvn test -X --file ApiMasterPCBuilder/pom.xml
 
-   # - name: Download artifact
-   #   uses: actions/download-artifact@v4
-   #   with:
-   #     name: allartifacts
-   #     path: distfiles
-
-
-    #- name: Build Docker image
-    #  run: |
-    #    docker build -t helloapp .
-   
     - name: Upload to remote with SCP
       uses: appleboy/scp-action@v0.1.7
       with:
