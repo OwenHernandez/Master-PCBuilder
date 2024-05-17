@@ -9,7 +9,7 @@ import {Posts} from "./entities/Posts";
 export const dataSource = new DataSource({
     type: "react-native",
     location: "default",
-    database: "MASTER.db",
+    database: "MASTER1.db",
     logging: [],
     synchronize: true,
     entities: [

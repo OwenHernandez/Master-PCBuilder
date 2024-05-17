@@ -87,13 +87,15 @@ const useLogin = () => {
                     friend.picture = picture;
                 }
             }
+            console.log("wepa")
             let userSave = transformUserDTOToEntity(newUser);
             userSave.password = password;
             await UserRepository.save(userSave);
             setUser(newUser);
             navigation.navigate("DrawerNavigator");
         } catch (err) {
-            setLoading(false); // Asegúrate de desactivar el indicador de carga
+            console.log("Error", err);
+            setLoading(false);
 
             if (err.response) {
                 // El servidor respondió con un código de estado fuera del rango 2xx
@@ -123,7 +125,7 @@ const useLogin = () => {
                         id: userDDBB.id,
                         nick: userDDBB.nick,
                         email: userDDBB.email,
-                        picture: userDDBB.picture,
+                        picture: "",
                         role: userDDBB.role,
                         friends: [],
                         blockedUsers: [],
