@@ -9,6 +9,7 @@ public class SellerDTOMapper {
     public Seller toDomain(SellerInputDTO sellerDTO) {
         Seller seller = new Seller();
         seller.setName(sellerDTO.getName());
+        seller.setImage(sellerDTO.getImage());
         seller.setDeleted((byte) (sellerDTO.isDeleted() ? 1 : 0));
 
         return seller;

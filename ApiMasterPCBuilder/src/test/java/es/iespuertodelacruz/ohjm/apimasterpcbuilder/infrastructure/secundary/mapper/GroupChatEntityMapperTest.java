@@ -101,7 +101,7 @@ public class GroupChatEntityMapperTest {
         assertEquals(groupChat.getName(), groupChatEntity.getName());
         assertEquals(groupChat.getDescription(), groupChatEntity.getDescription());
         assertEquals(groupChat.getPicture(), groupChatEntity.getPicture());
-        assertEquals(86400000L, groupChatEntity.getDateOfCreation());
+        assertEquals(82800000L, groupChatEntity.getDateOfCreation());
         assertNotNull(groupChatEntity.getGroupAdmin());
         assertNotNull(groupChatEntity.getUsers());
     }

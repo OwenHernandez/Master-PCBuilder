@@ -19,6 +19,7 @@ public class PostDTOMapper {
         Post post = new Post();
         post.setDescription(inputDTO.getDescription());
         post.setTitle(inputDTO.getTitle());
+        post.setImage(inputDTO.getImage());
         post.setDeleted((byte) (inputDTO.isDeleted() ? 1 : 0));
         return post;
     }
