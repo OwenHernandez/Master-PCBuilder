@@ -141,14 +141,14 @@ const Post = (props: Props) => {
                                             >
                                                 <MenuOption
                                                     onSelect={() => editPost()}
-                                                    text='Edit Component'
+                                                    text='Edit Post'
                                                     customStyles={{
                                                         optionText: {color: (darkMode) ? "white" : "black"}
                                                     }}
                                                 />
                                                 <MenuOption
                                                     onSelect={() => deletePost()}
-                                                    text='Delete Component'
+                                                    text='Delete Post'
                                                     customStyles={{
                                                         optionText: {color: (darkMode) ? "white" : "black"}
                                                     }}
@@ -206,14 +206,14 @@ const Post = (props: Props) => {
                                                 >
                                                     <MenuOption
                                                         onSelect={() => editPost()}
-                                                        text='Edit Component'
+                                                        text='Edit Post'
                                                         customStyles={{
                                                             optionText: {color: (darkMode) ? "white" : "black"}
                                                         }}
                                                     />
                                                     <MenuOption
                                                         onSelect={() => deletePost()}
-                                                        text='Delete Component'
+                                                        text='Delete Post'
                                                         customStyles={{
                                                             optionText: {color: (darkMode) ? "white" : "black"}
                                                         }}

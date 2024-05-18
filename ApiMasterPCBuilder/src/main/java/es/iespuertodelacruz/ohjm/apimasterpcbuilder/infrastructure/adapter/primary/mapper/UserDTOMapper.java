@@ -23,6 +23,9 @@ public class UserDTOMapper {
         user.setRole(userDTO.getRole());
         if (userDTO.getFriends() != null && !userDTO.getFriends().isEmpty()) {
             for (UserDTO uDTO : userDTO.getFriends()) {
+                if (uDTO == null) {
+                    continue;
+                }
                 User u = toDomain(uDTO);
                 user.getFriends().add(u);
             }
@@ -41,6 +44,9 @@ public class UserDTOMapper {
         if (user.getComponentsWanted() != null && !user.getComponentsWanted().isEmpty()) {
             List<ComponentOutputDTO> componentsWanted = new ArrayList<>();
             for (Component c : user.getComponentsWanted()) {
+                if (c == null || c.getDeleted() == 1) {
+                    continue;
+                }
                 ComponentOutputDTO cDTO = compMapper.toDTO(c);
                 componentsWanted.add(cDTO);
             }
@@ -51,6 +57,9 @@ public class UserDTOMapper {
         userDTO.setFriends(new ArrayList<>());
         if (user.getFriends() != null && !user.getFriends().isEmpty()) {
             for (User u : user.getFriends()) {
+                if (u == null || u.getDeleted() == 1) {
+                    continue;
+                }
                 u.setFriends(null);
                 UserDTO uDTO = toDTO(u);
                 userDTO.getFriends().add(uDTO);
@@ -59,6 +68,9 @@ public class UserDTOMapper {
         userDTO.setBlockedUsers(new ArrayList<>());
         if (user.getBlockedUsers() != null && !user.getBlockedUsers().isEmpty()) {
             for (User u : user.getBlockedUsers()) {
+                if (u == null || u.getDeleted() == 1) {
+                    continue;
+                }
                 u.setBlockedUsers(null);
                 UserDTO uDTO = toDTO(u);
                 userDTO.getBlockedUsers().add(uDTO);
@@ -76,6 +88,9 @@ public class UserDTOMapper {
         if (user.getComponentsWanted() != null && !user.getComponentsWanted().isEmpty()) {
             List<ComponentOutputDTO> componentsWanted = new ArrayList<>();
             for (Component c : user.getComponentsWanted()) {
+                if (c == null || c.getDeleted() == 1) {
+                    continue;
+                }
                 ComponentOutputDTO cDTO = compMapper.toDTO(c);
 
                 componentsWanted.add(cDTO);
@@ -87,6 +102,9 @@ public class UserDTOMapper {
         userDTO.setFriends(new ArrayList<>());
         if (user.getFriends() != null && !user.getFriends().isEmpty()) {
             for (User u : user.getFriends()) {
+                if (u == null || u.getDeleted() == 1) {
+                    continue;
+                }
                 u.setFriends(null);
                 UserDTO uDTO = toDTO(u);
                 userDTO.getFriends().add(uDTO);
@@ -95,6 +113,9 @@ public class UserDTOMapper {
         userDTO.setBlockedUsers(new ArrayList<>());
         if (user.getBlockedUsers() != null && !user.getBlockedUsers().isEmpty()) {
             for (User u : user.getBlockedUsers()) {
+                if (u == null || u.getDeleted() == 1) {
+                    continue;
+                }
                 u.setBlockedUsers(null);
                 UserDTO uDTO = toDTO(u);
                 userDTO.getBlockedUsers().add(uDTO);
