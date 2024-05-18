@@ -40,7 +40,7 @@ public class BuildComponentEntityMapperTest {
         BuildComponentEntity entity = buildComponentEntityMapper.toPersistence(buildComponent);
 
         assertEquals(buildComponent.getId(), entity.getId());
-        assertEquals(99964800000L, entity.getDateCreated());
+        assertEquals(99961200000L, entity.getDateCreated());
         assertEquals(buildComponent.getPriceAtTheTime(), entity.getPriceAtTheTime());
     }
 

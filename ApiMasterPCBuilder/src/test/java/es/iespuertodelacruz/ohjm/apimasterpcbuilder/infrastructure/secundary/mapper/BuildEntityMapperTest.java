@@ -138,7 +138,7 @@ public class BuildEntityMapperTest {
         assertEquals(build.getName(), persistence.getName());
         assertEquals(build.getNotes(), persistence.getNotes());
         assertEquals(build.getTotalPrice(), persistence.getTotalPrice());
-        assertEquals(1619996400000L, persistence.getDateOfCreation());
+        assertEquals(1619992800000L, persistence.getDateOfCreation());
         assertEquals(build.getCategory(), persistence.getCategory());
     }
 

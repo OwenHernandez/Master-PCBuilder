@@ -2,6 +2,7 @@ package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.secundary.se
 
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Seller;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.service.SellerEntityService;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestMethodOrder(value = MethodOrderer.OrderAnnotation.class)
 @Sql(scripts = { "/masterTest.sql" })
 public class SellerEntityServiceTest {
+
     @Autowired
     private SellerEntityService sellerEntityService;
 
@@ -80,6 +82,7 @@ public class SellerEntityServiceTest {
     }
 
     @Test
+    @Transactional
     @DisplayName("Test: Find a seller by name.")
     void findSellerByName_ShouldReturnCorrectSeller() {
         Seller seller = new Seller();

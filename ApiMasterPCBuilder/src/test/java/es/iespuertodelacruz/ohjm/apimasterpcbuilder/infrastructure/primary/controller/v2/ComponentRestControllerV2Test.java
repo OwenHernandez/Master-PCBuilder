@@ -1,11 +1,14 @@
 package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.primary.controller.v2;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.*;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Component;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Seller;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.User;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.IComponentService;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.IPriceHistoryService;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.ISellerService;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.IUserService;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.IPriceHistoryService;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.service.FileStorageService;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.controller.v2.ComponentRestControllerV2;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.primary.dto.ComponentInputDTO;
@@ -34,7 +37,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
 
 @WebMvcTest(ComponentRestControllerV2.class)
 @ExtendWith(MockitoExtension.class)
@@ -139,7 +141,6 @@ public class ComponentRestControllerV2Test {
     @Test
     @WithMockUser(username = "user", roles = "USER")
     public void get_unauthorized_test() throws Exception {
-
         when(userService.findByNick(any(String.class))).thenReturn(null);
 
         mockMvc.perform(get("/api/v2/components"))
@@ -149,7 +150,6 @@ public class ComponentRestControllerV2Test {
     @Test
     @WithMockUser(username = "user", roles = "USER")
     public void get_notFound_name_test() throws Exception {
-
         when(userService.findByNick(any(String.class))).thenReturn(new User());
 
         when(componentService.findByName(any(String.class))).thenReturn(null);
@@ -162,7 +162,6 @@ public class ComponentRestControllerV2Test {
     @Test
     @WithMockUser(username = "user", roles = "USER")
     public void get_notFound_userId_test() throws Exception {
-
         when(userService.findByNick(any(String.class))).thenReturn(new User());
 
         when(componentService.findByUserId(any(Long.class))).thenReturn(null);
@@ -205,7 +204,6 @@ public class ComponentRestControllerV2Test {
     @Test
     @WithMockUser(username = "user", roles = "USER")
     public void save_unauthorized_test() throws Exception {
-
         when(userService.findByNick(any(String.class))).thenReturn(null);
 
         mockMvc.perform(post("/api/v2/components")
@@ -217,7 +215,6 @@ public class ComponentRestControllerV2Test {
     @Test
     @WithMockUser(username = "user", roles = "USER")
     public void save_badRequest_bodyNull_test() throws Exception {
-
         mockMvc.perform(post("/api/v2/components")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(null)))
@@ -227,7 +224,6 @@ public class ComponentRestControllerV2Test {
     @Test
     @WithMockUser(username = "user", roles = "USER")
     public void save_badRequest_sellerNull_test() throws Exception {
-
         when(userService.findByNick(any(String.class))).thenReturn(new User());
 
         when(sellerService.findByName(any(String.class))).thenReturn(null);
@@ -293,11 +289,6 @@ public class ComponentRestControllerV2Test {
         long compId = 1L;
         String filename = "testImage.jpg";
 
-        // Simulación de la obtención del componente
-        Component mockComponent = new Component();
-        mockComponent.setId(compId);
-        mockComponent.setName("Test Component");
-        mockComponent.setImage(filename);
         when(componentService.findById(any(Long.class))).thenReturn(null);
 
         mockMvc.perform(get("/api/v2/components/img/{id}/{filename}", compId, filename))
@@ -310,14 +301,12 @@ public class ComponentRestControllerV2Test {
         long compId = 1L;
         String filename = "testImage.jpg";
 
-        // Simulación de la obtención del componente
         Component mockComponent = new Component();
         mockComponent.setId(compId);
         mockComponent.setName("Test Component");
         mockComponent.setImage(filename);
         when(componentService.findById(any(Long.class))).thenReturn(mockComponent);
 
-        // Simulación del usuario y autenticación
         User mockUser = mock(User.class);
         when(userService.findByNick("user")).thenReturn(mockUser);
 
@@ -333,14 +322,12 @@ public class ComponentRestControllerV2Test {
         long compId = 1L;
         String filename = "testImage.jpg";
 
-        // Simulación de la obtención del componente
         Component mockComponent = new Component();
         mockComponent.setId(compId);
         mockComponent.setName("Test Component");
         mockComponent.setImage(filename);
         when(componentService.findById(any(Long.class))).thenReturn(mockComponent);
 
-        // Simulación del usuario y autenticación
         User mockUser = mock(User.class);
         when(userService.findByNick("user")).thenReturn(mockUser);
 
@@ -354,7 +341,6 @@ public class ComponentRestControllerV2Test {
         long compId = 1L;
         String filename = "testImage.jpg";
 
-        // Simulación de la obtención del componente
         Component mockComponent = new Component();
         mockComponent.setId(compId);
         mockComponent.setName("Test Component");
@@ -391,7 +377,6 @@ public class ComponentRestControllerV2Test {
     @Test
     @WithMockUser(username = "user", roles = "USER")
     public void delete_badRequest_test() throws Exception {
-
         mockMvc.perform(delete("/api/v2/components/null"))
                 .andExpect(status().isBadRequest());
     }
@@ -399,7 +384,6 @@ public class ComponentRestControllerV2Test {
     @Test
     @WithMockUser(username = "user", roles = "USER")
     public void delete_unauthorized_test() throws Exception {
-
         when(userService.findByNick(any(String.class))).thenReturn(null);
 
         mockMvc.perform(delete("/api/v2/components/1"))
@@ -495,7 +479,6 @@ public class ComponentRestControllerV2Test {
     @Test
     @WithMockUser(username = "user", password = "password", roles = "USER")
     public void update_badRequest_bodyParamNull_test() throws Exception {
-
         mockMvc.perform(put("/api/v2/components/null")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(null)))
@@ -505,7 +488,6 @@ public class ComponentRestControllerV2Test {
     @Test
     @WithMockUser(username = "user", password = "password", roles = "USER")
     public void update_unauthorized_test() throws Exception {
-
         when(userService.findByNick(any(String.class))).thenReturn(null);
 
         mockMvc.perform(put("/api/v2/components/1")
@@ -517,7 +499,6 @@ public class ComponentRestControllerV2Test {
     @Test
     @WithMockUser(username = "user", password = "password", roles = "USER")
     public void update_notFound_test() throws Exception {
-
         when(componentService.findById(any(Long.class))).thenReturn(null);
 
         when(userService.findByNick(any(String.class))).thenReturn(new User());
@@ -627,7 +608,6 @@ public class ComponentRestControllerV2Test {
     @Test
     @WithMockUser(username = "user", password = "password", roles = "USER")
     public void amazon_notFound_test() throws Exception {
-
         when(componentService.searchAmazon(any(String.class))).thenReturn(null);
 
         mockMvc.perform(get("/api/v2/components/amazon/testSearch"))
@@ -652,77 +632,9 @@ public class ComponentRestControllerV2Test {
     @Test
     @WithMockUser(username = "user", password = "password", roles = "USER")
     public void ebay_notFound_test() throws Exception {
-
         when(componentService.searchEbay(any(String.class))).thenReturn(null);
 
         mockMvc.perform(get("/api/v2/components/ebay/testSearch"))
                 .andExpect(status().isNotFound());
     }
-
-    /*
-    @Test
-    @WithMockUser(username = "user", password = "password", roles = "USER")
-    public void updatePrice_ok_test() throws Exception {
-        ComponentInputDTO componentInputDTO = new ComponentInputDTO();
-        componentInputDTO.setName("Test Component");
-
-        Component component = new Component();
-        component.setId(1L);
-        component.setName("Test Component");
-
-        when(componentService.findById(any(Long.class))).thenReturn(component);
-
-        when(componentService.update(any(Component.class))).thenReturn(true);
-
-        mockMvc.perform(put("/api/v2/components/price/1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(componentInputDTO)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", is("Component Successfully updated")));
-    }
-
-    @Test
-    @WithMockUser(username = "user", password = "password", roles = "USER")
-    public void updatePrice_badRequest_test() throws Exception {
-
-        mockMvc.perform(put("/api/v2/components/price/")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(null)))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @WithMockUser(username = "user", password = "password", roles = "USER")
-    public void updatePrice_notFound_test() throws Exception {
-        ComponentInputDTO componentInputDTO = new ComponentInputDTO();
-        componentInputDTO.setName("Test Component");
-
-        when(componentService.findById(any(Long.class))).thenReturn(null);
-
-        mockMvc.perform(put("/api/v2/components/price/1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(componentInputDTO)))
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
-    @WithMockUser(username = "user", password = "password", roles = "USER")
-    public void updatePrice_internalServerError_test() throws Exception {
-        ComponentInputDTO componentInputDTO = new ComponentInputDTO();
-        componentInputDTO.setName("Test Component");
-
-        Component component = new Component();
-        component.setId(1L);
-        component.setName("Test Component");
-
-        when(componentService.findById(any(Long.class))).thenReturn(component);
-
-        when(componentService.update(any(Component.class))).thenReturn(false);
-
-        mockMvc.perform(put("/api/v2/components/price/1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(componentInputDTO)))
-                .andExpect(status().isInternalServerError());
-    }
-    */
 }
