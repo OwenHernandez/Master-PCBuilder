@@ -269,7 +269,8 @@ const Chat = (props: Props) => {
                 <Text style={{
                     ...Styles.headerText,
                     color: (darkMode) ? "white" : "black",
-                    fontSize: getFontSize(20)
+                    fontSize: getFontSize(20),
+                    maxWidth: "70%"
                 }}>{userSelected?.nick}</Text>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Material name='keyboard-backspace' size={getIconSize(100)}

@@ -114,7 +114,7 @@ const GroupList = (props: Props) => {
                                 if (text === "")
                                     setGroupsByName(groupList);
                                 else
-                                    setGroupsByName(groupList.filter((group) => group.name.toLowerCase().includes(text)))
+                                    setGroupsByName(groupList.filter((group) => group.name.toLowerCase().includes(text.toLowerCase())))
                             }}
                         ></TextInput>
                     </View>
