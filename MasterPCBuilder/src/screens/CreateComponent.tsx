@@ -7,7 +7,7 @@ import {
     Dimensions,
     TextInput,
     Alert,
-    ScrollView, KeyboardAvoidingView, Platform
+    ScrollView, KeyboardAvoidingView, Platform, Image
 } from 'react-native'
 import React, {useEffect, useState} from 'react'
 import {usePrimaryContext} from '../contexts/PrimaryContext';
@@ -22,6 +22,7 @@ import * as ImagePicker from "react-native-image-picker";
 import {ImagePickerResponse} from "react-native-image-picker";
 import RNFetchBlob from "rn-fetch-blob";
 import Toast from "react-native-toast-message";
+import {ComponentRepository, SellerRepository} from "../data/Database";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'CreateComponent'>;
 
@@ -61,8 +62,23 @@ const CreateComponent = (props: Props) => {
                 }
                 setSellers(prevItems => [...prevItems, item]);
             });
+            let sellersOffline =await SellerRepository.find();
+            let sellersNotInserted = response.data.filter(onlineSeller => {
+                    return !sellersOffline.some(offlineSeller => offlineSeller.id === onlineSeller.id);
+                }
+            );
+            for(const seller of sellersNotInserted){
+                let insertResult = await SellerRepository.insert(seller);
+            }
         } catch (e) {
-            console.log(e);
+            let sellersOffline = await SellerRepository.find();
+            sellersOffline.forEach((seller) => {
+                let item = {
+                    label: seller.name,
+                    value: seller.name
+                }
+                setSellers(prevItems => [...prevItems, item]);
+            });
         }
     }
 
@@ -88,22 +104,25 @@ const CreateComponent = (props: Props) => {
 
     async function createComponent() {
         if (!isNaN(Number(price))) {
+            let amazonPrice = 0;
+            let ebayPrice = 0;
             async function getAmazonPrice(){
                 try {
-                    const response = await axios.get(Globals.IP_HTTP + "/api/v2/components/searchAmazon/" + name);
-                    console.log(response.data[0].amazon_price)
-                    setAmazon_price(parseFloat(response.data[0].amazon_price));
-                    console.log(amazon_price)
+                    const response = await axios.get(Globals.IP_HTTP + "/api/v2/components/amazon/" + name);
+                    let stringAmazon:string= response.data[0].price;
+
+                    stringAmazon=stringAmazon.replace("$","");
+                    amazonPrice = parseFloat(stringAmazon);
                 } catch (err) {
                     console.log(err);
                 }
             }
             async function getEbayPrice(){
                 try {
-                    const response = await axios.get(Globals.IP_HTTP + "/api/v2/components/searchEbay/" + name);
-                    console.log(response.data[1].ebay_price)
-                    setEbay_price(parseFloat(response.data[1].ebay_price));
-                    console.log(ebay_price)
+                    const response = await axios.get(Globals.IP_HTTP + "/api/v2/components/ebay/" + name);
+                    let stringEbay:string= response.data[1].price;
+                    stringEbay=stringEbay.replace("$","");
+                    ebayPrice = parseFloat(stringEbay);
                 } catch (err) {
                     console.log(err);
                 }
@@ -127,6 +146,7 @@ const CreateComponent = (props: Props) => {
                 setPrice("");
                 setImage("");
                 setImage64("");
+                let insertResultPromise = await ComponentRepository.insert(response.data);
                 navigation.navigate("Components List", {components: []});
             } catch (e) {
                 console.log(e);
@@ -166,11 +186,12 @@ const CreateComponent = (props: Props) => {
         <View style={{flex: 1, backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"}}>
             <HeaderScreen name={route.name} navigation={navigation} profile={false} drawer={true} />
                 <ScrollView style={{flex:1}} contentContainerStyle={{ flexGrow: 1 }}>
-                    <View style={{flex:1}}>
-                        <View style={{flex:1,flexDirection:"row",}}>
+                    <View style={{flex:1,}}>
+                        <View style={{flex:2,flexDirection:"row",}}>
                             <View style={{flex: 1,flexDirection:"column",}}>
                                 <View style={{
-                                    flex:1, marginLeft:4,paddingRight:4
+                                    flex:1,
+                                    marginRight:"5%",
                                 }}>
                                     <TextInput
                                         placeholder='Name'
@@ -179,15 +200,17 @@ const CreateComponent = (props: Props) => {
                                             flex:1,
                                             borderWidth: 2,
                                             borderColor: "#ca2613",
-                                            borderRadius: 20,
-                                            paddingHorizontal: 5,
+                                            paddingHorizontal: "10%",
                                             width: "100%",
                                             fontSize: getFontSize(20),
                                             color: (darkMode) ? "white" : "black",
                                             textAlign: 'center',
-                                            marginBottom: 8,
-                                            marginTop:8
+                                            marginBottom: "5%",
+                                            marginTop:"5%",
                                         }}
+                                        numberOfLines={5}
+                                        multiline={true}
+                                        maxLength={100}
                                         placeholderTextColor={"#a3a3a3"}
                                         onChangeText={(text) => setName(text)}
                                     ></TextInput>
@@ -198,17 +221,17 @@ const CreateComponent = (props: Props) => {
                                             flex:4,
                                             borderWidth: 2,
                                             borderColor: "#ca2613",
-                                            borderRadius: 20,
-                                            paddingHorizontal: 5,
+                                            paddingHorizontal: "10%",
                                             width: "100%",
                                             fontSize: getFontSize(15),
                                             color: (darkMode) ? "white" : "black",
                                             textAlign: 'center',
-                                            marginBottom: 8
+                                            marginBottom: "5%",
                                         }}
                                         placeholderTextColor={"#a3a3a3"}
-                                        numberOfLines={3}
+                                        numberOfLines={5}
                                         multiline={true}
+                                        maxLength={100}
                                         onChangeText={(text) => setDescription(text)}
                                     ></TextInput>
                                     <TextInput
@@ -218,13 +241,12 @@ const CreateComponent = (props: Props) => {
                                             flex:1,
                                             borderWidth: 2,
                                             borderColor: "#ca2613",
-                                            borderRadius: 20,
                                             paddingHorizontal: 5,
                                             width: "100%",
                                             fontSize: getFontSize(20),
                                             color: (darkMode) ? "white" : "black",
                                             textAlign: 'center',
-                                            marginBottom: 8
+                                            marginBottom: "5%",
                                         }}
                                         keyboardType={"numeric"}
                                         placeholderTextColor={"#a3a3a3"}
@@ -232,7 +254,7 @@ const CreateComponent = (props: Props) => {
                                     ></TextInput>
                                 </View>
                             </View>
-                            <View style={{flex:1,margin:10}}>
+                            <View style={{flex:1,}}>
                                 <Dropdown
                                     data={sellers}
                                     labelField={"label"}
@@ -244,10 +266,12 @@ const CreateComponent = (props: Props) => {
                                         height: getIconSize(130),
                                         backgroundColor: (darkMode) ? "#242121" : "#F5F5F5",
                                         borderColor: "#ca2613",
-                                        //borderRadius: 20,
+                                        //
                                         width: "100%",
                                         borderWidth: 2,
-                                        marginBottom: 8,
+                                        marginBottom: "5%",
+                                        marginTop:"5%",
+
                                         flex:1
                                     }}
                                     placeholderStyle={{
@@ -263,7 +287,7 @@ const CreateComponent = (props: Props) => {
                                     containerStyle={{
                                         backgroundColor: (darkMode) ? "#242121" : "#F5F5F5",
                                         borderColor: "#ca2613",
-                                        borderWidth: 2/*, borderRadius: 20*/
+                                        borderWidth: 2/*, */
                                     }}
                                     itemTextStyle={{
                                         fontSize: getFontSize(20),
@@ -289,7 +313,7 @@ const CreateComponent = (props: Props) => {
                                         height: getIconSize(130),
                                         backgroundColor: (darkMode) ? "#242121" : "#F5F5F5",
                                         borderColor: "#ca2613",
-                                        //borderRadius: 20,
+                                        //
                                         width: "100%",
                                         borderWidth: 2,
                                         marginBottom: 8,
@@ -308,7 +332,7 @@ const CreateComponent = (props: Props) => {
                                     containerStyle={{
                                         backgroundColor: (darkMode) ? "#242121" : "#F5F5F5",
                                         borderColor: "#ca2613",
-                                        borderWidth: 2/*, borderRadius: 20*/
+                                        borderWidth: 2/*, */
                                     }}
                                     itemTextStyle={{
                                         fontSize: getFontSize(20),
@@ -322,25 +346,48 @@ const CreateComponent = (props: Props) => {
                                         textAlign: 'center'
                                     }}
                                 />
+                                <View style={{flex: 1, marginBottom: "4.5%"}}>
+                                    <TouchableOpacity style={{borderWidth: 2,borderColor: "#ca2613", height: "100%",justifyContent:"center", alignItems: "center"}} onPress={openGallery}>
+                                        {
+                                            (image64 !== "") ?
+                                                <Image
+                                                    source={{
+                                                        uri: "data:image/jpeg;base64," + image64,
+                                                        width: getIconSize(400),
+                                                        height: getIconSize(400)
+                                                    }}
+                                                    style={{ ...Styles.imageStyle, borderColor: (darkMode) ? "white" : "black", borderWidth: 1, borderRadius: 10 }}
+                                                />
+                                                :
+                                                <Text style={{
+                                                    fontSize: getFontSize(20),
+                                                    textAlign: 'center',
+                                                    color: (darkMode) ? "white" : "black"
+                                                }}>Select a picture for the Post</Text>
+                                        }
+                                    </TouchableOpacity>
+                                </View>
+
                             </View>
                         </View>
-                        <View style={{flex:1}}>
-                            <TouchableOpacity style={{...Styles.touchable}} onPress={openGallery}>
-                                <Text style={{
-                                    fontSize: getFontSize(20),
-                                    textAlign: 'center',
-                                    color: (darkMode) ? "white" : "black"
-                                }}>{(image === "") ? "Select a picture for the component" : image}</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={{...Styles.touchable}} onPress={createComponent}>
-                                <Text
-                                    style={{
-                                        fontSize: getFontSize(20),
-                                        color: (darkMode) ? "white" : "black",
-                                        textAlign: 'center'
-                                    }}>Create
-                                    Component</Text>
-                            </TouchableOpacity>
+                        <View style={{justifyContent:"flex-end",flexDirection:"row",height:"10%",}}>
+                            <View style={{flex:1,}}>
+                                <TouchableOpacity style={{
+                                    flex:1,
+                                    borderWidth: 2,
+                                    borderColor: "#ca2613",
+                                    width: "100%",
+                                    justifyContent:"center",
+                                    marginBottom: 8}} onPress={createComponent}>
+                                    <Text
+                                        style={{
+                                            fontSize: getFontSize(20),
+                                            color: (darkMode) ? "white" : "black",
+                                            textAlign: 'center'
+                                        }}>Create
+                                        Component</Text>
+                                </TouchableOpacity>
+                            </View>
                         </View>
                     </View>
                 </ScrollView>

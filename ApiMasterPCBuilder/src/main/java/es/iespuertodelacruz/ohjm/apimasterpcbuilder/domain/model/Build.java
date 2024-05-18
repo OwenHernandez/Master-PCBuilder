@@ -17,12 +17,21 @@ public class Build {
     private double totalPrice;
 
     private User user;
+    private byte deleted;
 
     private List<BuildComponent> buildsComponents;
 
     //private List<Post> post;
 
     public Build() {}
+
+    public byte getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(byte deleted) {
+        this.deleted = deleted;
+    }
 
     public String getDateOfCreation() {
         return dateOfCreation;
@@ -96,7 +105,7 @@ public class Build {
                 ", notes='" + notes + '\'' +
                 ", category='" + category + '\'' +
                 ", totalPrice=" + totalPrice +
-                ", user=" + user.toString() +
+                ", user=" + ((this.user != null) ? user.toString() : null) +
                 ", buildsComponents=" + buildsComponents +
                 '}';
     }

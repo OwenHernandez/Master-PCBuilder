@@ -24,7 +24,7 @@ public class PriceHistoryEntity implements Serializable {
     @Column(name="PRICE")
     private double price;
     @Column(name="DATE")
-    private BigInteger date;
+    private Long date;
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "COMPONENT_ID", nullable = false)
@@ -65,11 +65,11 @@ public class PriceHistoryEntity implements Serializable {
         this.price = price;
     }
 
-    public BigInteger getDate() {
+    public Long getDate() {
         return date;
     }
 
-    public void setDate(BigInteger date) {
+    public void setDate(Long date) {
         this.date = date;
     }
 

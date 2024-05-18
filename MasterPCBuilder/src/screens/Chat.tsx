@@ -21,7 +21,6 @@ import {Client} from "@stomp/stompjs";
 import axios from "axios";
 import {Globals} from "../components/Globals";
 import RNFetchBlob from "rn-fetch-blob";
-import Animated from "react-native-reanimated";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Chat'>;
 
@@ -44,6 +43,7 @@ const Chat = (props: Props) => {
     const [message, setMessage] = useState("");
     const flatListRef = useRef();
     const [blockedUser, setBlockedUser] = useState(false);
+    const msgsRef = useRef([{}] as IMsgType[]);
 
     useEffect(() => {
         connect();
@@ -55,12 +55,14 @@ const Chat = (props: Props) => {
         let messageTo = {
             author: user.nick,
             receiver: userSelected.nick,
-            content: message
+            content: message,
+            date: getFormattedDate()
         };
         stompClient.publish({destination: "/app/private", body: JSON.stringify(messageTo)});
         console.log("enviado privado");
+        msgsRef.current.unshift({content: messageTo.content, author: messageTo.author, receiver: messageTo.receiver, date: messageTo.date});
 
-        setMsgs( prevMsgs => [{content: messageTo.content, author: messageTo.author, receiver: messageTo.receiver, date: getFormattedDate()}, ...prevMsgs]);
+        setMsgs( [...msgsRef.current]);
         setMessage("");
         // @ts-ignore
         flatListRef.current.scrollToOffset({ animated: true });
@@ -69,17 +71,31 @@ const Chat = (props: Props) => {
     function getFormattedDate() {
         const date = new Date();
 
-        const year = date.getFullYear();
-        const month = (date.getMonth() + 1).toString().padStart(2, '0'); // +1 porque los meses empiezan en 0
-        const day = date.getDate().toString().padStart(2, '0');
+        // Usar toLocaleString() para obtener la fecha formateada según la zona horaria
+        const dateString = date.toLocaleString('en-GB', {
+            timeZone: 'Europe/London',
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false // Usar formato de 24 horas
+        }).replace(/,/g, '');
 
-        const hours = date.getHours().toString().padStart(2, '0');
-        const minutes = date.getMinutes().toString().padStart(2, '0');
-        const seconds = date.getSeconds().toString().padStart(2, '0');
+        // Desglosar la fecha en componentes para reordenarlos
+        const parts = dateString.split('/');
+        const timePart = parts[2].split(' ')[1];
 
-        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        // Reordenar los componentes para ajustar al formato deseado
+        const year = parts[2].split(' ')[0];
+        const month = parts[1];
+        const day = parts[0];
+
+        // Reconstruir la fecha en el formato aaaa-mm-dd hh:mm:ss
+        return `${year}-${month}-${day} ${timePart}`;
     }
-
+/*
     function onPublicMessageReceived(datos: any) {
         console.log("datos: " + datos);
         //setRecibido(datos.body);
@@ -89,27 +105,26 @@ const Chat = (props: Props) => {
         arr.push({content: nuevoMensaje.content, author: nuevoMensaje.author, receiver: nuevoMensaje.receiver, date: nuevoMensaje.date});
         setMsgs([...arr]);
     }
-
+*/
     function onPrivateMessageReceived(datos: any) {
         console.log("datos: " + datos);
         //setRecibido(datos.body);
         let nuevoMensaje = JSON.parse(datos.body);
         console.log(nuevoMensaje);
-        let arr = msgs;
-        arr.push({content: nuevoMensaje.content, author: nuevoMensaje.author, receiver: nuevoMensaje.receiver, date: nuevoMensaje.date});
-        setMsgs([...arr]);
+        msgsRef.current.unshift({content: nuevoMensaje.content, author: nuevoMensaje.author, receiver: nuevoMensaje.receiver, date: nuevoMensaje.date});
+        setMsgs([...msgsRef.current]);
     }
-
 
     function connect() {
 
         function getPrivateMessages() {
+            msgsRef.current = [];
             setMsgs([]);
-            getUserAuthorMsgs();
-            getUserReceiverMsgs();
-            setMsgs(msgs.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()));
+            getMsgs();
+
+
         }
-        async function getUserAuthorMsgs() {
+        async function getMsgs() {
             let userAuthor = await axios.get(
                 Globals.IP_HTTP + "/api/v2/messages?receiver=" + userSelected.nick + "&author=" + user.nick,
                 {
@@ -127,12 +142,9 @@ const Chat = (props: Props) => {
                     content: msg.content,
                     date: msg.date
                 }
-                setMsgs((msgs) => [newMsg, ...msgs]);
+                msgsRef.current.push(newMsg);
             });
 
-        }
-
-        async function getUserReceiverMsgs() {
             let userReceiver = await axios.get(
                 Globals.IP_HTTP + "/api/v2/messages?receiver=" + user.nick + "&author=" + userSelected.nick,
                 {
@@ -146,13 +158,16 @@ const Chat = (props: Props) => {
                 let newMsg: IMsgType = {
                     author: msg.author,
                     receiver: msg.receiver,
-                    msg: msg.content,
+                    content: msg.content,
                     date: msg.date
                 }
-                setMsgs((msgs) => [newMsg, ...msgs]);
+                msgsRef.current.push(newMsg);
             });
-        }
 
+            msgsRef.current.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+            setMsgs([...msgsRef.current]);
+        }
 
         getPrivateMessages();
 
@@ -226,18 +241,30 @@ const Chat = (props: Props) => {
         <SafeAreaView style={{flex: 1}}>
             <View style={Styles.headerView}>
                 <TouchableOpacity onPress={() => navigation.navigate("OtherUserProfile", {userSelected})}>
-                    <Image
-                        source={{
-                            uri: (userSelected?.picture !== "") ? "data:image/jpeg;base64," + userSelected?.picture : "https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png?x=480&quality=40"
-                        }}
-                        style={{
-                            ...Styles.imageStyle,
-                            borderColor: (darkMode) ? "white" : "black",
-                            borderWidth: 1,
-                            width: getIconSize(110),
-                            height: getIconSize(110)
-                        }}
-                    />
+                    {
+                        (userSelected?.picture !== "") ?
+                            <Image
+                                source={{
+                                    uri: "data:image/jpeg;base64," + userSelected?.picture,
+                                    width: getIconSize(100),
+                                    height: getIconSize(100)
+                                }}
+                                style={{...Styles.imageStyle, borderColor: (darkMode) ? "white" : "black", borderWidth: 1}}
+                            />
+                            :
+                            <Image
+                                source={
+                                    require("../../img/defaultProfilePic.png")
+                                }
+                                style={{
+                                    ...Styles.imageStyle,
+                                    borderColor: (darkMode) ? "white" : "black",
+                                    borderWidth: 1,
+                                    width: getIconSize(110),
+                                    height: getIconSize(110)
+                                }}
+                            />
+                    }
                 </TouchableOpacity>
                 <Text style={{
                     ...Styles.headerText,
@@ -260,18 +287,19 @@ const Chat = (props: Props) => {
                             return (
                                 <View>
                                     <View style={{flexDirection: "row", justifyContent: "flex-end"}}>
-                                        <Text style={{fontSize: getFontSize(15), color: "#a3a3a3", fontStyle: "italic"}}>{msg.item.date}</Text>
+                                        <Text style={{fontSize: getFontSize(15), color: "#a3a3a3", fontStyle: "italic", marginRight: "2%"}}>{msg.item.date}</Text>
                                     </View>
                                     <View style={{flexDirection: "row", justifyContent: "flex-end"}}>
                                         <View style={{
                                             backgroundColor: "#ca2613",
-                                            borderRadius: 20,
+                                            //
                                             padding: "1%",
                                             paddingHorizontal: "3%",
                                             margin: "2%",
+                                            marginRight: "3%",
                                             maxWidth: "90%"
                                         }}>
-                                            <Text style={{fontSize: getFontSize(15), color: "white"}}>{msg.item.msg}</Text>
+                                            <Text style={{fontSize: getFontSize(15), color: "white"}}>{msg.item.content}</Text>
                                         </View>
                                     </View>
                                 </View>
@@ -279,19 +307,20 @@ const Chat = (props: Props) => {
                         } else if (msg.item?.author === userSelected.nick) {
                             return (
                                 <View>
-                                    <View style={{flexDirection: "row", justifyContent: "flex-end"}}>
-                                        <Text style={{fontSize: getFontSize(15), color: "#a3a3a3", fontStyle: "italic"}}>{msg.item.date}</Text>
+                                    <View style={{flexDirection: "row", justifyContent: "flex-start"}}>
+                                        <Text style={{fontSize: getFontSize(15), color: "#a3a3a3", fontStyle: "italic", marginLeft: "2%"}}>{msg.item.date}</Text>
                                     </View>
-                                    <View style={{flexDirection: "row", justifyContent: "flex-end"}}>
+                                    <View style={{flexDirection: "row", justifyContent: "flex-start"}}>
                                         <View style={{
-                                            backgroundColor: "#ca2613",
-                                            borderRadius: 20,
+                                            backgroundColor: "#676767",
+                                            //
                                             padding: "1%",
                                             paddingHorizontal: "3%",
                                             margin: "2%",
+                                            marginLeft: "3%",
                                             maxWidth: "90%"
                                         }}>
-                                            <Text style={{fontSize: getFontSize(15), color: "white"}}>{msg.item.msg}</Text>
+                                            <Text style={{fontSize: getFontSize(15), color: "white"}}>{msg.item.content}</Text>
                                         </View>
                                     </View>
                                 </View>
@@ -322,7 +351,7 @@ const Chat = (props: Props) => {
                     style={{
                         borderWidth: 2,
                         borderColor: "#ca2613",
-                        borderRadius: 20,
+                        //
                         paddingHorizontal: "5%",
                         width: "80%",
                         fontSize: getFontSize(15),

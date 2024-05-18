@@ -11,8 +11,16 @@ public class BuildInputDTO {
     private String category;
 
     private List<Long> componentsIds;
-
+    private byte deleted;
     public BuildInputDTO() {}
+
+    public byte getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(byte deleted) {
+        this.deleted = deleted;
+    }
 
     public String getName() {
         return name;

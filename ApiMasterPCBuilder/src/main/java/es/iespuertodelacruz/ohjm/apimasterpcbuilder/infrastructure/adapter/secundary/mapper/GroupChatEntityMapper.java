@@ -26,12 +26,12 @@ public class GroupChatEntityMapper {
         String dateStr = sdf.format(date);
         groupChat.setDateOfCreation(dateStr);
         groupChat.setAdmin(userEntityMapper.toDomain(entity.getGroupAdmin(), new HashSet<>(), new HashSet<>(), "groupChat"));
-        if (entity.getUsers() != null && !entity.getUsers().isEmpty()) {
-            groupChat.setUsers(new ArrayList<>());
-            for (UserEntity ue : entity.getUsers()) {
-                groupChat.getUsers().add(userEntityMapper.toDomain(ue, new HashSet<>(), new HashSet<>(), "groupChat"));
-            }
+        groupChat.setUsers(new ArrayList<>());
+        for (UserEntity ue : entity.getUsers()) {
+            groupChat.getUsers().add(userEntityMapper.toDomain(ue, new HashSet<>(), new HashSet<>(), "groupChat"));
         }
+        groupChat.setDeleted(entity.getDeleted());
+
         return groupChat;
     }
 
@@ -44,12 +44,12 @@ public class GroupChatEntityMapper {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         entity.setDateOfCreation(sdf.parse(groupChat.getDateOfCreation()).getTime());
         entity.setGroupAdmin(userEntityMapper.toPersistence(groupChat.getAdmin(), new HashSet<>(), new HashSet<>(), "groupChat"));
-        if (groupChat.getUsers() != null && !groupChat.getUsers().isEmpty()) {
-            entity.setUsers(new ArrayList<>());
-            for (User u : groupChat.getUsers()) {
-                entity.getUsers().add(userEntityMapper.toPersistence(u, new HashSet<>(), new HashSet<>(), "groupChat"));
-            }
+        entity.setUsers(new ArrayList<>());
+        for (User u : groupChat.getUsers()) {
+            entity.getUsers().add(userEntityMapper.toPersistence(u, new HashSet<>(), new HashSet<>(), "groupChat"));
         }
+        entity.setDeleted(groupChat.getDeleted());
+
         return entity;
     }
 }

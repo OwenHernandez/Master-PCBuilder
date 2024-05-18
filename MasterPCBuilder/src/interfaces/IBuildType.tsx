@@ -9,4 +9,5 @@ export default interface IBuildType {
     userNick: string;
     category: string;
     buildsComponents: Array<IBuildComponentType>;
+    deleted: boolean;
 }

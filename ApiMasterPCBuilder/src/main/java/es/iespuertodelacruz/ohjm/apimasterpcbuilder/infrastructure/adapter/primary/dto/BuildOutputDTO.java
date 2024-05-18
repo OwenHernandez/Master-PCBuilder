@@ -10,9 +10,18 @@ public class BuildOutputDTO {
     private String category;
     private String userNick;
 
+    private boolean deleted;
     private List<BuildComponentDTO> buildsComponents;
 
     public BuildOutputDTO() {}
+
+    public boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
 
     public long getId() {
         return id;

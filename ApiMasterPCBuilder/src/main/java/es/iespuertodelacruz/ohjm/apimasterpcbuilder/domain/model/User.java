@@ -7,6 +7,7 @@ public class User {
     private long id;
 
     private byte active;
+    private byte deleted;
 
     private String email;
 
@@ -20,6 +21,8 @@ public class User {
 
     private String role;
 
+    private List<Build> builds;
+
     private List<User> friends;
 
     private List<User> blockedUsers;
@@ -32,7 +35,17 @@ public class User {
 
     private List<Component> componentsWanted;
 
+    private List<GroupChat> groupChatsAdmin;
+
     public User() {}
+
+    public byte getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(byte deleted) {
+        this.deleted = deleted;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -106,6 +119,14 @@ public class User {
         this.role = role;
     }
 
+    public List<Build> getBuilds() {
+        return builds;
+    }
+
+    public void setBuilds(List<Build> builds) {
+        this.builds = builds;
+    }
+
     public List<User> getFriends() {
         return friends;
     }
@@ -154,9 +175,17 @@ public class User {
         this.componentsWanted = componentsWanted;
     }
 
+    public List<GroupChat> getGroupChatsAdmin() {
+        return groupChatsAdmin;
+    }
+
+    public void setGroupChatsAdmin(List<GroupChat> groupChatsAdmin) {
+        this.groupChatsAdmin = groupChatsAdmin;
+    }
+
     @Override
     public String toString() {
-        return "UserEntity{" +
+        return "User{" +
                 "id=" + id +
                 ", email='" + email + '\'' +
                 ", nick='" + nick + '\'' +

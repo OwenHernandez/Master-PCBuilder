@@ -29,6 +29,14 @@ public class UserService implements IUserService {
     }
 
     @Override
+    public boolean delete(Long id) {
+        if (id == null) {
+            return false;
+        }
+        return repo.delete(id);
+    }
+
+    @Override
     public User findById(Long id) {
         User u = null;
         if (id != null) {
@@ -62,4 +70,5 @@ public class UserService implements IUserService {
         }
         return repo.findByRole(role);
     }
+
 }

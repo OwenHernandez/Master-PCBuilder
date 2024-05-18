@@ -18,7 +18,20 @@ public class GroupChat {
 
     private List<User> users;
 
+    private byte deleted;
+
     public GroupChat() {}
+
+    public GroupChat(long id, String name, String description, String picture, String dateOfCreation, User admin, List<User> users, byte deleted) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.picture = picture;
+        this.dateOfCreation = dateOfCreation;
+        this.admin = admin;
+        this.users = users;
+        this.deleted = deleted;
+    }
 
     public long getId() {
         return id;
@@ -74,5 +87,13 @@ public class GroupChat {
 
     public void setUsers(List<User> users) {
         this.users = users;
+    }
+
+    public byte getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(byte deleted) {
+        this.deleted = deleted;
     }
 }

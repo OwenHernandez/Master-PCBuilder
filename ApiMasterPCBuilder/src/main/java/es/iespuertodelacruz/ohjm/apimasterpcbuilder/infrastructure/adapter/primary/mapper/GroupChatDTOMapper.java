@@ -21,6 +21,7 @@ public class GroupChatDTOMapper {
         Date date = new Date();
         String dateStr = sdf.format(date);
         groupChat.setDateOfCreation(dateStr);
+        groupChat.setDeleted((byte) (groupChatInputDTO.isDeleted() ? 1 : 0));
 
         return groupChat;
     }
@@ -36,6 +37,8 @@ public class GroupChatDTOMapper {
         if (groupChat.getUsers() != null) {
             groupChatOutputDTO.setUsers(groupChat.getUsers().stream().map(userDTOMapper::toDTO).collect(Collectors.toList()));
         }
+        groupChatOutputDTO.setDeleted(groupChat.getDeleted() == 1);
+
         return groupChatOutputDTO;
     }
 }

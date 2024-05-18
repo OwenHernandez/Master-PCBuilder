@@ -6,7 +6,6 @@ import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.PriceHistory;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.BuildComponentEntity;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.ComponentEntity;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.PriceHistoryEntity;
-import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.UserEntity;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -30,6 +29,7 @@ public class ComponentEntityMapper {
         res.setEbay_price(componentEntity.getEbay_price());
         res.setType(componentEntity.getType());
         res.setImage(componentEntity.getImage());
+        res.setDeleted(componentEntity.getDeleted());
         res.setSeller(sellerMapper.toDomain(componentEntity.getSeller()));
 
 
@@ -64,6 +64,7 @@ public class ComponentEntityMapper {
         res.setEbay_price(component.getEbay_price());
         res.setImage(component.getImage());
         res.setSeller(sellerMapper.toPersistence(component.getSeller()));
+        res.setDeleted(component.getDeleted());
         ///res.setUser(userMapper.toPersistance(component.getUserWhoCreated()));
         if (component.getBuildsComponents() != null) {
 

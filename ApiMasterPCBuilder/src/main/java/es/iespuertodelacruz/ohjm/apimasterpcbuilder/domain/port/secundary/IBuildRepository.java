@@ -18,7 +18,5 @@ public interface IBuildRepository {
 
     List<Build> findByName(String name);
 
-    List<Build> findByTotalPrice(double totalPrice);
-
     List<Build> findByUserId(Long userId);
 }

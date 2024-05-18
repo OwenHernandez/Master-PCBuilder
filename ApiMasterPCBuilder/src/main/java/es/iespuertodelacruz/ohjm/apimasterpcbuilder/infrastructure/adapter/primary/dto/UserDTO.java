@@ -10,8 +10,18 @@ public class UserDTO {
     private List<UserDTO> friends;
     private List<UserDTO> blockedUsers;
     private List<ComponentOutputDTO> componentsWanted;
+    private String role;
+    private boolean deleted;
 
     public UserDTO() {
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public long getId() {
@@ -68,5 +78,13 @@ public class UserDTO {
 
     public void setComponentsWanted(List<ComponentOutputDTO> componentsWanted) {
         this.componentsWanted = componentsWanted;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

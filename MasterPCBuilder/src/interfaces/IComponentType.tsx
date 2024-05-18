@@ -13,4 +13,5 @@ export default interface IComponentType {
     userNick: string;
     wished?: boolean;
     priceHistory: Array<IPriceHistoryType>;
+    deleted: boolean;
 }

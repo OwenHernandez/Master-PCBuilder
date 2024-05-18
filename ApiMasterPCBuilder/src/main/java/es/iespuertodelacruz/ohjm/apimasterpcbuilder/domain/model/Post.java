@@ -19,6 +19,8 @@ public class Post {
 
     private List<User> usersWhoLiked;
 
+    private byte deleted;
+
     public Post() {}
 
     @Override
@@ -83,5 +85,26 @@ public class Post {
 
     public void setUsersWhoLiked(List<User> usersWhoLiked) {
         this.usersWhoLiked = usersWhoLiked;
+    }
+
+    public byte getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(byte deleted) {
+        this.deleted = deleted;
+    }
+
+    @Override
+    public String toString() {
+        return "Post{" +
+                "id=" + id +
+                ", description='" + description + '\'' +
+                ", image='" + image + '\'' +
+                ", title='" + title + '\'' +
+                ", build=" + build +
+                ", user=" + user +
+                ", usersWhoLiked=" + usersWhoLiked +
+                '}';
     }
 }

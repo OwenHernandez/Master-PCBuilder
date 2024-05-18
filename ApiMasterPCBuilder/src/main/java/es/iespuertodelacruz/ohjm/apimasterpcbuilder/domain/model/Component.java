@@ -1,7 +1,6 @@
 package es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model;
 
 import java.util.List;
-import java.util.Objects;
 
 public class Component {
 
@@ -18,7 +17,7 @@ public class Component {
     private double price;
     private double amazon_price;
     private double ebay_price;
-
+    private byte deleted;
     private List<BuildComponent> buildsComponents;
     private List<PriceHistory> priceHistories;
 
@@ -36,6 +35,14 @@ public class Component {
         if (o == null || getClass() != o.getClass()) return false;
         Component component = (Component) o;
         return id == component.id;
+    }
+
+    public byte getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(byte deleted) {
+        this.deleted = deleted;
     }
 
     public List<PriceHistory> getPriceHistories() {

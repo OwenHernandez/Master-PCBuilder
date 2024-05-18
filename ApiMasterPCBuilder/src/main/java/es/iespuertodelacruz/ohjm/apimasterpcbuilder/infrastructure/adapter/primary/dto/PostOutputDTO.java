@@ -18,6 +18,8 @@ public class PostOutputDTO {
 
     private List<UserDTO> usersWhoLiked;
 
+    private boolean deleted;
+
     public PostOutputDTO() {}
 
     public long getId() {
@@ -74,5 +76,13 @@ public class PostOutputDTO {
 
     public void setUsersWhoLiked(List<UserDTO> usersWhoLiked) {
         this.usersWhoLiked = usersWhoLiked;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

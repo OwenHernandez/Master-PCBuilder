@@ -28,6 +28,7 @@ public class BuildEntityMapper {
         res.setName(buildEntity.getName());
         res.setNotes(buildEntity.getNotes());
         res.setTotalPrice(buildEntity.getTotalPrice());
+        res.setDeleted(buildEntity.getDeleted());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date(buildEntity.getDateOfCreation());
         String dateStr = sdf.format(date);
@@ -37,22 +38,22 @@ public class BuildEntityMapper {
         if (res.getBuildsComponents() == null) {
             res.setBuildsComponents(new ArrayList<>());
         }
-        for (BuildComponentEntity bce : buildEntity.getBuildsComponents()) {
-            BuildComponent bc = bcMapper.toDomain(bce);
-            Component comp = componentMapper.toDomain(bce.getComponent());
-            if (bce.getComponent().getUser() != null) {
+        if (buildEntity.getBuildsComponents() != null && !buildEntity.getBuildsComponents().isEmpty()) {
+            for (BuildComponentEntity bce : buildEntity.getBuildsComponents()) {
+                BuildComponent bc = bcMapper.toDomain(bce);
+                Component comp = componentMapper.toDomain(bce.getComponent());
                 comp.setUserWhoCreated(userMapper.toDomain(bce.getComponent().getUser(), new HashSet<Long>(), new HashSet<Long>(), "builds"));
-            }
-            if (bce.getComponent().getUsersWhoWants() != null) {
-                if (comp.getUsersWhoWants() == null) {
-                    comp.setUsersWhoWants(new ArrayList<>());
+                if (bce.getComponent().getUsersWhoWants() != null) {
+                    if (comp.getUsersWhoWants() == null) {
+                        comp.setUsersWhoWants(new ArrayList<>());
+                    }
+                    for (UserEntity ue : bce.getComponent().getUsersWhoWants()) {
+                        comp.getUsersWhoWants().add(userMapper.toDomain(ue, new HashSet<Long>(), new HashSet<Long>(), "builds"));
+                    }
                 }
-                for (UserEntity ue : bce.getComponent().getUsersWhoWants()) {
-                    comp.getUsersWhoWants().add(userMapper.toDomain(ue, new HashSet<Long>(), new HashSet<Long>(), "builds"));
-                }
+                bc.setComponent(comp);
+                res.getBuildsComponents().add(bc);
             }
-            bc.setComponent(comp);
-            res.getBuildsComponents().add(bc);
         }
 
 
@@ -66,6 +67,7 @@ public class BuildEntityMapper {
         res.setName(build.getName());
         res.setNotes(build.getNotes());
         res.setTotalPrice(build.getTotalPrice());
+        res.setDeleted(build.getDeleted());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date date = sdf.parse(build.getDateOfCreation());
         long dateLong = date.getTime();
@@ -75,12 +77,14 @@ public class BuildEntityMapper {
         if (res.getBuildsComponents() == null) {
             res.setBuildsComponents(new ArrayList<>());
         }
-        for (BuildComponent bc : build.getBuildsComponents()) {
-            BuildComponentEntity bce = bcMapper.toPersistence(bc);
-            ComponentEntity comp = componentMapper.toPersistence(bc.getComponent());
-            comp.setUser(userMapper.toPersistence(bc.getComponent().getUserWhoCreated(), new HashSet<>(), new HashSet<>(), "builds"));
-            bce.setComponent(comp);
-            res.getBuildsComponents().add(bce);
+        if (build.getBuildsComponents() != null && !build.getBuildsComponents().isEmpty()) {
+            for (BuildComponent bc : build.getBuildsComponents()) {
+                BuildComponentEntity bce = bcMapper.toPersistence(bc);
+                ComponentEntity comp = componentMapper.toPersistence(bc.getComponent());
+                comp.setUser(userMapper.toPersistence(bc.getComponent().getUserWhoCreated(), new HashSet<>(), new HashSet<>(), "builds"));
+                bce.setComponent(comp);
+                res.getBuildsComponents().add(bce);
+            }
         }
 
         return res;

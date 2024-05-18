@@ -32,10 +32,31 @@ const SearchUsers = (props: Props) => {
     const [userList, setUserList] = useState([{}] as IUserType[]);
     const [usersByNick, setUsersByNick] = useState([{}] as IUserType[]);
 
+    /**
+     * `useEffect` hook that is executed when the `user` state changes.
+     *
+     * This hook calls the `getUsers` function to fetch the list of users.
+     * As the dependency array contains `user`, this hook will run whenever the `user` state changes.
+     */
     useEffect(() => {
         getUsers();
     }, [user]);
 
+    /**
+     * Asynchronous function to fetch the list of users from the server.
+     *
+     * This function does the following:
+     * 1. Initializes the `userList` and `usersByNick` states to empty arrays.
+     * 2. Sends a GET request to the server to fetch the list of users. The request headers contain the authorization token.
+     * 3. Iterates over the response data, which is an array of users.
+     * 4. For each user, if the user's nickname is not the same as the current user's nickname and the user is not a friend of the current user, it sends a GET request to the server to fetch the user's profile picture.
+     * 5. If the response data is not equal to `Globals.IMG_NOT_FOUND`, it converts the response data to base64 and assigns it to the `picture` property of the user.
+     * 6. Adds the user to the `userList` and `usersByNick` states.
+     *
+     * @async
+     * @function
+     * @throws Will log any error that occurs during the execution of the function.
+     */
     async function getUsers() {
         try {
             setUserList([]);
@@ -64,6 +85,18 @@ const SearchUsers = (props: Props) => {
         }
     }
 
+    /**
+     * Function to check if a user is blocked.
+     *
+     * This function iterates over the `blockedUsers` array of the current user.
+     * For each blocked user, it checks if the blocked user's id is the same as the selected user's id.
+     * If it finds a match, it returns true, indicating that the selected user is blocked.
+     * If it doesn't find a match after iterating over the entire array, it returns false, indicating that the selected user is not blocked.
+     *
+     * @function
+     * @param {IUserType} userSelected - The user to check if they are blocked.
+     * @returns {boolean} - Returns true if the selected user is blocked, false otherwise.
+     */
     function isBlocked(userSelected: IUserType): boolean {
         for (const blockedUser of user.blockedUsers) {
             if (blockedUser.id === userSelected.id) {
@@ -80,62 +113,85 @@ const SearchUsers = (props: Props) => {
                 <View style={{
                     flexDirection: "row",
                     justifyContent: "space-around",
-                    margin: "10%",
+                    margin: "5%",
                     alignItems: "center"
                 }}>
-                    <TextInput
-                        placeholder='Search a friend by name'
-                        placeholderTextColor={"#a3a3a3"}
-                        style={{
-                            borderWidth: 2,
-                            borderColor: "#ca2613",
-                            borderRadius: 20,
-                            paddingHorizontal: "5%",
-                            width: "80%",
-                            fontSize: getFontSize(15),
-                            color: (darkMode) ? "white" : "black"
-                        }}
-                        onChangeText={(text) => {
-                            if (text === "")
-                                setUsersByNick(userList);
-                            else
-                                setUsersByNick(userList.filter((u) => u.nick.toLowerCase().includes(text)))
-                        }}
-                    ></TextInput>
-                    <FontAwesome5Icon name="search" size={getIconSize(80)}
-                                      color={(darkMode) ? "white" : "black"}/>
+                    <View style={{flex:7}}>
+                        <TextInput
+                            placeholder='Search a friend by name'
+                            placeholderTextColor={"#a3a3a3"}
+                            style={{
+                                borderWidth: 2,
+                                borderColor: "#ca2613",
+
+                                paddingHorizontal: "5%",
+                                width: "100%",
+                                fontSize: getFontSize(15),
+                                color: (darkMode) ? "white" : "black"
+                            }}
+                            onChangeText={(text) => {
+                                if (text === "")
+                                    setUsersByNick(userList);
+                                else
+                                    setUsersByNick(userList.filter((u) => u.nick.toLowerCase().includes(text)))
+                            }}
+                        ></TextInput>
+                    </View>
+                    <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
+                        <FontAwesome5Icon name="search" size={getIconSize(80)}
+                                          color={(darkMode) ? "white" : "black"}/>
+                    </View>
                 </View>
                 <FlatList
                     data={usersByNick}
                     renderItem={(u) => {
-                        return (
-                            <TouchableOpacity onPress={() => navigation.navigate("OtherUserProfile", {userSelected: u.item})}
-                                              style={{
-                                                  ...Styles.touchable,
-                                                  flexDirection: "row",
-                                                  alignItems: "center",
-                                                  margin: "3%",
-                                                  opacity: (!isBlocked(u.item)) ? 1 : 0.5
-                                              }}>
-                                <Image
-                                    source={{
-                                        uri: (u.item.picture !== "") ? "data:image/jpeg;base64," + u.item.picture : "https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png?x=480&quality=40",
-                                    }}
+                        if (!u.item.deleted) {
+                            return (
+                                <TouchableOpacity
+                                    onPress={() => navigation.navigate("OtherUserProfile", {userSelected: u.item})}
                                     style={{
-                                        ...Styles.imageStyle,
-                                        borderColor: (darkMode) ? "white" : "black",
-                                        borderWidth: 1,
-                                        width: getIconSize(110),
-                                        height: getIconSize(110)
-                                    }}
-                                />
-                                <Text style={{
-                                    color: (darkMode) ? "white" : "black",
-                                    marginLeft: "5%",
-                                    marginRight: "13%"
-                                }}>{u.item.nick}</Text>
-                            </TouchableOpacity>
-                        )
+                                        ...Styles.touchable,
+                                        flexDirection: "row",
+                                        alignItems: "center",
+                                        margin: "5%",
+                                        opacity: (!isBlocked(u.item)) ? 1 : 0.5
+                                    }}>
+                                    {
+                                        (u.item.picture !== "") ?
+                                            <Image
+                                                source={{
+                                                    uri: "data:image/jpeg;base64," + u.item.picture,
+                                                    width: getIconSize(100),
+                                                    height: getIconSize(100)
+                                                }}
+                                                style={{
+                                                    ...Styles.imageStyle,
+                                                    borderColor: (darkMode) ? "white" : "black",
+                                                    borderWidth: 1
+                                                }}
+                                            />
+                                            :
+                                            <Image
+                                                source={
+                                                    require("../../img/defaultProfilePic.png")
+                                                }
+                                                style={{
+                                                    ...Styles.imageStyle,
+                                                    borderColor: (darkMode) ? "white" : "black",
+                                                    borderWidth: 1,
+                                                    width: getIconSize(110),
+                                                    height: getIconSize(110)
+                                                }}
+                                            />
+                                    }
+                                    <Text style={{
+                                        color: (darkMode) ? "white" : "black",
+                                        marginLeft: "5%",
+                                        marginRight: "13%"
+                                    }}>{u.item.nick}</Text>
+                                </TouchableOpacity>
+                            )
+                        }
                     }}
                     keyExtractor={(comp, index) => index + ""}
                 />

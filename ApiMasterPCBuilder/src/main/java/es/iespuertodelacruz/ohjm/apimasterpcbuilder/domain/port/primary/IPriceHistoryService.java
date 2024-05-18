@@ -2,10 +2,11 @@ package es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary;
 
 
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.PriceHistory;
+import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
 import java.util.List;
-
+@Service
 public interface IPriceHistoryService {
     List<PriceHistory> findAll();
 

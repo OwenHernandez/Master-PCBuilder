@@ -1,8 +1,10 @@
 package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.service;
 
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Component;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Seller;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.secundary.ISellerRepository;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.mapper.SellerEntityMapper;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.ComponentEntity;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.persistence.SellerEntity;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.repository.ISellerEntityRepository;
 import jakarta.transaction.Transactional;
@@ -29,6 +31,17 @@ public class SellerEntityService implements ISellerRepository {
 
         for (SellerEntity se : all) {
             Seller seller = mapper.toDomain(se);
+            if (se.getComponents() != null && !se.getComponents().isEmpty()) {
+                seller.setComponents(new ArrayList<>());
+                for (ComponentEntity ce : se.getComponents()) {
+                    if (ce.getDeleted() == 1) {
+                        continue;
+                    }
+                    Component c = new Component();
+                    c.setId(ce.getId());
+                    seller.getComponents().add(c);
+                }
+            }
             res.add(seller);
         }
 
@@ -38,16 +51,23 @@ public class SellerEntityService implements ISellerRepository {
     @Override
     @Transactional
     public Seller save(Seller seller) {
-        try {
-            if (seller != null) {
-                SellerEntity sellerEntity = mapper.toPersistence(seller);
-                SellerEntity save = repo.save(sellerEntity);
-                return mapper.toDomain(save);
+        if (seller != null) {
+            SellerEntity sellerEntity = mapper.toPersistence(seller);
+            SellerEntity save = repo.save(sellerEntity);
+            if (sellerEntity.getComponents() != null && !sellerEntity.getComponents().isEmpty()) {
+                seller.setComponents(new ArrayList<>());
+                for (ComponentEntity ce : sellerEntity.getComponents()) {
+                    if (ce.getDeleted() == 1) {
+                        continue;
+                    }
+                    Component c = new Component();
+                    c.setId(ce.getId());
+                    seller.getComponents().add(c);
+                }
             }
-            return null;
-        } catch (RuntimeException e) {
-            return null;
+            return mapper.toDomain(save);
         }
+        return null;
     }
 
     @Override
@@ -57,8 +77,19 @@ public class SellerEntityService implements ISellerRepository {
         if (id != null) {
             Optional<SellerEntity> opt = repo.findById(id);
             if (opt.isPresent()) {
-                SellerEntity buildEntity = opt.get();
-                res = mapper.toDomain(buildEntity);
+                SellerEntity sellerEntity = opt.get();
+                res = mapper.toDomain(sellerEntity);
+                if (sellerEntity.getComponents() != null && !sellerEntity.getComponents().isEmpty()) {
+                    res.setComponents(new ArrayList<>());
+                    for (ComponentEntity ce : sellerEntity.getComponents()) {
+                        if (ce.getDeleted() == 1) {
+                            continue;
+                        }
+                        Component c = new Component();
+                        c.setId(ce.getId());
+                        res.getComponents().add(c);
+                    }
+                }
             }
         }
         return res;
@@ -67,28 +98,18 @@ public class SellerEntityService implements ISellerRepository {
     @Override
     @Transactional
     public boolean deleteById(long id) {
-        try {//I will need to change this once the Component class is done
-            repo.deleteById(id);
-            return true;
-        } catch (RuntimeException e) {
-            return false;
-        }
+        repo.deleteById(id);
+        return true;
     }
 
     @Override
     @Transactional
     public boolean update(Seller seller) {
-        try {
-            SellerEntity sellerEntity = mapper.toPersistence(seller);
-            SellerEntity save = repo.save(sellerEntity);
+        repo.findById(seller.getId()).orElseThrow(() -> new RuntimeException("Seller not found"));
+        SellerEntity sellerEntity = mapper.toPersistence(seller);
+        repo.save(sellerEntity);
 
-            if (save != null)
-                return true;
-            else
-                return false;
-        } catch (RuntimeException e) {
-            return false;
-        }
+        return true;
     }
 
     @Override
@@ -98,6 +119,17 @@ public class SellerEntityService implements ISellerRepository {
             SellerEntity sellerEntity = repo.findByName(name);
             if (sellerEntity != null) {
                 res = mapper.toDomain(sellerEntity);
+                if (sellerEntity.getComponents() != null && !sellerEntity.getComponents().isEmpty()) {
+                    res.setComponents(new ArrayList<>());
+                    for (ComponentEntity ce : sellerEntity.getComponents()) {
+                        if (ce.getDeleted() == 1) {
+                            continue;
+                        }
+                        Component c = new Component();
+                        c.setId(ce.getId());
+                        res.getComponents().add(c);
+                    }
+                }
             }
         }
         return res;

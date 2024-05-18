@@ -1,10 +1,12 @@
 package es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 public class Message {
-
+    private String id;
     private String author;
     private String receiver;
     private String content;
@@ -19,7 +21,9 @@ public class Message {
         m.setContent(content);
         m.setTopic(topic);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        sdf.setTimeZone(TimeZone.getTimeZone("Europe/London"));
         m.setDate(sdf.format(new Date()));
+
         return m;
     }
 
@@ -30,8 +34,18 @@ public class Message {
         m.setContent(content);
         m.setTopic("private");
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        sdf.setTimeZone(TimeZone.getTimeZone("Europe/London"));
         m.setDate(sdf.format(new Date()));
+
         return m;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getAuthor() {
