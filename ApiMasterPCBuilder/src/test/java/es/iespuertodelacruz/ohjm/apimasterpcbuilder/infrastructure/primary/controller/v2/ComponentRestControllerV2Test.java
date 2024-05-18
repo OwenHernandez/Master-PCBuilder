@@ -3,6 +3,7 @@ package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.primary.cont
 import com.fasterxml.jackson.databind.ObjectMapper;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.*;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.IComponentService;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.IPriceHistoryService;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.ISellerService;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.IUserService;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.service.FileStorageService;
@@ -53,6 +54,9 @@ public class ComponentRestControllerV2Test {
 
     @MockBean
     private ISellerService sellerService;
+
+    @MockBean
+    private IPriceHistoryService priceHistoryService;
 
     @MockBean
     private FileStorageService fileStorageService;

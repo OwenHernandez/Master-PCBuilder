@@ -21,9 +21,10 @@ CREATE TABLE `users`
     `EMAIL`    varchar(255) NOT NULL,
     `PASSWORD` varchar(255) NOT NULL,
     `PICTURE`  varchar(255) DEFAULT NULL,
-    `ACTIVE`   tinyint      DEFAULT '0',
+    `ACTIVE`   tinyint      DEFAULT 0,
     `HASH`     varchar(255) NOT NULL,
     `ROLE`     varchar(30)  NOT NULL,
+    `DELETED`  tinyint      DEFAULT 0,
     PRIMARY KEY (`ID`),
     UNIQUE (`NICK`),
     UNIQUE (`EMAIL`)
@@ -31,9 +32,10 @@ CREATE TABLE `users`
 
 CREATE TABLE `sellers`
 (
-    `ID`    int          NOT NULL AUTO_INCREMENT,
-    `NAME`  varchar(100) NOT NULL,
-    `IMAGE` varchar(255) DEFAULT NULL,
+    `ID`        int          NOT NULL AUTO_INCREMENT,
+    `NAME`      varchar(100) NOT NULL,
+    `IMAGE`     varchar(255) DEFAULT NULL,
+    `DELETED`   tinyint      DEFAULT 0,
     PRIMARY KEY (`ID`),
     UNIQUE (`NAME`)
 );
@@ -47,6 +49,7 @@ CREATE TABLE `builds`
     `USER_ID`          int            NOT NULL,
     `CATEGORY`         varchar(50)  DEFAULT NULL,
     `DATE_OF_CREATION` bigint       DEFAULT NULL,
+    `DELETED`          tinyint      DEFAULT 0,
     PRIMARY KEY (`ID`),
     CONSTRAINT `FK_USER_BUILD` FOREIGN KEY (`USER_ID`) REFERENCES `users` (`ID`)
 );
@@ -57,6 +60,7 @@ CREATE TABLE `posts`
     `TITLE`       varchar(50) NOT NULL,
     `IMAGE`       varchar(255) DEFAULT NULL,
     `DESCRIPTION` varchar(100) DEFAULT NULL,
+    `DELETED`     tinyint      DEFAULT 0,
     `BUILD_ID`    int         NOT NULL,
     `USER_ID`     int         NOT NULL,
     PRIMARY KEY (`ID`),
@@ -76,6 +80,7 @@ CREATE TABLE `components`
     `TYPE`         varchar(20)    NOT NULL,
     `AMAZON_PRICE` decimal(10, 2) DEFAULT NULL,
     `EBAY_PRICE`   decimal(10, 2) DEFAULT NULL,
+    `DELETED`      tinyint      DEFAULT 0,
     PRIMARY KEY (`ID`),
     CONSTRAINT `FK_SELLER_COMPONENT` FOREIGN KEY (`SELLER_ID`) REFERENCES `sellers` (`ID`),
     CONSTRAINT `FK_USER_COMPONENTS` FOREIGN KEY (`USER_ID`) REFERENCES `users` (`ID`)
@@ -101,6 +106,7 @@ CREATE TABLE `group_chats`
     `DATE_OF_CREATION` bigint       NOT NULL,
     `GROUP_ADMIN_ID`   int          NOT NULL,
     `PICTURE`          varchar(255) NOT NULL,
+    `DELETED`          tinyint      DEFAULT 0,
     PRIMARY KEY (`ID`),
     CONSTRAINT `GROUP_CHAT_ADMIN_ID` FOREIGN KEY (`GROUP_ADMIN_ID`) REFERENCES `users` (`ID`)
 );
@@ -168,30 +174,30 @@ CREATE TABLE `price_history`
 );
 
 INSERT INTO `users`
-VALUES (1, 'user1', 'user1@example.com', 'password1', 'user1.jpg', 1, 'hash1', 'ROLE_ADMIN'),
-       (2, 'user2', 'user2@example.com', 'password2', 'user2.jpg', 1, 'hash2', 'ROLE_USER'),
+VALUES (1, 'user1', 'user1@example.com', 'password1', 'user1.jpg', 1, 'hash1', 'ROLE_ADMIN', 0),
+       (2, 'user2', 'user2@example.com', 'password2', 'user2.jpg', 1, 'hash2', 'ROLE_USER', 0),
        (3, 'Coso', 'coso8610@gmail.com', '$2a$10$SZEU19//bprJ96NKVUj9cubMwrF0SFme21kqLj6iHr/4S/vdnYS6G',
-        'Coso_1000000033_1.jpg', 1, '$2a$10$JGz5Ymj0rPnICzmh5WAlU.Xeui1OP7umdaFJxNLurTY9CY8Zgmm/u', 'ROLE_ADMIN');
+        'Coso_1000000033_1.jpg', 1, '$2a$10$JGz5Ymj0rPnICzmh5WAlU.Xeui1OP7umdaFJxNLurTY9CY8Zgmm/u', 'ROLE_ADMIN', 0);
 
 INSERT INTO `sellers`
-VALUES (1, 'TechStore', 'techstore_logo.jpg'),
-       (2, 'PCParts', 'pcparts_logo.jpg'),
-       (3, 'ElectroGadgets', 'electrogadgets_logo.jpg');
+VALUES (1, 'TechStore', 'techstore_logo.jpg', 0),
+       (2, 'PCParts', 'pcparts_logo.jpg', 0),
+       (3, 'ElectroGadgets', 'electrogadgets_logo.jpg', 0);
 
 INSERT INTO `builds`
-VALUES (1, 'Gaming PC', 'High-end gaming PC build', 1500.00, 1, 'Gaming', 576437878532),
-       (2, 'Workstation', 'Professional video editing workstation', 2000.00, 2, 'Work', 576437878532),
-       (3, 'Budget PC', 'Entry-level budget PC', 800.00, 1, 'Budget', 576437878532);
+VALUES (1, 'Gaming PC', 'High-end gaming PC build', 1500.00, 1, 'Gaming', 576437878532, 0),
+       (2, 'Workstation', 'Professional video editing workstation', 2000.00, 2, 'Work', 576437878532, 0),
+       (3, 'Budget PC', 'Entry-level budget PC', 800.00, 1, 'Budget', 576437878532, 0);
 
 INSERT INTO `posts`
-VALUES (1, 'My Gaming PC Setup', 'Coso_1000000033.jpg', 'Just finished building my dream gaming PC!', 2, 1),
-       (2, 'Video Editing Rig', 'video_editing.jpg', 'Check out my new video editing setup!', 2, 2),
-       (3, 'Budget PC Build', 'budget_build.jpg', 'Built a budget-friendly PC for everyday use.', 2, 1);
+VALUES (1, 'My Gaming PC Setup', 'Coso_1000000033.jpg', 'Just finished building my dream gaming PC!', 0, 2, 1),
+       (2, 'Video Editing Rig', 'video_editing.jpg', 'Check out my new video editing setup!', 0, 2, 2),
+       (3, 'Budget PC Build', 'budget_build.jpg', 'Built a budget-friendly PC for everyday use.', 0, 2, 1);
 
 INSERT INTO `components`
-VALUES (1, 'Graphics Card', 'Coso_1000000036.jpg', 'NVIDIA RTX 3080', 800.00, 1, 1, 'GPU', 800.00, 700.00),
-       (2, 'Processor', 'Coso_1000000034.jpg', 'AMD Ryzen 7 5800X', 400.00, 2, 3, 'CPU', 400.00, 300.00),
-       (3, 'Memory', 'Coso_1000000037.jpg', 'Corsair Vengeance 16GB', 120.00, 3, 2, 'RAM', 120.00, 60.00);
+VALUES (1, 'Graphics Card', 'Coso_1000000036.jpg', 'NVIDIA RTX 3080', 800.00, 1, 1, 'GPU', 800.00, 700.00, 0),
+       (2, 'Processor', 'Coso_1000000034.jpg', 'AMD Ryzen 7 5800X', 400.00, 2, 3, 'CPU', 400.00, 300.00, 0),
+       (3, 'Memory', 'Coso_1000000037.jpg', 'Corsair Vengeance 16GB', 120.00, 3, 2, 'RAM', 120.00, 60.00, 0);
 
 INSERT INTO `builds_components`
 VALUES (1, 1, 1, 800.00, 1704153600000),
@@ -199,8 +205,8 @@ VALUES (1, 1, 1, 800.00, 1704153600000),
        (3, 2, 3, 120.00, 1704153600000);
 
 INSERT INTO `group_chats`
-VALUES (1, 'CosoGroup', 'fsdfdsgdfs', 1711411200000, 1, 'jgfkhfg'),
-       (2, 'CosoGroupOG!!', 'A group for all the coso enjoyers!!', 1711584000000, 3, 'GroupChat12_1000000033.jpg');
+VALUES (1, 'CosoGroup', 'fsdfdsgdfs', 1711411200000, 1, 'jgfkhfg', 0),
+       (2, 'CosoGroupOG!!', 'A group for all the coso enjoyers!!', 1711584000000, 3, 'GroupChat12_1000000033.jpg', 0);
 
 INSERT INTO `group_chats_users`
 VALUES (1, 1, 1),

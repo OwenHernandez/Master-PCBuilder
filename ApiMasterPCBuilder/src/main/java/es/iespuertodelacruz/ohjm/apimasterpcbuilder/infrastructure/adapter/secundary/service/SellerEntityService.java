@@ -112,6 +112,7 @@ public class SellerEntityService implements ISellerRepository {
         return true;
     }
 
+    @Transactional
     @Override
     public Seller findByName(String name) {
         Seller res = null;

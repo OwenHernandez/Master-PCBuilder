@@ -45,8 +45,6 @@ public class UserEntity implements Serializable {
 	private String role;
 	private byte deleted;
 
-	private byte deleted;
-
 	//bi-directional many-to-many association to UserEntity
 	@JsonIgnore
 	@ManyToMany
