@@ -41,4 +41,8 @@ public class SellerDTO {
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

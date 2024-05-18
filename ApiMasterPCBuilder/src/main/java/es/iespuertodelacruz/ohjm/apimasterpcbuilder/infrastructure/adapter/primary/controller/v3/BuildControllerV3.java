@@ -44,8 +44,6 @@ public class BuildControllerV3 {
 
     @SchemaMapping(typeName = "Query", field = "builds")
     public List<BuildOutputDTO> getBuilds() {
-        List<BuildOutputDTO> collect = buildService.findAll().stream().map(buildDTOMapper::toDTO).collect(Collectors.toList());
-        return collect;
     }
 
     @SchemaMapping(typeName = "Query", field = "build")
@@ -160,3 +158,6 @@ public class BuildControllerV3 {
         return false;
     }
 }
+
+        List<BuildOutputDTO> collect = buildService.findAll().stream().map(buildDTOMapper::toDTO).collect(Collectors.toList());
+        return collect;

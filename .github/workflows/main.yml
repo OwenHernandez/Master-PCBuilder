@@ -23,17 +23,17 @@ jobs:
     - name: Build with Maven
       run: mvn -B clean package --file ApiMasterPCBuilder/pom.xml
 
-    - name: subir fichero
-      uses: actions/upload-artifact@v4
-      with:
-        name: allartifacts
-        path: ApiMasterPCBuilder/target/*
+   # - name: subir fichero
+   #   uses: actions/upload-artifact@v4
+    #  with:
+    #    name: allartifacts
+   #     path: ApiMasterPCBuilder/target/*
 
-    - name: Download artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: allartifacts
-        path: distfiles
+   # - name: Download artifact
+   #   uses: actions/download-artifact@v4
+   #   with:
+   #     name: allartifacts
+   #     path: distfiles
 
 
     #- name: Build Docker image
@@ -44,8 +44,8 @@ jobs:
       uses: appleboy/scp-action@v0.1.7
       with:
         username: root
-        host: "146.190.12.221"
-        password: "ji8VqvweXT0rwLEBDZ$Q"
+        host: "146.190.2.205"
+        password: "fz2EfMkU^Fbb<P3ETrh"
         source: "ApiMasterPCBuilder/target/*.jar"
         target: "~/"
         overwrite: true
@@ -58,8 +58,8 @@ jobs:
       uses: appleboy/ssh-action@master
       with:
         username: root
-        host: "146.190.12.221"
-        password: "ji8VqvweXT0rwLEBDZ$Q"
+        host: "146.190.2.205"
+        password: "fz2EfMkU^Fbb<P3ETrh"
         script: |
           docker stop root_MasterPcBuildercontainer_1 || true; 
           docker rm root_MasterPcBuildercontainer_1 -f || true; 

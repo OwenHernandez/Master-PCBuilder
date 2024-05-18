@@ -96,8 +96,7 @@ const ComponentScreen = (props: Props) => {
                 {headers: {Authorization: "Bearer " + token}}
             );
             await ComponentRepository.delete(component?.id);
-            const responseComponents = await axios.get(Globals.IP_HTTP + "/api/v2/components", {headers: {"Authorization": "Bearer " + token}});
-            navigation.navigate("Components List", {components: responseComponents.data});
+            navigation.navigate("Components List", {components: []});
         } catch (err) {
             console.log(err);
         }

@@ -2,8 +2,6 @@ package es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.prim
 
 public class UserInputV3DTO {
 
-    private Long id;
-
     private String password;
 
     private String picture;
@@ -16,17 +14,9 @@ public class UserInputV3DTO {
 
     private String nick;
 
-    private boolean active;
+    private byte active;
 
     public UserInputV3DTO() {}
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getPassword() {
         return password;
@@ -76,11 +66,11 @@ public class UserInputV3DTO {
         this.nick = nick;
     }
 
-    public boolean getActive() {
+    public byte getActive() {
         return active;
     }
 
-    public void setActive(boolean active) {
+    public void setActive(byte active) {
         this.active = active;
     }
 }
