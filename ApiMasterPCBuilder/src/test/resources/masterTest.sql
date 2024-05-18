@@ -14,6 +14,7 @@ DROP TABLE IF EXISTS `group_chats`;
 DROP TABLE IF EXISTS `sellers`;
 DROP TABLE IF EXISTS `users`;
 
+
 CREATE TABLE `users` (
                          `ID`       int          NOT NULL AUTO_INCREMENT,
                          `NICK`     varchar(30)  NOT NULL,
@@ -79,6 +80,7 @@ CREATE TABLE `components` (
                               PRIMARY KEY (`ID`),
                               CONSTRAINT `FK_SELLER_COMPONENT` FOREIGN KEY (`SELLER_ID`) REFERENCES `sellers` (`ID`),
                               CONSTRAINT `FK_USER_COMPONENT` FOREIGN KEY (`USER_ID`) REFERENCES `users` (`ID`)
+
 );
 
 CREATE TABLE `builds_components` (
@@ -102,6 +104,7 @@ CREATE TABLE `group_chats` (
                                `DELETED`          tinyint      NOT NULL DEFAULT 0,
                                PRIMARY KEY (`ID`),
                                CONSTRAINT `GROUP_CHAT_ADMIN_ID` FOREIGN KEY (`GROUP_ADMIN_ID`) REFERENCES `users` (`ID`)
+
 );
 
 CREATE TABLE `group_chats_users` (
@@ -159,6 +162,7 @@ CREATE TABLE `price_history` (
                                  PRIMARY KEY (`ID`),
                                  CONSTRAINT `FK_PRICE_HISTORY_COMPONENT` FOREIGN KEY (`COMPONENT_ID`) REFERENCES `components` (`ID`)
 );
+
 
 -- Datos de ejemplo para las tablas
 INSERT INTO `users` VALUES

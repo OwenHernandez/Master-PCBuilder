@@ -41,7 +41,6 @@ class PostDTOMapperTest {
         PostInputDTO inputDTO = new PostInputDTO();
         inputDTO.setTitle("New GPU Launch");
         inputDTO.setDescription("Discussing the latest GPU technology");
-        inputDTO.setImage("image_url");
 
         // When
         Post result = postDTOMapper.toDomain(inputDTO);
@@ -49,7 +48,6 @@ class PostDTOMapperTest {
         // Then
         assertThat(result.getTitle()).isEqualTo("New GPU Launch");
         assertThat(result.getDescription()).isEqualTo("Discussing the latest GPU technology");
-        assertThat(result.getImage()).isEqualTo("image_url");
     }
 
     @Test
@@ -59,7 +57,6 @@ class PostDTOMapperTest {
         post.setId(1L);
         post.setTitle("New GPU Launch");
         post.setDescription("Discussing the latest GPU technology");
-        post.setImage("image_url");
 
         User user = new User(); // Simplified example
         post.setUser(user);
@@ -82,7 +79,6 @@ class PostDTOMapperTest {
         assertThat(result.getId()).isEqualTo(1L);
         assertThat(result.getTitle()).isEqualTo("New GPU Launch");
         assertThat(result.getDescription()).isEqualTo("Discussing the latest GPU technology");
-        assertThat(result.getImage()).isEqualTo("image_url");
         assertThat(result.getUser()).isNotNull();
         assertThat(result.getBuild()).isNotNull();
         assertThat(result.getUsersWhoLiked()).hasSize(2);

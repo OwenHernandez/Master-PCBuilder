@@ -95,7 +95,6 @@ const useLogin = () => {
             navigation.navigate("DrawerNavigator");
         } catch (err) {
             console.log("Error", err);
-            setLoading(false);
 
             if (err.response) {
                 // El servidor respondió con un código de estado fuera del rango 2xx

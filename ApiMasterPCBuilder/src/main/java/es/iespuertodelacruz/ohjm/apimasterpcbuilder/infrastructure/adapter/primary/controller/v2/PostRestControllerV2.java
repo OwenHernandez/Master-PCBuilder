@@ -172,9 +172,10 @@ public class PostRestControllerV2 {
                 Post postById = service.findById(id);
                 if (postById != null) {
                     if (postById.getUser().getId() == byNick.getId()) {
-                        boolean ok = service.deleteById(id);
+                        postById.setDeleted((byte) 1);
+                        Post ok = service.save(postById);
 
-                        if (ok) {
+                        if (ok != null) {
                             return ResponseEntity.ok("Post Successfully Deleted");
                         } else {
                             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong");

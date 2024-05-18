@@ -44,8 +44,7 @@ public class BuildControllerV3 {
 
     @SchemaMapping(typeName = "Query", field = "builds")
     public List<BuildOutputDTO> getBuilds() {
-        List<BuildOutputDTO> collect = buildService.findAll().stream().map(buildDTOMapper::toDTO).collect(Collectors.toList());
-        return collect;
+        return buildService.findAll().stream().map(buildDTOMapper::toDTO).collect(Collectors.toList());
     }
 
     @SchemaMapping(typeName = "Query", field = "build")

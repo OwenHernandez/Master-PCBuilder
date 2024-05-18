@@ -199,7 +199,7 @@ public class PostRestControllerV2Test {
 
         given(userService.findByNick(anyString())).willReturn(user);
         given(service.findById(anyLong())).willReturn(post);
-        given(service.deleteById(anyLong())).willReturn(true);
+        given(service.save(any(Post.class))).willReturn(post);
 
         mockMvc.perform(delete("/api/v2/posts/{id}", 1))
                 .andExpect(status().isOk())
