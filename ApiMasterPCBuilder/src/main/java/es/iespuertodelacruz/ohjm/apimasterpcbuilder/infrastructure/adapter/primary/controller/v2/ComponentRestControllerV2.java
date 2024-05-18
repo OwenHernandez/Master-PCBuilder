@@ -116,17 +116,29 @@ public class ComponentRestControllerV2 {
                     Component component = mapper.toDomain(componentInputDTO);
                     component.setSeller(sellerByName);
                     component.setUserWhoCreated(userByNick);
-                    List<Component> components = componentService.searchEbay(component.getName());
-                    log.info("Components found in ebay: " + components.size());
-                    if (components != null && !components.isEmpty()) {
-                        log.info("Component found in ebay");
-                        component.setEbay_price(components.get(1).getEbay_price());
+                    try {
+                        List<Component> components = componentService.searchEbay(component.getName());
+                        log.info("Searching in ebay");
+                        if (components != null && !components.isEmpty()) {
+                            log.info("Components found in ebay: " + components.size());
+                            component.setEbay_price(components.get(1).getEbay_price());
+                        }
+                    } catch (Exception e) {
+                        log= Logger.getLogger("Error while searching in ebay");
+                        log.info(e.getMessage());
+                        component.setEbay_price(0.0);
                     }
-                    List<Component> components1 = componentService.searchAmazon(component.getName());
-                    log.info("Components found in amazon: " + components1.size());
-                    if (components1 != null && !components1.isEmpty()) {
-                        log.info("Component found in amazon");
-                        component.setAmazon_price(components1.get(0).getAmazon_price());
+                    try {
+                        List<Component> components1 = componentService.searchAmazon(component.getName());
+                        log.info("Searching in amazon");
+                        if (components1 != null && !components1.isEmpty()) {
+                            log.info("Components found in amazon: " + components1.size());
+                            component.setAmazon_price(components1.get(0).getAmazon_price());
+                        }
+                    } catch (Exception e) {
+                        log= Logger.getLogger("Error while searching in amazon");
+                        log.info(e.getMessage());
+                        component.setAmazon_price(0.0);
                     }
                     component.setPriceHistories(new ArrayList<>());
                     Component save = componentService.save(component);
