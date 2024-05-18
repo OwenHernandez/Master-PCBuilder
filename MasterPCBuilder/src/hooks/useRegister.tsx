@@ -39,7 +39,7 @@ const useRegister = () => {
                     Toast.show({
                         position: 'bottom',
                         type: 'error',
-                        text1: "Please, check your email to confirm your account",
+                        text1: "Please, check your email",
                         text1Style: { fontSize: getFontSize(15) },
                         visibilityTime: 3000
                     });
@@ -86,8 +86,10 @@ const useRegister = () => {
             Toast.show({
                 position: 'bottom',
                 type: 'error',
-                text1: "Something went wrong, please try again later",
+                text1: "Something went wrong,",
+                text2: "please try again later",
                 text1Style: { fontSize: getFontSize(15) },
+                text2Style: { fontSize: getFontSize(10) },
                 visibilityTime: 3000
             });
         }

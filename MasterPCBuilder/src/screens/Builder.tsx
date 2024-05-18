@@ -33,6 +33,8 @@ import IPriceHistoryType from "../interfaces/IPriceHistoryType";
 import {ComponentDTO} from "../data/dtos/ComponentDTO";
 import {transformBuildDTOToEntity} from "../data/transformers/BuildTransformer";
 import {transformComponentDTOToEntity, transformComponentToDTO} from "../data/transformers/ComponentTransformer";
+import {BuildDTO} from "../data/dtos/BuildDTO";
+import {BuildComponentDTO} from "../data/dtos/BuildComponentDTO";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Builder'>;
 
@@ -283,17 +285,27 @@ const Builder = (props: Props) => {
             {headers: {"Authorization": "Bearer " + token}}
         );
         if (response.status === 200) {
-            let updateBuild:IBuildType={
+            let buildsComponents: BuildComponentDTO[] = [];
+            for (const buildComp of buildTemp.buildsComponents) {
+                let buildCompDTO: BuildComponentDTO = {
+                    id: null,
+                    dateCreated: buildComp.dateCreated,
+                    priceAtTheTime: buildComp.priceAtTheTime,
+                    component: buildComp.component
+                }
+                buildsComponents.push(buildCompDTO);
+            }
+            let updateBuild:BuildDTO={
                 id: buildTemp.id,
                 totalPrice: totalPrice,
                 userNick: user.nick,
                 name: buildTemp.name,
                 notes: buildTemp.notes,
                 category: buildTemp.category,
-                buildsComponents: componentsSelected,
+                buildsComponents: buildsComponents,
                 deleted: false
             };
-            let newBuild = await transformBuildDTOToEntity(response.data);
+            let newBuild = await transformBuildDTOToEntity(updateBuild);
             await BuildRepository.save(newBuild);
             setBuildsTemp(undefined);
             navigation.navigate("UserBuildsList");
@@ -307,8 +319,8 @@ const Builder = (props: Props) => {
         {name: "Motherboard", icon: "developer-board", type: "Motherboard", importIcon: "Material"},
         {name: "Memory RAM", icon: "memory", type: "RAM", importIcon: "FontAwesome5"},
         {name: "Drive", icon: "harddisk", type: "Drive", importIcon: "Material"},
-        {name: "Tower", icon: "desktop-tower", type: "Tower", importIcon: "Material"},
-        {name: "Fan", icon: "fan", type: "Fan", importIcon: "Material"},
+        {name: "Case", icon: "desktop-tower", type: "Case", importIcon: "Material"},
+        {name: "Cooling", icon: "fan", type: "Cooling", importIcon: "Material"},
         {name: "PSU", icon: "power", type: "PSU", importIcon: "Material"},
         {
             name: "GPU",
@@ -608,7 +620,9 @@ const Builder = (props: Props) => {
                             alignItems: "center"
                         }}>
                         <TextInput
-                            maxLength={20}
+                            maxLength={255}
+                            multiline={true}
+                            numberOfLines={5}
                             defaultValue={(buildTemp !== null && buildTemp !== undefined) && buildTemp.notes}
                             placeholder='notes' placeholderTextColor="#a3a3a3"
                             style={{

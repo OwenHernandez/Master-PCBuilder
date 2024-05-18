@@ -180,6 +180,15 @@ const GroupChatDetails = (props: Props) => {
         }
     }
 
+    function inGroup(userSelected: IUserType) {
+        for (const member of groupTemp.users) {
+            if (member.id === userSelected.id) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     return (
         <SafeAreaView style={{flex: 1, backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"}}>
             <HeaderScreen name={groupTemp?.name + "'s Details"} navigation={navigation} profile={false}
@@ -486,8 +495,8 @@ const GroupChatDetails = (props: Props) => {
                 onRequestClose={() => setModalAddMemberVisible(!modalAddMemberVisible)}
             >
                 <View style={{...styles.modalContainer}}>
-                    <View style={{...styles.modalContent, backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"}}>
-                        <View style={{flexDirection: "row", justifyContent: "space-between", margin: "5%"}}>
+                    <View style={{...styles.modalContent, marginVertical: "40%", backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"}}>
+                        <View style={{flexDirection: "row", justifyContent: "space-between", margin: "5%", marginRight: "10%"}}>
                             <Text style={{
                                 fontSize: getFontSize(20),
                                 color: (darkMode) ? "white" : "black",
@@ -529,37 +538,41 @@ const GroupChatDetails = (props: Props) => {
                         <FlatList
                             data={friendsByName}
                             renderItem={(friend) => {
-                                return (
-                                    <TouchableOpacity onPress={() => {
-                                        addRemoveMember(friend.item);
-                                        setModalAddMemberVisible(!modalAddMemberVisible);
-                                    }}
-                                                      style={{
-                                                          ...Styles.touchable,
-                                                          flexDirection: "row",
-                                                          alignItems: "center",
-                                                          margin: "3%"
-                                                      }}>
-                                        <Image
-                                            source={{
-                                                uri: (friend.item.picture !== "") ? "data:image/jpeg;base64," + friend.item.picture : "https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png?x=480&quality=40",
-                                            }}
-                                            style={{
-                                                ...Styles.imageStyle,
-                                                borderColor: (darkMode) ? "white" : "black",
-                                                borderWidth: 1,
-                                                width: getIconSize(110),
-                                                height: getIconSize(110)
-                                            }}
-                                        />
-                                        <Text style={{
-                                            color: (darkMode) ? "white" : "black",
-                                            marginLeft: "5%",
-                                            marginRight: "13%"
-                                        }}>{friend.item.nick}</Text>
-                                    </TouchableOpacity>
+                                if (!inGroup(friend.item)) {
+                                    return (
+                                        <TouchableOpacity onPress={() => {
+                                            addRemoveMember(friend.item);
+                                            setModalAddMemberVisible(!modalAddMemberVisible);
+                                        }}
+                                                          style={{
+                                                              ...Styles.touchable,
+                                                              flexDirection: "row",
+                                                              alignItems: "center",
+                                                              margin: "5%",
+                                                              marginHorizontal: "10%"
+                                                          }}>
+                                            <Image
+                                                source={{
+                                                    uri: (friend.item.picture !== "") ? "data:image/jpeg;base64," + friend.item.picture : "https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png?x=480&quality=40",
+                                                }}
+                                                style={{
+                                                    ...Styles.imageStyle,
+                                                    borderColor: (darkMode) ? "white" : "black",
+                                                    borderWidth: 1,
+                                                    width: getIconSize(110),
+                                                    height: getIconSize(110)
+                                                }}
+                                            />
+                                            <Text style={{
+                                                color: (darkMode) ? "white" : "black",
+                                                marginLeft: "5%",
+                                                marginRight: "13%",
+                                                maxWidth: "80%"
+                                            }}>{friend.item.nick}</Text>
+                                        </TouchableOpacity>
 
-                                )
+                                    )
+                                }
                             }}
                             keyExtractor={(comp, index) => index + ""}
                         />
@@ -573,13 +586,14 @@ const GroupChatDetails = (props: Props) => {
                 onRequestClose={() => setModalEditGroupVisible(!modalEditGroupVisible)}
             >
                 <View style={{...styles.modalContainer}}>
-                    <View style={{...styles.modalContent, backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"}}>
+                    <ScrollView style={{...styles.modalContent, backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"}}>
                         <View style={{flexDirection: "row", justifyContent: "space-between", margin: "5%"}}>
                             <Text style={{
                                 fontSize: getFontSize(20),
                                 color: (darkMode) ? "white" : "black",
-                                marginHorizontal: "5%"
-                            }}>Choose a user and press to add them</Text>
+                                marginHorizontal: "5%",
+                                textAlign: "center"
+                            }}>Edit Group</Text>
                             <TouchableOpacity onPress={() => setModalEditGroupVisible(!modalEditGroupVisible)}>
                                 <Material name='close-box' size={getIconSize(100)}
                                           color={(darkMode) ? "white" : "black"}></Material>
@@ -593,6 +607,9 @@ const GroupChatDetails = (props: Props) => {
                             <TextInput
                                 placeholder='Change the name of the group'
                                 defaultValue={groupTemp.name}
+                                multiline={true}
+                                numberOfLines={3}
+                                maxLength={50}
                                 placeholderTextColor={"#a3a3a3"}
                                 style={{
                                     borderWidth: 2,
@@ -612,6 +629,7 @@ const GroupChatDetails = (props: Props) => {
                                 defaultValue={groupTemp.description}
                                 multiline={true}
                                 numberOfLines={3}
+                                maxLength={100}
                                 placeholderTextColor={"#a3a3a3"}
                                 style={{
                                     borderWidth: 2,
@@ -665,7 +683,7 @@ const GroupChatDetails = (props: Props) => {
                                 }}>Save changes</Text>
                             </TouchableOpacity>
                         </View>
-                    </View>
+                    </ScrollView>
                 </View>
             </Modal>
         </SafeAreaView>
@@ -679,13 +697,13 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        marginTop: "50%",
-        borderColor: "#ca2613",
-        borderWidth: 2
+        backgroundColor: 'rgba(0, 0, 0, 0.5)'
     },
     modalContent: {
-        borderRadius: 10
+        marginVertical: "20%",
+        width: "90%",
+        borderColor: "#ca2613",
+        borderWidth: 2
     },
     closeModalText: {
         marginTop: 10,

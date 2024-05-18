@@ -46,6 +46,7 @@ const Register = (props: Props) => {
                     <View>
                         <TextInput
                             placeholder='Nick' placeholderTextColor={"#a3a3a3"} onChangeText={changeNick}
+                            maxLength={30}
                             value={nick}
                             style={{
                                 textAlign: "center",
@@ -58,6 +59,7 @@ const Register = (props: Props) => {
                         ></TextInput>
                         <TextInput
                             placeholder='Email' placeholderTextColor={"#a3a3a3"} onChangeText={changeEmail}
+                            maxLength={255}
                             value={email}
                             style={{
                                 textAlign: "center",
