@@ -495,7 +495,7 @@ const GroupChatDetails = (props: Props) => {
                 onRequestClose={() => setModalAddMemberVisible(!modalAddMemberVisible)}
             >
                 <View style={{...styles.modalContainer}}>
-                    <View style={{...styles.modalContent, backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"}}>
+                    <View style={{...styles.modalContent, marginVertical: "40%", backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"}}>
                         <View style={{flexDirection: "row", justifyContent: "space-between", margin: "5%", marginRight: "10%"}}>
                             <Text style={{
                                 fontSize: getFontSize(20),
@@ -586,7 +586,7 @@ const GroupChatDetails = (props: Props) => {
                 onRequestClose={() => setModalEditGroupVisible(!modalEditGroupVisible)}
             >
                 <View style={{...styles.modalContainer}}>
-                    <View style={{...styles.modalContent, backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"}}>
+                    <ScrollView style={{...styles.modalContent, backgroundColor: (darkMode) ? "#242121" : "#F5F5F5"}}>
                         <View style={{flexDirection: "row", justifyContent: "space-between", margin: "5%"}}>
                             <Text style={{
                                 fontSize: getFontSize(20),
@@ -607,6 +607,9 @@ const GroupChatDetails = (props: Props) => {
                             <TextInput
                                 placeholder='Change the name of the group'
                                 defaultValue={groupTemp.name}
+                                multiline={true}
+                                numberOfLines={3}
+                                maxLength={50}
                                 placeholderTextColor={"#a3a3a3"}
                                 style={{
                                     borderWidth: 2,
@@ -626,6 +629,7 @@ const GroupChatDetails = (props: Props) => {
                                 defaultValue={groupTemp.description}
                                 multiline={true}
                                 numberOfLines={3}
+                                maxLength={100}
                                 placeholderTextColor={"#a3a3a3"}
                                 style={{
                                     borderWidth: 2,
@@ -679,7 +683,7 @@ const GroupChatDetails = (props: Props) => {
                                 }}>Save changes</Text>
                             </TouchableOpacity>
                         </View>
-                    </View>
+                    </ScrollView>
                 </View>
             </Modal>
         </SafeAreaView>
@@ -696,7 +700,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0, 0, 0, 0.5)'
     },
     modalContent: {
-        marginVertical: "50%",
+        marginVertical: "20%",
         width: "90%",
         borderColor: "#ca2613",
         borderWidth: 2
