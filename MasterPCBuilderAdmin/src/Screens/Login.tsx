@@ -25,13 +25,13 @@ const Login = (props: Props) => {
                 return;
             }
 
-            const response = await axios.post('http://localhost:8080/api/v1/login', {
+            const response = await axios.post("http://"+Globals.IP_HTTP+"/api/v1/login", {
                 nick,
                 password
             })
             const data = response.data;
             if (data !== undefined) {
-                const responseUser = await axios.get('http://localhost:8080/api/v2/users?nick=' + nick, {headers: {'Authorization': "Bearer " + data}});
+                const responseUser = await axios.get('http://'+Globals.IP_HTTP+'/api/v2/users?nick=' + nick, {headers: {'Authorization': "Bearer " + data}});
                 const dataUser = responseUser.data;
                 if (dataUser.role === "ROLE_ADMIN") {
                     setIsWorking(1);

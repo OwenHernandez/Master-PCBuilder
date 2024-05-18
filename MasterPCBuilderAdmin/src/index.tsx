@@ -7,6 +7,7 @@ import Router from "./Components/Router";
 import AppContextProvider from './Contexts/AppContextProvider';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {ApolloClient, InMemoryCache, ApolloProvider, ApolloLink, createHttpLink} from '@apollo/client';
+import {Globals} from "./Components/Globals";
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -26,7 +27,7 @@ const authLink = new ApolloLink((operation, forward) => {
     return forward(operation);
 });
 const httpLink = createHttpLink({
-    uri: 'http://localhost:8080/graphql',
+    uri: 'http://'+Globals.IP_HTTP+':8080/graphql',
 });
 const client = new ApolloClient({
     link: authLink.concat(httpLink),
