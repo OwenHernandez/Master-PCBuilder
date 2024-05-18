@@ -5,6 +5,7 @@ import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Component;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.Seller;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.User;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.IComponentService;
+import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.IPriceHistoryService;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.ISellerService;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.IUserService;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.port.primary.IPriceHistoryService;

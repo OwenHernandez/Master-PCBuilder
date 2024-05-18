@@ -256,9 +256,8 @@ public class ComponentEntityService implements IComponentRepository {
     }
 
 
-    public List<Component> searchAmazon(String name) {
-        log = Logger.getLogger("amazon");
-        log.info("API Key: " + apiKey);
+
+    public List<Component> searchAmazon(String name){
         name = name.replace(" ", "+");
         Mono<List<ProductAmazonDTO>> responseMono = this.webClient.get()
                 .uri("http://127.0.0.1:8000/" + name)
@@ -269,14 +268,13 @@ public class ComponentEntityService implements IComponentRepository {
         List<ProductAmazonDTO> block = responseMono.block();
         List<Component> components = new ArrayList<>();
         for (ProductAmazonDTO productAmazonDTO : block) {
-            if (productAmazonDTO.getPrice() != null) {
-                Component component = new Component();
+            if (productAmazonDTO.getPrice()!=null && productAmazonDTO.getTitle().contains(name)){
+                Component component=new Component();
                 component.setName(productAmazonDTO.getTitle());
                 String price = productAmazonDTO.getPrice();
 
-                price = price.replace("$", "");
-                price = price.replace(",", "");
-                log = Logger.getLogger("amazon");
+                price=price.replace("$","");
+                price=price.replace(",","");
                 component.setAmazon_price(Double.parseDouble(price));
                 components.add(component);
             }

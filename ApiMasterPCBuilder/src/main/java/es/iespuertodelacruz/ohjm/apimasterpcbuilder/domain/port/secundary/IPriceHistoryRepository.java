@@ -4,7 +4,7 @@ import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.model.PriceHistory;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-@Repository
+
 public interface IPriceHistoryRepository {
     List<PriceHistory> findAll();
 

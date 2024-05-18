@@ -141,7 +141,6 @@ const CreatePost = (props: Props) => {
                                 value={selectedValue}
                                 onChange={(newValue) => setSelectedValue(newValue.value)}
                                 style={{
-
                                     height: "50%", // Aumenta la altura del contenedor del Dropdown
                                     borderColor: "#ca2613",
                                     width: "100%",
@@ -163,6 +162,7 @@ const CreatePost = (props: Props) => {
                                     backgroundColor: (darkMode) ? "#242121" : "#F5F5F5",
                                     borderColor: "#ca2613",
                                     borderWidth: 2,
+                                    height: "50%"
                                 }}
                                 itemTextStyle={{
                                     fontSize: getFontSize(20),

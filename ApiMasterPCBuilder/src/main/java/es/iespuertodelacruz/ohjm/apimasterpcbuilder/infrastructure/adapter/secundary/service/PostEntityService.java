@@ -53,7 +53,7 @@ public class PostEntityService implements IPostRepository {
         if (!repo.existsById(id)) {
             return false;
         }
-        repo.findById(id).ifPresent(postEntity -> postEntity.setDeleted((byte) 1));
+        repo.deleteById(id);
         return true;
     }
 
