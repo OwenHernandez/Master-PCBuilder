@@ -620,7 +620,9 @@ const Builder = (props: Props) => {
                             alignItems: "center"
                         }}>
                         <TextInput
-                            maxLength={20}
+                            maxLength={255}
+                            multiline={true}
+                            numberOfLines={5}
                             defaultValue={(buildTemp !== null && buildTemp !== undefined) && buildTemp.notes}
                             placeholder='notes' placeholderTextColor="#a3a3a3"
                             style={{

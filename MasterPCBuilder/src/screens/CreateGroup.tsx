@@ -20,7 +20,6 @@ import axios from "axios";
 import * as ImagePicker from "react-native-image-picker";
 import {ImagePickerResponse} from "react-native-image-picker";
 import RNFetchBlob from "rn-fetch-blob";
-import {GroupChatRepository} from "../data/Database";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'CreatePost'>;
 
