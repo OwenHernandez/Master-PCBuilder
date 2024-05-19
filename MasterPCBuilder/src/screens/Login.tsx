@@ -48,6 +48,7 @@ const Login = (props: Props) => {
                     <View>
                         <TextInput
                             placeholder='Nick' placeholderTextColor={"#a3a3a3"} onChangeText={changeNick}
+                            maxLength={30}
                             value={nick}
                             style={{
                                 textAlign: "center",

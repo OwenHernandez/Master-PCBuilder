@@ -149,13 +149,15 @@ const AdminChat = (props: Props) => {
         console.log("datos: " + datos);
         let nuevoMensaje = JSON.parse(datos.body);
         console.log(nuevoMensaje);
-        msgsRef.current.push({
-            content: nuevoMensaje.content,
-            author: nuevoMensaje.author,
-            receiver: nuevoMensaje.receiver,
-            date: nuevoMensaje.date
-        });
-        setMsgs([...msgsRef.current]);
+        if (nuevoMensaje.author === userSelected.nick) {
+            msgsRef.current.push({
+                content: nuevoMensaje.content,
+                author: nuevoMensaje.author,
+                receiver: nuevoMensaje.receiver,
+                date: nuevoMensaje.date
+            });
+            setMsgs([...msgsRef.current]);
+        }
     }
 
     function connect() {

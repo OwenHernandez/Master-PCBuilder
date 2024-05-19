@@ -31,7 +31,7 @@ type Select = {
 }
 
 const EditComponent = (props: Props) => {
-    const {user, darkMode, token} = usePrimaryContext();
+    const {user, darkMode, token, setUser} = usePrimaryContext();
     const {navigation, route} = props;
     const {comp} = route.params;
     const fontScale = PixelRatio.getFontScale();
@@ -118,8 +118,17 @@ const EditComponent = (props: Props) => {
                 comp.sellerName = selectedSeller.value;
                 comp.type = selectedType.value;
                 comp.image = image64;
+                setComponent(comp);
 
-                navigation.navigate("Components List", {components: []});
+                Toast.show({
+                    type: "error",
+                    position: "bottom",
+                    text1: "Component edited successfully",
+                    text1Style: {fontSize: getFontSize(15)},
+                    visibilityTime: 3000
+                });
+
+                navigation.navigate("ComponentScreen", {comp: component});
             } catch (e) {
                 console.log(e);
             }

@@ -130,7 +130,7 @@ const ComponentScreen = (props: Props) => {
         setPrecios(auxPrecios);
         setPreciosAmazon(auxPreciosAmazon);
         setPreciosEbay(auxPreciosEbay);
-    }, []);
+    }, [comp]);
 
     const data = {
         labels: meses,

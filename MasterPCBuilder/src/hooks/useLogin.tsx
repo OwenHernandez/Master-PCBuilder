@@ -87,11 +87,12 @@ const useLogin = () => {
                     friend.picture = picture;
                 }
             }
-            console.log("wepa")
             let userSave = transformUserDTOToEntity(newUser);
             userSave.password = password;
             await UserRepository.save(userSave);
             setUser(newUser);
+            setNick("");
+            setPassword("");
             navigation.navigate("DrawerNavigator");
         } catch (err) {
             console.log("Error", err);
