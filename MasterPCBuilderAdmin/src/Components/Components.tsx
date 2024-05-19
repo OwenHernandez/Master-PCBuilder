@@ -15,7 +15,7 @@ import {
     DELETE_COMPONENT,
     GET_BUILDS,
     GET_COMPONENTS,
-    GET_SELLER,
+    GET_SELLERS,
     SAVE_COMPONENT,
     UPDATE_COMPONENT
 } from "../Querys/Querys";
@@ -42,7 +42,7 @@ export interface ISellerType {
 const Components=(props: Props) => {
     const {token} = useAppContext();
     const { loading, error, data:dataComponents } = useQuery(GET_COMPONENTS);
-    const { loading:loadingSeller, error:errorSeller, data:dataSeller } = useQuery(GET_SELLER);
+    const { loading:loadingSeller, error:errorSeller, data:dataSeller } = useQuery(GET_SELLERS);
     const [saveComponentG] = useMutation(SAVE_COMPONENT);
     const [updateComponentG] = useMutation(UPDATE_COMPONENT);
     const [deleteComponentG] = useMutation(DELETE_COMPONENT);
