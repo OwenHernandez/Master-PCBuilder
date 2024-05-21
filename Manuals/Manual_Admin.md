@@ -1,5 +1,7 @@
 # Manual de Administración de MasterPCBuilder
 
+![https://github.com/OwenHernandez/Master-PCBuilder-Owen/blob/main/Manuals/img/logo_dark.png](https://github.com/OwenHernandez/Master-PCBuilder-Owen/blob/main/Manuals/img/logo_dark.png)
+
 ## Índice
 
 - [Introducción](#introducción)
@@ -33,6 +35,8 @@ Además, MasterPCBuilder cuenta con un panel de control (dashboard) con gráfica
 
 ### Login
 
+![https://github.com/OwenHernandez/Master-PCBuilder-Owen/blob/main/Manuals/img/Screenshot%202024-05-21%20215728.png](https://github.com/OwenHernandez/Master-PCBuilder-Owen/blob/main/Manuals/img/Screenshot%202024-05-21%20215728.png)
+
 - **Campo para el Nombre de Usuario (Nick)**: 
   - _Insert your nick here_: Este campo de texto permite al usuario ingresar su nombre de usuario o apodo (nick) que ha registrado en la plataforma. Es un campo obligatorio para proceder con el inicio de sesión.
 
@@ -53,6 +57,8 @@ Además, MasterPCBuilder cuenta con un panel de control (dashboard) con gráfica
 
 ### Navbar
 
+![]()
+
 1. **Ícono del Sol**:
    - Función: Cambiar entre el tema claro (light theme) y el tema oscuro (dark theme).
    - Uso: Al hacer clic en el ícono del sol, el tema de la interfaz de usuario cambiará, proporcionando una experiencia visual diferente según la preferencia del usuario. Si está en tema claro, cambiará a tema oscuro y viceversa.
@@ -62,6 +68,8 @@ Además, MasterPCBuilder cuenta con un panel de control (dashboard) con gráfica
    - Uso: Al hacer clic en el ícono de tres líneas, se abre un menú lateral que contiene accesos directos a varias secciones de la aplicación.
 
 ### Side Menu
+
+![https://github.com/OwenHernandez/Master-PCBuilder-Owen/blob/main/Manuals/img/Screenshot%202024-05-21%20215754.png](https://github.com/OwenHernandez/Master-PCBuilder-Owen/blob/main/Manuals/img/Screenshot%202024-05-21%20215754.png)
 
 1. **Logo de MasterPCBuilder**:
    - En la parte superior del menú, se muestra el logo de la aplicación.
@@ -82,6 +90,8 @@ Además, MasterPCBuilder cuenta con un panel de control (dashboard) con gráfica
 ## Funcionalidades
 
 ### Dashboard
+
+![https://github.com/OwenHernandez/Master-PCBuilder-Owen/blob/main/Manuals/img/Screenshot%202024-05-21%20215803.png](https://github.com/OwenHernandez/Master-PCBuilder-Owen/blob/main/Manuals/img/Screenshot%202024-05-21%20215803.png)
 
 - **Indicadores Principales**:
   - _Total Users_: En la parte superior izquierda, puedes ver el número total de usuarios registrados en la plataforma. En este ejemplo, hay 13 usuarios.
@@ -112,6 +122,8 @@ Además, MasterPCBuilder cuenta con un panel de control (dashboard) con gráfica
   - _Filtrado de Información_: Utiliza los botones de filtro para personalizar la información mostrada en la gráfica de barras según la categoría de componentes que te interese.
 
 ### Users
+
+![https://github.com/OwenHernandez/Master-PCBuilder-Owen/blob/main/Manuals/img/Screenshot%202024-05-21%20215822.png](https://github.com/OwenHernandez/Master-PCBuilder-Owen/blob/main/Manuals/img/Screenshot%202024-05-21%20215822.png)
 
 #### Listado de Usuarios:
 
@@ -157,6 +169,8 @@ Además, MasterPCBuilder cuenta con un panel de control (dashboard) con gráfica
 
 ### Sellers
 
+![https://github.com/OwenHernandez/Master-PCBuilder-Owen/blob/main/Manuals/img/Screenshot%202024-05-21%20215830.png](https://github.com/OwenHernandez/Master-PCBuilder-Owen/blob/main/Manuals/img/Screenshot%202024-05-21%20215830.png)
+
 #### Listado de Vendedores:
 - La pantalla principal muestra una lista de todos los vendedores registrados en la plataforma. Cada vendedor se muestra con su nombre.
 - A la derecha de cada nombre de vendedor, hay un ícono de flecha hacia abajo que, al hacer clic, despliega más detalles del vendedor.
@@ -192,6 +206,8 @@ Además, MasterPCBuilder cuenta con un panel de control (dashboard) con gráfica
     - _Close_: Botón para cerrar la ventana sin añadir al vendedor.
 
 ### Components
+
+![https://github.com/OwenHernandez/Master-PCBuilder-Owen/blob/main/Manuals/img/Screenshot%202024-05-21%20215838.png](https://github.com/OwenHernandez/Master-PCBuilder-Owen/blob/main/Manuals/img/Screenshot%202024-05-21%20215838.png)
 
 #### Listado de Componentes:
 - La pantalla principal muestra una lista de todos los componentes de PC disponibles en la plataforma. Cada componente se muestra con su nombre y tipo.
@@ -234,6 +250,8 @@ Además, MasterPCBuilder cuenta con un panel de control (dashboard) con gráfica
 
 ### Builds
 
+![https://github.com/OwenHernandez/Master-PCBuilder-Owen/blob/main/Manuals/img/Screenshot%202024-05-21%20215845.png](https://github.com/OwenHernandez/Master-PCBuilder-Owen/blob/main/Manuals/img/Screenshot%202024-05-21%20215845.png)
+
 #### Listado de Builds:
 - La pantalla principal muestra una lista de todas las configuraciones de PC creadas en la plataforma. Cada build se muestra con su nombre.
 - Los builds están categorizados (por ejemplo, Gaming PC, Workstation, Budget PC).
@@ -269,6 +287,8 @@ Además, MasterPCBuilder cuenta con un panel de control (dashboard) con gráfica
 
 ### Posts
 
+![https://github.com/OwenHernandez/Master-PCBuilder-Owen/blob/main/Manuals/img/Screenshot%202024-05-21%20215852.png](https://github.com/OwenHernandez/Master-PCBuilder-Owen/blob/main/Manuals/img/Screenshot%202024-05-21%20215852.png)
+
 #### Listado de Publicaciones:
 - La pantalla principal muestra una lista de todas las publicaciones creadas en la plataforma. Cada publicación se muestra con su título.
 - A la derecha de cada título de publicación, hay un ícono de flecha hacia abajo que, al hacer clic, despliega más detalles de la publicación.
@@ -299,6 +319,8 @@ Además, MasterPCBuilder cuenta con un panel de control (dashboard) con gráfica
   - _Close_: Botón para cerrar la ventana sin guardar los cambios.
 
 ### Groups
+
+![https://github.com/OwenHernandez/Master-PCBuilder-Owen/blob/main/Manuals/img/Screenshot%202024-05-21%20215900.png](https://github.com/OwenHernandez/Master-PCBuilder-Owen/blob/main/Manuals/img/Screenshot%202024-05-21%20215900.png)
 
 #### Listado de Grupos:
 - La pantalla principal muestra una lista de todos los grupos creados en la plataforma. Cada grupo se muestra con su nombre.
