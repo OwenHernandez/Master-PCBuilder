@@ -1,13 +1,6 @@
 import random
 import time
 
-<<<<<<< HEAD
-from fastapi import FastAPI
-from selectorlib import Extractor
-import requests
-import json
-from time import sleep
-=======
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from seleniumbase import Driver
@@ -20,30 +13,27 @@ from selenium.webdriver.chrome.options import Options
 from time import sleep
 from twocaptcha import TwoCaptcha
 
->>>>>>> 3db40d54c32477bdcecadb19c5c9271689bf2090
 app = FastAPI()
 
 e = Extractor.from_yaml_file('search_results.yml')
 
-@app.get("/{search}")
-async def root(search:str):
-    # product_data = []
-<<<<<<< HEAD
-    amazon_url = "https://www.amazon.com/s?k="+search
-    proxies_list = open("rotating_ip.txt", "r").read().strip().split("\n")
-    numero=random.randint(0, len(proxies_list)-1)
-    data = scrape(amazon_url,proxies_list[numero])
-    products= []
-    if data:
-        for product in data['products']:
-            product['search_url'] = amazon_url
-            print("Got: %s" % product['title'])
-            # APARTIR DE AQUI PUEDO CAMBIARLO YO PARA HACER
-            products.append(product)
-        return products
+API_KEY = "2b7e151628aed2a6abf7158809cf4f3c"
+API_KEY_NAME = "access_token"
+api_key_header = APIKeyHeader(name=API_KEY_NAME, auto_error=False)
 
-def scrape(url,proxy):
-=======
+
+async def get_api_key(api_key_header: str = Depends(api_key_header)):
+    if api_key_header == API_KEY:
+        return api_key_header
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail="No tiene acceso"
+        )
+
+
+@app.get("/{search}")
+async def root(search: str, api_key: str = Depends(get_api_key)):
+    # product_data = []
     amazon_url = "https://www.amazon.com/s?k=" + search
     data = scrape(amazon_url)
     products = []
@@ -62,7 +52,6 @@ def root(texto: str):
 
 
 def scrape(url):
->>>>>>> 3db40d54c32477bdcecadb19c5c9271689bf2090
     headers = {
         'dnt': '1',
         'upgrade-insecure-requests': '1',
@@ -80,19 +69,13 @@ def scrape(url):
 
     # Download the page using requests
     print("Downloading %s" % url)
-<<<<<<< HEAD
-    r = requests.get(url,proxies={'http': f"http://{proxy}"}, headers=headers)
-=======
     r = requests.get(url, headers=headers)
->>>>>>> 3db40d54c32477bdcecadb19c5c9271689bf2090
     # Simple check to check if page was blocked (Usually 503)
     if r.status_code > 500:
         if "To discuss automated access to Amazon data please contact" in r.text:
-            print(r.text)
             print("Page %s was blocked by Amazon. Please try using better proxies\n" % url)
         else:
             print("Page %s must have been blocked by Amazon as the status code was %d" % (url, r.status_code))
         return None
     # Pass the HTML of the page and create
     return e.extract(r.text)
-
