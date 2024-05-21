@@ -14,7 +14,7 @@ public class UserInputV3DTO {
 
     private String nick;
 
-    private byte active;
+    private boolean active;
 
     public UserInputV3DTO() {}
 
@@ -66,11 +66,11 @@ public class UserInputV3DTO {
         this.nick = nick;
     }
 
-    public byte getActive() {
+    public boolean getActive() {
         return active;
     }
 
-    public void setActive(byte active) {
+    public void setActive(boolean active) {
         this.active = active;
     }
 }
