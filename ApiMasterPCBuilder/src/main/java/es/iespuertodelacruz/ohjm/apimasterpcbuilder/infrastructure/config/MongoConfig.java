@@ -12,6 +12,7 @@ public class MongoConfig {
 
     @Bean
     public MongoTemplate mongoTemplate() {
-        return new MongoTemplate(new SimpleMongoClientDatabaseFactory("mongodb://mongodb:27017/master"));
+        String uri = "mongodb://root:1q2w3e4r@mongodb:27017/master?authSource=admin";
+        return new MongoTemplate(new SimpleMongoClientDatabaseFactory(uri));
     }
 }
