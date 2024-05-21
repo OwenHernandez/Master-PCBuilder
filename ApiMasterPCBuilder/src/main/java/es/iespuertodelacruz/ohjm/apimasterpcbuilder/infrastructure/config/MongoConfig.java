@@ -12,6 +12,6 @@ public class MongoConfig {
 
     @Bean
     public MongoTemplate mongoTemplate() {
-        return new MongoTemplate(new SimpleMongoClientDatabaseFactory("mongodb://localhost:27017/master"));
+        return new MongoTemplate(new SimpleMongoClientDatabaseFactory("mongodb://mongo:27017/master"));
     }
 }
