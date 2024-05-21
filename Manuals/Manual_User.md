@@ -43,6 +43,7 @@ además de ofrecer herramientas para la construcción de PCs, masterPCbuilder fo
 con una interfaz intuitiva y funcionalidades robustas, masterPCbuilder aspira a convertirse en el destino preferido para entusiastas de la tecnología y constructores de PC, ofreciendo una experiencia única y enriquecedora en el mundo de la construcción de PCs personalizados.
 
 ## login
+![1.png](img/1.png)
 
 esta es la primera pantalla que el usuario se va a encontrar, es una interfaz de inicio de sesión para una aplicación "masterPCbuilder".
 
@@ -55,6 +56,7 @@ esta es la primera pantalla que el usuario se va a encontrar, es una interfaz de
 - **botón "register"**: este botón lleva a los usuarios a una pantalla de registro donde pueden crear una nueva cuenta si no tienen una, si usted está empezando a usar la aplicación por favor presione este botón.
 
 ## register
+![1.png](img/2.png)
 
 esta pantalla es para que los usuarios se puedan registrar en nuestra aplicación, poder usarla sin complicaciones y se queden sus montajes, componentes y demás guardados. esta pantalla solo la debe usar si es su primera vez en la app.
 
@@ -74,6 +76,7 @@ al pulsar en el link, se le redirigirá al usuario a una pantalla que muestra lo
 si algo fue mal se le proporcionará un mensaje para aclarar el problema y que el usuario pueda solucionarlo (normalmente, el problema será que las contraseñas no coincidan, el correo sea o tenga un formato invalido o que el nick ya fue elegido por otra persona.
 
 ## menú lateral
+![1.png](img/3.png)
 
 esta pantalla muestra el menú lateral de navegación dentro de la aplicación.
 
@@ -94,6 +97,7 @@ esta pantalla muestra el menú lateral de navegación dentro de la aplicación.
 esta parte explicará todas las pantallas que tienen que ver más con otros usuarios.
 
 ## posts
+![1.png](img/4.png)
 
 esta pantalla es una interfaz de publicaciones.
 
@@ -122,6 +126,7 @@ esta pantalla es una interfaz de publicaciones.
   - **publicaciones (posts)**: un botón para ver la lista de publicaciones, que es la pantalla actual.
 
 ## other user profile
+![1.png](img/5.png)
 
 esta pantalla es una interfaz de perfil de otro usuario para la aplicación.
 
@@ -139,6 +144,7 @@ esta pantalla es una interfaz de perfil de otro usuario para la aplicación.
 - **botón "block user"/”unblock user”**: un botón que permite bloquear a este usuario, evitando cualquier tipo de interacción futura, si este ya está bloqueado, podrá desbloquearlo pulsando otra vez en el mismo y si es su amigo y lo bloquea se cancelará la amistad.
 
 ## post
+![1.png](img/6.png)
 
 esta pantalla muestra una publicación específica dentro de la aplicación.
 
@@ -160,6 +166,7 @@ esta pantalla muestra una publicación específica dentro de la aplicación.
   - puede pulsar en el componente para ver la información de este más detalladamente.
 
 ## create post
+![1.png](img/7.png)
 
 esta pantalla es una interfaz de creación de publicaciones para la aplicación (si no ha creado ningún montaje no podrá usar esta pantalla).
 
@@ -179,10 +186,12 @@ esta pantalla es una interfaz de creación de publicaciones para la aplicación 
   - **publicaciones (posts)**: un botón para ver la lista de publicaciones.
 
 ## edit post
+![1.png](img/8.png)
 
 en si esta pantalla es idéntica a la de “create post” pero en lugar de crear la publicación la editaras y el título, descripción,... ya estarán cargadas.
 
 ## friends list
+![1.png](img/9.png)
 
 esta pantalla es la interfaz de lista de amigos dentro de la aplicación.
 
@@ -202,6 +211,7 @@ esta pantalla es la interfaz de lista de amigos dentro de la aplicación.
   - **group list**: un botón que lleva a una lista de grupos a los que el usuario pertenece.
 
 ## search users
+![1.png](img/10.png)
 
 esta pantalla es la interfaz de búsqueda de usuarios dentro de la aplicación.
 
@@ -220,6 +230,7 @@ esta pantalla es la interfaz de búsqueda de usuarios dentro de la aplicación.
   - **group list**: un botón que lleva a una lista de grupos a los que el usuario pertenece.
 
 ## group list
+![1.png](img/11.png)
 
 esta pantalla es la interfaz de lista de grupos dentro de la aplicación.
 
@@ -240,6 +251,10 @@ esta pantalla es la interfaz de lista de grupos dentro de la aplicación.
   - **group list**: un botón para ver la lista de grupos, que es la pantalla actual.
 
 ## group details
+![1.png](img/12.png)
+![1.png](img/13.png)
+![1.png](img/15.png)
+![1.png](img/16.png)
 
 estas pantallas muestran los detalles de un grupo específico dentro de la aplicación.
 
@@ -267,6 +282,7 @@ estas pantallas muestran los detalles de un grupo específico dentro de la aplic
 - **botón "leave group"**: en la parte inferior, hay un botón rojo que permite al usuario salir del grupo.
 
 ## profile
+![1.png](img/17.png)
 
 esta pantalla es la interfaz de perfil del usuario actual dentro de la aplicación.
 
@@ -289,6 +305,7 @@ esta pantalla es la interfaz de perfil del usuario actual dentro de la aplicaci�
 - **botón "logout"**: un botón para cerrar la sesión del usuario actual en la aplicación.
 
 ## settings
+![1.png](img/18.png)
 
 esta pantalla es la interfaz de configuración para la aplicación.
 
@@ -305,6 +322,7 @@ esta pantalla es la interfaz de configuración para la aplicación.
 - **botón de ayuda**: un icono de signo de interrogación en la esquina inferior derecha que redirigirá al usuario hacía el chat de ayuda en donde podrá hablar con un administrador por si tiene algún inconveniente.
 
 ## support chat
+![1.png](img/19.png)
 
 esta pantalla es la interfaz de soporte dentro de la aplicación.
 
@@ -320,18 +338,22 @@ esta pantalla es la interfaz de soporte dentro de la aplicación.
 - **botón de envío**: a la derecha del campo de entrada de texto, hay un icono de flecha que permite enviar el mensaje escrito al administrador.
 
 ## friend chat
+![1.png](img/20.png)
 
 esta pantalla es básicamente igual a la anterior pero el encabezado tiene el avatar del amigo (que al pulsarlo irá al perfil del amigo) y el nombre de este, pero si tienes al usuario bloqueado saldrá así:
 
 por lo que podrás seguir la conversación y desbloquear al usuario en su perfil o pulsando el texto en rojo “unblock them?” (recordar que si el usuario está bloqueado, este no es su amigo y si lo desbloquea tendrá que añadirlo otra vez como amigo)
 
 ## group chat
+![1.png](img/21.png)
 
 en esta pantalla más de lo mismo, lo diferente es que en lugar de estar el avatar y el nombre del amigo, están los del grupo, antes de la fecha aparece el nombre del usuario del grupo que envió dicho mensaje, siendo “you” el usuario actual y los mensajes de otros miembros del grupo que no sea este estarán en gris.
 
 ## components
+![1.png](img/22.png)
 
 ## components list
+![1.png](img/23.png)
 
 esta pantalla muestra la lista de componentes dentro de la aplicación.
 
@@ -347,6 +369,7 @@ esta pantalla muestra la lista de componentes dentro de la aplicación.
   - muestra los componentes que resultaron de la búsqueda, al pulsar en cualquiera de ellos, se abrirá una pantalla que mostrará información adicional sobre el componente.
 
 ## component screen
+![1.png](img/24.png)
 
 esta pantalla muestra un componente en concreto dentro de la aplicación.
 
@@ -365,6 +388,7 @@ esta pantalla muestra un componente en concreto dentro de la aplicación.
     - **delete component (eliminar componente)**: permite al usuario eliminar el componente de la base de datos o lista, en caso de que ya no sea relevante o necesario.
 
 ## create component
+![1.png](img/25.png)
 
 esta pantalla muestra la interfaz para crear un nuevo componente dentro de la aplicación.
 
@@ -387,8 +411,11 @@ esta pantalla muestra la interfaz para crear un nuevo componente dentro de la ap
   - **components list**: un botón para ver la lista de componentes.
 
 ## builds
+![1.png](img/26.png)
 
 ## builder
+![1.png](img/27.png)
+![1.png](img/28.png)
 
 esta pantalla muestra la interfaz del constructor de PC dentro de la aplicación (si el usuario ya ha seleccionado un montaje previamente, le aparecerá dicho montaje y podrá actualizarlo).
 
@@ -444,6 +471,7 @@ esta pantalla muestra la interfaz del constructor de PC dentro de la aplicación
   - **save/update**: un botón para guardar/actualizar la construcción actual.
 
 ## your builds
+![1.png](img/29.png)
 
 esta pantalla muestra las construcciones de PC guardadas por el usuario dentro de la aplicación.
 
