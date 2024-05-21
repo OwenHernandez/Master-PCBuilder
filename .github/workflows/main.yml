@@ -67,3 +67,4 @@ jobs:
           docker build -t masterpcbuilder .;
           docker-compose build;
           docker-compose up -d
+          
