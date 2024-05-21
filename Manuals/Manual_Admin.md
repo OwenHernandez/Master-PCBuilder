@@ -57,7 +57,7 @@ Además, MasterPCBuilder cuenta con un panel de control (dashboard) con gráfica
 
 ### Navbar
 
-![]()
+![https://github.com/OwenHernandez/Master-PCBuilder-Owen/blob/main/Manuals/img/Screenshot%202024-05-21%20220508.png](https://github.com/OwenHernandez/Master-PCBuilder-Owen/blob/main/Manuals/img/Screenshot%202024-05-21%20220508.png)
 
 1. **Ícono del Sol**:
    - Función: Cambiar entre el tema claro (light theme) y el tema oscuro (dark theme).
