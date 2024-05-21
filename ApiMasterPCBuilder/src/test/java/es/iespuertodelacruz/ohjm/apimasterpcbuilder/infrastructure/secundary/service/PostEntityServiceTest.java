@@ -7,17 +7,23 @@ import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.service.BuildService;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.domain.service.UserService;
 import es.iespuertodelacruz.ohjm.apimasterpcbuilder.infrastructure.adapter.secundary.service.PostEntityService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@ActiveProfiles("test")
 @SpringBootTest
-@Transactional
+@TestMethodOrder(value = MethodOrderer.OrderAnnotation.class)
+@Sql(scripts = { "/masterTest.sql" })
 public class PostEntityServiceTest {
 
     @Autowired
@@ -30,6 +36,7 @@ public class PostEntityServiceTest {
     private BuildService buildService;
 
     private User testUser;
+
     private Build testBuild;
 
     @BeforeEach

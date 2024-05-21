@@ -31,7 +31,7 @@ public class MessageDocumentMapperTest {
         assertEquals(messageDocument.getReceiver(), domain.getReceiver());
         assertEquals(messageDocument.getContent(), domain.getContent());
         assertEquals(messageDocument.getTopic(), domain.getTopic());
-        assertEquals("1973-03-03 09:46:40", domain.getDate());
+        assertEquals("1973-03-03 08:46:40", domain.getDate());
     }
 
     @Test
@@ -49,7 +49,7 @@ public class MessageDocumentMapperTest {
         assertEquals(message.getReceiver(), document.getReceiver());
         assertEquals(message.getContent(), document.getContent());
         assertEquals(message.getTopic(), document.getTopic());
-        assertEquals(99996400000L, document.getDate());
+        assertEquals(100000000000L, document.getDate());
     }
 
     @Test

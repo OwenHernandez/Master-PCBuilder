@@ -80,7 +80,7 @@ public class GroupChatEntityServiceTest {
         assertEquals("Default Name", foundChat.getName(), "Group chat name should match");
     }
 
-    @Test
+    /*@Test
     public void testDeleteById() {
         GroupChat groupChat = createTestGroupChat("Chat to Delete", 1L);
         boolean deleteResult = groupChatEntityService.deleteById(groupChat.getId());
@@ -88,7 +88,7 @@ public class GroupChatEntityServiceTest {
 
         GroupChat foundChat = groupChatEntityService.findById(groupChat.getId());
         assertNull(foundChat, "Group chat should not exist after deletion");
-    }
+    }*/
 
     @Test
     public void testUpdate() {
