@@ -57,7 +57,7 @@ $RECYCLE.BIN/
 *~
 
 ### Images ###
-/img/*
+# /img/*
 
 ### Other ###
 # Node.js
