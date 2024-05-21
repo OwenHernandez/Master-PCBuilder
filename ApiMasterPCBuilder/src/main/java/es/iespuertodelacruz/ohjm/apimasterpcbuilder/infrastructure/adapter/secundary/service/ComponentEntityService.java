@@ -260,11 +260,11 @@ public class ComponentEntityService implements IComponentRepository {
     public List<Component> searchAmazon(String name){
         name = name.replace(" ", "+");
         Mono<List<ProductAmazonDTO>> responseMono = this.webClient.get()
-                .uri("http://127.0.0.1:8000/" + name)
+                .uri("/" + name)
                 .header("access_token", apiKey)
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<List<ProductAmazonDTO>>() {
-                });
+                .bodyToMono(new ParameterizedTypeReference<List<ProductAmazonDTO>>() {}
+                );
         List<ProductAmazonDTO> block = responseMono.block();
         List<Component> components = new ArrayList<>();
         for (ProductAmazonDTO productAmazonDTO : block) {
