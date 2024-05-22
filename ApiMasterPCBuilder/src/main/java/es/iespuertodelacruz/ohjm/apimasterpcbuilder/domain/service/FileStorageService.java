@@ -40,15 +40,19 @@ public class FileStorageService {
         return(path);
     }
     public String save(String fileName, byte[] dataFile) {
+        Logger logger = Logger.getLogger(FileStorageService.class.getName());
         try {
             Files.createDirectories(root);
+            logger.info("Directory created>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
         } catch (IOException e) {
             throw new RuntimeException("The directory could not be created");
         }
 
         try {
             Path filenameFree = getFilenameFree(fileName);
+            logger.info("File name free>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
             Files.write(filenameFree,dataFile);
+            logger.info("File saved>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
             return filenameFree.getFileName().toString();
         } catch (Exception e) {
             if (e instanceof FileAlreadyExistsException) {
