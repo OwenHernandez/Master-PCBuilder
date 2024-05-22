@@ -41,7 +41,6 @@ public class FileStorageService {
     }
     public String save(String fileName, byte[] dataFile) {
         Logger logger = Logger.getLogger("debug");
-        logger.info("Saving file>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
         try {
             Files.createDirectories(root);
             logger.info("Directory created>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
