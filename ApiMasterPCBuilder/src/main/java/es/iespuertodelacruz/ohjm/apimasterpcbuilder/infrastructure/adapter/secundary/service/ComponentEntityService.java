@@ -268,7 +268,7 @@ public class ComponentEntityService implements IComponentRepository {
         List<ProductAmazonDTO> block = responseMono.block();
         List<Component> components = new ArrayList<>();
         for (ProductAmazonDTO productAmazonDTO : block) {
-            if (productAmazonDTO.getPrice()!=null && productAmazonDTO.getTitle().contains(name)){
+            if (productAmazonDTO.getPrice()!=null && productAmazonDTO.getTitle().contains(name.toLowerCase())){
                 Component component=new Component();
                 component.setName(productAmazonDTO.getTitle());
                 String price = productAmazonDTO.getPrice();
