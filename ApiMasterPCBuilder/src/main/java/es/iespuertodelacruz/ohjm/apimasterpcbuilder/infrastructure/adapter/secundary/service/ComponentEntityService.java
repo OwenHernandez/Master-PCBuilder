@@ -259,9 +259,9 @@ public class ComponentEntityService implements IComponentRepository {
 
     public List<Component> searchAmazon(String name){
         log=Logger.getLogger( this.getClass().getName() );
-        name = name.replace(" ", "+");
+        String searchName  = name.replace(" ", "+");
         Mono<List<ProductAmazonDTO>> responseMono = this.webClient.get()
-                .uri("/" + name)
+                .uri("/" + searchName)
                 .header("access_token", apiKey)
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<List<ProductAmazonDTO>>() {}
