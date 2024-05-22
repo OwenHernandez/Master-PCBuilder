@@ -258,6 +258,7 @@ public class ComponentEntityService implements IComponentRepository {
 
 
     public List<Component> searchAmazon(String name){
+        log=Logger.getLogger( this.getClass().getName() );
         name = name.replace(" ", "+");
         Mono<List<ProductAmazonDTO>> responseMono = this.webClient.get()
                 .uri("/" + name)
@@ -266,10 +267,11 @@ public class ComponentEntityService implements IComponentRepository {
                 .bodyToMono(new ParameterizedTypeReference<List<ProductAmazonDTO>>() {}
                 );
         List<ProductAmazonDTO> block = responseMono.block();
+        log.info("ProductAmazonDTO"+block );
         List<Component> components = new ArrayList<>();
         for (ProductAmazonDTO productAmazonDTO : block) {
+            log.info("ProductAmazonDTO"+ productAmazonDTO.getTitle());
             if (productAmazonDTO.getPrice()!=null && productAmazonDTO.getTitle().contains(name.toLowerCase())){
-                log=Logger.getLogger( this.getClass().getName() );
                 log.info("Encontro un componte con el mismo nombre");
                 Component component=new Component();
                 component.setName(productAmazonDTO.getTitle());
