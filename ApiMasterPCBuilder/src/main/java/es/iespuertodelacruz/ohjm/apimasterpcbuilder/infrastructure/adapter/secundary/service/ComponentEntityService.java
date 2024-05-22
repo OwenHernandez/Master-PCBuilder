@@ -271,7 +271,7 @@ public class ComponentEntityService implements IComponentRepository {
         List<Component> components = new ArrayList<>();
         for (ProductAmazonDTO productAmazonDTO : block) {
             log.info("ProductAmazonDTO Title:" + productAmazonDTO.getTitle() + ", ProductAmazonDTO Price:" + productAmazonDTO.getPrice());
-            if (productAmazonDTO.getPrice() != null && name != null && productAmazonDTO.getTitle().toLowerCase().contains(name.toLowerCase())) {
+            if (productAmazonDTO.getPrice() != null && productAmazonDTO.getTitle().toLowerCase().contains(name.toLowerCase())) {
                 log.info("Encontro un componte con el mismo nombre");
                 Component component = new Component();
                 component.setName(productAmazonDTO.getTitle());
