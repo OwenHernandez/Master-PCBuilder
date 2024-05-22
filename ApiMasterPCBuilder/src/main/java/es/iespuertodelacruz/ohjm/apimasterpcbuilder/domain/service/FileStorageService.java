@@ -11,10 +11,11 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.logging.Logger;
 
 @Service
 public class FileStorageService {
-    private final Path root = Paths.get("img");
+    private final Path root = Paths.get("../img");
 
     private Path getFilenameFree(String filename){
         Path path = this.root.resolve(filename);
