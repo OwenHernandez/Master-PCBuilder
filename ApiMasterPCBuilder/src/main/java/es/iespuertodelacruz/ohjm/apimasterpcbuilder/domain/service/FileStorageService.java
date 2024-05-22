@@ -43,16 +43,16 @@ public class FileStorageService {
         Logger logger = Logger.getLogger("debug");
         try {
             Files.createDirectories(root);
-            logger.info("Directory created>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+            logger.info("Directory created at: " + root.toAbsolutePath());
         } catch (IOException e) {
             throw new RuntimeException("The directory could not be created");
         }
 
         try {
             Path filenameFree = getFilenameFree(fileName);
-            logger.info("File name free>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+            logger.info("File name free: " + filenameFree.toAbsolutePath());
             Files.write(filenameFree,dataFile);
-            logger.info("File saved>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+            logger.info("File saved at: " + filenameFree.toAbsolutePath());
             return filenameFree.getFileName().toString();
         } catch (Exception e) {
             if (e instanceof FileAlreadyExistsException) {
