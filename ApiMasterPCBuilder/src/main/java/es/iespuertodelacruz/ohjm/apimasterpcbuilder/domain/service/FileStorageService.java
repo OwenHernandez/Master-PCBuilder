@@ -40,7 +40,7 @@ public class FileStorageService {
         return(path);
     }
     public String save(String fileName, byte[] dataFile) {
-        Logger logger = Logger.getLogger(FileStorageService.class.getName());
+        Logger logger = Logger.getLogger("debug");
         logger.info("Saving file>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
         try {
             Files.createDirectories(root);

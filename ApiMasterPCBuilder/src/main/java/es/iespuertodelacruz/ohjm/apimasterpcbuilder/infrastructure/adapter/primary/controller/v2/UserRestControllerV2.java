@@ -22,11 +22,14 @@ import java.io.IOException;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.logging.Logger;
 
 @RestController
 @CrossOrigin
 @RequestMapping("/api/v2/users")
 public class UserRestControllerV2 {
+
+    Logger logger = Logger.getLogger("debug");
 
     @Autowired
     IUserService userService;
@@ -59,6 +62,7 @@ public class UserRestControllerV2 {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable("id") long id, @RequestBody UserInputDTO userDTO) {
+        logger.info("Updating user>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
         if (userDTO == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The user parameter is required");
         } else {
@@ -74,7 +78,8 @@ public class UserRestControllerV2 {
                 } else if (byId.getId() != userByNick.getId()) {
                     return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not that user");
                 }
-                if (userDTO.getPictureBase64() == null || userDTO.getPictureBase64().isBlank()) {
+                if (userDTO.getPictureBase64() != null && !userDTO.getPictureBase64().isBlank()) {
+                    logger.info("Updating image>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
                     String codedPicture = userDTO.getPictureBase64();
                     byte[] photoBytes = Base64.getDecoder().decode(codedPicture);
                     String newFileName = storageService.save(byId.getNick() + "_" + userDTO.getPicture(), photoBytes);
