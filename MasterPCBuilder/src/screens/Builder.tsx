@@ -318,7 +318,7 @@ const Builder = (props: Props) => {
         {name: "CPU", icon: "cpu", type: "CPU", importIcon: "Octicon"},
         {name: "Motherboard", icon: "developer-board", type: "Motherboard", importIcon: "Material"},
         {name: "Memory RAM", icon: "memory", type: "RAM", importIcon: "FontAwesome5"},
-        {name: "Drive", icon: "harddisk", type: "Drive", importIcon: "Material"},
+        {name: "Storage", icon: "harddisk", type: "Storage", importIcon: "Material"},
         {name: "Case", icon: "desktop-tower", type: "Case", importIcon: "Material"},
         {name: "Cooling", icon: "fan", type: "Cooling", importIcon: "Material"},
         {name: "PSU", icon: "power", type: "PSU", importIcon: "Material"},

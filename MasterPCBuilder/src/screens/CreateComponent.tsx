@@ -90,7 +90,6 @@ const CreateComponent = (props: Props) => {
             {label: "RAM", value: "RAM"},
             {label: "Storage", value: "Storage"},
             {label: "Case", value: "Case"},
-            {label: "Case", value: "Case"},
             {label: "Cooling", value: "Cooling"},
             {label: "PSU", value: "PSU"},
             {label: "TV", value: "TV"},
