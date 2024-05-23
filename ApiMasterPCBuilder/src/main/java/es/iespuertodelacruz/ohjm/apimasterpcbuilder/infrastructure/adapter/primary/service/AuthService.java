@@ -40,7 +40,7 @@ public class AuthService {
 		userDetails.setEmail(save.getEmail());
 		userDetails.setRole(save.getRole());
 		mailService.send(save.getEmail(), "Please verify your email",
-				"http://localhost:8080/api/v1/verify?usermail=" + save.getEmail() + "&hash=" + save.getHash());
+				"http://146.190.2.205:8080/api/v1/verify?usermail=" + save.getEmail() + "&hash=" + save.getHash());
 	}
 
 	public User registerV3(UserDetailsLogin udl) {
