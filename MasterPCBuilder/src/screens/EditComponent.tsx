@@ -342,7 +342,7 @@ const EditComponent = (props: Props) => {
                                                 fontSize: getFontSize(20),
                                                 textAlign: 'center',
                                                 color: (darkMode) ? "white" : "black"
-                                            }}>Select a picture for the Post</Text>
+                                            }}>Select a picture for the Component</Text>
                                     }
                                 </TouchableOpacity>
                             </View>

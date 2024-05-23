@@ -335,7 +335,7 @@ const Builder = (props: Props) => {
         {name: "Keyboard", icon: "keyboard", type: "Keyboard", importIcon: "FontAwesome5"},
         {name: "Mouse", icon: "mouse", type: "Mouse", importIcon: "FontAwesome5"},
         {name: "Headphones", icon: "headphones-alt", type: "Headphones", importIcon: "FontAwesome5"},
-        {name: "Speakers", icon: "speaker", type: "Speaker", importIcon: "Material"},
+        {name: "Speakers", icon: "speaker", type: "Speakers", importIcon: "Material"},
         {name: "Microphone", icon: "microphone", type: "Microphone", importIcon: "FontAwesome5"}
     ];
 
@@ -742,7 +742,6 @@ const Builder = (props: Props) => {
                                     numColumns={2}
                                     contentContainerStyle={{marginHorizontal: "2%"}}
                                     renderItem={(comp) => {
-                                        console.log(comp.item.name);
                                         if (comp.item !== undefined && comp.item !== null && comp.item.type === modalCompType && !comp.item.deleted) {
                                             return (
                                                 <TouchableOpacity style={{

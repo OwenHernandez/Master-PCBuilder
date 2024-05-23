@@ -253,7 +253,8 @@ const ComponentScreen = (props: Props) => {
                                 <Text style={{
                                     fontSize: getFontSize(30),
                                     color: (darkMode) ? "white" : "black",
-                                    textAlign: "center"
+                                    textAlign: "center",
+                                    maxWidth: "80%"
                                 }}>{component?.name}</Text>
                                 {
                                     (precios.length > 0 && preciosAmazon.length > 0 && preciosEbay.length > 0) ?
